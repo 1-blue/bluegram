@@ -1,0 +1,5 @@
+# 공통 폴더의 이미지
+*/public/images
+
+# node_modules 제외
+*/node_modules
