@@ -15,6 +15,9 @@ module.exports = {
     alias: {
       "@components": path.resolve(__dirname, "src/components"),
       "@util": path.resolve(__dirname, "src/util"),
+      "@store": path.resolve(__dirname, "src/store"),
+      "@pages": path.resolve(__dirname, "src/pages"),
+      "@css": path.resolve(__dirname, "src/css"),
     },
   },
 
@@ -42,9 +45,15 @@ module.exports = {
           // @babel/preset-env는 브라우저 환경에 맞게 알아서 바벨 설정을 해줌
           // @babel/preset-react는 jsx 지원
           presets: ["@babel/preset-env", "@babel/preset-react"],
-          // dev server을 위한 설정
-          plugins: ["react-refresh/babel"],
+          // dev server을 위한 설정, async와 await를 위한 설정
+          plugins: ["react-refresh/babel", "@babel/plugin-transform-runtime"],
         },
+      },
+
+      // css를 위한 로더
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
       },
     ],
   },
