@@ -1,0 +1,24 @@
+{
+  "name": "bluegram_backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "description": "SNS 클론 프로젝트 - 백엔드",
+  "scripts": {
+    "dev": "npx nodemon app.js"
+  },
+  "author": "1-blue",
+  "license": "ISC",
+  "dependencies": {
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.5.1"
+  },
+  "type": "module"
+}
