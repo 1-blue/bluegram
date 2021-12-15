@@ -19,6 +19,8 @@ module.exports = {
       "@pages": path.resolve(__dirname, "src/pages"),
       "@css": path.resolve(__dirname, "src/css"),
     },
+    // 로더 해석에 적용되지 않음
+    modules: ["node_modules", path.resolve(__dirname, "app")],
   },
 
   // 진입점 설정
@@ -78,7 +80,12 @@ module.exports = {
       // index 파일 없으면 브라우저에서 폴더를 보여줄지 여부
       serveIndex: true,
     },
+    // 핫 모듈 리로딩 기능 ( 새로고침해도 기존 입력 정보는 유지 )
     hot: true,
+    // 포트번호 설정
     port: 8080,
+    // SPA의 react-router 같은 거 사용할 때 필수적으로 적용해 줘야 하는 옵션이다.
+    // 기본적으로 /login으로 요청 보내면 404에러가나기 때문에 그때 index.js로 요청을 넘기게 해주는 옵션 값
+    historyApiFallback: true,
   },
 };
