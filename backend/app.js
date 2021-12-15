@@ -1,15 +1,20 @@
 import dotenv from "dotenv";
+dotenv.config();
+
 import path from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-
-dotenv.config();
+import db from "./models/index.js"
 
 const __dirname = path.resolve();
-
 const app = express();
 app.set("PORT", process.env.PORT);
+
+db.sequelize
+  .sync({ force: true, alter: false })
+  .then(() => console.log("DB 연결 성공!"))
+  .catch(error => console.error("DB 연결 실패 >> ", error));
 
 // middleware
 app.use("/", express.static(path.join(__dirname, "public")));
