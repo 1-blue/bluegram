@@ -4,15 +4,17 @@ dotenv.config();
 import path from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
-import session from "express-session";
+import expressSession from "express-session";
+import fileStore from "session-file-store";
 import db from "./models/index.js"
 
 const __dirname = path.resolve();
+const FileStore = fileStore(expressSession);
 const app = express();
 app.set("PORT", process.env.PORT);
 
 db.sequelize
-  .sync({ force: true, alter: false })
+  .sync({ force: false, alter: false })
   .then(() => console.log("DB 연결 성공!"))
   .catch(error => console.error("DB 연결 실패 >> ", error));
 
@@ -22,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
-  session({
+  expressSession({
     resave: false,
     saveUninitialized: false,
     name: "session-cookie",
@@ -31,6 +33,7 @@ app.use(
       httpOnly: true,
       secure: false,
     },
+    store: new FileStore(),
   }),
 );
 
@@ -39,6 +42,12 @@ import authRouter from "./routes/auth.js";
 
 // router 등록
 app.use("/auth", authRouter);
+
+// 404 에러처리 미들웨어
+app.use(function(req, res, next) {
+  console.log("404 에러처리 미들웨어");
+  res.status(404).send('404');
+});
 
 // 에러처리 미들웨어
 app.use((error, req, res, next) => {
