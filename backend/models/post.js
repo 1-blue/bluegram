@@ -29,19 +29,19 @@ const Post = (sequelize, DataTypes) => {
 
   Post.associate = db => {
     // 유저와 게시글 ( 1 : N )
-    db.Post.belongsTo(db.User, { foreignKey: "UserId" });
+    db.Post.belongsTo(db.User, { foreignKey: "UserId", onDelete: "cascade" });
 
     // 유저와 댓글 ( 1 : N )
-    db.Post.hasMany(db.Comment);
+    db.Post.hasMany(db.Comment, { onDelete: "cascade" });
 
     // 좋아요 ( N : M ) ( 유저와 게시글 )
-    db.Post.belongsToMany(db.User, { through: "likes", as: "Liked", foreignKey: "UserId" });
+    db.Post.belongsToMany(db.User, { through: "likes", as: "Liked", foreignKey: "UserId", onDelete: "cascade" });
     
     // 해시태그 ( N : M ) ( 게시글과 해시태그 )
-    db.Post.belongsToMany(db.Hashtag, { through: "postHashtags", as: "postHashtager", foreignKey: "HashtagId" });
+    db.Post.belongsToMany(db.Hashtag, { through: "postHashtags", as: "postHashtager", foreignKey: "HashtagId", onDelete: "cascade" });
 
     // 게시글과 이미지 ( 1 : N )
-    db.Post.hasMany(db.Image);
+    db.Post.hasMany(db.Image, { onDelete: "cascade" });
   };
 
   return Post;

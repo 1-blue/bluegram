@@ -29,7 +29,7 @@ const Hashtag = (sequelize, DataTypes) => {
 
   Hashtag.associate = db => {
     // 해시태그 ( N : M ) ( 게시글과 해시태그 )
-    db.Hashtag.belongsToMany(db.Post, { through: "postHashtags", as: "postHashtaged", foreignKey: "PostId" });
+    db.Hashtag.belongsToMany(db.Post, { through: "postHashtags", as: "postHashtaged", foreignKey: "PostId", onDelete: "cascade" });
   };
 
   return Hashtag;

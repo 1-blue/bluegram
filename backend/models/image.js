@@ -29,10 +29,10 @@ const Image = (sequelize, DataTypes) => {
 
   Image.associate = db => {
     // 유저와 이미지 ( 1 : N )
-    db.Image.belongsTo(db.User, { foreignKey: "UserId" });
+    db.Image.belongsTo(db.User, { foreignKey: "UserId", onDelete: "cascade" });
 
     // 게시글와 이미지 ( 1 : N )
-    db.Image.belongsTo(db.Post, { foreignKey: "PostId" });
+    db.Image.belongsTo(db.Post, { foreignKey: "PostId", onDelete: "cascade" });
   };
 
   return Image;

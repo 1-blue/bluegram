@@ -29,14 +29,14 @@ const Comment = (sequelize, DataTypes) => {
 
   Comment.associate = db => {
     // 유저와 댓글 ( 1 : N )
-    db.Comment.belongsTo(db.User, { foreignKey: "UserId" });
+    db.Comment.belongsTo(db.User, { foreignKey: "UserId", onDelete: "cascade" });
 
     // 게시글과 댓글 ( 1 : N )
-    db.Comment.belongsTo(db.Post, { foreignKey: "PostId" });
+    db.Comment.belongsTo(db.Post, { foreignKey: "PostId", onDelete: "cascade" });
 
     // 댓글과 답글 ( 1 : N )
-    db.Comment.hasMany(db.Comment);
-    db.Comment.belongsTo(db.Comment, { foreignKey: "CommentId" });
+    db.Comment.hasMany(db.Comment, { onDelete: "cascade" });
+    db.Comment.belongsTo(db.Comment, { foreignKey: "CommentId", onDelete: "cascade" });
   };
 
   return Comment;
