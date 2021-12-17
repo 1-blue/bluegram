@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import path from "path";
+import fs from "fs";
 import express from "express";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
@@ -12,6 +13,14 @@ const __dirname = path.resolve();
 const FileStore = fileStore(expressSession);
 const app = express();
 app.set("PORT", process.env.PORT);
+
+try {
+  fs.accessSync(path.join(__dirname, "public"));
+  fs.accessSync(path.join(__dirname, "public", "images"));
+} catch (error) {
+  fs.mkdirSync(path.join(__dirname, "public"));
+  fs.mkdirSync(path.join(__dirname, "public", "images"));
+}
 
 db.sequelize
   .sync({ force: false, alter: false })
@@ -39,9 +48,11 @@ app.use(
 
 // routes
 import authRouter from "./routes/auth.js";
+import imageRouter from "./routes/image.js";
 
 // router 등록
 app.use("/auth", authRouter);
+app.use("/image", imageRouter);
 
 // 404 에러처리 미들웨어
 app.use(function(req, res, next) {
