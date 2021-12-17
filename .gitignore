@@ -6,3 +6,6 @@
 
 # env
 */.env
+
+# session-store ( file )
+*/sessions
