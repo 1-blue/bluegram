@@ -2,12 +2,13 @@ import express from "express";
 import passport from "passport";
 
 import db from "../models/index.js";
+import { isLoggedIn, isNotLoggedIn } from "../middleware/index.js"
 
 const router = express.Router();
 const { User, Post } = db;
 
 // 로그인
-router.post("/", (req, res, next) => {
+router.post("/", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (error, user, message) => {
     // 서버측 에러 ( 조건검사 도중에 에러 )
     if (error) {
@@ -28,7 +29,7 @@ router.post("/", (req, res, next) => {
 
       // 유저와 유저와 관련된 정보까지 모아서 찾음
       const fullUser = await User.findOne({
-        attributes: ["_id", "nickname", "createdAt"],
+        attributes: ["_id", "name", "createdAt"],
         where: { _id: user._id },
         include: [{ model: Post }, { model: User, as: "Followers" }, { model: User, as: "Followings" }],
       });
@@ -39,7 +40,7 @@ router.post("/", (req, res, next) => {
 });
 
 // 로그아웃
-router.post("/logout", (req, res) => {
+router.post("/logout", isLoggedIn, (req, res) => {
   req.logout();
   req.session.destroy();
   res.status(204).json({ message: "로그아웃에 성공했습니다." });
