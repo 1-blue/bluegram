@@ -1,8 +1,9 @@
-import { LOAD_TO_ME_REQUEST } from "@store/types";
+import { LOGIN_REQUEST } from "@store/types";
 
-export function loadToMeAction(data) {
+// 로그인 액션 크리에이터
+export function loginAction(data) {
   return {
-    type: LOAD_TO_ME_REQUEST,
+    type: LOGIN_REQUEST,
     data,
   };
 }
