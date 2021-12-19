@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const authInstance = axios.create({
-  baseURL: "http://localhost:3000/auth",
+  baseURL: `${process.env.SERVER_URL}/auth`,
   withCredentials: true,
   timeout: 1000,
 });
@@ -16,6 +16,7 @@ const authInstance = axios.create({
 //   },
 // );
 
-export function apiLoadToMe() {
-  return authInstance.get("/");
+// 로그인
+export function apiLogin(body) {
+  return authInstance.post("/", body);
 }

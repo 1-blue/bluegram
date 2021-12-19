@@ -4,12 +4,13 @@ import { NavLink } from "react-router-dom";
 
 // components
 import Icon from "@components/common/Icon";
+import Avatar from "@components/common/Avatar";
 
 // styled-components
 import { Wrapper } from "./style";
 
 const RightMenu = () => {
-  const { me } = useSelector(state => state.auth);
+  const { me } = useSelector(state => state.user);
 
   return (
     <Wrapper>
@@ -40,7 +41,14 @@ const RightMenu = () => {
               <Icon shape="heart" />
             </NavLink>
           </li>
-          <li>내정보</li>
+          <li>
+            <Avatar
+              width={20}
+              height={20}
+              src={process.env.IMAGE_URL + "/" + me.Images[0].name}
+              alt="유저의 프로필 이미지"
+            />
+          </li>
         </>
       ) : (
         <>

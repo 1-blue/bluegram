@@ -1,13 +1,16 @@
+/* eslint-disable prettier/prettier */
+
 //types
-import { RESET_MESSAGE, LOAD_TO_ME_REQUEST, LOAD_TO_ME_SUCCESS, LOAD_TO_ME_FAILURE } from "@store/types";
+import {
+  RESET_MESSAGE,
+  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
+} from "@store/types";
 
 const initState = {
-  me: null,
-
-  // 로그인한 유저 정보 로드
-  loadToMeLoading: false,
-  loadToMeDone: null,
-  loadToMeError: null,
+  // 로그인
+  loginLoading: false,
+  loginDone: null,
+  loginError: null,
 };
 
 function authReducer(prevState = initState, action) {
@@ -15,30 +18,29 @@ function authReducer(prevState = initState, action) {
     case RESET_MESSAGE:
       return {
         ...prevState,
-        loadToMeLoading: false,
-        loadToMeDone: null,
-        loadToMeError: null,
+        loginLoading: false,
+        loginDone: null,
+        loginError: null,
       };
-    case LOAD_TO_ME_REQUEST:
+
+    case LOGIN_REQUEST:
       return {
         ...prevState,
-        loadToMeLoading: true,
-        loadToMeDone: null,
-        loadToMeError: null,
+        loginLoading: true,
+        loginDone: null,
+        loginError: null,
       };
-    case LOAD_TO_ME_SUCCESS:
-      console.log("LOAD_TO_ME_SUCCESS >> ", action);
+    case LOGIN_SUCCESS:
       return {
         ...prevState,
-        loadToMeLoading: false,
-        loadToMeDone: null,
+        loginLoading: false,
+        loginDone: action.data.message,
       };
-    case LOAD_TO_ME_FAILURE:
-      console.log("LOAD_TO_ME_FAILURE >> ", action);
+    case LOGIN_FAILURE:
       return {
         ...prevState,
-        loadToMeLoading: false,
-        loadToMeError: null,
+        loginLoading: false,
+        loginError: action.data.message,
       };
 
     default:

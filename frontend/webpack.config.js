@@ -21,6 +21,7 @@ module.exports = {
       "@store": path.resolve(__dirname, "src/store"),
       "@pages": path.resolve(__dirname, "src/pages"),
       "@css": path.resolve(__dirname, "src/css"),
+      "@hooks": path.resolve(__dirname, "src/hooks"),
     },
     // 로더 해석에 적용되지 않음
     modules: ["node_modules", path.resolve(__dirname, "app")],

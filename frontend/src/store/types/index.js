@@ -1,7 +1,22 @@
 // 메시지 초기화
 export const RESET_MESSAGE = "RESET_MESSAGE";
 
+// 로그인 요청
+export const LOGIN_REQUEST = "LOGIN_REQUEST";
+export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
+export const LOGIN_FAILURE = "LOGIN_FAILURE";
+
+// 회원가입 요청
+export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
+export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
+export const SIGNUP_FAILURE = "SIGNUP_FAILURE";
+
 // 로그인한 유저 정보 요청
 export const LOAD_TO_ME_REQUEST = "LOAD_TO_ME_REQUEST";
 export const LOAD_TO_ME_SUCCESS = "LOAD_TO_ME_SUCCESS";
 export const LOAD_TO_ME_FAILURE = "LOAD_TO_ME_FAILURE";
+
+// 로그인한 유저 정보 요청
+export const UPLOAD_IMAGES_REQUEST = "UPLOAD_IMAGES_REQUEST";
+export const UPLOAD_IMAGES_SUCCESS = "UPLOAD_IMAGES_SUCCESS";
+export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGES_FAILURE";

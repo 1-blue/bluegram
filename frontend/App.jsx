@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Provider } from "react-redux";
+import { useDispatch } from "react-redux";
 
 // layout
 import AppLayout from "@components/AppLayout";
@@ -11,24 +11,25 @@ import LoginPage from "@pages/LoginPage";
 import ProfilePage from "@pages/ProfilePage";
 import SignupPage from "@pages/SignupPage";
 
-// store
-import store from "@store/configureStore";
+// action
+import { loadToMeAction } from "./src/store/actions/userAction";
 
 const App = () => {
+  const dispatch = useDispatch();
+  useEffect(() => dispatch(loadToMeAction()), []);
+
   return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <AppLayout>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/Signup" element={<SignupPage />} />
-            <Route path="/*" element={<div>...?</div>} />
-          </Routes>
-        </AppLayout>
-      </BrowserRouter>
-    </Provider>
+    <BrowserRouter>
+      <AppLayout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/Signup" element={<SignupPage />} />
+          <Route path="/*" element={<div>...?</div>} />
+        </Routes>
+      </AppLayout>
+    </BrowserRouter>
   );
 };
 
