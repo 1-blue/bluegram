@@ -1,6 +1,9 @@
+require("dotenv").config();
+
 const path = require("path");
 const RefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const dotenvWebpackPlugin = require("dotenv-webpack");
 
 module.exports = {
   // 웹펙 시작 모드 설정
@@ -60,8 +63,8 @@ module.exports = {
     ],
   },
 
-  // 플러그인 설정
-  plugins: [new HtmlWebpackPlugin({ title: "bluegram" }), new RefreshWebpackPlugin()],
+  // 플러그인 설정 / html생성 / refresh / dotenv설정
+  plugins: [new HtmlWebpackPlugin({ title: "bluegram" }), new RefreshWebpackPlugin(), new dotenvWebpackPlugin()],
 
   // 데브서버 설정
   devServer: {
