@@ -5,7 +5,7 @@ import db from "../models/index.js";
 import { isLoggedIn, isNotLoggedIn } from "../middleware/index.js"
 
 const router = express.Router();
-const { User, Post } = db;
+const { User, Post, Image } = db;
 
 // 로그인
 router.post("/", isNotLoggedIn, (req, res, next) => {
@@ -30,11 +30,16 @@ router.post("/", isNotLoggedIn, (req, res, next) => {
       // 유저와 유저와 관련된 정보까지 모아서 찾음
       const fullUser = await User.findOne({
         attributes: ["_id", "name", "createdAt"],
-        where: { _id: user._id },
-        include: [{ model: Post }, { model: User, as: "Followers" }, { model: User, as: "Followings" }],
+        where: { _id: req.user._id },
+        include: [
+          { model: Image },
+          { model: Post, attributes: ["_id"] },
+          { model: User, as: "Followers" },
+          { model: User, as: "Followings" }
+        ],
       });
       
-      return res.status(204).json({ message: "로그인에 성공했습니다.", user: fullUser });
+      return res.status(200).json({ message: "로그인에 성공했습니다.", user: fullUser });
     });
   })(req, res, next);
 });

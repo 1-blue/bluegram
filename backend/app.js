@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import expressSession from "express-session";
 import fileStore from "session-file-store";
 import passport from "passport";
+import cors from "cors";
 
 import db from "./models/index.js"
 import passportConfig from "./passport/index.js";
@@ -54,6 +55,10 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors({
+  credentials: true,
+  origin: process.env.CLENT_URL
+}));
 
 // routes
 import authRouter from "./routes/auth.js";

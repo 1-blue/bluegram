@@ -2,8 +2,6 @@ import path from "path";
 import express from "express";
 import multer from "multer";
 
-import { isLoggedIn } from "../middleware/index.js"
-
 const __dirname = path.resolve();
 const router = express.Router();
 
@@ -24,10 +22,10 @@ const limits = { fileSize: 20 * 1024 * 1024 };
 
 const upload = multer({ storage, limits });
 
-router.post("/", isLoggedIn, upload.array("images"), (req, res) => {
+router.post("/", upload.array("images"), (req, res) => {
   const filenames = req.files.map(file => file.filename);
 
-  res.send(filenames)
+  res.status(201).json({ message: "이미지 생성에 성공하셨습니다.", images: filenames })
 });
 
 export default router;
