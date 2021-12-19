@@ -2,11 +2,14 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 
+// layout
+import AppLayout from "@components/AppLayout";
+
 // pages
 import HomePage from "@pages/HomePage";
 import LoginPage from "@pages/LoginPage";
 import ProfilePage from "@pages/ProfilePage";
-import RegisterPage from "@pages/RegisterPage";
+import SignupPage from "@pages/SignupPage";
 
 // store
 import store from "@store/configureStore";
@@ -15,13 +18,15 @@ const App = () => {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/*" element={<div>...?</div>} />
-        </Routes>
+        <AppLayout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/Signup" element={<SignupPage />} />
+            <Route path="/*" element={<div>...?</div>} />
+          </Routes>
+        </AppLayout>
       </BrowserRouter>
     </Provider>
   );
