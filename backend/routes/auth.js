@@ -25,7 +25,7 @@ router.post("/", isNotLoggedIn, (req, res, next) => {
       return res.status(403).json({ message });
     }
     
-    return req.login(user, async loginError => {
+    return req.login({ user }, async loginError => {
       if (loginError) {
         console.error("POST /user/login loginError >> ", loginError);
         return res.status(500).json({ message: "서버에서 알 수 없는 에러가 발생했습니다. 잠시후에 다시 시도해주세요" });
@@ -34,7 +34,7 @@ router.post("/", isNotLoggedIn, (req, res, next) => {
       // 유저와 유저와 관련된 정보까지 모아서 찾음
       const fullUser = await User.findOne({
         attributes: ["_id", "name", "createdAt"],
-        where: { _id: req.user._id },
+        where: { _id: user._id },
         include: [
           { model: Image },
           { model: Post, attributes: ["_id"] },

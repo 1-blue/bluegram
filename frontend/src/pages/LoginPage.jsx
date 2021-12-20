@@ -20,12 +20,12 @@ const Wrapper = styled.main`
   margin: auto;
 
   /* 폼의 제목, 목적, 이름 */
-  & h1 {
+  & > form > .form-title {
     text-align: center;
     margin-bottom: 1rem;
   }
 
-  & div {
+  & > form > .form-footer {
     width: 60%;
     display: flex;
     justify-content: space-between;
@@ -43,7 +43,7 @@ const Wrapper = styled.main`
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loginDone, loginError } = useSelector(state => state.auth);
+  const { loginLoading, loginDone, loginError } = useSelector(state => state.auth);
   const [id, onChangeId] = useInput("");
   const [password, onChangePassword] = useInput("");
 
@@ -68,7 +68,7 @@ const LoginPage = () => {
   return (
     <Wrapper>
       <Form onSubmit={onLocalLogin}>
-        <h1>bluegram</h1>
+        <h1 className="form-title">bluegram</h1>
         {/* id */}
         <Input type="text" placeholder="아이디를 입력해주세요" value={id} onChange={onChangeId} />
 
@@ -76,7 +76,7 @@ const LoginPage = () => {
         <Input type="password" placeholder="비밀번호를 입력해주세요" value={password} onChange={onChangePassword} />
 
         {/* 일반 로그인 버튼 */}
-        <Button type="submit" local>
+        <Button type="submit" local loading={loginLoading}>
           로그인
         </Button>
 
@@ -88,12 +88,12 @@ const LoginPage = () => {
         <Button type="button" naver>
           네이버 로그인
         </Button>
-        {/* 네이버 로그인 버튼 */}
+        {/* 카카오 로그인 버튼 */}
         <Button type="button" kakao>
-          <a href="http://localhost:3000/auth/kakao">카카오 로그인</a>
+          <a href={process.env.KAKAO_URL}>카카오 로그인</a>
         </Button>
 
-        <div>
+        <div className="form-footer">
           <Link to="/signup">가입하기</Link>
           <Link to="#">아이디 / 비밀번호 찾기</Link>
         </div>
