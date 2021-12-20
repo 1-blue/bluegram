@@ -11,8 +11,13 @@ const Image = (sequelize, DataTypes) => {
       },
       name: {
         type: DataTypes.STRING(40),
-        allowNull: false,
+        allowNull: true,
         comment: "이미지 이름 ( 최대 40자리 )",
+      },
+      url: {
+        type: DataTypes.STRING(150),
+        allowNull: true,
+        comment: "OAuth 인증일 경우 대체할 url",
       },
     },
     {

@@ -1,5 +1,9 @@
-import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
+
+import express, { application } from "express";
 import passport from "passport";
+import axios from "axios";
 
 import db from "../models/index.js";
 import { isLoggedIn, isNotLoggedIn } from "../middleware/index.js"
@@ -7,7 +11,7 @@ import { isLoggedIn, isNotLoggedIn } from "../middleware/index.js"
 const router = express.Router();
 const { User, Post, Image } = db;
 
-// 로그인
+// 로컬 로그인
 router.post("/", isNotLoggedIn, (req, res, next) => {
   passport.authenticate("local", (error, user, message) => {
     // 서버측 에러 ( 조건검사 도중에 에러 )
@@ -44,11 +48,31 @@ router.post("/", isNotLoggedIn, (req, res, next) => {
   })(req, res, next);
 });
 
+// 카카오 로그인
+router.get("/kakao", isNotLoggedIn, passport.authenticate("kakao"));
+
+router.get("/kakao/callback", passport.authenticate("kakao", {
+  failureRedirect: "/"
+}), (req, res) => {
+  res.redirect(process.env.CLIENT_URL);
+});
+
 // 로그아웃
-router.post("/logout", isLoggedIn, (req, res) => {
+router.delete("/", isLoggedIn, async (req, res, next) => {
+  if(req.user.accessToken){
+    try {
+      await axios.post("https://kapi.kakao.com/v1/user/unlink", null, {
+        headers: {
+          "Authorization": `Bearer ${req.user.accessToken}`,
+        }
+      });
+    } catch (error) {
+      return next(error)
+    }
+  }
   req.logout();
   req.session.destroy();
-  res.status(204).json({ message: "로그아웃에 성공했습니다." });
+  res.status(200).json({ message: "로그아웃에 성공했습니다." });
 });
 
 export default router;

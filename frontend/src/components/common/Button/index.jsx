@@ -17,10 +17,8 @@ Button.propTypes = {
   local: Proptypes.bool,
   facebook: Proptypes.bool,
   naver: Proptypes.bool,
-};
-
-Button.defaultProps = {
-  signup: true,
+  kakao: Proptypes.bool,
+  onClick: Proptypes.func,
 };
 
 export default Button;

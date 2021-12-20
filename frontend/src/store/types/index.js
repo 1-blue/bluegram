@@ -1,10 +1,15 @@
 // 메시지 초기화
 export const RESET_MESSAGE = "RESET_MESSAGE";
 
-// 로그인 요청
-export const LOGIN_REQUEST = "LOGIN_REQUEST";
-export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-export const LOGIN_FAILURE = "LOGIN_FAILURE";
+// 로컬 로그인 요청
+export const LOCAL_LOGIN_REQUEST = "LOCAL_LOGIN_REQUEST";
+export const LOCAL_LOGIN_SUCCESS = "LOCAL_LOGIN_SUCCESS";
+export const LOCAL_LOGIN_FAILURE = "LOCAL_LOGIN_FAILURE";
+
+// 로컬 로그아웃 요청
+export const LOCAL_LOGOUT_REQUEST = "LOCAL_LOGOUT_REQUEST";
+export const LOCAL_LOGOUT_SUCCESS = "LOCAL_LOGOUT_SUCCESS";
+export const LOCAL_LOGOUT_FAILURE = "LOCAL_LOGOUT_FAILURE";
 
 // 회원가입 요청
 export const SIGNUP_REQUEST = "SIGNUP_REQUEST";

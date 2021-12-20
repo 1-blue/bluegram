@@ -16,7 +16,12 @@ const authInstance = axios.create({
 //   },
 // );
 
-// 로그인
-export function apiLogin(body) {
+// 로컬 로그인
+export function apiLocalLogin(body) {
   return authInstance.post("/", body);
+}
+
+// 로컬 로그아웃
+export function apiLocalLogout() {
+  return authInstance.delete("/");
 }

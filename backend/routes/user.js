@@ -14,7 +14,7 @@ router.get("/me", async (req, res, next) => {
 
   try {
     const fullUser = await User.findOne({
-      attributes: ["_id", "name", "createdAt"],
+      attributes: ["_id", "name", "provider", "createdAt"],
       where: { _id: req.user._id },
       include: [
         { model: Image },

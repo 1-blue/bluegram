@@ -12,7 +12,7 @@ import Button from "@components/common/Button";
 import useInput from "@hooks/useInput";
 
 // action
-import { resetMessageAction, loginAction } from "@store/actions";
+import { resetMessageAction, localLoginAction, kakaoLoginAction } from "@store/actions";
 
 // styled-component
 const Wrapper = styled.main`
@@ -56,17 +56,18 @@ const LoginPage = () => {
     if (loginDone) navigate("/");
   }, [loginDone, loginError]);
 
-  const onSubmit = useCallback(
+  // 로컬 로그인
+  const onLocalLogin = useCallback(
     e => {
       e.preventDefault();
-      dispatch(loginAction({ id, password }));
+      dispatch(localLoginAction({ id, password }));
     },
     [id, password],
   );
 
   return (
     <Wrapper>
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={onLocalLogin}>
         <h1>bluegram</h1>
         {/* id */}
         <Input type="text" placeholder="아이디를 입력해주세요" value={id} onChange={onChangeId} />
@@ -80,12 +81,16 @@ const LoginPage = () => {
         </Button>
 
         {/* 페이스북 로그인 버튼 */}
-        <Button type="submit" facebook>
+        <Button type="button" facebook>
           페이스북 로그인
         </Button>
         {/* 네이버 로그인 버튼 */}
-        <Button type="submit" naver>
+        <Button type="button" naver>
           네이버 로그인
+        </Button>
+        {/* 네이버 로그인 버튼 */}
+        <Button type="button" kakao>
+          <a href="http://localhost:3000/auth/kakao">카카오 로그인</a>
         </Button>
 
         <div>
