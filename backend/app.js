@@ -57,7 +57,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(cors({
   credentials: true,
-  origin: process.env.CLENT_URL
+  origin: process.env.CLIENT_URL
 }));
 
 // routes
@@ -71,7 +71,7 @@ app.use("/image", imageRouter);
 app.use("/user", userRouter);
 
 // 404 에러처리 미들웨어
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   console.log("404 에러처리 미들웨어");
   res.status(404).send('404');
 });

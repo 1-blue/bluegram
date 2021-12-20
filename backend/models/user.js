@@ -11,13 +11,13 @@ const User = (sequelize, DataTypes) => {
       },
       id: {
         type: DataTypes.STRING(20),
-        allowNull: false,
+        allowNull: true,
         unique: true,
         comment: "유저가 로그인할 때 사용할 아이디"
       },
       password: {
         type: DataTypes.STRING(100),
-        allowNull: false,
+        allowNull: true,
         comment: "유저가 로그인할 때 사용할 비밀번호 ( bcrypt 적용 )"
       },
       name: {
@@ -27,13 +27,23 @@ const User = (sequelize, DataTypes) => {
       },
       phone: {
         type: DataTypes.STRING(11),
-        allowNull: false,
+        allowNull: true,
         comment: "유저 전화번호"
       },
       birthday: {
         type: DataTypes.STRING(8),
-        allowNull: false,
+        allowNull: true,
         comment: "유저 생년월일"
+      },
+      snsId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        comment: "OAuth 로그인 시 해당 아이디"
+      },
+      provider: {
+        type: DataTypes.STRING(20),
+        allowNull: true,
+        comment: "OAuth 로그인 시 로그인의 주체"
       }
     },
     {

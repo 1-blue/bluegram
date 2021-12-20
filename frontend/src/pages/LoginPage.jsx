@@ -12,7 +12,7 @@ import Button from "@components/common/Button";
 import useInput from "@hooks/useInput";
 
 // action
-import { resetMessageAction, loginAction } from "@store/actions";
+import { resetMessageAction, localLoginAction, kakaoLoginAction } from "@store/actions";
 
 // styled-component
 const Wrapper = styled.main`
@@ -20,12 +20,12 @@ const Wrapper = styled.main`
   margin: auto;
 
   /* 폼의 제목, 목적, 이름 */
-  & h1 {
+  & > form > .form-title {
     text-align: center;
     margin-bottom: 1rem;
   }
 
-  & div {
+  & > form > .form-footer {
     width: 60%;
     display: flex;
     justify-content: space-between;
@@ -43,7 +43,7 @@ const Wrapper = styled.main`
 const LoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loginDone, loginError } = useSelector(state => state.auth);
+  const { loginLoading, loginDone, loginError } = useSelector(state => state.auth);
   const [id, onChangeId] = useInput("");
   const [password, onChangePassword] = useInput("");
 
@@ -56,18 +56,19 @@ const LoginPage = () => {
     if (loginDone) navigate("/");
   }, [loginDone, loginError]);
 
-  const onSubmit = useCallback(
+  // 로컬 로그인
+  const onLocalLogin = useCallback(
     e => {
       e.preventDefault();
-      dispatch(loginAction({ id, password }));
+      dispatch(localLoginAction({ id, password }));
     },
     [id, password],
   );
 
   return (
     <Wrapper>
-      <Form onSubmit={onSubmit}>
-        <h1>bluegram</h1>
+      <Form onSubmit={onLocalLogin}>
+        <h1 className="form-title">bluegram</h1>
         {/* id */}
         <Input type="text" placeholder="아이디를 입력해주세요" value={id} onChange={onChangeId} />
 
@@ -75,20 +76,24 @@ const LoginPage = () => {
         <Input type="password" placeholder="비밀번호를 입력해주세요" value={password} onChange={onChangePassword} />
 
         {/* 일반 로그인 버튼 */}
-        <Button type="submit" local>
+        <Button type="submit" local loading={loginLoading}>
           로그인
         </Button>
 
         {/* 페이스북 로그인 버튼 */}
-        <Button type="submit" facebook>
+        <Button type="button" facebook>
           페이스북 로그인
         </Button>
         {/* 네이버 로그인 버튼 */}
-        <Button type="submit" naver>
+        <Button type="button" naver>
           네이버 로그인
         </Button>
+        {/* 카카오 로그인 버튼 */}
+        <Button type="button" kakao>
+          <a href={process.env.KAKAO_URL}>카카오 로그인</a>
+        </Button>
 
-        <div>
+        <div className="form-footer">
           <Link to="/signup">가입하기</Link>
           <Link to="#">아이디 / 비밀번호 찾기</Link>
         </div>

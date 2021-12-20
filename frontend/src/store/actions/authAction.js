@@ -1,9 +1,17 @@
-import { LOGIN_REQUEST } from "@store/types";
+import { LOCAL_LOGIN_REQUEST, LOCAL_LOGOUT_REQUEST } from "@store/types";
 
-// 로그인 액션 크리에이터
-export function loginAction(data) {
+// 로컬 로그인 액션 크리에이터
+export function localLoginAction(data) {
   return {
-    type: LOGIN_REQUEST,
+    type: LOCAL_LOGIN_REQUEST,
+    data,
+  };
+}
+
+// 로컬 로그아웃 액션 크리에이터
+export function localLogoutAction(data) {
+  return {
+    type: LOCAL_LOGOUT_REQUEST,
     data,
   };
 }

@@ -69,6 +69,17 @@ export const Wrapper = styled.button`
       padding: 0.5rem;
       background-color: var(--naver-color);
       color: white;
+      margin-bottom: 0.3rem;
+    `}
+
+  /* 카카오 로그인 스타일 */
+  ${({ kakao }) =>
+    kakao &&
+    css`
+      width: 60%;
+      padding: 0.5rem;
+      background-color: var(--kakao-color);
+      color: white;
       margin-bottom: 1rem;
     `}
 `;

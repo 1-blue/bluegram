@@ -4,19 +4,20 @@ import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
 // types
 import {
-  LOGIN_REQUEST, LOGIN_SUCCESS, LOGIN_FAILURE,
   LOAD_TO_ME_SUCCESS,
+  LOCAL_LOGIN_REQUEST, LOCAL_LOGIN_SUCCESS, LOCAL_LOGIN_FAILURE,
+  LOCAL_LOGOUT_REQUEST, LOCAL_LOGOUT_SUCCESS, LOCAL_LOGOUT_FAILURE,
  } from "@store/types";
 
 // api
-import { apiLogin } from "@store/api";
+import { apiLocalLogin, apiLocalLogout } from "@store/api";
 
-function* login(action) {
+function* localLogin(action) {
   try {
-    const { data } = yield call(apiLogin, action.data);
+    const { data } = yield call(apiLocalLogin, action.data);
 
     yield put({
-      type: LOGIN_SUCCESS,
+      type: LOCAL_LOGIN_SUCCESS,
       data,
     });
     yield put({
@@ -26,16 +27,40 @@ function* login(action) {
   } catch (error) {
     console.error(error);
     yield put({
-      type: LOGIN_FAILURE,
+      type: LOCAL_LOGIN_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
+function* localLogout(action) {
+  try {
+    const { data } = yield call(apiLocalLogout, action.data);
+    console.log(data);
+
+    yield put({
+      type: LOCAL_LOGOUT_SUCCESS,
+      data,
+    });
+    yield put({
+      type: LOAD_TO_ME_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOCAL_LOGOUT_FAILURE,
       data: error.response.data,
     });
   }
 }
 
-function* watchLogin() {
-  yield takeLatest(LOGIN_REQUEST, login);
+function* watchLocalLogin() {
+  yield takeLatest(LOCAL_LOGIN_REQUEST, localLogin);
+}
+function* watchLocalLogout() {
+  yield takeLatest(LOCAL_LOGOUT_REQUEST, localLogout);
 }
 
 export default function* authSaga() {
-  yield all([fork(watchLogin)]);
+  yield all([fork(watchLocalLogin), fork(watchLocalLogout)]);
 }
