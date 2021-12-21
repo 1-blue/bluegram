@@ -9,9 +9,9 @@ export const Wrapper = styled.nav`
 `;
 
 export const Container = styled.div`
-  max-width: 80vw;
+  max-width: 60vw;
   margin: auto;
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
 `;
