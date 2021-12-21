@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 // css
 import "@css/reset.css";
 import "@css/common.css";
+import "@css/animation.css";
 
 // components
 import App from "./App";

@@ -2,8 +2,8 @@ import styled, { css } from "styled-components";
 
 export const Wrapper = styled.button`
   /* 회원가입 스타일 */
-  ${({ signup }) =>
-    signup &&
+  ${({ $signup }) =>
+    $signup &&
     css`
       position: relative;
       margin: 1rem 0;
@@ -40,9 +40,10 @@ export const Wrapper = styled.button`
     `}
 
   /* 일반 로그인 스타일 */
-  ${({ local }) =>
-    local &&
+  ${({ $local }) =>
+    $local &&
     css`
+      position: relative;
       width: 60%;
       padding: 0.5rem;
       background-color: var(--main-color);
@@ -51,9 +52,10 @@ export const Wrapper = styled.button`
     `}
 
   /* 페이스북 로그인 스타일 */
-  ${({ facebook }) =>
-    facebook &&
+  ${({ $facebook }) =>
+    $facebook &&
     css`
+      position: relative;
       width: 60%;
       padding: 0.5rem;
       background-color: var(--facebook-color);
@@ -62,9 +64,10 @@ export const Wrapper = styled.button`
     `}
 
   /* 네이버 로그인 스타일 */
-  ${({ naver }) =>
-    naver &&
+  ${({ $naver }) =>
+    $naver &&
     css`
+      position: relative;
       width: 60%;
       padding: 0.5rem;
       background-color: var(--naver-color);
@@ -73,9 +76,10 @@ export const Wrapper = styled.button`
     `}
 
   /* 카카오 로그인 스타일 */
-  ${({ kakao }) =>
-    kakao &&
+  ${({ $kakao }) =>
+    $kakao &&
     css`
+      position: relative;
       width: 60%;
       padding: 0.5rem;
       background-color: var(--kakao-color);

@@ -1,11 +1,16 @@
 import React from "react";
 import Proptypes from "prop-types";
 
+// component
+import Spinner from "@components/common/Spinner";
+
+// styled-component
 import { Wrapper } from "./style";
 
 const Button = props => {
   return (
     <Wrapper {...props}>
+      {props.loading && <Spinner button />}
       <span className="button-text">{props.children}</span>
     </Wrapper>
   );
@@ -13,12 +18,17 @@ const Button = props => {
 
 Button.propTypes = {
   type: Proptypes.string.isRequired,
-  signup: Proptypes.bool,
-  local: Proptypes.bool,
-  facebook: Proptypes.bool,
-  naver: Proptypes.bool,
-  kakao: Proptypes.bool,
+  $signup: Proptypes.bool,
+  $local: Proptypes.bool,
+  $facebook: Proptypes.bool,
+  $naver: Proptypes.bool,
+  $kakao: Proptypes.bool,
   onClick: Proptypes.func,
+  $loading: Proptypes.bool,
+};
+
+Button.defaultProps = {
+  $loading: false,
 };
 
 export default Button;
