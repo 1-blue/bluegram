@@ -1,0 +1,13 @@
+@keyframes menu-appear {
+  from {
+    transform: translateX(-50%) scale(0, 0);
+  }
+
+  80% {
+    transform: translateX(-50%) scale(1.2, 1.2);
+  }
+
+  to {
+    transform: translateX(-50%) scale(1, 1);
+  }
+}
