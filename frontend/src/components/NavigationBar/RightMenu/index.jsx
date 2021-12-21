@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -63,7 +63,7 @@ const RightMenu = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/">
+            <NavLink to="/directMessage">
               <Icon shape="dm" medium />
             </NavLink>
           </li>
@@ -73,7 +73,7 @@ const RightMenu = () => {
             </NavLink>
           </li>
           <li>
-            <NavLink to="/">
+            <NavLink to="/post">
               <Icon shape="compass" medium />
             </NavLink>
           </li>
@@ -93,12 +93,16 @@ const RightMenu = () => {
             {showMenu && (
               <Menu>
                 <li>
-                  <Icon shape="avatar" small />
-                  <span>프로필</span>
+                  <NavLink to="/profile">
+                    <Icon shape="avatar" small />
+                    <span>프로필</span>
+                  </NavLink>
                 </li>
                 <li>
-                  <Icon shape="bookmark" small />
-                  <span>저장됨</span>
+                  <NavLink to="/profile">
+                    <Icon shape="bookmark" small />
+                    <span>저장됨</span>
+                  </NavLink>
                 </li>
                 <li onClick={onClickLogout}>
                   <span>로그아웃</span>

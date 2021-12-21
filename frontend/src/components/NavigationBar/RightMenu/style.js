@@ -9,7 +9,7 @@ export const Wrapper = styled.ul`
   }
 
   & > li {
-    margin-left: 1rem;
+    margin-left: 1.5rem;
     cursor: pointer;
     height: 24px;
   }

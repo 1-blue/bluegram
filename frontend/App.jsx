@@ -10,6 +10,9 @@ import HomePage from "@pages/HomePage";
 import LoginPage from "@pages/LoginPage";
 import ProfilePage from "@pages/ProfilePage";
 import SignupPage from "@pages/SignupPage";
+import DirectMessagePage from "@pages/DirectMessagePage";
+import PostPage from "@pages/PostPage";
+import NotFoundPage from "@pages/NotFoundPage";
 
 // action
 import { loadToMeAction } from "./src/store/actions/userAction";
@@ -25,8 +28,10 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/Signup" element={<SignupPage />} />
-          <Route path="/*" element={<div>...?</div>} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/directMessage" element={<DirectMessagePage />} />
+          <Route path="/post" element={<PostPage />} />
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </AppLayout>
     </BrowserRouter>

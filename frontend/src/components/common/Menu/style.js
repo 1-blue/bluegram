@@ -10,8 +10,6 @@ export const Wrapper = styled.section`
   box-shadow: 2px 2px 10px gray;
 
   & > li {
-    display: flex;
-    align-items: center;
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
 
@@ -19,14 +17,19 @@ export const Wrapper = styled.section`
       background-color: rgba(128, 128, 128, 0.05);
     }
 
-    & > span {
-      margin-left: 1rem;
+    & > a {
+      display: flex;
+      align-items: center;
+
+      & > span {
+        margin-left: 1rem;
+      }
     }
   }
   & > li:last-child {
     border-top: 1px solid rgba(128, 128, 128, 0.2);
 
-    & > span {
+    & > a > span {
       margin-left: 0;
     }
   }
