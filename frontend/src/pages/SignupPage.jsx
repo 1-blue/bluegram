@@ -111,7 +111,7 @@ const SignupPage = () => {
         <ImageInput />
 
         {/* 회원가입 버튼 */}
-        <Button type="submit" signup>
+        <Button type="submit" $signup>
           회원가입
         </Button>
       </Form>

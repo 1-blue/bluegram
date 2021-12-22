@@ -6,7 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Icon from "@components/common/Icon";
 import Avatar from "@components/common/Avatar";
 import Menu from "@components/common/Menu";
-import CreatePostModal from "@components/common/CreatePostModal";
+import CreatePostModal from "@components/CreatePostModal";
 
 // styled-components
 import { Wrapper } from "./style";
@@ -23,7 +23,7 @@ const RightMenu = () => {
   const { me } = useSelector(state => state.user);
   const { logoutDone, logoutError } = useSelector(state => state.auth);
   const [showProfileMenu, onClickShowProfileMenu, setShowProfileMenu] = useToggle(false);
-  const [showCreatePostModal, onClickShowCreatePostModal, setShowCreatePostModal] = useToggle(true);
+  const [showCreatePostModal, onClickShowCreatePostModal, setShowCreatePostModal] = useToggle(false);
 
   useEffect(() => {
     if (!(logoutDone || logoutError)) return;

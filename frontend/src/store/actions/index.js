@@ -5,4 +5,4 @@ export const resetMessageAction = () => ({ type: RESET_MESSAGE });
 export { localLoginAction, localLogoutAction } from "./authAction";
 export { loadToMeAction, signupAction } from "./userAction";
 export { uploadImagesAction } from "./imageAction";
-export { createPostAction } from "./postAction";
+export { createPostAction, loadPostsAction } from "./postAction";

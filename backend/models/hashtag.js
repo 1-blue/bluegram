@@ -12,7 +12,7 @@ const Hashtag = (sequelize, DataTypes) => {
       content: {
         type: DataTypes.STRING(40),
         alllowNull: true,
-        comment: "해시태그의 내용 ( 최대 40자, 특수문자 불가능 )"
+        comment: "해시태그의 내용 ( 최대 40자, 특수문자 불가능 )",
       },
     },
     {
@@ -29,7 +29,12 @@ const Hashtag = (sequelize, DataTypes) => {
 
   Hashtag.associate = db => {
     // 해시태그 ( N : M ) ( 게시글과 해시태그 )
-    db.Hashtag.belongsToMany(db.Post, { through: "postHashtags", as: "postHashtaged", foreignKey: "PostId", onDelete: "cascade" });
+    db.Hashtag.belongsToMany(db.Post, {
+      through: "postHashtags",
+      as: "postHashtaged",
+      foreignKey: "PostId",
+      onDelete: "cascade",
+    });
   };
 
   return Hashtag;

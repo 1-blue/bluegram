@@ -9,7 +9,7 @@ import { Wrapper } from "./style";
 
 const ImageInput = () => {
   const dispatch = useDispatch();
-  const { images } = useSelector(state => state.user);
+  const { imagePreviews } = useSelector(state => state.image);
   const inputRef = useRef(null);
 
   // 이미지 업로드 ( 파일 탐색기 이용 )
@@ -36,7 +36,11 @@ const ImageInput = () => {
     >
       <input type="file" accept="image/*" onChange={onChangeProfileImage} ref={inputRef} />
       <div>
-        {images ? <img src={`${process.env.IMAGE_URL}/${images[0]}`} alt="" /> : <span>프로필 이미지 선택</span>}
+        {imagePreviews ? (
+          <img src={`${process.env.IMAGE_URL}/${imagePreviews[0]}`} alt="" />
+        ) : (
+          <span>프로필 이미지 선택</span>
+        )}
       </div>
     </Wrapper>
   );

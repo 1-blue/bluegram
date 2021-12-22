@@ -10,7 +10,7 @@ import fileStore from "session-file-store";
 import passport from "passport";
 import cors from "cors";
 
-import db from "./models/index.js"
+import db from "./models/index.js";
 import passportConfig from "./passport/index.js";
 
 const __dirname = path.resolve();
@@ -55,10 +55,12 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(cors({
-  credentials: true,
-  origin: process.env.CLIENT_URL
-}));
+app.use(
+  cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL,
+  }),
+);
 
 // routes
 import authRouter from "./routes/auth.js";
@@ -75,7 +77,7 @@ app.use("/post", postRouter);
 // 404 에러처리 미들웨어
 app.use((req, res, next) => {
   console.log("404 에러처리 미들웨어");
-  res.status(404).send('404');
+  res.status(404).send("404");
 });
 
 // 에러처리 미들웨어

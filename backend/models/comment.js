@@ -12,7 +12,7 @@ const Comment = (sequelize, DataTypes) => {
       content: {
         type: DataTypes.STRING(100),
         alllowNull: true,
-        comment: "댓글의 내용 ( 최대 100자, , 특수문자 가능 )"
+        comment: "댓글의 내용 ( 최대 100자, , 특수문자 가능 )",
       },
     },
     {

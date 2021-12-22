@@ -6,10 +6,11 @@ import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 // types
 import {
   CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
+  LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
  } from "@store/types";
 
 // api
-import { apiCreatePost } from "@store/api";
+import { apiCreatePost, apiLoadPosts } from "@store/api";
 
 function* createPost(action) {
   try {
@@ -27,11 +28,30 @@ function* createPost(action) {
     });
   }
 }
+function* loadPosts(action) {
+  try {
+    const { data } = yield call(apiLoadPosts, action.data);
+
+    yield put({
+      type: LOAD_POSTS_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_POSTS_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
 
 function* watchCreatePost() {
   yield takeLatest(CREATE_POST_REQUEST, createPost);
 }
+function* watchLoadPosts() {
+  yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
+}
 
 export default function* postSaga() {
-  yield all([fork(watchCreatePost)]);
+  yield all([fork(watchCreatePost), fork(watchLoadPosts)]);
 }
