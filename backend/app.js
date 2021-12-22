@@ -64,11 +64,13 @@ app.use(cors({
 import authRouter from "./routes/auth.js";
 import imageRouter from "./routes/image.js";
 import userRouter from "./routes/user.js";
+import postRouter from "./routes/post.js";
 
 // router 등록
 app.use("/auth", authRouter);
 app.use("/image", imageRouter);
 app.use("/user", userRouter);
+app.use("/post", postRouter);
 
 // 404 에러처리 미들웨어
 app.use((req, res, next) => {
