@@ -142,7 +142,7 @@
         name
       },
     },
-    Liker: [
+    Likers: [
       { _id },
       // ...
     ],

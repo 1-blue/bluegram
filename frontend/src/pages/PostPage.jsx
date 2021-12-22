@@ -9,7 +9,7 @@ import { loadPostsAction } from "@store/actions/postAction";
 
 // components
 import PostCard from "@components/PostCard";
-import ReadPostModal from "@components/ReadPostModal";
+import PostModal from "@components/PostModal";
 
 const Wrapper = styled.ul`
   display: grid;
@@ -66,7 +66,7 @@ const PostPage = () => {
         ))}
       </Wrapper>
 
-      {showModal && <ReadPostModal PostId={openPostId} onCloseModal={onCloseModal} ref={modalRef} />}
+      {showModal && <PostModal PostId={openPostId} onCloseModal={onCloseModal} ref={modalRef} />}
     </>
   );
 };

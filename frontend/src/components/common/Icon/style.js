@@ -29,8 +29,8 @@ const mediumIconTable = {
   fillHeart: "-25px -90px",
   avater: "-50px -90px",
   fillAvatar: "-75px -90px",
-  bookmark: "-0px -110px",
-  fillBookmark: "-25px -110px",
+  bookmark: "-0px -115px",
+  fillBookmark: "-25px -115px",
 };
 const smallIconTable = {
   home: "-0px -60px",
@@ -53,6 +53,7 @@ export const Wrapper = styled.i`
   display: inline-block;
   background-image: url("./icon/icon.svg");
   background-repeat: no-repeat;
+  cursor: pointer;
 
   ${({ shape, big, medium, small }) => {
     if (big) {
