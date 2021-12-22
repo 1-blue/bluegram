@@ -6,21 +6,30 @@ import {
   RESET_MESSAGE,
   CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
+  LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
 } from "@store/types";
 
 const initState = {
-  // 게시글
+  // 최신 게시글들
   posts: [],
+
+  // 특정 게시글
+  post: null,
 
   // 게시글 생성 요청
   createPostLoading: false,
   createPostDone: null,
   createPostError: null,
 
-  // 생성된 게시글 불러오기 요청
+  // 최신 게시글들 불러오기 요청
   loadPostsLoading: false,
   loadPostsDone: null,
   loadPostsError: null,
+
+  // 특정 게시글 불러오기 요청
+  loadPostLoading: false,
+  loadPostDone: null,
+  loadPostError: null,
 };
 
 function postReducer(prevState = initState, action) {
@@ -73,6 +82,27 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadPostsLoading: false,
         loadPostsError: action.data.message,
+      };
+
+    case LOAD_POST_REQUEST:
+      return {
+        ...prevState,
+        loadPostLoading: true,
+        loadPostDone: null,
+        loadPostError: null,
+      };
+    case LOAD_POST_SUCCESS:
+      return {
+        ...prevState,
+        loadPostLoading: false,
+        loadPostDone: action.data.message,
+        post: action.data.post,
+      };
+    case LOAD_POST_FAILURE:
+      return {
+        ...prevState,
+        loadPostLoading: false,
+        loadPostError: action.data.message,
       };
 
     default:

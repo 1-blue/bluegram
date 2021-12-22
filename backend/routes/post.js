@@ -83,7 +83,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2021/12/22 - 게시글 불러오기 - by 1-blue
+// 2021/12/22 - 전체 게시글 불러오기 - by 1-blue
 router.get("/", async (req, res, next) => {
   const lastId = +req.query.lastId || -1;
 
@@ -96,6 +96,54 @@ router.get("/", async (req, res, next) => {
       where,
       limit: 30,
       order: [["updatedAt", "DESC"]],
+      attributes: ["_id", "content", "updatedAt"],
+      include: [
+        // 게시글을 작성한 유저
+        {
+          model: User,
+          attributes: ["_id", "name"],
+          include: [
+            {
+              model: Image,
+              attributes: ["_id", "name"],
+            },
+          ],
+        },
+        // 게시글의 이미지들
+        {
+          model: Image,
+          attributes: ["_id", "name"],
+        },
+        // 게시글의 댓글과 답글들
+        {
+          model: Comment,
+          attributes: ["_id"],
+        },
+        // 게시글의 좋아요
+        {
+          model: User,
+          as: "Likers",
+          attributes: ["_id"],
+        },
+      ],
+    });
+
+    res.json({ message: "최신 게시글을 불러오는데 성공했습니다.", posts });
+  } catch (error) {
+    console.error("GET /post error >> ", error);
+    return next(error);
+  }
+});
+
+// 2021/12/22 - 특정 게시글 불러오기 - by 1-blue
+router.get("/:PostId", async (req, res, next) => {
+  const PostId = +req.params.PostId;
+
+  try {
+    const post = await Post.findOne({
+      where: {
+        _id: PostId,
+      },
       attributes: ["_id", "content", "updatedAt"],
       include: [
         // 게시글을 작성한 유저
@@ -141,7 +189,7 @@ router.get("/", async (req, res, next) => {
       ],
     });
 
-    res.json({ message: "게시글을 불러오는데 성공했습니다.", posts });
+    res.json({ message: "특정 게시글을 불러오는데 성공했습니다.", post });
   } catch (error) {
     console.error("GET /post error >> ", error);
     return next(error);

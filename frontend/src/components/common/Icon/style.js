@@ -23,7 +23,7 @@ const mediumIconTable = {
   fillDm: "-75px -40px",
   add: "-0px -65px",
   fillAdd: "-25px -65px",
-  compass: "-50px -65px",
+  compass: "-51px -65px",
   fillCompass: "-75px -65px",
   heart: "-0px -90px",
   fillHeart: "-25px -90px",

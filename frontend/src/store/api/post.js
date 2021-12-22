@@ -13,7 +13,12 @@ export function apiCreatePost(body) {
   return postInstance.post("/", body);
 }
 
-// 2021/12/22 - 게시글 생성 요청 - by 1-blue
+// 2021/12/22 - 최신 게시글들 요청 - by 1-blue
 export function apiLoadPosts(body) {
   return postInstance.get(`?lastId=${body.lastId}`);
+}
+
+// 2021/12/22 - 특정 게시글 요청 - by 1-blue
+export function apiLoadPost(body) {
+  return postInstance.get(`/${body.PostId}`);
 }

@@ -75,10 +75,7 @@ const RightMenu = () => {
           <li>
             <Icon shape="add" medium onClick={onClickShowCreatePostModal} />
             {showCreatePostModal && (
-              <CreatePostModal
-                showCreatePostModal={showCreatePostModal}
-                onCloseCreatePostModal={onCloseCreatePostModal}
-              />
+              <CreatePostModal showCreatePostModal={showCreatePostModal} onCloseModal={onCloseCreatePostModal} />
             )}
           </li>
           <li>

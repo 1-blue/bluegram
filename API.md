@@ -130,6 +130,10 @@
   {
     _id,
     content,
+    Images: [
+      "이미지이름",
+      // ...
+    ]
     User: {
       _id,
       name,
@@ -142,7 +146,10 @@
       { _id },
       // ...
     ],
-    commentCount
+    Comments: [
+      { _id },
+      // ...
+    ]
   },
   // ...
 ]
@@ -183,6 +190,58 @@
 + 역할: 게시글 삭제
 + 전송 데이터: params를 이용한 `PostId`를 받아서 삭제
 + 응답 데이터: `{ message }`
++ 응답 코드
+  1. `200`: 게시글 삭제 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
+
+## 4.5 GET /post/:PostId
++ 역할: 특정 게시글 상세 정보 불러오기
++ 전송 데이터: params를 이용한 `PostId`를 받아서 게시글 상세 정보 불러오기
++ 응답 데이터
+```javascript
+[
+  {
+    _id,
+    content,
+    updatedAt,
+    Images: [
+      "이미지이름",
+      // ...
+    ]
+    User: {
+      _id,
+      name,
+      Image: {
+        _id,
+        name
+      },
+    },
+    Liker: [
+      { UserId },
+      // ...
+    ],
+    Comments: [
+      {
+        _id,
+        content,
+        updatedAt,
+        CommentId,
+        User: {
+          _id,
+          name,
+          Image: {
+            _id,
+            name
+          },
+        }
+      },
+      // ...
+    ]
+  },
+  // ...
+]
+```
 + 응답 코드
   1. `200`: 게시글 삭제 성공
   2. `500`: 서버측 에러 ( 원인불명 )

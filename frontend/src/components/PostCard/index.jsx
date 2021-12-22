@@ -9,7 +9,7 @@ import Icon from "@components/common/Icon";
 // styled-component
 import { Wrapper } from "./style";
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, onOpenModal }) => {
   const [isMouseHover, setIsMouseHover] = useState(false);
 
   // 2021/12/22 - 마우스 enter/leave 이벤트 핸들러 - by 1-blue
@@ -17,7 +17,12 @@ const PostCard = ({ post }) => {
   const onMouseLeave = useCallback(() => setIsMouseHover(false), []);
 
   return (
-    <Wrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} isMouseHover={isMouseHover}>
+    <Wrapper
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      isMouseHover={isMouseHover}
+      onClick={onOpenModal(post._id)}
+    >
       <section className="post-image-container">
         <img
           src={process.env.IMAGE_URL + "/" + post.Images[0].name}
@@ -86,6 +91,7 @@ PostCard.propTypes = {
       }),
     ).isRequired,
   }),
+  onOpenModal: Proptypes.func.isRequired,
 };
 
 export default PostCard;

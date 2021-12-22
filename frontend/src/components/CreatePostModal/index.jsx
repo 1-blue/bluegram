@@ -13,7 +13,7 @@ import { uploadImagesAction, createPostAction, resetMessageAction } from "@store
 // components
 import Avatar from "@components/common/Avatar";
 
-const CreatePostModal = ({ showCreatePostModal, onCloseCreatePostModal }) => {
+const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
   const dispatch = useDispatch();
   const { me } = useSelector(state => state.user);
   const { createPostDone, createPostError } = useSelector(state => state.post);
@@ -30,13 +30,13 @@ const CreatePostModal = ({ showCreatePostModal, onCloseCreatePostModal }) => {
 
     dispatch(resetMessageAction());
 
-    onCloseCreatePostModal();
-  }, [createPostDone, createPostError, onCloseCreatePostModal]);
+    onCloseModal();
+  }, [createPostDone, createPostError, onCloseModal]);
 
   // 2021/12/22 - 모달 외 다른 영역 클릭시 닫기 - by 1-blue
   const handleClickOutside = useCallback(
     ({ target }) => {
-      if (showCreatePostModal && !modalRef.current?.contains(target)) onCloseCreatePostModal();
+      if (showCreatePostModal && !modalRef.current?.contains(target)) onCloseModal();
     },
     [modalRef.current, showCreatePostModal],
   );
@@ -87,7 +87,7 @@ const CreatePostModal = ({ showCreatePostModal, onCloseCreatePostModal }) => {
 
   return (
     <Wrapper>
-      <button type="button" className="close-modal-button" onClick={onCloseCreatePostModal}>
+      <button type="button" className="close-modal-button" onClick={onCloseModal}>
         X
       </button>
       {imagePreviews ? (
@@ -138,7 +138,7 @@ const CreatePostModal = ({ showCreatePostModal, onCloseCreatePostModal }) => {
 
 CreatePostModal.propTypes = {
   showCreatePostModal: PropTypes.bool.isRequired,
-  onCloseCreatePostModal: PropTypes.func.isRequired,
+  onCloseModal: PropTypes.func.isRequired,
 };
 
 export default CreatePostModal;
