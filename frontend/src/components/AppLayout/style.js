@@ -5,6 +5,6 @@ export const Wrapper = styled.div`
 `;
 
 export const MainContainer = styled.main`
-  max-width: 80vw;
+  max-width: 60vw;
   margin: auto;
 `;

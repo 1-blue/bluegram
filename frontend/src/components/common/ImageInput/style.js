@@ -27,7 +27,7 @@ export const Wrapper = styled.section`
     }
   }
 
-  & > input[type="file"]{
+  & > input[type="file"] {
     display: none;
   }
 `;

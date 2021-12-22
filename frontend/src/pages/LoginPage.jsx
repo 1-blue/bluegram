@@ -12,7 +12,7 @@ import Button from "@components/common/Button";
 import useInput from "@hooks/useInput";
 
 // action
-import { resetMessageAction, localLoginAction, kakaoLoginAction } from "@store/actions";
+import { resetMessageAction, localLoginAction } from "@store/actions";
 
 // styled-component
 const Wrapper = styled.main`
@@ -76,20 +76,20 @@ const LoginPage = () => {
         <Input type="password" placeholder="비밀번호를 입력해주세요" value={password} onChange={onChangePassword} />
 
         {/* 일반 로그인 버튼 */}
-        <Button type="submit" local loading={loginLoading}>
+        <Button type="submit" $local $loading={loginLoading}>
           로그인
         </Button>
 
         {/* 페이스북 로그인 버튼 */}
-        <Button type="button" facebook>
+        <Button type="button" $facebook>
           페이스북 로그인
         </Button>
         {/* 네이버 로그인 버튼 */}
-        <Button type="button" naver>
+        <Button type="button" $naver>
           네이버 로그인
         </Button>
         {/* 카카오 로그인 버튼 */}
-        <Button type="button" kakao>
+        <Button type="button" $kakao>
           <a href={process.env.KAKAO_URL}>카카오 로그인</a>
         </Button>
 
