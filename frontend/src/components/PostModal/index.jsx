@@ -14,6 +14,7 @@ import PostComment from "./PostComment";
 import PostIconButtons from "./PostIconButtons";
 import PostInfo from "./PostInfo";
 import PostCommentForm from "./PostCommentForm";
+import ImageCarousel from "@components/common/ImageCarousel";
 
 // styled-component
 import { Wrapper } from "./style";
@@ -35,7 +36,31 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
       <div className="modal" ref={modalRef}>
         {post ? (
           <>
-            <img src={process.env.IMAGE_URL + "/" + post.Images[0].name} alt="게시글의 이미지" className="post-image" />
+            {post.Images.length === 1 ? (
+              <img
+                src={process.env.IMAGE_URL + "/" + post.Images[post.Images.length - 1].name}
+                alt="게시글의 이미지"
+                className="post-image"
+              />
+            ) : (
+              <ImageCarousel speed={300} length={post.Images.length}>
+                <li>
+                  <img
+                    src={process.env.IMAGE_URL + "/" + post.Images[post.Images.length - 1].name}
+                    alt="게시글의 이미지"
+                  />
+                </li>
+                {post.Images.map(image => (
+                  <li key={image._id}>
+                    <img src={process.env.IMAGE_URL + "/" + image.name} alt="게시글의 이미지" />
+                  </li>
+                ))}
+                <li>
+                  <img src={process.env.IMAGE_URL + "/" + post.Images[0].name} alt="게시글의 이미지" />
+                </li>
+              </ImageCarousel>
+            )}
+
             <div className="post">
               {/* 머리 부분 */}
               <PostHead image={post.User.Images[0]} name={post.User.name} />

@@ -12,6 +12,7 @@ import { uploadImagesAction, createPostAction, resetMessageAction } from "@store
 
 // components
 import Avatar from "@components/common/Avatar";
+import ImageCarousel from "@components/common/ImageCarousel";
 
 const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
   const dispatch = useDispatch();
@@ -93,7 +94,27 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
       {imagePreviews ? (
         <div className="modal-input-text" ref={modalRef}>
           <h1 className="modal-title">{title}</h1>
-          <img src={process.env.IMAGE_URL + "/" + imagePreviews[0]} alt="사용자가 등록한 이미지" />
+          {imagePreviews.length === 1 ? (
+            <img src={process.env.IMAGE_URL + "/" + imagePreviews[0]} alt="사용자가 등록한 이미지" />
+          ) : (
+            <ImageCarousel speed={300} length={imagePreviews.length} height={94}>
+              <li>
+                <img
+                  src={process.env.IMAGE_URL + "/" + imagePreviews[imagePreviews.length - 1]}
+                  alt="사용자가 등록한 이미지"
+                />
+              </li>
+              {imagePreviews.map(imagePreview => (
+                <li key={imagePreview}>
+                  <img src={process.env.IMAGE_URL + "/" + imagePreview} alt="사용자가 등록한 이미지" />
+                </li>
+              ))}
+              <li>
+                <img src={process.env.IMAGE_URL + "/" + imagePreviews[0]} alt="사용자가 등록한 이미지" />
+              </li>
+            </ImageCarousel>
+          )}
+
           <form className="modal-form" onSubmit={onSubmitPost}>
             <div className="modal-form-user-profile">
               <Avatar
