@@ -23,14 +23,14 @@ const mediumIconTable = {
   fillDm: "-75px -40px",
   add: "-0px -65px",
   fillAdd: "-25px -65px",
-  compass: "-50px -65px",
+  compass: "-51px -65px",
   fillCompass: "-75px -65px",
   heart: "-0px -90px",
   fillHeart: "-25px -90px",
   avater: "-50px -90px",
   fillAvatar: "-75px -90px",
-  bookmark: "-0px -110px",
-  fillBookmark: "-25px -110px",
+  bookmark: "-0px -115px",
+  fillBookmark: "-25px -115px",
 };
 const smallIconTable = {
   home: "-0px -60px",
@@ -53,6 +53,7 @@ export const Wrapper = styled.i`
   display: inline-block;
   background-image: url("./icon/icon.svg");
   background-repeat: no-repeat;
+  cursor: pointer;
 
   ${({ shape, big, medium, small }) => {
     if (big) {

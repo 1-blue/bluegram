@@ -6,7 +6,7 @@ import passport from "passport";
 import axios from "axios";
 
 import db from "../models/index.js";
-import { isLoggedIn, isNotLoggedIn } from "../middleware/index.js"
+import { isLoggedIn, isNotLoggedIn } from "../middleware/index.js";
 
 const router = express.Router();
 const { User, Post, Image } = db;
@@ -24,7 +24,7 @@ router.post("/", isNotLoggedIn, (req, res, next) => {
     if (message) {
       return res.status(403).json({ message });
     }
-    
+
     return req.login({ user }, async loginError => {
       if (loginError) {
         console.error("POST /user/login loginError >> ", loginError);
@@ -39,10 +39,10 @@ router.post("/", isNotLoggedIn, (req, res, next) => {
           { model: Image },
           { model: Post, attributes: ["_id"] },
           { model: User, as: "Followers" },
-          { model: User, as: "Followings" }
+          { model: User, as: "Followings" },
         ],
       });
-      
+
       return res.status(200).json({ message: "로그인에 성공했습니다.", user: fullUser });
     });
   })(req, res, next);
@@ -51,23 +51,27 @@ router.post("/", isNotLoggedIn, (req, res, next) => {
 // 카카오 로그인
 router.get("/kakao", isNotLoggedIn, passport.authenticate("kakao"));
 
-router.get("/kakao/callback", passport.authenticate("kakao", {
-  failureRedirect: "/"
-}), (req, res) => {
-  res.redirect(process.env.CLIENT_URL);
-});
+router.get(
+  "/kakao/callback",
+  passport.authenticate("kakao", {
+    failureRedirect: "/",
+  }),
+  (req, res) => {
+    res.redirect(process.env.CLIENT_URL);
+  },
+);
 
 // 로그아웃
 router.delete("/", isLoggedIn, async (req, res, next) => {
-  if(req.user.accessToken){
+  if (req.user.accessToken) {
     try {
       await axios.post("https://kapi.kakao.com/v1/user/unlink", null, {
         headers: {
-          "Authorization": `Bearer ${req.user.accessToken}`,
-        }
+          Authorization: `Bearer ${req.user.accessToken}`,
+        },
       });
     } catch (error) {
-      return next(error)
+      return next(error);
     }
   }
   req.logout();

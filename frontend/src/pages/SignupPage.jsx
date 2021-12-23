@@ -29,7 +29,8 @@ const Wrapper = styled.main`
 const SignupPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { signupDone, signupError, images } = useSelector(state => state.user);
+  const { signupDone, signupError } = useSelector(state => state.user);
+  const { imagePreviews } = useSelector(state => state.image);
   const [id, onChangeId] = useInput("");
   const [password, onChangePassword] = useInput("");
   const [passwordCheck, onChangePasswordCheck] = useInput("");
@@ -62,9 +63,9 @@ const SignupPage = () => {
       // 유효성 검사 ( >> 추후에 다른 입력값들에 대한 유효성 검사도 추가 )
       if (!(password === passwordCheck)) return alert("비밀번호를 확인해주세요");
 
-      dispatch(signupAction({ id, password, name, phone, birthday, imageName: images[0] }));
+      dispatch(signupAction({ id, password, name, phone, birthday, imageName: imagePreviews[0] }));
     },
-    [id, password, passwordCheck, name, phone, birthday, images],
+    [id, password, passwordCheck, name, phone, birthday, imagePreviews],
   );
 
   return (
@@ -110,7 +111,7 @@ const SignupPage = () => {
         <ImageInput />
 
         {/* 회원가입 버튼 */}
-        <Button type="submit" signup>
+        <Button type="submit" $signup>
           회원가입
         </Button>
       </Form>

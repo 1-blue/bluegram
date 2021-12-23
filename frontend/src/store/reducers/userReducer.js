@@ -5,15 +5,11 @@ import {
   RESET_MESSAGE,
   LOAD_TO_ME_REQUEST, LOAD_TO_ME_SUCCESS, LOAD_TO_ME_FAILURE,
   SIGNUP_REQUEST, SIGNUP_SUCCESS, SIGNUP_FAILURE,
-  UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
 } from "@store/types";
 
 const initState = {
   // 로그인한 유저의 데이터
   me: null,
-  
-  // 유저의 프로필 이미지 or 게시글 이미지 preview
-  images: null,
 
   // 로그인한 유저 정보 로드
   loadToMeLoading: false,
@@ -24,11 +20,6 @@ const initState = {
   signupLoading: false,
   signupDone: null,
   signupError: null,
-
-  // 이미지 처리 ( 프로필 및 게시글 )
-  uploadImagesLoading: false,
-  uploadImagesDone: null,
-  uploadImagesError: null,
 };
 
 function userReducer(prevState = initState, action) {
@@ -83,27 +74,6 @@ function userReducer(prevState = initState, action) {
         ...prevState,
         signupLoading: false,
         signupError: action.data.message,
-      };
-
-    case UPLOAD_IMAGES_REQUEST:
-      return {
-        ...prevState,
-        uploadImagesLoading: true,
-        uploadImagesDone: null,
-        uploadImagesError: null,
-      };
-    case UPLOAD_IMAGES_SUCCESS:
-      return {
-        ...prevState,
-        uploadImagesLoading: false,
-        uploadImagesDone: action.data.message,
-        images: action.data.images
-      };
-    case UPLOAD_IMAGES_FAILURE:
-      return {
-        ...prevState,
-        uploadImagesLoading: false,
-        uploadImagesError: action.data.message,
       };
 
     default:

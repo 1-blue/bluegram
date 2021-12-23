@@ -12,7 +12,7 @@ const Post = (sequelize, DataTypes) => {
       content: {
         type: DataTypes.STRING(200),
         alllowNull: true,
-        comment: "게시글의 내용 ( 최대 200자, , 특수문자 가능 )"
+        comment: "게시글의 내용 ( 최대 200자, , 특수문자 가능 )",
       },
     },
     {
@@ -35,10 +35,15 @@ const Post = (sequelize, DataTypes) => {
     db.Post.hasMany(db.Comment, { onDelete: "cascade" });
 
     // 좋아요 ( N : M ) ( 유저와 게시글 )
-    db.Post.belongsToMany(db.User, { through: "likes", as: "Liked", foreignKey: "UserId", onDelete: "cascade" });
-    
+    db.Post.belongsToMany(db.User, { through: "likes", as: "Likers", foreignKey: "UserId", onDelete: "cascade" });
+
     // 해시태그 ( N : M ) ( 게시글과 해시태그 )
-    db.Post.belongsToMany(db.Hashtag, { through: "postHashtags", as: "postHashtager", foreignKey: "HashtagId", onDelete: "cascade" });
+    db.Post.belongsToMany(db.Hashtag, {
+      through: "postHashtags",
+      as: "postHashtager",
+      foreignKey: "HashtagId",
+      onDelete: "cascade",
+    });
 
     // 게시글과 이미지 ( 1 : N )
     db.Post.hasMany(db.Image, { onDelete: "cascade" });

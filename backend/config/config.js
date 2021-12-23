@@ -9,7 +9,7 @@ const configDB = {
     host: process.env.DATABASE_HOST,
     dialect: "mysql",
     logging: false,
-    freezeTableName: true
+    freezeTableName: true,
   },
   test: {
     database: process.env.DATABASE_NAME,
@@ -18,7 +18,7 @@ const configDB = {
     host: process.env.DATABASE_HOST,
     dialect: "mysql",
     logging: false,
-    freezeTableName: true
+    freezeTableName: true,
   },
   production: {
     database: process.env.DATABASE_NAME,
@@ -27,8 +27,8 @@ const configDB = {
     host: process.env.DATABASE_HOST,
     dialect: "mysql",
     logging: false,
-    freezeTableName: true
-  }
-}
+    freezeTableName: true,
+  },
+};
 
 export default configDB;

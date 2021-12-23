@@ -53,7 +53,6 @@ function timeFormat(value) {
     return `${Math.floor(temp / 1000 / 60 / 60 / 24 / 30)}개월전`;
   }
   // 1년 이상
-
   return `${Math.floor(temp / 1000 / 60 / 60 / 24 / 30 / 12)}년전`;
 }
 
