@@ -6,7 +6,7 @@ import Proptypes from "prop-types";
 // styled-components
 import { Wrapper } from "./style";
 
-const ImageCarousel = ({ children, speed, length, height }) => {
+const ImageCarousel = ({ children, speed, length }) => {
   const wrapperRef = useRef(null);
   const dotRef = useRef(null);
   const [imageNodes, setImageNodes] = useState(null);
@@ -16,16 +16,18 @@ const ImageCarousel = ({ children, speed, length, height }) => {
 
   // 2021/12/23 - 이미지 노드들 배열로 모아서 state에 넣는 함수 - by 1-blue
   useEffect(() => {
+    if (length === 1) return;
     setImageNodes([...wrapperRef.current.childNodes]);
-  }, [wrapperRef.current]);
+  }, [length, wrapperRef.current]);
 
   // 2021/12/23 - 첫 이미지 지정 - by 1-blue
   useEffect(() => {
+    if (length === 1) return;
     imageNodes?.forEach(imageNode => (imageNode.style.transform = `translateX(-${currentIndex * 100}%)`));
     setTimeout(() => {
       imageNodes?.forEach(imageNode => (imageNode.style.transition = `all ${speed}ms`));
     }, 100);
-  }, [imageNodes]);
+  }, [length, imageNodes]);
 
   // 2021/12/23 - 다음 이미지로 넘기는 함수 - by 1-blue
   const onClickNextButton = useCallback(() => {
@@ -43,14 +45,14 @@ const ImageCarousel = ({ children, speed, length, height }) => {
       setClick(false);
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transition = `all 0s`));
-      }, 900);
+      }, speed - 100);
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transform = `translateX(-${1 * 100}%)`));
-      }, 1000);
+      }, speed);
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transition = `all ${speed}ms`));
         setClick(true);
-      }, 1010);
+      }, speed + 100);
 
       // 현재 이미지와 dot 동기화
       dotNodes[currentIndex - length].style.color = "black";
@@ -58,7 +60,7 @@ const ImageCarousel = ({ children, speed, length, height }) => {
       // 현재 이미지와 dot 동기화
       dotNodes[currentIndex].style.color = "black";
     }
-  }, [imageNodes, currentIndex, click, dotNodes, length]);
+  }, [imageNodes, currentIndex, click, dotNodes, length, speed]);
 
   // 2021/12/23 - 이전 이미지로 넘기는 함수 - by 1-blue
   const onClickPrevButton = useCallback(() => {
@@ -75,58 +77,73 @@ const ImageCarousel = ({ children, speed, length, height }) => {
       setClick(false);
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transition = `all 0s`));
-      }, 250);
+      }, speed - 100);
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transform = `translateX(-${(imageNodes.length - 2) * 100}%)`));
-      }, 500);
+      }, speed);
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transition = `all ${speed}ms`));
         setClick(true);
-      }, 510);
+      }, speed + 100);
       // 현재 이미지와 dot 동기화
       dotNodes[length - 1].style.color = "black";
     } else {
       // 현재 이미지와 dot 동기화
       dotNodes[currentIndex - 2].style.color = "black";
     }
-  }, [imageNodes, currentIndex, click, dotNodes, length]);
+  }, [imageNodes, currentIndex, click, dotNodes, length, speed]);
 
   // 2021/12/23 - dot 노드들 배열로 모아서 state에 넣는 함수들 - by 1-blue
   useEffect(() => {
+    if (length === 1) return;
     setDotNodes([...dotRef.current.childNodes]);
-  }, [dotRef.current]);
+  }, [length, dotRef.current]);
 
   // 2021/12/23 - 첫 이미지와 dot 동기화 - by 1-blue
   useEffect(() => {
+    if (length === 1) return;
     if (!dotNodes) return;
     dotNodes[0].style.color = "black";
-  }, [dotNodes]);
+  }, [length, dotNodes]);
 
   return (
-    <Wrapper height={height}>
-      {/* 이미지들 */}
+    <Wrapper>
+      {/* 이미지들 : 이미지가 두개 이상이라면 처음과 마지막에 마지막과 처음 이미지 추가 ( 무한 회전을 위함 )*/}
       <ul ref={wrapperRef} className="image-container">
-        {children}
+        {length === 1 ? (
+          <>{children}</>
+        ) : (
+          <>
+            {children[children.length - 1]}
+            {children}
+            {children[0]}
+          </>
+        )}
       </ul>
 
-      {/* 이미지 이동 버튼 */}
-      <button type="button" onClick={onClickNextButton} className="next-button">
-        {">"}
-      </button>
-      <button type="button" onClick={onClickPrevButton} className="prev-button">
-        {"<"}
-      </button>
+      {/* 이미지가 여러 개라면 버튼과 dot 추가 */}
+      {length === 1 || (
+        <>
+          {/* 이미지 이동 버튼 */}
+          <button type="button" onClick={onClickNextButton} className="next-button">
+            {">"}
+          </button>
+          <button type="button" onClick={onClickPrevButton} className="prev-button">
+            {"<"}
+          </button>
 
-      {/* 이미지 현재 위치를 표시하는 노드들 */}
-      <ul className="dots" ref={dotRef}>
-        {Array(length)
-          .fill()
-          .map((v, i) => (
-            <li key={i}>•</li>
-          ))}
-      </ul>
+          {/* 이미지 현재 위치를 표시하는 노드들 */}
+          <ul className="dots" ref={dotRef}>
+            {Array(length)
+              .fill()
+              .map((v, i) => (
+                <li key={i}>•</li>
+              ))}
+          </ul>
 
-      <span className="image-number">{`${currentIndex} / ${length}`}</span>
+          <span className="image-number">{`${currentIndex} / ${length}`}</span>
+        </>
+      )}
     </Wrapper>
   );
 };
@@ -134,12 +151,11 @@ const ImageCarousel = ({ children, speed, length, height }) => {
 ImageCarousel.propTypes = {
   children: Proptypes.node.isRequired,
   speed: Proptypes.number,
-  height: Proptypes.number,
+  length: Proptypes.number.isRequired,
 };
 
 ImageCarousel.defaultProps = {
   speed: 1000,
-  height: 100,
 };
 
 export default ImageCarousel;

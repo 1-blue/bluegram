@@ -16,12 +16,12 @@ const authInstance = axios.create({
 //   },
 // );
 
-// 로컬 로그인
+// 2021/12/20 - 로컬 로그인 - by 1-blue
 export function apiLocalLogin(body) {
   return authInstance.post("/", body);
 }
 
-// 로컬 로그아웃
+// 2021/12/20 - 로컬 로그아웃 - by 1-blue
 export function apiLocalLogout() {
   return authInstance.delete("/");
 }

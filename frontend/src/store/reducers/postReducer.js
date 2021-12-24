@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-// 2021/12/22 - 게시글 관련 리듀서 - by 1-blue
 
 //types
 import {
@@ -40,6 +39,12 @@ function postReducer(prevState = initState, action) {
         createPostLoading: false,
         createPostDone: null,
         createPostError: null,
+        loadPostsLoading: false,
+        loadPostsDone: null,
+        loadPostsError: null,
+        loadPostLoading: false,
+        loadPostDone: null,
+        loadPostError: null,
       };
 
     case CREATE_POST_REQUEST:

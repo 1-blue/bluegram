@@ -9,9 +9,9 @@ import Avatar from "@components/common/Avatar";
 // styled-component
 import { Wrapper } from "./style";
 
-const PostHead = ({ image, name }) => {
+const PostHead = ({ image, name, className }) => {
   return (
-    <Wrapper>
+    <Wrapper className={className}>
       <Avatar width={40} height={40} src={image.name ? process.env.IMAGE_URL + "/" + image.name : image.url} />
       <span className="post-head-username">{name}</span>
       <button type="button" className="post-conent-head-follow-button">
@@ -27,6 +27,7 @@ PostHead.propTypes = {
     name: Proptypes.string,
   }).isRequired,
   name: Proptypes.string.isRequired,
+  className: Proptypes.string.isRequired,
 };
 
 export default PostHead;

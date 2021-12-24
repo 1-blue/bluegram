@@ -27,6 +27,9 @@ function authReducer(prevState = initState, action) {
         loginLoading: false,
         loginDone: null,
         loginError: null,
+        logoutLoading: false,
+        logoutDone: null,
+        logoutError: null,
       };
 
     case LOCAL_LOGIN_REQUEST:

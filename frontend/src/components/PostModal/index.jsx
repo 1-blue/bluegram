@@ -1,5 +1,3 @@
-// 2021/12/22 하나의 게시글 모달 by 1-blue
-
 import React, { forwardRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Proptypes from "prop-types";
@@ -23,12 +21,13 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
   const dispatch = useDispatch();
   const { post } = useSelector(state => state.post);
 
+  // 2021/12/24 - 특정 게시글 상세 정보 요청 - by 1-blue
   useEffect(() => {
     dispatch(loadPostAction({ PostId }));
   }, []);
 
   return (
-    <Wrapper>
+    <Wrapper length={post?.Images.length}>
       <button type="button" className="close-modal-button" onClick={onCloseModal}>
         X
       </button>
@@ -36,34 +35,21 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
       <div className="modal" ref={modalRef}>
         {post ? (
           <>
-            {post.Images.length === 1 ? (
-              <img
-                src={process.env.IMAGE_URL + "/" + post.Images[post.Images.length - 1].name}
-                alt="게시글의 이미지"
-                className="post-image"
-              />
-            ) : (
-              <ImageCarousel speed={300} length={post.Images.length}>
-                <li>
-                  <img
-                    src={process.env.IMAGE_URL + "/" + post.Images[post.Images.length - 1].name}
-                    alt="게시글의 이미지"
-                  />
+            {/* 머리 부분 */}
+            <PostHead image={post.User.Images[0]} name={post.User.name} className="post-head-1" />
+
+            {/* image-carousel */}
+            <ImageCarousel speed={300} length={post.Images.length}>
+              {post.Images.map(image => (
+                <li key={image._id}>
+                  <img src={process.env.IMAGE_URL + "/" + image.name} alt="게시글의 이미지" />
                 </li>
-                {post.Images.map(image => (
-                  <li key={image._id}>
-                    <img src={process.env.IMAGE_URL + "/" + image.name} alt="게시글의 이미지" />
-                  </li>
-                ))}
-                <li>
-                  <img src={process.env.IMAGE_URL + "/" + post.Images[0].name} alt="게시글의 이미지" />
-                </li>
-              </ImageCarousel>
-            )}
+              ))}
+            </ImageCarousel>
 
             <div className="post">
               {/* 머리 부분 */}
-              <PostHead image={post.User.Images[0]} name={post.User.name} />
+              <PostHead image={post.User.Images[0]} name={post.User.name} className="post-head-2" />
 
               <div className="post-scroll">
                 {/* 컨텐츠 부분 */}

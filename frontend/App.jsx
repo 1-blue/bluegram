@@ -19,6 +19,8 @@ import { loadToMeAction } from "./src/store/actions/userAction";
 
 const App = () => {
   const dispatch = useDispatch();
+
+  // 2021/12/20 - 로그인한 유저 정보 요청 - by 1-blue
   useEffect(() => dispatch(loadToMeAction()), []);
 
   return (
@@ -39,10 +41,3 @@ const App = () => {
 };
 
 export default App;
-
-// const HomePage = React.lazy(() => import("./src/pages/HomePage"));
-// const LoginPage = React.lazy(() => import("./src/pages/LoginPage"));
-// const ProfilePage = React.lazy(() => import("./src/pages/ProfilePage"));
-// const RegisterPage = React.lazy(() => import("./src/pages/RegisterPage"));
-// <React.Suspense fallback={<div>loadding</div>}>
-// </React.Suspense>

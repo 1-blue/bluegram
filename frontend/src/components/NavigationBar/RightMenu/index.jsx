@@ -25,21 +25,22 @@ const RightMenu = () => {
   const [showProfileMenu, onClickShowProfileMenu, setShowProfileMenu] = useToggle(false);
   const [showCreatePostModal, onClickShowCreatePostModal, setShowCreatePostModal] = useToggle(false);
 
+  // 2021/12/21 - 로그아웃 성공 및 실패 시 메시지 and 성공 시 리다이렉트 - by 1-blue
   useEffect(() => {
     if (!(logoutDone || logoutError)) return;
     alert(logoutDone || logoutError);
 
     dispatch(resetMessageAction());
 
-    if (logoutDone) navigate("/");
+    if (logoutDone) navigate("/post");
   }, [logoutDone, logoutError]);
 
-  // 2021/12/21 - 로그아웃 이벤트 - by 1-blue
+  // 2021/12/21 - 로그아웃 요청 - by 1-blue
   const onClickLogout = useCallback(() => {
     dispatch(localLogoutAction());
   }, []);
 
-  // 2021/12/21 - 본인 프로필 메뉴 다른 영역 클릭시 닫기 이벤트 메서드 - by 1-blue
+  // 2021/12/21 - 본인 프로필 메뉴 다른 영역 클릭시 닫기 이벤트 - by 1-blue
   const handleCloseMenu = useCallback(() => {
     if (showProfileMenu) {
       setShowProfileMenu(false);
@@ -96,26 +97,26 @@ const RightMenu = () => {
               alt="유저의 프로필 이미지"
               onClick={onClickShowProfileMenu}
             />
-            {showProfileMenu && (
-              <Menu>
-                <li>
-                  <NavLink to="/profile">
-                    <Icon shape="avatar" small />
-                    <span>프로필</span>
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink to="/profile">
-                    <Icon shape="bookmark" small />
-                    <span>저장됨</span>
-                  </NavLink>
-                </li>
-                <li onClick={onClickLogout}>
-                  <span>로그아웃</span>
-                </li>
-              </Menu>
-            )}
           </li>
+          {showProfileMenu && (
+            <Menu>
+              <li>
+                <NavLink to="/profile">
+                  <Icon shape="avatar" small />
+                  <span>프로필</span>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink to="/profile">
+                  <Icon shape="bookmark" small />
+                  <span>저장됨</span>
+                </NavLink>
+              </li>
+              <li onClick={onClickLogout}>
+                <span>로그아웃</span>
+              </li>
+            </Menu>
+          )}
         </>
       ) : (
         <>

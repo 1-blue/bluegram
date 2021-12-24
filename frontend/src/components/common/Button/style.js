@@ -20,7 +20,7 @@ export const Wrapper = styled.button`
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: purple;
+        background: purple;
         transform: scale(0, 1);
         transition: all 0.35s;
       }
@@ -37,6 +37,21 @@ export const Wrapper = styled.button`
       &:hover .button-text {
         color: white;
       }
+
+      @media (max-width: 480px) {
+        margin: 0.6rem 0;
+        padding: 0.6rem 1.4rem;
+        border: 1px solid purple;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+      @media (min-width: 480px) and (max-width: 768px) {
+        margin: 0.8rem 0;
+        padding: 0.8rem 1.6rem;
+        border: 2px solid purple;
+        border-radius: 8px;
+        font-size: 1.2rem;
+      }
     `}
 
   /* 일반 로그인 스타일 */
@@ -46,9 +61,14 @@ export const Wrapper = styled.button`
       position: relative;
       width: 60%;
       padding: 0.5rem;
-      background-color: var(--main-color);
+      background: var(--main-color);
       color: white;
       margin-bottom: 0.3rem;
+      opacity: 0.9;
+
+      &:hover {
+        opacity: 1;
+      }
     `}
 
   /* 페이스북 로그인 스타일 */
@@ -58,9 +78,14 @@ export const Wrapper = styled.button`
       position: relative;
       width: 60%;
       padding: 0.5rem;
-      background-color: var(--facebook-color);
+      background: var(--facebook-color);
       color: white;
       margin-bottom: 0.3rem;
+      opacity: 0.9;
+
+      &:hover {
+        opacity: 1;
+      }
     `}
 
   /* 네이버 로그인 스타일 */
@@ -70,9 +95,14 @@ export const Wrapper = styled.button`
       position: relative;
       width: 60%;
       padding: 0.5rem;
-      background-color: var(--naver-color);
+      background: var(--naver-color);
       color: white;
       margin-bottom: 0.3rem;
+      opacity: 0.9;
+
+      &:hover {
+        opacity: 1;
+      }
     `}
 
   /* 카카오 로그인 스타일 */
@@ -85,5 +115,47 @@ export const Wrapper = styled.button`
       background-color: var(--kakao-color);
       color: white;
       margin-bottom: 1rem;
+      opacity: 0.9;
+
+      &:hover {
+        opacity: 1;
+      }
+    `}
+
+  /* 이미지 업로드 버튼 */
+  ${({ $upload }) =>
+    $upload &&
+    css`
+      position: relative;
+      padding: 0.5rem 1rem;
+      background: #0095f6;
+      color: white;
+      border-radius: 5px;
+      font-weight: 700;
+    `}
+
+    /* 폼 제출 버튼 */
+    ${({ $submit }) =>
+    $submit &&
+    css`
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 80px;
+      height: 51px;
+      padding: 0.5em;
+      color: var(--light-blue);
+      border-radius: 0 1rem 0 0;
+      font-weight: bold;
+
+      @media (max-width: 480px) {
+        height: 43px;
+      }
+      @media (min-width: 480px) and (max-width: 768px) {
+        height: 45px;
+      }
+      @media (min-width: 768px) and (max-width: 1024px) {
+        height: 48px;
+      }
     `}
 `;

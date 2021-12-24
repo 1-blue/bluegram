@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-// 2021/12/22 - 이미지 관련 리듀서 - by 1-blue
 
 //types
 import {
@@ -22,11 +21,12 @@ function imageReducer(prevState = initState, action) {
     case RESET_MESSAGE:
       return {
         ...prevState,
+        imagePreviews: null,
+        
         uploadImagesLoading: false,
         uploadImagesDone: null,
         uploadImagesError: null,
 
-        imagePreviews: null,
       };
 
     case UPLOAD_IMAGES_REQUEST:

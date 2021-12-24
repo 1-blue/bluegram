@@ -15,4 +15,8 @@ Icon.propTypes = {
   small: Proptypes.bool,
 };
 
+Icon.defaultProps = {
+  small: true,
+};
+
 export default Icon;

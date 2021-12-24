@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from "react";
 
-const useToggle = (initialValue = false) => {
+const useText = (initialValue = "") => {
   const [value, setValue] = useState(initialValue);
 
-  const onChnageValue = useCallback(e => setValue(prev => !prev), []);
+  const onChnageValue = useCallback(e => setValue(e.target.value), []);
 
   return [value, onChnageValue, setValue];
 };
 
-export default useToggle;
+export default useText;

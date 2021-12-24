@@ -17,9 +17,11 @@ const PostInfo = ({ Likers, updatedAt }) => {
 };
 
 PostInfo.propTypes = {
-  Likers: Proptypes.shape({
-    _id: Proptypes.number,
-  }).isRequired,
+  Likers: Proptypes.arrayOf(
+    Proptypes.shape({
+      _id: Proptypes.number,
+    }),
+  ).isRequired,
   updatedAt: Proptypes.string.isRequired,
 };
 

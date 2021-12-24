@@ -19,24 +19,8 @@ const Wrapper = styled.main`
   max-width: 400px;
   margin: auto;
 
-  /* 폼의 제목, 목적, 이름 */
-  & > form > .form-title {
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-
-  & > form > .form-footer {
-    width: 60%;
-    display: flex;
-    justify-content: space-between;
-
-    & a {
-      font-size: 0.7rem;
-      cursor: pointer;
-    }
-    & a:hover {
-      text-decoration: underline;
-    }
+  @media (max-width: 768px) {
+    max-width: 350px;
   }
 `;
 
@@ -47,16 +31,17 @@ const LoginPage = () => {
   const [id, onChangeId] = useInput("");
   const [password, onChangePassword] = useInput("");
 
+  // 2021/12/20 - 로그인 성공 시 메시지와 redirect / 로그인 실패 시 메시지 - by 1-blue
   useEffect(() => {
     if (!(loginDone || loginError)) return;
     alert(loginDone || loginError);
 
     dispatch(resetMessageAction());
 
-    if (loginDone) navigate("/");
+    if (loginDone) navigate("/post");
   }, [loginDone, loginError]);
 
-  // 로컬 로그인
+  // 2021/12/20 - 로컬 로그인 요청 - by 1-blue
   const onLocalLogin = useCallback(
     e => {
       e.preventDefault();

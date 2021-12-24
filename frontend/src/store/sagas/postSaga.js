@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-// 2021/12/22 - 게시글 관련 비동기 요청 처리 - by 1-blue
 
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 

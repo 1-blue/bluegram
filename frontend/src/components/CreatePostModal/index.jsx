@@ -1,18 +1,20 @@
-// 2021/12/22 - 게시글 생성 모달 - by 1-blue
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
 
 // styled-components
-import { Wrapper } from "./style";
+import { Wrapper, Modal } from "./style";
 
 // action
 import { uploadImagesAction, createPostAction, resetMessageAction } from "@store/actions";
 
+// hook
+import useText from "@hooks/useText";
+
 // components
 import Avatar from "@components/common/Avatar";
 import ImageCarousel from "@components/common/ImageCarousel";
+import Button from "@components/common/Button";
 
 const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
   const dispatch = useDispatch();
@@ -22,7 +24,7 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
   const modalRef = useRef(null);
   const imageRef = useRef(null);
   const [title, setTitle] = useState("새 게시물 만들기");
-  const [text, setText] = useState("");
+  const [text, onInputText] = useText("");
 
   // 2021/12/22 - 게시글 생성 성공 or 실패 시 메시지 보여주고 모달 닫기
   useEffect(() => {
@@ -34,13 +36,15 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
     onCloseModal();
   }, [createPostDone, createPostError, onCloseModal]);
 
-  // 2021/12/22 - 모달 외 다른 영역 클릭시 닫기 - by 1-blue
+  // 2021/12/22 - 모달 닫기 이벤트 - by 1-blue
   const handleClickOutside = useCallback(
     ({ target }) => {
       if (showCreatePostModal && !modalRef.current?.contains(target)) onCloseModal();
     },
     [modalRef.current, showCreatePostModal],
   );
+
+  // 2021/12/22 - 모달 닫기 이벤트 등록 - by 1-blue
   useEffect(() => {
     window.addEventListener("click", handleClickOutside);
 
@@ -71,12 +75,7 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
     setTitle("새 게시물 만들기");
   }, []);
 
-  // 2021/12/22 - 텍스트 입력받기 - by 1-blue
-  const onInputText = useCallback(e => {
-    setText(e.target.value);
-  }, []);
-
-  // 2021/12/22 - 게시글 생성 - by 1-blue
+  // 2021/12/22 - 게시글 생성 요청 - by 1-blue
   const onSubmitPost = useCallback(
     e => {
       e.preventDefault();
@@ -88,71 +87,67 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
 
   return (
     <Wrapper>
+      {/* 모달 닫기 버튼 */}
       <button type="button" className="close-modal-button" onClick={onCloseModal}>
         X
       </button>
-      {imagePreviews ? (
-        <div className="modal-input-text" ref={modalRef}>
-          <h1 className="modal-title">{title}</h1>
-          {imagePreviews.length === 1 ? (
-            <img src={process.env.IMAGE_URL + "/" + imagePreviews[0]} alt="사용자가 등록한 이미지" />
-          ) : (
-            <ImageCarousel speed={300} length={imagePreviews.length} height={94}>
-              <li>
-                <img
-                  src={process.env.IMAGE_URL + "/" + imagePreviews[imagePreviews.length - 1]}
-                  alt="사용자가 등록한 이미지"
-                />
-              </li>
+
+      <Modal
+        length={imagePreviews?.length}
+        ref={modalRef}
+        onDragOver={e => e.preventDefault()}
+        onDrop={imageDragAndDrop}
+      >
+        <h1 className="modal-title">{title}</h1>
+
+        {imagePreviews ? (
+          // 이미지 업로드 후
+          <div className="modal-flex-container">
+            {/* image-carousel */}
+            <ImageCarousel speed={300} length={imagePreviews.length}>
               {imagePreviews.map(imagePreview => (
                 <li key={imagePreview}>
                   <img src={process.env.IMAGE_URL + "/" + imagePreview} alt="사용자가 등록한 이미지" />
                 </li>
               ))}
-              <li>
-                <img src={process.env.IMAGE_URL + "/" + imagePreviews[0]} alt="사용자가 등록한 이미지" />
-              </li>
             </ImageCarousel>
-          )}
 
-          <form className="modal-form" onSubmit={onSubmitPost}>
-            <div className="modal-form-user-profile">
-              <Avatar
-                width={40}
-                height={40}
-                src={`${process.env.IMAGE_URL}/${me.Images[0].name ? me.Images[0].name : me.Images[0].url}`}
+            {/* 게시글 정보 입력 폼 */}
+            <form className="modal-form" onSubmit={onSubmitPost}>
+              <div className="modal-form-info">
+                <Avatar
+                  width={40}
+                  height={40}
+                  src={`${process.env.IMAGE_URL}/${me.Images[0].name ? me.Images[0].name : me.Images[0].url}`}
+                />
+                <b>{me.name}</b>
+              </div>
+
+              <textarea
+                className="modal-form-textarea"
+                value={text}
+                onChange={onInputText}
+                placeholder="🗨️텍스트를 입력하세요😀"
               />
-              <span className="modal-form-user-profile-name">{me.name}</span>
-            </div>
 
-            <textarea className="modal-form-textarea" value={text} onChange={onInputText}></textarea>
-
-            <div className="modal-form-footer">
               <span className="modal-form-text-length">{text.length}/2,200</span>
-              <button type="submit" className="modal-form-submit-button">
-                게시글 등록
-              </button>
-            </div>
-          </form>
-        </div>
-      ) : (
-        <div
-          className="modal-input-images"
-          ref={modalRef}
-          onDragOver={e => e.preventDefault()}
-          onDrop={imageDragAndDrop}
-        >
-          <h1 className="modal-title">{title}</h1>
 
-          <div className="modal-contents">
+              <Button type="submit" $submit>
+                게시
+              </Button>
+            </form>
+          </div>
+        ) : (
+          // 이미지 업로드 전
+          <div className="modal-flex-container">
             <h2 className="modal-sub-title">사진과 동영상을 여기에 끌어다 놓으세요</h2>
             <input type="file" hidden ref={imageRef} accept="image/*" multiple onChange={imageSelect} />
-            <button type="button" className="modal-images-input-button" onClick={() => imageRef.current.click()}>
+            <Button type="button" onClick={() => imageRef.current.click()} $upload>
               컴퓨터에서 선택
-            </button>
+            </Button>
           </div>
-        </div>
-      )}
+        )}
+      </Modal>
     </Wrapper>
   );
 };

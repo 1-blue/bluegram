@@ -1,5 +1,3 @@
-// 2021/12/22 메시지 페이지 by 1-blue
-
 import React from "react";
 
 const DirectMessagePage = () => {
