@@ -19,10 +19,8 @@ const Wrapper = styled.main`
   max-width: 400px;
   margin: auto;
 
-  /* 폼의 제목, 목적, 이름 */
-  & h1 {
-    text-align: center;
-    margin-bottom: 1rem;
+  @media (max-width: 768px) {
+    max-width: 350px;
   }
 `;
 
@@ -38,7 +36,7 @@ const SignupPage = () => {
   const [phone, onChangePhone] = useInput("");
   const [birthday, onChangeBirthday] = useInput("");
 
-  // 회원가입 성공 시 홈페이지로 이동 및 성공 or 실패 메시지 alert
+  // 2021/12/20 - 회원가입 성공 시 홈페이지로 이동 및 성공 or 실패 메시지 alert - by 1-blue
   useEffect(() => {
     if (!(signupDone || signupError)) return;
     alert(signupDone || signupError);
@@ -48,7 +46,7 @@ const SignupPage = () => {
     if (signupDone) navigate("/login");
   }, [signupDone, signupError]);
 
-  // 회원가입 요청
+  // 2021/12/20 - 회원가입 요청 - by 1-blue
   const onSubmit = useCallback(
     e => {
       e.preventDefault();
@@ -71,7 +69,7 @@ const SignupPage = () => {
   return (
     <Wrapper>
       <Form onSubmit={onSubmit}>
-        <h1>bluegram</h1>
+        <h1 className="form-title">bluegram</h1>
         {/* id */}
         <Input type="text" placeholder="아이디를 입력해주세요" value={id} onChange={onChangeId} />
 

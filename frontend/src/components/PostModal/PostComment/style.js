@@ -1,5 +1,5 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.section`
-  padding: 0.8rem;
+  padding: 0.8em;
 `;

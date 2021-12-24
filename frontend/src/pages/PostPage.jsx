@@ -1,5 +1,3 @@
-// 2021/12/22 게시글 리스트 페이지 by 1-blue
-
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -14,7 +12,20 @@ import PostModal from "@components/PostModal";
 const Wrapper = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, auto);
-  gap: 24px;
+  gap: 12px;
+
+  @media (max-width: 480px) {
+    gap: 2px;
+  }
+  @media (min-width: 480px) and (max-width: 768px) {
+    gap: 4px;
+  }
+  @media (min-width: 768px) and (max-width: 1024px) {
+    gap: 8px;
+  }
+  @media (min-width: 1024px) and (max-width: 1600px) {
+    gap: 10px;
+  }
 `;
 
 const PostPage = () => {
@@ -24,6 +35,7 @@ const PostPage = () => {
   const [openPostId, setOpenPostId] = useState(null);
   const modalRef = useRef(null);
 
+  // 2021/12/21 - 전체 게시글 요청 - by 1-blue
   useEffect(() => {
     dispatch(loadPostsAction({ lastId: -1 }));
   }, []);
@@ -37,6 +49,8 @@ const PostPage = () => {
     },
     [showModal],
   );
+
+  // 2021/12/21 - 다른 영역 클릭 시 모달 닫기 이벤트 등록 - by 1-blue
   useEffect(() => {
     window.addEventListener("click", handleCloseModal);
 

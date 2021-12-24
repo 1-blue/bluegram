@@ -38,10 +38,10 @@ export const Wrapper = styled.li`
       & > div {
         display: flex;
         align-items: flex-end;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.3em;
 
         & > span {
-          margin-left: 1rem;
+          margin-left: 1em;
           font-size: 1rem;
           font-weight: bold;
         }

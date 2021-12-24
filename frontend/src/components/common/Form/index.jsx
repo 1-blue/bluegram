@@ -10,6 +10,7 @@ const Form = props => {
 
 Form.propTypes = {
   onSubmit: Proptypes.func.isRequired,
+  children: Proptypes.node.isRequired,
 };
 
 export default Form;

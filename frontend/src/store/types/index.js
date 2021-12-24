@@ -1,27 +1,27 @@
-// 메시지 초기화
+// 메시지 초기화 - by 1-blue
 export const RESET_MESSAGE = "RESET_MESSAGE";
 
-// 로컬 로그인 요청
+// 2021/12/20 - 로컬 로그인 요청 - by 1-blue
 export const LOCAL_LOGIN_REQUEST = "LOCAL_LOGIN_REQUEST";
 export const LOCAL_LOGIN_SUCCESS = "LOCAL_LOGIN_SUCCESS";
 export const LOCAL_LOGIN_FAILURE = "LOCAL_LOGIN_FAILURE";
 
-// 로컬 로그아웃 요청
+// 2021/12/20 - 로컬 로그아웃 요청 - by 1-blue
 export const LOCAL_LOGOUT_REQUEST = "LOCAL_LOGOUT_REQUEST";
 export const LOCAL_LOGOUT_SUCCESS = "LOCAL_LOGOUT_SUCCESS";
 export const LOCAL_LOGOUT_FAILURE = "LOCAL_LOGOUT_FAILURE";
 
-// 회원가입 요청
+// 2021/12/20 - 회원가입 요청 - by 1-blue
 export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
 export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
 export const SIGNUP_FAILURE = "SIGNUP_FAILURE";
 
-// 로그인한 유저 정보 요청
+// 2021/12/20 - 로그인한 유저 정보 요청 - by 1-blue
 export const LOAD_TO_ME_REQUEST = "LOAD_TO_ME_REQUEST";
 export const LOAD_TO_ME_SUCCESS = "LOAD_TO_ME_SUCCESS";
 export const LOAD_TO_ME_FAILURE = "LOAD_TO_ME_FAILURE";
 
-// 로그인한 유저 정보 요청
+// 2021/12/20 - 이미지(들) 업로드 요청 - by 1-blue
 export const UPLOAD_IMAGES_REQUEST = "UPLOAD_IMAGES_REQUEST";
 export const UPLOAD_IMAGES_SUCCESS = "UPLOAD_IMAGES_SUCCESS";
 export const UPLOAD_IMAGES_FAILURE = "UPLOAD_IMAGES_FAILURE";

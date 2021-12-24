@@ -1,13 +1,37 @@
-@keyframes menu-appear {
+@keyframes appear-scale {
   from {
-    transform: translateX(-50%) scale(0, 0);
+    transform: scale(0, 0);
   }
 
   80% {
-    transform: translateX(-50%) scale(1.2, 1.2);
+    transform: scale(1.2, 1.2);
   }
 
   to {
-    transform: translateX(-50%) scale(1, 1);
+    transform: scale(1, 1);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes back-in-down {
+  from {
+    transform: translateY(-100vh) scale(0.8, 0.8);
+  }
+
+  80% {
+    transform: translateY(0) scale(0.8, 0.8);
+  }
+
+  to {
+    transform: translateY(0) scale(1, 1);
   }
 }

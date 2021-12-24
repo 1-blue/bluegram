@@ -1,5 +1,3 @@
-// 2021/12/22 - 하나의 게시글 컴포넌트 - by 1-blue
-
 import React, { useCallback, useState } from "react";
 import Proptypes from "prop-types";
 
@@ -25,7 +23,7 @@ const PostCard = ({ post, onOpenModal }) => {
     >
       <section className="post-image-container">
         <img
-          src={process.env.IMAGE_URL + "/" + post.Images[0].name}
+          src={process.env.IMAGE_URL + "/" + post.Images[post.Images.length - 1].name}
           alt="유저가 업로드한 이미지"
           className="post-image"
         />
@@ -90,7 +88,7 @@ PostCard.propTypes = {
         _id: Proptypes.number,
       }),
     ).isRequired,
-  }),
+  }).isRequired,
   onOpenModal: Proptypes.func.isRequired,
 };
 

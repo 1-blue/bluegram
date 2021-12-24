@@ -1,5 +1,3 @@
-// 2021/12/22 잘못된 접근 페이지 by 1-blue
-
 import React from "react";
 
 const NotFoundPage = () => {

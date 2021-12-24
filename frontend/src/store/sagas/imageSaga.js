@@ -1,7 +1,11 @@
+/* eslint-disable prettier/prettier */
+
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
 // types
-import { UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE } from "@store/types";
+import {
+  UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
+} from "@store/types";
 
 // api
 import { apiUploadImages } from "@store/api";

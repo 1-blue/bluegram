@@ -4,11 +4,11 @@ export const Wrapper = styled.input`
   &[type="text"],
   &[type="password"] {
     width: 60%;
-    padding: 0.5rem;
+    padding: 0.5em;
+    margin-bottom: 0.3em;
+    border: 1px solid purple;
     font-size: 1rem;
     font-weight: 500;
-    border: 1px solid purple;
-    margin-bottom: 0.3rem;
   }
 
   &[type="file"] {
@@ -16,11 +16,12 @@ export const Wrapper = styled.input`
   }
 
   &:focus {
-    box-shadow: 0 0 3px purple;
+    box-shadow: 0 0 3px var(--main-color);
   }
 
   &::placeholder {
     font-size: 0.7rem;
-    color: rgba(128, 0, 128, 0.5); // purple
+    color: var(--main-color);
+    opacity: 0.5;
   }
 `;
