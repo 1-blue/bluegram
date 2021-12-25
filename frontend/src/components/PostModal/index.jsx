@@ -60,7 +60,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
               </div>
 
               {/* 아이콘 버튼 영역 */}
-              <PostIconButtons />
+              <PostIconButtons PostId={PostId} />
 
               {/* 좋아요 개수 및 게시글 작성 시간 */}
               <PostInfo Likers={post.Likers} updatedAt={post.updatedAt} />

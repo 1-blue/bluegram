@@ -37,7 +37,7 @@ export const Wrapper = styled.li`
 
       & > div {
         display: flex;
-        align-items: flex-end;
+        align-items: flex-start;
         margin-bottom: 0.3em;
 
         & > span {
@@ -52,6 +52,7 @@ export const Wrapper = styled.li`
       position: absolute;
       top: 10px;
       right: 10px;
+      z-index: 1;
     }
   }
 `;

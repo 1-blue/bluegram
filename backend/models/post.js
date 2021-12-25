@@ -35,13 +35,13 @@ const Post = (sequelize, DataTypes) => {
     db.Post.hasMany(db.Comment, { onDelete: "cascade" });
 
     // 좋아요 ( N : M ) ( 유저와 게시글 )
-    db.Post.belongsToMany(db.User, { through: "likes", as: "Likers", foreignKey: "UserId", onDelete: "cascade" });
+    db.Post.belongsToMany(db.User, { through: "likes", as: "Likers", foreignKey: "PostId", onDelete: "cascade" });
 
     // 해시태그 ( N : M ) ( 게시글과 해시태그 )
     db.Post.belongsToMany(db.Hashtag, {
       through: "postHashtags",
       as: "postHashtager",
-      foreignKey: "HashtagId",
+      foreignKey: "PostId",
       onDelete: "cascade",
     });
 

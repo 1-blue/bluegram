@@ -124,6 +124,9 @@ router.get("/", async (req, res, next) => {
           model: User,
           as: "Likers",
           attributes: ["_id"],
+          through: {
+            attributes: ["updatedAt"],
+          },
         },
       ],
     });
@@ -185,6 +188,9 @@ router.get("/:PostId", async (req, res, next) => {
           model: User,
           as: "Likers",
           attributes: ["_id"],
+          through: {
+            attributes: ["updatedAt"],
+          },
         },
       ],
     });

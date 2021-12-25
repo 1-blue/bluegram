@@ -80,7 +80,7 @@ const User = (sequelize, DataTypes) => {
     db.User.hasMany(db.Comment, { onDelete: "cascade" });
 
     // 좋아요 ( N : M ) ( 유저와 게시글 )
-    db.User.belongsToMany(db.Post, { through: "likes", as: "Liked", foreignKey: "PostId", onDelete: "cascade" });
+    db.User.belongsToMany(db.Post, { through: "likes", as: "Liked", foreignKey: "UserId", onDelete: "cascade" });
 
     // 유저와 이미지 ( 1 : N )
     db.User.hasMany(db.Image, { onDelete: "cascade" });

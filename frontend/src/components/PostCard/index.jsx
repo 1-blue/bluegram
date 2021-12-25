@@ -31,18 +31,18 @@ const PostCard = ({ post, onOpenModal }) => {
           <>
             <div className="post-information">
               <div>
-                <Icon shape="fillHeart" width={24} height={24} color="white" />
+                <Icon shape="fillHeart" width={24} height={24} fill="white" animation="rubber-band" />
                 <span>{post.Likers.length}</span>
               </div>
               <div>
-                <Icon shape="comment" width={24} height={24} color="white" />
+                <Icon shape="comment" width={24} height={24} fill="white" animation="rubber-band" />
                 <span>{post.Comments.length}</span>
               </div>
             </div>
 
             {post.Images.length === 1 || (
               <figure className="kinds">
-                <Icon shape="images" width={24} height={24} color="white"></Icon>
+                <Icon shape="images" width={24} height={24} fill="white" animation="bounce" />
               </figure>
             )}
           </>
