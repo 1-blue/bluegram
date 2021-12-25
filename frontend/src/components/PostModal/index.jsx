@@ -27,7 +27,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
   }, []);
 
   return (
-    <Wrapper length={post?.Images.length}>
+    <Wrapper>
       <button type="button" className="close-modal-button" onClick={onCloseModal}>
         X
       </button>

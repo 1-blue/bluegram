@@ -28,16 +28,24 @@ const PostCard = ({ post, onOpenModal }) => {
           className="post-image"
         />
         {isMouseHover && (
-          <div className="post-information">
-            <div>
-              <Icon shape="fillHeart" small />
-              <span>{post.Likers.length}</span>
+          <>
+            <div className="post-information">
+              <div>
+                <Icon shape="fillHeart" width={24} height={24} color="white" />
+                <span>{post.Likers.length}</span>
+              </div>
+              <div>
+                <Icon shape="comment" width={24} height={24} color="white" />
+                <span>{post.Comments.length}</span>
+              </div>
             </div>
-            <div>
-              <Icon shape="heart" small />
-              <span>{post.Comments.length}</span>
-            </div>
-          </div>
+
+            {post.Images.length === 1 || (
+              <figure className="kinds">
+                <Icon shape="images" width={24} height={24} color="white"></Icon>
+              </figure>
+            )}
+          </>
         )}
       </section>
     </Wrapper>

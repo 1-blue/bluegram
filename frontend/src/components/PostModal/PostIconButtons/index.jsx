@@ -12,18 +12,18 @@ const PostIconButtons = () => {
     <Wrapper>
       <div>
         <li>
-          <Icon shape="heart" medium />
+          <Icon shape="heart" width={24} height={24} />
         </li>
         <li>
-          <Icon shape="compass" medium />
+          <Icon shape="compass" width={24} height={24} />
         </li>
         <li>
-          <Icon shape="dm" medium />
+          <Icon shape="airplane" width={24} height={24} />
         </li>
       </div>
 
       <li>
-        <Icon shape="bookmark" medium />
+        <Icon shape="bookmark" width={24} height={24} />
       </li>
     </Wrapper>
   );

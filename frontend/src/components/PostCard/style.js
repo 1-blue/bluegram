@@ -47,5 +47,11 @@ export const Wrapper = styled.li`
         }
       }
     }
+
+    & > .kinds {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
   }
 `;
