@@ -3,7 +3,7 @@ import axios from "axios";
 const authInstance = axios.create({
   baseURL: `${process.env.SERVER_URL}/user`,
   withCredentials: true,
-  timeout: 1000,
+  timeout: 2500,
 });
 
 // 2021/12/20 - 로그인한 유저 정보 요청 - by 1-blue

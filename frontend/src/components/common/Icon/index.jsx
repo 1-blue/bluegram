@@ -3,6 +3,7 @@
 import React from "react";
 import Proptypes from "prop-types";
 
+// assets
 import {
   Home, FillHome,
   PostAdd, FillPostAdd,
@@ -10,60 +11,137 @@ import {
   Heart, FillHeart,
   BookMark, FillBookMark,
   Comment, FillComment,
-  Airplane,FillAirplane,
+  Airplane, FillAirplane,
   Avatar,
   Images,
   Play,
 } from "../../../assets/icon";
 
-const Icon = ({ shape, width, height, color, onClick }) => {
-  switch (shape) {
+// styled-component
+import { Wrapper } from "./style";
+
+const Icon = (props) => {
+  switch (props.shape) {
     case "home":
-      return <Home width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Home {...props} />
+        </Wrapper>
+      );
     case "fillHome":
-      return <FillHome width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <FillHome {...props} />
+        </Wrapper>
+      );
     case "postAdd":
-      return <PostAdd width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <PostAdd {...props} />
+        </Wrapper>
+      );
     case "fillPostAdd":
-      return <FillPostAdd width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <FillPostAdd {...props} />
+        </Wrapper>
+      );
     case "compass":
-      return <Compass width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Compass {...props} />
+        </Wrapper>
+      );
     case "fillCompass":
-      return <FillCompass width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <FillCompass {...props} />
+        </Wrapper>
+      );
     case "heart":
-      return <Heart width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Heart {...props} />
+        </Wrapper>
+      );
     case "fillHeart":
-      return <FillHeart width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <FillHeart {...props} />
+        </Wrapper>
+      );
     case "bookmark":
-      return <BookMark width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <BookMark {...props} />
+        </Wrapper>
+      );
     case "fillBookmark":
-      return <FillBookMark width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <FillBookMark {...props} />
+        </Wrapper>
+      );
     case "comment":
-      return <Comment width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Comment {...props} />
+        </Wrapper>
+      );
     case "fillComment":
-      return <FillComment width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <FillComment {...props} />
+        </Wrapper>
+      );
     case "airplane":
-      return <Airplane width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Airplane {...props} />
+        </Wrapper>
+      );
     case "fillAirplane":
-      return <FillAirplane width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <FillAirplane {...props} />
+        </Wrapper>
+      );
     case "avatar":
-      return <Avatar width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Avatar {...props} />
+        </Wrapper>
+      );
     case "images":
-      return <Images width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Images {...props} />
+        </Wrapper>
+      );
     case "play":
-      return <Play width={width} height={height} fill={color} onClick={onClick} />;
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Play {...props} />
+        </Wrapper>
+      );
 
     default:
-      return <Avatar />;
+      return (
+        <Wrapper>
+          <Avatar />
+        </Wrapper>
+      );
   }
 };
 
 Icon.propTypes = {
   shape: Proptypes.string,
-  width: Proptypes.bool,
-  height: Proptypes.bool,
-  color: Proptypes.bool,
+  width: Proptypes.number,
+  height: Proptypes.number,
+  fill: Proptypes.string,
   onClick: Proptypes.func,
+  hoverfill: Proptypes.string,
+  animation: Proptypes.string,
 };
 
 Icon.defaultProps = {
@@ -72,6 +150,8 @@ Icon.defaultProps = {
   height: 24,
   color: "black",
   onClick: null,
+  hoverfill: null,
+  animation: null,
 };
 
 export default Icon;

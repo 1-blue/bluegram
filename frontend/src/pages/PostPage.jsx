@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 // action
-import { loadPostsAction } from "@store/actions/postAction";
+import { loadPostsAction, resetPostAction } from "@store/actions/postAction";
 
 // components
 import PostCard from "@components/PostCard";
@@ -43,8 +43,18 @@ const PostPage = () => {
   // 2021/12/21 - 다른 영역 클릭 시 모달 닫기 이벤트 - by 1-blue
   const handleCloseModal = useCallback(
     e => {
+      /**
+       * 바로 아랫부분 추가한 이유는 게시글 모달창 내부에서 좋아요 같은 아이콘을 누르게 되면 즉시 다른 아이콘으로 변경해 줌
+       * ex) heart 아이콘 ==> fillHeart 아이콘
+       * 이때 문제가 발생하는 게 누르는 즉시 아이콘을 변경시키므로 이벤트 버블링이 돼서 widdow에서 click 이벤트를 받기 전에
+       * 아이콘이 변경되어버림... 그래서 모달창 내부에 있는 태그임에도 불구하고 누르면 영역 외의 태그라고 판단해서 모달창이 닫히기 때문에
+       * 아이콘은 특별처리로 눌러도 모달창이 닫히지 않도록 해주는 코드임
+       */
+      if (e.target.nodeName === "path" || e.target.nodeName === "svg") return;
+
       if (showModal && !modalRef.current?.contains(e.target)) {
         setShowModal(false);
+        dispatch(resetPostAction());
       }
     },
     [showModal],

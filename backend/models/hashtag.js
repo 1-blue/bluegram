@@ -32,7 +32,7 @@ const Hashtag = (sequelize, DataTypes) => {
     db.Hashtag.belongsToMany(db.Post, {
       through: "postHashtags",
       as: "postHashtaged",
-      foreignKey: "PostId",
+      foreignKey: "HashtagId",
       onDelete: "cascade",
     });
   };

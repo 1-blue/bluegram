@@ -62,6 +62,12 @@ function userReducer(prevState = initState, action) {
         signupLoading: true,
         signupDone: null,
         signupError: null,
+        appendLikeToPostDone: false,
+        appendLikeToPostDone: null,
+        appendLikeToPostError: null,
+        removeLikeToPostDone: false,
+        removeLikeToPostDone: null,
+        removeLikeToPostError: null,
       };
     case SIGNUP_SUCCESS:
       return {

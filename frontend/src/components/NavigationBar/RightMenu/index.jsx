@@ -74,7 +74,7 @@ const RightMenu = () => {
             </NavLink>
           </li>
           <li>
-            <Icon shape="postAdd" onClick={onClickShowCreatePostModal} width={24} height={24} />
+            <Icon shape="postAdd" width={24} height={24} onClick={onClickShowCreatePostModal} />
             {showCreatePostModal && (
               <CreatePostModal showCreatePostModal={showCreatePostModal} onCloseModal={onCloseCreatePostModal} />
             )}

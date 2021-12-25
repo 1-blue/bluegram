@@ -31,8 +31,8 @@ export const Wrapper = styled.section`
 
   .modal {
     width: 80vw;
-    max-width: 1700px;
-    /* max-height: 80vh; */
+    max-width: 1300px;
+    max-height: 750px;
     display: flex;
     background-color: white;
     border-radius: 1rem;
@@ -101,17 +101,17 @@ export const Wrapper = styled.section`
 
   @media (max-width: 480px) {
     .modal {
-      height: 60vh;
+      height: 80vh;
     }
   }
   @media (min-width: 480px) and (max-width: 768px) {
     .modal {
-      height: 70vh;
+      height: 90vh;
     }
   }
   @media (min-width: 768px) and (max-width: 1024px) {
     .modal {
-      height: 80vh;
+      height: 95vh;
     }
   }
   @media (min-width: 1024px) {
