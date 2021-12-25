@@ -4,7 +4,7 @@ import React from "react";
 import SearchInput from "@components/common/SearchInput";
 
 const CenterMenu = () => {
-  return <SearchInput type="text" placeholder="검색" />;
+  return <SearchInput type="search" placeholder="검색" />;
 };
 
 export default CenterMenu;

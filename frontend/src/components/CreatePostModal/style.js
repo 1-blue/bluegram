@@ -169,6 +169,12 @@ export const Modal = styled.div`
       font-size: 1rem;
     }
   }
+  @media (min-width: 1024px) {
+    height: auto;
+  }
+  @media (min-width: 1600px) {
+    height: 80vh;
+  }
 
   animation-name: back-in-down;
   animation-duration: 1s;

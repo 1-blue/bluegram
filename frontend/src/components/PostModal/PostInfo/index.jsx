@@ -2,7 +2,7 @@ import React from "react";
 import Proptypes from "prop-types";
 
 // util
-import { timeFormat } from "@util/dateFormat";
+import { timeFormat } from "@utils/dateFormat";
 
 // styled-components
 import { Wrapper } from "./style";

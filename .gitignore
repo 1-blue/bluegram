@@ -9,3 +9,6 @@
 
 # session-store ( file )
 */sessions
+
+# 번들링된 파일 제외
+*/dist

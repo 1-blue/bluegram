@@ -29,42 +29,38 @@ export const Wrapper = styled.section`
     display: flex;
   }
 
-  ${({ length }) => css`
-    .modal {
-      width: 80vw;
-      max-height: 90vh;
-      /* max-height: calc(100vh - 200px); */
-      display: flex;
-      background-color: white;
-      border-radius: 1rem;
+  .modal {
+    width: 80vw;
+    max-width: 1700px;
+    /* max-height: 80vh; */
+    display: flex;
+    background-color: white;
+    border-radius: 1rem;
 
-      & > .post-one-image {
-        width: 70%;
-        border-radius: 1rem 0 0 1rem;
-      }
+    & > .post-one-image {
+      width: 70%;
+      border-radius: 1rem 0 0 1rem;
+    }
 
-      & > .post {
-        /* flex: 1 1 ${() => (length <= 3 ? length * 70 : length * 50)}%; */
-        flex: 1 1 40%;
+    & > .post {
+      flex: 1 1 40%;
 
-        display: inline-flex;
-        flex-direction: column;
-        width: 40%;
-        height: 100%;
-        vertical-align: top;
+      display: inline-flex;
+      flex-direction: column;
+      width: 40%;
+      vertical-align: top;
 
-        .post-scroll {
-          flex-grow: 1;
-          overflow: auto;
-          &::-webkit-scrollbar {
-            display: none;
-          }
+      .post-scroll {
+        flex-grow: 1;
+        overflow: auto;
+        &::-webkit-scrollbar {
+          display: none;
         }
       }
     }
-  `}
+  }
 
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     .post-head-1 {
       display: flex;
     }
@@ -88,7 +84,6 @@ export const Wrapper = styled.section`
       & > .post {
         display: inline-flex;
         flex-direction: column;
-        height: 100%;
         vertical-align: top;
 
         width: 100%;
@@ -103,22 +98,34 @@ export const Wrapper = styled.section`
       }
     }
   }
-  @media (min-width: 768px) and (max-width: 1024px) {
+
+  @media (max-width: 480px) {
+    .modal {
+      height: 60vh;
+    }
+  }
+  @media (min-width: 480px) and (max-width: 768px) {
     .modal {
       height: 70vh;
     }
   }
-  @media (min-width: 1024px) and (max-width: 1600px) {
+  @media (min-width: 768px) and (max-width: 1024px) {
     .modal {
       height: 80vh;
     }
   }
-  @media (min-width: 1600px) {
+  @media (min-width: 1024px) {
     .modal {
-      height: 90vh;
+      height: auto;
     }
   }
-  @media (min-width: 768px) {
+  @media (min-width: 1600px) {
+    .modal {
+      height: 80vh;
+    }
+  }
+
+  @media (min-width: 1024px) {
     .modal > section > ul > li > img {
       border-radius: 1rem 0 0 1rem;
     }

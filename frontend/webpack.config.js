@@ -17,11 +17,12 @@ module.exports = {
     extensions: [".jsx", ".js"],
     alias: {
       "@components": path.resolve(__dirname, "src/components"),
-      "@util": path.resolve(__dirname, "src/util"),
+      "@utils": path.resolve(__dirname, "src/utils"),
       "@store": path.resolve(__dirname, "src/store"),
       "@pages": path.resolve(__dirname, "src/pages"),
       "@css": path.resolve(__dirname, "src/css"),
       "@hooks": path.resolve(__dirname, "src/hooks"),
+      "@assets": path.resolve(__dirname, "src/assets"),
     },
     // 로더 해석에 적용되지 않음
     modules: ["node_modules", path.resolve(__dirname, "app")],
@@ -61,11 +62,21 @@ module.exports = {
         test: /\.css$/,
         use: ["style-loader", "css-loader"],
       },
+
+      // 2021/12/25 - svg를 위한 로더 - by 1-blue
+      {
+        test: /\.svg$/,
+        use: ["@svgr/webpack"],
+      },
     ],
   },
 
   // 플러그인 설정 / html생성 / refresh / dotenv설정
-  plugins: [new HtmlWebpackPlugin({ title: "bluegram" }), new RefreshWebpackPlugin(), new dotenvWebpackPlugin()],
+  plugins: [
+    new HtmlWebpackPlugin({ title: "bluegram", template: "./index.html" }),
+    new RefreshWebpackPlugin(),
+    new dotenvWebpackPlugin(),
+  ],
 
   // 데브서버 설정
   devServer: {

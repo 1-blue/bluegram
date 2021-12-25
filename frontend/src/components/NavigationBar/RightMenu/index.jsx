@@ -65,28 +65,28 @@ const RightMenu = () => {
         <>
           <li>
             <NavLink to="/">
-              <Icon shape="home" medium />
+              <Icon shape="home" width={24} height={24} />
             </NavLink>
           </li>
           <li>
             <NavLink to="/directMessage">
-              <Icon shape="dm" medium />
+              <Icon shape="airplane" width={24} height={24} />
             </NavLink>
           </li>
           <li>
-            <Icon shape="add" medium onClick={onClickShowCreatePostModal} />
+            <Icon shape="postAdd" onClick={onClickShowCreatePostModal} width={24} height={24} />
             {showCreatePostModal && (
               <CreatePostModal showCreatePostModal={showCreatePostModal} onCloseModal={onCloseCreatePostModal} />
             )}
           </li>
           <li>
             <NavLink to="/post">
-              <Icon shape="compass" medium />
+              <Icon shape="compass" width={24} height={24} />
             </NavLink>
           </li>
           <li>
             <NavLink to="/">
-              <Icon shape="heart" medium />
+              <Icon shape="heart" width={24} height={24} />
             </NavLink>
           </li>
           <li>
@@ -102,13 +102,13 @@ const RightMenu = () => {
             <Menu>
               <li>
                 <NavLink to="/profile">
-                  <Icon shape="avatar" small />
+                  <Icon shape="avatar" width={20} height={20} />
                   <span>프로필</span>
                 </NavLink>
               </li>
               <li>
                 <NavLink to="/profile">
-                  <Icon shape="bookmark" small />
+                  <Icon shape="bookmark" width={20} height={20} />
                   <span>저장됨</span>
                 </NavLink>
               </li>
