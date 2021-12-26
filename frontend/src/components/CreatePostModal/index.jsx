@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Wrapper, Modal } from "./style";
 
 // action
-import { uploadImagesAction, createPostAction, resetMessageAction } from "@store/actions";
+import { uploadImagesAction, createPostAction, resetMessageAction, resetImagePreview } from "@store/actions";
 
 // hook
 import useText from "@hooks/useText";
@@ -23,8 +23,20 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
   const { imagePreviews } = useSelector(state => state.image);
   const modalRef = useRef(null);
   const imageRef = useRef(null);
-  const [title, setTitle] = useState("새 게시물 만들기");
-  const [text, onInputText] = useText("");
+  const [title, setTitle] = useState("");
+  const [text, onInputText, setText] = useText("");
+
+  // 2021/12/25 - 게시글 생성 모달창 초기화 메서드 - by 1-blue
+  const initializePostModal = useCallback(() => {
+    setTitle("새 게시물 만들기");
+    setText("");
+    dispatch(resetImagePreview());
+  }, [setTitle, setText]);
+
+  // 2021/12/25 - 게시글 생성 모달창 초기화 실행 - by 1-blue
+  useEffect(() => {
+    initializePostModal();
+  }, []);
 
   // 2021/12/22 - 게시글 생성 성공 or 실패 시 메시지 보여주고 모달 닫기
   useEffect(() => {
@@ -39,7 +51,11 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
   // 2021/12/22 - 모달 닫기 이벤트 - by 1-blue
   const handleClickOutside = useCallback(
     ({ target }) => {
-      if (showCreatePostModal && !modalRef.current?.contains(target)) onCloseModal();
+      if (showCreatePostModal && !modalRef.current?.contains(target)) {
+        if (!confirm("게시글 생성을 취소시겠습니까?")) return;
+        onCloseModal();
+        initializePostModal();
+      }
     },
     [modalRef.current, showCreatePostModal],
   );

@@ -8,6 +8,7 @@ import { loadPostsAction, resetPostAction } from "@store/actions/postAction";
 // components
 import PostCard from "@components/PostCard";
 import PostModal from "@components/PostModal";
+import Spinner from "@components/common/Spinner";
 
 const Wrapper = styled.ul`
   display: grid;
@@ -79,7 +80,7 @@ const PostPage = () => {
   const onCloseModal = useCallback(() => setShowModal(false), [showModal]);
 
   if (posts.length === 0) {
-    return <h1>게시글이 없거나, 게시글을 불러오는 중입니다...</h1>;
+    return <Spinner page />;
   }
 
   return (

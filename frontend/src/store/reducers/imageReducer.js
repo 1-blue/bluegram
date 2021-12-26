@@ -2,7 +2,7 @@
 
 //types
 import {
-  RESET_MESSAGE,
+  RESET_MESSAGE, RESET_IMAGE_PREVIEW_REQUEST,
   UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
 } from "@store/types";
 
@@ -26,7 +26,12 @@ function imageReducer(prevState = initState, action) {
         uploadImagesLoading: false,
         uploadImagesDone: null,
         uploadImagesError: null,
+      };
 
+    case RESET_IMAGE_PREVIEW_REQUEST:
+      return {
+        ...prevState,
+        imagePreviews: null,
       };
 
     case UPLOAD_IMAGES_REQUEST:
