@@ -73,7 +73,7 @@ module.exports = {
 
   // 플러그인 설정 / html생성 / refresh / dotenv설정
   plugins: [
-    new HtmlWebpackPlugin({ title: "bluegram", template: "./index.html" }),
+    new HtmlWebpackPlugin({ title: "bluegram", template: "./index.html", favicon: "./src/assets/favicon/favicon.ico" }),
     new RefreshWebpackPlugin(),
     new dotenvWebpackPlugin(),
   ],

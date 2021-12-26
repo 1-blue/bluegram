@@ -9,6 +9,8 @@ const Spinner = props => {
 };
 
 Spinner.propTypes = {
+  page: PropTypes.bool,
+  modal: PropTypes.bool,
   button: PropTypes.bool,
 };
 

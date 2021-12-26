@@ -170,7 +170,7 @@ export const Modal = styled.div`
     }
   }
   @media (min-width: 1024px) {
-    height: auto;
+    height: 60vh;
   }
   @media (min-width: 1600px) {
     height: 80vh;

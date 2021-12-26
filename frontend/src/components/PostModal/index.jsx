@@ -13,6 +13,7 @@ import PostIconButtons from "./PostIconButtons";
 import PostInfo from "./PostInfo";
 import PostCommentForm from "./PostCommentForm";
 import ImageCarousel from "@components/common/ImageCarousel";
+import Spinner from "@components/common/Spinner";
 
 // styled-component
 import { Wrapper } from "./style";
@@ -70,7 +71,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
             </div>
           </>
         ) : (
-          <h1>게시글을 불러오는 중입니다...</h1>
+          <Spinner modal />
         )}
       </div>
     </Wrapper>
