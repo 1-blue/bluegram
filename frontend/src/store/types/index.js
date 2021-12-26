@@ -4,6 +4,9 @@ export const RESET_MESSAGE = "RESET_MESSAGE";
 // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주기 - by 1-blue
 export const RESET_POST = "RESET_POST";
 
+// 2021/12/26 - 이미지 프리뷰 비우기 - by 1-blue
+export const RESET_IMAGE_PREVIEW_REQUEST = "RESET_IMAGE_PREVIEW_REQUEST";
+
 // 2021/12/20 - 로컬 로그인 요청 - by 1-blue
 export const LOCAL_LOGIN_REQUEST = "LOCAL_LOGIN_REQUEST";
 export const LOCAL_LOGIN_SUCCESS = "LOCAL_LOGIN_SUCCESS";
