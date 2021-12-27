@@ -19,7 +19,7 @@ const Button = props => {
 Button.propTypes = {
   type: Proptypes.string.isRequired,
   onClick: Proptypes.func,
-  children: Proptypes.string,
+  children: Proptypes.oneOfType([Proptypes.string, Proptypes.node]),
   $loading: Proptypes.bool,
 
   $signup: Proptypes.bool,

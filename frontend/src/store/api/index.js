@@ -3,3 +3,4 @@ export { apiLoadToMe, apiSignup } from "./user";
 export { apiUploadImages } from "./image";
 export { apiCreatePost, apiLoadPosts, apiLoadPost } from "./post";
 export { apiAppendLikeToPost, apiRemoveLikeToPost } from "./like";
+export { apiAppendCommentToPost, apiRemoveCommentToPost } from "./comment";

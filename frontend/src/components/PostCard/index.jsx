@@ -56,7 +56,7 @@ PostCard.propTypes = {
   post: Proptypes.shape({
     _id: Proptypes.number.isRequired,
     content: Proptypes.string.isRequired,
-    updatedAt: Proptypes.string.isRequired,
+    createdAt: Proptypes.string.isRequired,
     User: Proptypes.shape({
       _id: Proptypes.number,
       name: Proptypes.string,

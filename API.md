@@ -248,41 +248,17 @@
   3. `401`: 비로그인 접근
 
 # 5. comment
-## 5.1 GET /comment/:PostId
-+ 역할: 댓글 목록 불러오기
-+ 전송 데이터: params로 `PostId`를 전송
-+ 응답 데이터
-```javascript
-[
-  {
-    _id,
-    content,
-    User: {
-      _id,
-      name,
-      Image: {
-        _id,
-        name
-      },
-    }
-  },
-  // ...
-]
-```
-+ 응답 코드
-  1. `200`: 댓글 불러오기 성공
-  2. `500`: 서버측 에러 ( 원인불명 )
-
-## 5.2 POST /comment
+## 5.1 POST /comment/post
 + 역할: 댓글 or 답글 생성
-+ 전송 데이터: `{ PostId, content, CommentId }`
++ 전송 데이터: `{ content, PostId, CommentId }`
 + 응답 데이터: `{ message }`
 + 응답 코드
   1. `200`: 댓글 or 답글 생성 성공
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
+  4. `404`: 없는 게시글에 댓글 추가 요청
 
-## 5.3 DELETE /comment/:PostId
+## 5.2 DELETE /comment/post/:PostId
 + 역할: 댓글 삭제
 + 전송 데이터: params로 `PostId` 전송
 + 응답 데이터: `{ message }`
@@ -290,6 +266,7 @@
   1. `200`: 댓글 불러오기 성공
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
+  4. `404`: 없는 게시글에 댓글 삭제 요청
 
 # 6. following
 ## 6.1 GET /following/:UserId?lastId=?

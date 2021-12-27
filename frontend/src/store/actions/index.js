@@ -8,3 +8,4 @@ export { loadToMeAction, signupAction } from "./userAction";
 export { uploadImagesAction, resetImagePreview } from "./imageAction";
 export { resetPostAction, createPostAction, loadPostsAction, loadPostAction } from "./postAction";
 export { appendLikeToPostAction, removeLikeToPostAction } from "./likeAction";
+export { appendCommentToPostAction, removeCommentToPostAction } from "./commentAction";

@@ -57,17 +57,17 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
                 <PostContent content={post.content} />
 
                 {/* 댓글 영역 */}
-                <PostComment />
+                <PostComment Comments={post.Comments} />
               </div>
 
               {/* 아이콘 버튼 영역 */}
               <PostIconButtons PostId={PostId} />
 
               {/* 좋아요 개수 및 게시글 작성 시간 */}
-              <PostInfo Likers={post.Likers} updatedAt={post.updatedAt} />
+              <PostInfo Likers={post.Likers} createdAt={post.createdAt} />
 
               {/* 댓글 폼 */}
-              <PostCommentForm />
+              <PostCommentForm PostId={PostId} />
             </div>
           </>
         ) : (

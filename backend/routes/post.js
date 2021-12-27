@@ -31,7 +31,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
       where: {
         _id: createdPost._id,
       },
-      attributes: ["_id", "content", "updatedAt"],
+      attributes: ["_id", "content", "createdAt"],
       include: [
         // 게시글을 작성한 유저
         {
@@ -52,7 +52,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
         // 게시글의 댓글과 답글들
         {
           model: Comment,
-          attributes: ["_id", "content", "UserId", "CommentId"],
+          attributes: ["_id", "content", "UserId", "CommentId", "createdAt"],
           include: [
             // 게시글의 댓글과 답글들을 작성한 유저
             {
@@ -72,7 +72,14 @@ router.post("/", isLoggedIn, async (req, res, next) => {
           model: User,
           as: "Likers",
           attributes: ["_id"],
+          through: {
+            attributes: ["createdAt"],
+          },
         },
+      ],
+      order: [
+        ["createdAt", "DESC"],
+        [Comment, "createdAt", "ASC"],
       ],
     });
 
@@ -95,8 +102,8 @@ router.get("/", async (req, res, next) => {
     const posts = await Post.findAll({
       where,
       limit: 30,
-      order: [["updatedAt", "DESC"]],
-      attributes: ["_id", "content", "updatedAt"],
+      order: [["createdAt", "DESC"]],
+      attributes: ["_id", "content", "createdAt"],
       include: [
         // 게시글을 작성한 유저
         {
@@ -125,7 +132,7 @@ router.get("/", async (req, res, next) => {
           as: "Likers",
           attributes: ["_id"],
           through: {
-            attributes: ["updatedAt"],
+            attributes: ["createdAt"],
           },
         },
       ],
@@ -147,7 +154,7 @@ router.get("/:PostId", async (req, res, next) => {
       where: {
         _id: PostId,
       },
-      attributes: ["_id", "content", "updatedAt"],
+      attributes: ["_id", "content", "createdAt"],
       include: [
         // 게시글을 작성한 유저
         {
@@ -168,7 +175,7 @@ router.get("/:PostId", async (req, res, next) => {
         // 게시글의 댓글과 답글들
         {
           model: Comment,
-          attributes: ["_id", "content", "UserId", "CommentId"],
+          attributes: ["_id", "content", "UserId", "CommentId", "createdAt"],
           include: [
             // 게시글의 댓글과 답글들을 작성한 유저
             {
@@ -192,6 +199,10 @@ router.get("/:PostId", async (req, res, next) => {
             attributes: ["updatedAt"],
           },
         },
+      ],
+      order: [
+        ["createdAt", "DESC"],
+        [Comment, "createdAt", "ASC"],
       ],
     });
 
