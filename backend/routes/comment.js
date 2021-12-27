@@ -33,8 +33,6 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
       },
     });
 
-    console.log("createdCommentWithData >> ", createdCommentWithData.toJSON());
-
     res.json({ message: "댓글 생성이 생성되었습니다.", createdCommentWithData });
   } catch (error) {
     console.error("POST /comment >> ", error);
@@ -45,20 +43,21 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
 // 2021/12/27 - 게시글의 댓글 제거 - by 1-blue
 router.delete("/post/:CommentId", isLoggedIn, async (req, res, next) => {
   const CommentId = +req.params.CommentId;
-  const { _id: UserId } = req.user;
 
   try {
     const targetComment = await Comment.findByPk(CommentId);
 
     if (!targetComment) {
-      return res.status(404).json({ message: "존재하지 않는 댓글입니다.\n잠시후에 다시 시도해주세요" });
+      return res.status(404).json({ message: "존재하지 않은 댓글입니다.\n잠시후에 다시 시도해주세요" });
     }
+    const removedPostId = targetComment.PostId;
 
-    const result = await targetComment.destory();
+    await Comment.destroy({ where: { _id: CommentId } });
 
-    console.log("result >> ", result);
-
-    res.json({ message: "댓글 삭제가 완료되었습니다.", result: { CommentId, UserId } });
+    res.json({
+      message: "댓글 삭제가 완료되었습니다.",
+      result: { removedCommentId: CommentId, removedPostId },
+    });
   } catch (error) {
     console.error("POST /comment >> ", error);
     next(error);

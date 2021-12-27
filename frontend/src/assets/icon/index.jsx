@@ -17,6 +17,7 @@ import FillAirplane from "@assets/icon/fillAirplane.svg";
 import Avatar from "@assets/icon/avatar.svg";
 import Images from "@assets/icon/images.svg";
 import Play from "@assets/icon/play.svg";
+import Option from "@assets/icon/option.svg"
 
 export {
   Home, FillHome,
@@ -29,4 +30,5 @@ export {
   Avatar,
   Images,
   Play,
+  Option,
 };

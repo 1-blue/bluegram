@@ -13,5 +13,5 @@ export function apiAppendCommentToPost(body) {
 
 // 2021/12/27 - 게시글에 댓글 삭제 - by 1-blue
 export function apiRemoveCommentToPost(body) {
-  return authInstance.delete(`/post/${body.PostId}`);
+  return authInstance.delete(`/post/${body.CommentId}`);
 }

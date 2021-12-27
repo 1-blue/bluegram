@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const LeftMenu = () => {
   return (
     <>
-      <Link to="/">로고</Link>
+      <Link to="/explore">로고</Link>
     </>
   );
 };

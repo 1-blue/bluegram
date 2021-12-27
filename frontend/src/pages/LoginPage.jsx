@@ -38,7 +38,7 @@ const LoginPage = () => {
 
     dispatch(resetMessageAction());
 
-    if (loginDone) navigate("/post");
+    if (loginDone) navigate("/explore");
   }, [loginDone, loginError]);
 
   // 2021/12/20 - 로컬 로그인 요청 - by 1-blue

@@ -6,7 +6,7 @@ import db from "../models/index.js";
 
 const { Post } = db;
 
-// 2021/12/25 - 좋아요 추가 - by 1-blue
+// 2021/12/25 - 게시글에 좋아요 추가 - by 1-blue
 router.post("/post/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
   const { _id: UserId } = req.user;
@@ -31,12 +31,12 @@ router.post("/post/:PostId", isLoggedIn, async (req, res, next) => {
 
     res.json({ message: `${req.user.name}님 게시글에 좋아요를 누르셨습니다.`, result });
   } catch (error) {
-    console.error("POST /like/:PostId >> ", error);
+    console.error("POST /like/post/:PostId >> ", error);
     next(error);
   }
 });
 
-// 2021/12/25 - 좋아요 제거 - by 1-blue
+// 2021/12/25 - 게시글에 좋아요 제거 - by 1-blue
 router.delete("/post/:PostId", async (req, res, next) => {
   const PostId = +req.params.PostId;
   const { _id: UserId } = req.user;
@@ -64,7 +64,7 @@ router.delete("/post/:PostId", async (req, res, next) => {
       result: { removedPostId: PostId, UserId },
     });
   } catch (error) {
-    console.error("POST /like/:PostId >> ", error);
+    console.error("POST /like/post/:PostId >> ", error);
     next(error);
   }
 });

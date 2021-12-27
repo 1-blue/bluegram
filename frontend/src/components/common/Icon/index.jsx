@@ -15,6 +15,7 @@ import {
   Avatar,
   Images,
   Play,
+  Option,
 } from "../../../assets/icon";
 
 // styled-component
@@ -122,6 +123,12 @@ const Icon = (props) => {
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
           <Play {...props} />
+        </Wrapper>
+      );
+    case "option":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Option {...props} />
         </Wrapper>
       );
 

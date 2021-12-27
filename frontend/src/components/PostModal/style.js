@@ -56,6 +56,10 @@ export const Wrapper = styled.section`
         &::-webkit-scrollbar {
           display: none;
         }
+
+        & > .post-comment {
+          padding: 0.4em;
+        }
       }
     }
   }

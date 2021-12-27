@@ -1,28 +1,15 @@
+/* eslint-disable prettier/prettier */
+
 // types
 import {
-  RESET_MESSAGE,
-  RESET_POST,
-  CREATE_POST_REQUEST,
-  CREATE_POST_SUCCESS,
-  CREATE_POST_FAILURE,
-  LOAD_POSTS_REQUEST,
-  LOAD_POSTS_SUCCESS,
-  LOAD_POSTS_FAILURE,
-  LOAD_POST_REQUEST,
-  LOAD_POST_SUCCESS,
-  LOAD_POST_FAILURE,
-  APPEND_LIKE_TO_POST_REQUEST,
-  APPEND_LIKE_TO_POST_SUCCESS,
-  APPEND_LIKE_TO_POST_FAILURE,
-  REMOVE_LIKE_TO_POST_REQUEST,
-  REMOVE_LIKE_TO_POST_SUCCESS,
-  REMOVE_LIKE_TO_POST_FAILURE,
-  APPEND_COMMENT_TO_POST_REQUEST,
-  APPEND_COMMENT_TO_POST_SUCCESS,
-  APPEND_COMMENT_TO_POST_FAILURE,
-  REMOVE_COMMENT_TO_POST_REQUEST,
-  REMOVE_COMMENT_TO_POST_SUCCESS,
-  REMOVE_COMMENT_TO_POST_FAILURE,
+  RESET_MESSAGE, RESET_POST,
+  CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
+  LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
+  LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
+  APPEND_LIKE_TO_POST_REQUEST, APPEND_LIKE_TO_POST_SUCCESS, APPEND_LIKE_TO_POST_FAILURE,
+  REMOVE_LIKE_TO_POST_REQUEST, REMOVE_LIKE_TO_POST_SUCCESS, REMOVE_LIKE_TO_POST_FAILURE,
+  APPEND_COMMENT_TO_POST_REQUEST, APPEND_COMMENT_TO_POST_SUCCESS, APPEND_COMMENT_TO_POST_FAILURE,
+  REMOVE_COMMENT_TO_POST_REQUEST, REMOVE_COMMENT_TO_POST_SUCCESS, REMOVE_COMMENT_TO_POST_FAILURE,
 } from "@store/types";
 
 const initState = {
@@ -297,6 +284,22 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         removeCommentToPostLoading: false,
         removeCommentToPostDone: action.data.message,
+
+        // 2021/12/27 - 게시글의 댓글 삭제 후 posts 처리 - by 1-blue
+        posts: prevState.posts.map(post => {
+          if (post._id !== action.data.result.removedPostId) return post;
+
+          return {
+            ...post,
+            Comments: post.Comments.filter(comment => comment._id !== action.data.result.removedCommentId),
+          };
+        }),
+
+        // 2021/12/27 - 게시글의 댓글 삭제 후 post 처리 - by 1-blue
+        post: {
+          ...prevState.post,
+          Comments: prevState.post.Comments.filter(comment => comment._id !== action.data.result.removedCommentId),
+        },
       };
     case REMOVE_COMMENT_TO_POST_FAILURE:
       return {
