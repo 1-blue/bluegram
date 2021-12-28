@@ -1,4 +1,10 @@
-import { RESET_POST, CREATE_POST_REQUEST, LOAD_POSTS_REQUEST, LOAD_POST_REQUEST } from "@store/types";
+import {
+  RESET_POST,
+  CREATE_POST_REQUEST,
+  LOAD_POSTS_REQUEST,
+  LOAD_POST_REQUEST,
+  REMOVE_POST_REQUEST,
+} from "@store/types";
 
 // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주는 액션 크리에이터 - by 1-blue
 export function resetPostAction(data) {
@@ -28,6 +34,14 @@ export function loadPostsAction(data) {
 export function loadPostAction(data) {
   return {
     type: LOAD_POST_REQUEST,
+    data,
+  };
+}
+
+// 2021/12/27 - 특정 게시글 제거 요청 액션 크리에이터 - by 1-blue
+export function removePostAction(data) {
+  return {
+    type: REMOVE_POST_REQUEST,
     data,
   };
 }

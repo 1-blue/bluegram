@@ -29,7 +29,7 @@ const Wrapper = styled.ul`
   }
 `;
 
-const PostPage = () => {
+const ExplorePage = () => {
   const dispatch = useDispatch();
   const { posts } = useSelector(state => state.post);
   const [showModal, setShowModal] = useState(false);
@@ -51,7 +51,7 @@ const PostPage = () => {
        * 아이콘이 변경되어버림... 그래서 모달창 내부에 있는 태그임에도 불구하고 누르면 영역 외의 태그라고 판단해서 모달창이 닫히기 때문에
        * 아이콘은 특별처리로 눌러도 모달창이 닫히지 않도록 해주는 코드임
        */
-      if (e.target.nodeName === "path" || e.target.nodeName === "svg") return;
+      if (e.target.nodeName === "path" || e.target.nodeName === "svg" || e.target.nodeName === "LI") return;
 
       if (showModal && !modalRef.current?.contains(e.target)) {
         setShowModal(false);
@@ -96,4 +96,4 @@ const PostPage = () => {
   );
 };
 
-export default PostPage;
+export default ExplorePage;

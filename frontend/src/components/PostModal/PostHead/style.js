@@ -15,4 +15,8 @@ export const Wrapper = styled.section`
     font-weight: bold;
     color: var(--facebook-color);
   }
+
+  & > i {
+    margin: 0 0 0 auto;
+  }
 `;

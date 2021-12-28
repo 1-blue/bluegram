@@ -15,3 +15,13 @@ export function apiAppendLikeToPost(body) {
 export function apiRemoveLikeToPost(body) {
   return authInstance.delete(`/post/${body.PostId}`);
 }
+
+// 2021/12/28 - 댓글에 좋아요 추가 - by 1-blue
+export function apiAppendLikeToComment(body) {
+  return authInstance.post(`/comment/${body.CommentId}`);
+}
+
+// 2021/12/28 - 댓글에 좋아요 삭제 - by 1-blue
+export function apiRemoveLikeToComment(body) {
+  return authInstance.delete(`/comment/${body.CommentId}`);
+}

@@ -1,13 +1,18 @@
 /* eslint-disable prettier/prettier */
 
-//types
+// types
 import {
   RESET_MESSAGE, RESET_POST,
   CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
   LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
+  REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
   APPEND_LIKE_TO_POST_REQUEST, APPEND_LIKE_TO_POST_SUCCESS, APPEND_LIKE_TO_POST_FAILURE,
   REMOVE_LIKE_TO_POST_REQUEST, REMOVE_LIKE_TO_POST_SUCCESS, REMOVE_LIKE_TO_POST_FAILURE,
+  APPEND_COMMENT_TO_POST_REQUEST, APPEND_COMMENT_TO_POST_SUCCESS, APPEND_COMMENT_TO_POST_FAILURE,
+  REMOVE_COMMENT_TO_POST_REQUEST, REMOVE_COMMENT_TO_POST_SUCCESS, REMOVE_COMMENT_TO_POST_FAILURE,
+  APPEND_LIKE_TO_COMMENT_REQUEST, APPEND_LIKE_TO_COMMENT_SUCCESS, APPEND_LIKE_TO_COMMENT_FAILURE,
+  REMOVE_LIKE_TO_COMMENT_REQUEST, REMOVE_LIKE_TO_COMMENT_SUCCESS, REMOVE_LIKE_TO_COMMENT_FAILURE,
 } from "@store/types";
 
 const initState = {
@@ -32,15 +37,40 @@ const initState = {
   loadPostDone: null,
   loadPostError: null,
 
+  // 특정 게시글 제거 요청
+  removePostLoading: false,
+  removePostDone: null,
+  removePostError: null,
+
   // 2021/12/25 - 좋아요 추가 - by 1-blue
-  appendLikeToPostDone: false,
+  appendLikeToPostLoading: false,
   appendLikeToPostDone: null,
   appendLikeToPostError: null,
 
   // 2021/12/25 - 좋아요 제거 - by 1-blue
-  removeLikeToPostDone: false,
+  removeLikeToPostLoading: false,
   removeLikeToPostDone: null,
   removeLikeToPostError: null,
+
+  // 2021/12/25 - 게시글에 댓글 추가 - by 1-blue
+  appendCommentToPostLoading: false,
+  appendCommentToPostDone: null,
+  appendCommentToPostError: null,
+
+  // 2021/12/25 - 게시글에 댓글 제거 - by 1-blue
+  removeCommentToPostLoading: false,
+  removeCommentToPostDone: null,
+  removeCommentToPostError: null,
+
+  // 2021/12/25 - 댓글에 좋아요 추가 - by 1-blue
+  appendLikeToCommentLoading: false,
+  appendLikeToCommentDone: null,
+  appendLikeToCommentError: null,
+
+  // 2021/12/25 - 댓글에 좋아요 제거 - by 1-blue
+  removeLikeToCommentLoading: false,
+  removeLikeToCommentDone: null,
+  removeLikeToCommentError: null,
 };
 
 function postReducer(prevState = initState, action) {
@@ -57,12 +87,29 @@ function postReducer(prevState = initState, action) {
         loadPostLoading: false,
         loadPostDone: null,
         loadPostError: null,
-        appendLikeToPostDone: false,
+        removePostLoading: false,
+        removePostDone: null,
+        removePostError: null,
+        appendLikeToPostLoading: false,
         appendLikeToPostDone: null,
         appendLikeToPostError: null,
-        removeLikeToPostDone: false,
+        removeLikeToPostLoading: false,
         removeLikeToPostDone: null,
         removeLikeToPostError: null,
+        appendCommentToPostLoading: false,
+        appendCommentToPostDone: null,
+        appendCommentToPostError: null,
+        removeCommentToPostLoading: false,
+        removeCommentToPostDone: null,
+        removeCommentToPostError: null,
+
+        appendLikeToCommentLoading: false,
+        appendLikeToCommentDone: null,
+        appendLikeToCommentError: null,
+
+        removeLikeToCommentLoading: false,
+        removeLikeToCommentDone: null,
+        removeLikeToCommentError: null,
       };
 
     // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주기 - by 1-blue
@@ -135,7 +182,34 @@ function postReducer(prevState = initState, action) {
         loadPostError: action.data.message,
       };
 
-    // 2021/12/25 - 좋아요 추가 - by 1-blue
+    // 2021/12/28 특정 게시글 제거 - by 1-blue
+    case REMOVE_POST_REQUEST:
+      return {
+        ...prevState,
+        removePostLoading: true,
+        removePostDone: null,
+        removePostError: null,
+      };
+    case REMOVE_POST_SUCCESS:
+      return {
+        ...prevState,
+        removePostLoading: false,
+        removePostDone: action.data.message,
+
+        // 2021/12/28 특정 게시글 내용 비우기 - by 1-blue
+        posts: prevState.posts.filter(post => post._id !== action.data.result.removedPostId),
+
+        // 2021/12/28 특정 게시글 내용 비우기 - by 1-blue
+        post: null,
+      };
+    case REMOVE_POST_FAILURE:
+      return {
+        ...prevState,
+        removePostLoading: false,
+        removePostError: action.data.message,
+      };
+
+    // 2021/12/25 - 게시글 좋아요 추가 - by 1-blue
     case APPEND_LIKE_TO_POST_REQUEST:
       return {
         ...prevState,
@@ -155,13 +229,13 @@ function postReducer(prevState = initState, action) {
 
           return {
             ...post,
-            Likers: [...post.Likers, { _id: action.data.result.UserId }],
+            PostLikers: [...post.PostLikers, { _id: action.data.result.UserId }],
           };
         }),
         // 2021/12/25 - 불변성 지키면서 특정 게시글 객체에 게시글에 좋아요 누른 인원 추가 - by 1-blue
         post: {
           ...prevState.post,
-          Likers: [...prevState.post.Likers, { _id: action.data.result.UserId }],
+          PostLikers: [...prevState.post.PostLikers, { _id: action.data.result.UserId }],
         },
       };
     case APPEND_LIKE_TO_POST_FAILURE:
@@ -171,7 +245,7 @@ function postReducer(prevState = initState, action) {
         appendLikeToPostError: action.data.message,
       };
 
-    // 2021/12/25 - 좋아요 제거 - by 1-blue
+    // 2021/12/25 - 게시글 좋아요 제거 - by 1-blue
     case REMOVE_LIKE_TO_POST_REQUEST:
       return {
         ...prevState,
@@ -191,13 +265,13 @@ function postReducer(prevState = initState, action) {
 
           return {
             ...post,
-            Likers: post.Likers.filter(liker => liker._id !== action.data.result.UserId),
+            PostLikers: post.PostLikers.filter(liker => liker._id !== action.data.result.UserId),
           };
         }),
         // 2021/12/25 - 불변성 지키면서 특정 게시글 객체에 게시글에 좋아요 누른 인원 제거 - by 1-blue
         post: {
           ...prevState.post,
-          Likers: prevState.post.Likers.filter(liker => liker._id !== action.data.result.UserId),
+          PostLikers: prevState.post.PostLikers.filter(liker => liker._id !== action.data.result.UserId),
         },
       };
     case REMOVE_LIKE_TO_POST_FAILURE:
@@ -205,6 +279,162 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         removeLikeToPostLoading: false,
         removeLikeToPostError: action.data.message,
+      };
+
+    // 2021/12/27 - 게시글 댓글 추가 - by 1-blue
+    case APPEND_COMMENT_TO_POST_REQUEST:
+      return {
+        ...prevState,
+        appendCommentToPostLoading: true,
+        appendCommentToPostDone: null,
+        appendCommentToPostError: null,
+      };
+    case APPEND_COMMENT_TO_POST_SUCCESS:
+      const { createdCommentWithData } = action.data;
+      return {
+        ...prevState,
+        appendCommentToPostLoading: false,
+        appendCommentToPostDone: action.data.message,
+
+        // 2021/12/27 - 게시글의 댓글 추가 후 posts 처리 - by 1-blue
+        posts: prevState.posts.map(post => {
+          if (post._id !== action.data.createdCommentWithData.PostId) return post;
+
+          return {
+            ...post,
+            Comments: [{ _id: createdCommentWithData._id }, ...post.Comments],
+          };
+        }),
+
+        // 2021/12/27 - 게시글의 댓글 추가 후 post 처리 - by 1-blue
+        post: {
+          ...prevState.post,
+          Comments: [
+            ...prevState.post.Comments,
+            {
+              _id: createdCommentWithData._id,
+              content: createdCommentWithData.content,
+              createdAt: createdCommentWithData.createdAt,
+              User: { ...createdCommentWithData.User },
+              CommentLikers: [],
+            },
+          ],
+        },
+      };
+    case APPEND_COMMENT_TO_POST_FAILURE:
+      return {
+        ...prevState,
+        appendCommentToPostLoading: false,
+        appendCommentToPostError: action.data.message,
+      };
+
+    // 2021/12/27 - 게시글 댓글 삭제 - by 1-blue
+    case REMOVE_COMMENT_TO_POST_REQUEST:
+      return {
+        ...prevState,
+        removeCommentToPostLoading: true,
+        removeCommentToPostDone: null,
+        removeCommentToPostError: null,
+      };
+    case REMOVE_COMMENT_TO_POST_SUCCESS:
+      return {
+        ...prevState,
+        removeCommentToPostLoading: false,
+        removeCommentToPostDone: action.data.message,
+
+        // 2021/12/27 - 게시글의 댓글 삭제 후 posts 처리 - by 1-blue
+        posts: prevState.posts.map(post => {
+          if (post._id !== action.data.result.removedPostId) return post;
+
+          return {
+            ...post,
+            Comments: post.Comments.filter(comment => comment._id !== action.data.result.removedCommentId),
+          };
+        }),
+
+        // 2021/12/27 - 게시글의 댓글 삭제 후 post 처리 - by 1-blue
+        post: {
+          ...prevState.post,
+          Comments: prevState.post.Comments.filter(comment => comment._id !== action.data.result.removedCommentId),
+        },
+      };
+    case REMOVE_COMMENT_TO_POST_FAILURE:
+      return {
+        ...prevState,
+        removeCommentToPostLoading: false,
+        removeCommentToPostError: action.data.message,
+      };
+
+    // 2021/12/28 - 댓글에 좋아요 추가 - by 1-blue
+    case APPEND_LIKE_TO_COMMENT_REQUEST:
+      return {
+        ...prevState,
+        appendLikeToCommentLoading: true,
+        appendLikeToCommentDone: null,
+        appendLikeToCommentError: null,
+      };
+    case APPEND_LIKE_TO_COMMENT_SUCCESS:
+      const { commentLikerWithData } = action.data;
+      console.log("commentLikerWithData >> ", commentLikerWithData);
+      return {
+        ...prevState,
+        appendLikeToCommentLoading: false,
+        appendLikeToCommentDone: action.data.message,
+
+        // 2021/12/28 - 댓글 좋아요 추가 후 post 처리 - by 1-blue
+        post: {
+          ...prevState.post,
+          Comments: prevState.post.Comments.map(comment => {
+            if (comment._id !== commentLikerWithData.CommentLikes.CommentId) return comment;
+
+            return {
+              ...comment,
+              CommentLikers: [...comment.CommentLikers, commentLikerWithData],
+            };
+          }),
+        },
+      };
+    case APPEND_LIKE_TO_COMMENT_FAILURE:
+      return {
+        ...prevState,
+        appendLikeToCommentLoading: false,
+        appendLikeToCommentError: action.data.message,
+      };
+
+    // 2021/12/28 - 댓글에 좋아요 제거 - by 1-blue
+    case REMOVE_LIKE_TO_COMMENT_REQUEST:
+      return {
+        ...prevState,
+        removeLikeToCommentLoading: true,
+        removeLikeToCommentDone: null,
+        removeLikeToCommentError: null,
+      };
+    case REMOVE_LIKE_TO_COMMENT_SUCCESS:
+      return {
+        ...prevState,
+        removeLikeToCommentLoading: false,
+        removeLikeToCommentDone: action.data.message,
+
+        // 2021/12/28 - 댓글 좋아요 추가 후 post 처리 - by 1-blue
+        post: {
+          ...prevState.post,
+          Comments: prevState.post.Comments.map(comment => {
+            if (comment._id !== action.data.result.CommentId) return comment;
+
+            return {
+              ...comment,
+              CommentLikers: comment.CommentLikers.filter(
+                commentLiker => commentLiker._id !== action.data.result.removedUserId,
+              ),
+            };
+          }),
+        },
+      };
+    case REMOVE_LIKE_TO_COMMENT_FAILURE:
+      return {
+        ...prevState,
+        removeLikeToCommentLoading: false,
+        removeLikeToCommentError: action.data.message,
       };
 
     default:

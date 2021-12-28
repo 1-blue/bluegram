@@ -31,7 +31,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
       where: {
         _id: createdPost._id,
       },
-      attributes: ["_id", "content", "updatedAt"],
+      attributes: ["_id", "content", "createdAt"],
       include: [
         // 게시글을 작성한 유저
         {
@@ -52,7 +52,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
         // 게시글의 댓글과 답글들
         {
           model: Comment,
-          attributes: ["_id", "content", "UserId", "CommentId"],
+          attributes: ["_id", "content", "UserId", "CommentId", "createdAt"],
           include: [
             // 게시글의 댓글과 답글들을 작성한 유저
             {
@@ -65,14 +65,26 @@ router.post("/", isLoggedIn, async (req, res, next) => {
                 },
               ],
             },
+            // 게시글의 댓글과 답글들에 좋아요
+            {
+              model: User,
+              as: "CommentLikers",
+            },
           ],
         },
         // 게시글의 좋아요
         {
           model: User,
-          as: "Likers",
+          as: "PostLikers",
           attributes: ["_id"],
+          through: {
+            attributes: ["createdAt"],
+          },
         },
+      ],
+      order: [
+        ["createdAt", "DESC"],
+        [Comment, "createdAt", "ASC"],
       ],
     });
 
@@ -95,8 +107,8 @@ router.get("/", async (req, res, next) => {
     const posts = await Post.findAll({
       where,
       limit: 30,
-      order: [["updatedAt", "DESC"]],
-      attributes: ["_id", "content", "updatedAt"],
+      order: [["createdAt", "DESC"]],
+      attributes: ["_id", "content", "createdAt"],
       include: [
         // 게시글을 작성한 유저
         {
@@ -122,10 +134,10 @@ router.get("/", async (req, res, next) => {
         // 게시글의 좋아요
         {
           model: User,
-          as: "Likers",
+          as: "PostLikers",
           attributes: ["_id"],
           through: {
-            attributes: ["updatedAt"],
+            attributes: ["createdAt"],
           },
         },
       ],
@@ -147,7 +159,7 @@ router.get("/:PostId", async (req, res, next) => {
       where: {
         _id: PostId,
       },
-      attributes: ["_id", "content", "updatedAt"],
+      attributes: ["_id", "content", "createdAt"],
       include: [
         // 게시글을 작성한 유저
         {
@@ -168,7 +180,7 @@ router.get("/:PostId", async (req, res, next) => {
         // 게시글의 댓글과 답글들
         {
           model: Comment,
-          attributes: ["_id", "content", "UserId", "CommentId"],
+          attributes: ["_id", "content", "UserId", "CommentId", "createdAt"],
           include: [
             // 게시글의 댓글과 답글들을 작성한 유저
             {
@@ -181,23 +193,62 @@ router.get("/:PostId", async (req, res, next) => {
                 },
               ],
             },
+            // 게시글의 댓글과 답글들에 좋아요를 누른 유저
+            {
+              model: User,
+              as: "CommentLikers",
+              attributes: ["_id", "name"],
+              through: {
+                attributes: ["createdAt", "UserId", "CommentId"],
+              },
+              // 게시글의 댓글과 답글들에 좋아요를 누른 유저의 이미지
+              include: [
+                {
+                  model: Image,
+                  attributes: ["_id", "name"],
+                },
+              ],
+            },
           ],
         },
         // 게시글의 좋아요
         {
           model: User,
-          as: "Likers",
+          as: "PostLikers",
           attributes: ["_id"],
           through: {
-            attributes: ["updatedAt"],
+            attributes: ["createdAt"],
           },
         },
       ],
+      order: [
+        ["createdAt", "DESC"],
+        [Comment, "createdAt", "ASC"],
+      ],
     });
+
+    if (!post) return res.status(404).json({ message: "존재하지 않은 게시글입니다.\n잠시후에 다시 시도해주세요" });
 
     res.json({ message: "특정 게시글을 불러오는데 성공했습니다.", post });
   } catch (error) {
     console.error("GET /post error >> ", error);
+    return next(error);
+  }
+});
+
+// 2021/12/28 - 특정 게시글 제거하기 - by 1-blue
+router.delete("/:PostId", async (req, res, next) => {
+  const PostId = +req.params.PostId;
+
+  try {
+    const removedPostCount = await Post.destroy({ where: { _id: PostId } });
+
+    if (removedPostCount === 0)
+      return res.status(404).json({ message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
+
+    res.status(200).json({ message: "게시글 삭제에 성공하셨습니다.", result: { removedPostId: PostId } });
+  } catch (error) {
+    console.error("DELETE /post/:PostId error >> ", error);
     return next(error);
   }
 });

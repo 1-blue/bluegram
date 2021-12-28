@@ -32,7 +32,7 @@ const RightMenu = () => {
 
     dispatch(resetMessageAction());
 
-    if (logoutDone) navigate("/post");
+    if (logoutDone) navigate("/explore");
   }, [logoutDone, logoutError]);
 
   // 2021/12/21 - 로그아웃 요청 - by 1-blue
@@ -80,7 +80,7 @@ const RightMenu = () => {
             )}
           </li>
           <li>
-            <NavLink to="/post">
+            <NavLink to="/explore">
               <Icon shape="compass" width={24} height={24} />
             </NavLink>
           </li>

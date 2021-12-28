@@ -11,7 +11,7 @@ import LoginPage from "@pages/LoginPage";
 import ProfilePage from "@pages/ProfilePage";
 import SignupPage from "@pages/SignupPage";
 import DirectMessagePage from "@pages/DirectMessagePage";
-import PostPage from "@pages/PostPage";
+import ExplorePage from "@pages/ExplorePage";
 import NotFoundPage from "@pages/NotFoundPage";
 
 // action
@@ -32,7 +32,7 @@ const App = () => {
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/directMessage" element={<DirectMessagePage />} />
-          <Route path="/post" element={<PostPage />} />
+          <Route path="/explore" element={<ExplorePage />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </AppLayout>

@@ -51,6 +51,7 @@ hr {
 }
 pre {
   white-space: pre-line;
+  margin: 0;
 }
 button {
   border: none;

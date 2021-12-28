@@ -1,9 +1,19 @@
-import React, { forwardRef, useEffect } from "react";
+import React, { forwardRef, useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Proptypes from "prop-types";
 
 // action
-import { loadPostAction } from "@store/actions";
+import {
+  loadPostAction,
+  resetMessageAction,
+  appendCommentToPostAction,
+  removeCommentToPostAction,
+  removePostAction,
+  appendLikeToPostAction,
+  removeLikeToPostAction,
+  appendLikeToCommentAction,
+  removeLikeToCommentAction,
+} from "@store/actions";
 
 // components
 import PostHead from "./PostHead";
@@ -20,12 +30,141 @@ import { Wrapper } from "./style";
 
 const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
   const dispatch = useDispatch();
-  const { post } = useSelector(state => state.post);
+  const {
+    post,
+    appendCommentToPostDone,
+    appendCommentToPostError,
+    removeCommentToPostDone,
+    removeCommentToPostError,
+    removePostDone,
+    removePostError,
+    appendLikeToPostDone,
+    appendLikeToPostError,
+    removeLikeToPostDone,
+    removeLikeToPostError,
+    appendLikeToCommentDone,
+    appendLikeToCommentError,
+    removeLikeToCommentDone,
+    removeLikeToCommentError,
+  } = useSelector(state => state.post);
+  const { me } = useSelector(state => state.user);
 
   // 2021/12/24 - 특정 게시글 상세 정보 요청 - by 1-blue
   useEffect(() => {
     dispatch(loadPostAction({ PostId }));
   }, []);
+
+  // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(appendCommentToPostDone || appendCommentToPostError)) return;
+
+    alert(appendCommentToPostDone || appendCommentToPostError);
+
+    dispatch(resetMessageAction());
+  }, [appendCommentToPostDone, appendCommentToPostError]);
+
+  // 2021/12/27 - 게시글의 댓글 제거 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(removeCommentToPostDone || removeCommentToPostError)) return;
+
+    alert(removeCommentToPostDone || removeCommentToPostError);
+
+    dispatch(resetMessageAction());
+  }, [removeCommentToPostDone, removeCommentToPostError]);
+
+  // 2021/12/28 - 게시글 제거 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(removePostDone || removePostError)) return;
+
+    alert(removePostDone || removePostError);
+
+    dispatch(resetMessageAction());
+  }, [removePostDone, removePostError]);
+
+  // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(appendLikeToPostDone || appendLikeToPostError)) return;
+    alert(appendLikeToPostDone || appendLikeToPostError);
+
+    dispatch(resetMessageAction());
+  }, [appendLikeToPostDone, appendLikeToPostError]);
+
+  // 2021/12/25 - 게시글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(removeLikeToPostDone || removeLikeToPostError)) return;
+    alert(removeLikeToPostDone || removeLikeToPostError);
+
+    dispatch(resetMessageAction());
+  }, [removeLikeToPostDone, removeLikeToPostError]);
+
+  // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(appendLikeToCommentDone || appendLikeToCommentError)) return;
+    alert(appendLikeToCommentDone || appendLikeToCommentError);
+
+    dispatch(resetMessageAction());
+  }, [appendLikeToCommentDone, appendLikeToCommentError]);
+
+  // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(removeLikeToCommentDone || removeLikeToCommentError)) return;
+    alert(removeLikeToCommentDone || removeLikeToCommentError);
+
+    dispatch(resetMessageAction());
+  }, [removeLikeToCommentDone, removeLikeToCommentError]);
+
+  // 2021/12/27 - 댓글 생성 ( using PostCommentForm ) - by 1-blue
+  const onAppendComment = useCallback(
+    (content, CommentId) => e => {
+      e.preventDefault();
+
+      if (!content.trim()) return alert("댓글을 입력한 후에 제출해주세요!");
+
+      dispatch(appendCommentToPostAction({ content, PostId, CommentId }));
+    },
+    [PostId],
+  );
+
+  // 2021/12/27 - 댓글 삭제 ( using PostComment ) - by 1-blue
+  const onRemoveComment = useCallback(
+    CommentId => e => {
+      e.preventDefault();
+
+      dispatch(removeCommentToPostAction({ CommentId }));
+    },
+    [],
+  );
+
+  // 2021/12/27 - 게시글 삭제 ( using PostHead ) - by 1-blue
+  const onRemovePost = useCallback(
+    e => {
+      e.preventDefault();
+
+      dispatch(removePostAction({ PostId }));
+    },
+    [PostId],
+  );
+
+  // 2021/12/25 - 게시글 좋아요 추가/삭제 요청 - by 1-blue
+  const onClickPostLike = useCallback(() => {
+    // 좋아요 제거
+    if (post.PostLikers.some(liker => liker._id === me._id)) return dispatch(removeLikeToPostAction({ PostId }));
+
+    // 좋아요 추가
+    return dispatch(appendLikeToPostAction({ PostId }));
+  }, [post, me]);
+
+  // 2021/12/28 - 댓글 좋아요 추가/삭제 요청 - by 1-blue
+  const onClickCommentLike = useCallback(
+    (CommentId, isMineCommentLike) => () => {
+      // 좋아요 제거
+      if (isMineCommentLike) return dispatch(removeLikeToCommentAction({ CommentId }));
+
+      // 좋아요 추가
+      return dispatch(appendLikeToCommentAction({ CommentId }));
+    },
+    [me],
+  );
 
   return (
     <Wrapper>
@@ -37,7 +176,13 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
         {post ? (
           <>
             {/* 머리 부분 */}
-            <PostHead image={post.User.Images[0]} name={post.User.name} className="post-head-1" />
+            <PostHead
+              image={post.User.Images[0]}
+              name={post.User.name}
+              className="post-head-1"
+              isMinePost={post.User._id === me._id}
+              onRemovePost={onRemovePost}
+            />
 
             {/* image-carousel */}
             <ImageCarousel speed={300} length={post.Images.length}>
@@ -50,24 +195,44 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
 
             <div className="post">
               {/* 머리 부분 */}
-              <PostHead image={post.User.Images[0]} name={post.User.name} className="post-head-2" />
+              <PostHead
+                image={post.User.Images[0]}
+                name={post.User.name}
+                className="post-head-2"
+                isMinePost={post.User._id === me._id}
+                onRemovePost={onRemovePost}
+              />
 
               <div className="post-scroll">
                 {/* 컨텐츠 부분 */}
                 <PostContent content={post.content} />
 
                 {/* 댓글 영역 */}
-                <PostComment />
+                <ul className="post-comment">
+                  {post.Comments.map(comment => (
+                    <PostComment
+                      key={comment._id}
+                      comment={comment}
+                      isMineComment={comment.User._id === me._id}
+                      onRemoveComment={onRemoveComment}
+                      onClickCommentLike={onClickCommentLike}
+                      isMineCommentLike={comment.CommentLikers.some(liker => liker._id === me._id)}
+                    />
+                  ))}
+                </ul>
               </div>
 
               {/* 아이콘 버튼 영역 */}
-              <PostIconButtons PostId={PostId} />
+              <PostIconButtons
+                onClickPostLike={onClickPostLike}
+                isPostLiked={post?.PostLikers.some(liker => liker._id === me._id)}
+              />
 
               {/* 좋아요 개수 및 게시글 작성 시간 */}
-              <PostInfo Likers={post.Likers} updatedAt={post.updatedAt} />
+              <PostInfo PostLikers={post.PostLikers} createdAt={post.createdAt} />
 
               {/* 댓글 폼 */}
-              <PostCommentForm />
+              <PostCommentForm PostId={PostId} onAppendComment={onAppendComment} />
             </div>
           </>
         ) : (
