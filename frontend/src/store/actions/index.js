@@ -6,6 +6,6 @@ export const resetMessageAction = () => ({ type: RESET_MESSAGE });
 export { localLoginAction, localLogoutAction } from "./authAction";
 export { loadToMeAction, signupAction } from "./userAction";
 export { uploadImagesAction, resetImagePreview } from "./imageAction";
-export { resetPostAction, createPostAction, loadPostsAction, loadPostAction } from "./postAction";
+export { resetPostAction, createPostAction, loadPostsAction, loadPostAction, removePostAction } from "./postAction";
 export { appendLikeToPostAction, removeLikeToPostAction } from "./likeAction";
 export { appendCommentToPostAction, removeCommentToPostAction } from "./commentAction";

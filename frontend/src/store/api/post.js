@@ -22,3 +22,8 @@ export function apiLoadPosts(body) {
 export function apiLoadPost(body) {
   return postInstance.get(`/${body.PostId}`);
 }
+
+// 2021/12/22 - 특정 게시글 삭제 요청 - by 1-blue
+export function apiRemovePost(body) {
+  return postInstance.delete(`/${body.PostId}`);
+}

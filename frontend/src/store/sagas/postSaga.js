@@ -7,6 +7,7 @@ import {
   CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
   LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
+  REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
   APPEND_LIKE_TO_POST_REQUEST, APPEND_LIKE_TO_POST_SUCCESS, APPEND_LIKE_TO_POST_FAILURE,
   REMOVE_LIKE_TO_POST_REQUEST, REMOVE_LIKE_TO_POST_SUCCESS, REMOVE_LIKE_TO_POST_FAILURE,
   APPEND_COMMENT_TO_POST_REQUEST, APPEND_COMMENT_TO_POST_SUCCESS, APPEND_COMMENT_TO_POST_FAILURE,
@@ -14,7 +15,16 @@ import {
  } from "@store/types";
 
 // api
-import { apiCreatePost, apiLoadPosts, apiLoadPost, apiAppendLikeToPost, apiRemoveLikeToPost, apiAppendCommentToPost, apiRemoveCommentToPost } from "@store/api";
+import {
+  apiCreatePost,
+  apiLoadPosts,
+  apiLoadPost,
+  apiRemovePost,
+  apiAppendLikeToPost,
+  apiRemoveLikeToPost,
+  apiAppendCommentToPost,
+  apiRemoveCommentToPost,
+} from "@store/api";
 
 function* createPost(action) {
   try {
@@ -60,6 +70,22 @@ function* loadPost(action) {
     console.error(error);
     yield put({
       type: LOAD_POST_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
+function* removePost(action) {
+  try {
+    const { data } = yield call(apiRemovePost, action.data);
+
+    yield put({
+      type: REMOVE_POST_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: REMOVE_POST_FAILURE,
       data: error.response.data,
     });
   }
@@ -138,6 +164,9 @@ function* watchLoadPosts() {
 function* watchLoadPost() {
   yield takeLatest(LOAD_POST_REQUEST, loadPost);
 }
+function* watchRemovePost() {
+  yield takeLatest(REMOVE_POST_REQUEST, removePost);
+}
 function* watchAppendLikeToPost() {
   yield takeLatest(APPEND_LIKE_TO_POST_REQUEST, appendLikeToPost);
 }
@@ -156,6 +185,7 @@ export default function* postSaga() {
     fork(watchCreatePost),
     fork(watchLoadPosts),
     fork(watchLoadPost),
+    fork(watchRemovePost),
     fork(watchAppendLikeToPost),
     fork(watchRemoveLikeToPost),
     fork(watchAppendCommentToPost),

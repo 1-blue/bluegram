@@ -6,6 +6,7 @@ import {
   CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
   LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
+  REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
   APPEND_LIKE_TO_POST_REQUEST, APPEND_LIKE_TO_POST_SUCCESS, APPEND_LIKE_TO_POST_FAILURE,
   REMOVE_LIKE_TO_POST_REQUEST, REMOVE_LIKE_TO_POST_SUCCESS, REMOVE_LIKE_TO_POST_FAILURE,
   APPEND_COMMENT_TO_POST_REQUEST, APPEND_COMMENT_TO_POST_SUCCESS, APPEND_COMMENT_TO_POST_FAILURE,
@@ -33,6 +34,11 @@ const initState = {
   loadPostLoading: false,
   loadPostDone: null,
   loadPostError: null,
+
+  // 특정 게시글 제거 요청
+  removePostLoading: false,
+  removePostDone: null,
+  removePostError: null,
 
   // 2021/12/25 - 좋아요 추가 - by 1-blue
   appendLikeToPostLoading: false,
@@ -69,6 +75,9 @@ function postReducer(prevState = initState, action) {
         loadPostLoading: false,
         loadPostDone: null,
         loadPostError: null,
+        removePostLoading: false,
+        removePostDone: null,
+        removePostError: null,
         appendLikeToPostLoading: false,
         appendLikeToPostDone: null,
         appendLikeToPostError: null,
@@ -151,6 +160,33 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadPostLoading: false,
         loadPostError: action.data.message,
+      };
+
+    // 2021/12/28 특정 게시글 제거 - by 1-blue
+    case REMOVE_POST_REQUEST:
+      return {
+        ...prevState,
+        removePostLoading: true,
+        removePostDone: null,
+        removePostError: null,
+      };
+    case REMOVE_POST_SUCCESS:
+      return {
+        ...prevState,
+        removePostLoading: false,
+        removePostDone: action.data.message,
+
+        // 2021/12/28 특정 게시글 내용 비우기 - by 1-blue
+        posts: prevState.posts.filter(post => post._id !== action.data.result.removedPostId),
+
+        // 2021/12/28 특정 게시글 내용 비우기 - by 1-blue
+        post: null,
+      };
+    case REMOVE_POST_FAILURE:
+      return {
+        ...prevState,
+        removePostLoading: false,
+        removePostError: action.data.message,
       };
 
     // 2021/12/25 - 게시글 좋아요 추가 - by 1-blue

@@ -8,6 +8,7 @@ import {
   resetMessageAction,
   appendCommentToPostAction,
   removeCommentToPostAction,
+  removePostAction,
 } from "@store/actions";
 
 // components
@@ -25,8 +26,14 @@ import { Wrapper } from "./style";
 
 const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
   const dispatch = useDispatch();
-  const { appendCommentToPostDone, appendCommentToPostError, removeCommentToPostDone, removeCommentToPostError } =
-    useSelector(state => state.post);
+  const {
+    appendCommentToPostDone,
+    appendCommentToPostError,
+    removeCommentToPostDone,
+    removeCommentToPostError,
+    removePostDone,
+    removePostError,
+  } = useSelector(state => state.post);
   const { post } = useSelector(state => state.post);
   const { me } = useSelector(state => state.user);
 
@@ -35,7 +42,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     dispatch(loadPostAction({ PostId }));
   }, []);
 
-  // 2021/12/27 - 게시글의 댓글 생성 성공 시 메시지 / 게시글의 댓글 생성 실패 시 메시지 - by 1-blue
+  // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
   useEffect(() => {
     if (!(appendCommentToPostDone || appendCommentToPostError)) return;
 
@@ -44,7 +51,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     dispatch(resetMessageAction());
   }, [appendCommentToPostDone, appendCommentToPostError]);
 
-  // 2021/12/27 - 게시글의 댓글 제거 성공 시 메시지 / 게시글의 댓글 제거 실패 시 메시지 - by 1-blue
+  // 2021/12/27 - 게시글의 댓글 제거 성공/실패 시 메시지 - by 1-blue
   useEffect(() => {
     if (!(removeCommentToPostDone || removeCommentToPostError)) return;
 
@@ -52,6 +59,15 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
 
     dispatch(resetMessageAction());
   }, [removeCommentToPostDone, removeCommentToPostError]);
+
+  // 2021/12/28 - 게시글 제거 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(removePostDone || removePostError)) return;
+
+    alert(removePostDone || removePostError);
+
+    dispatch(resetMessageAction());
+  }, [removePostDone, removePostError]);
 
   // 2021/12/27 - 댓글 생성 ( using PostCommentForm ) - by 1-blue
   const onAppendComment = useCallback(
@@ -65,7 +81,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     [PostId],
   );
 
-  // 2021/12/27 - 댓글 삭제 ( using PostCommentForm ) - by 1-blue
+  // 2021/12/27 - 댓글 삭제 ( using PostComment ) - by 1-blue
   const onRemoveComment = useCallback(
     CommentId => e => {
       e.preventDefault();
@@ -73,6 +89,16 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
       dispatch(removeCommentToPostAction({ CommentId }));
     },
     [],
+  );
+
+  // 2021/12/27 - 게시글 삭제 ( using PostHead ) - by 1-blue
+  const onRemovePost = useCallback(
+    e => {
+      e.preventDefault();
+
+      dispatch(removePostAction({ PostId }));
+    },
+    [PostId],
   );
 
   return (
@@ -90,6 +116,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
               name={post.User.name}
               className="post-head-1"
               isMine={post.User._id === me._id}
+              onRemovePost={onRemovePost}
             />
 
             {/* image-carousel */}
@@ -108,6 +135,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
                 name={post.User.name}
                 className="post-head-2"
                 isMine={post.User._id === me._id}
+                onRemovePost={onRemovePost}
               />
 
               <div className="post-scroll">

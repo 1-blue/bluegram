@@ -206,9 +206,28 @@ router.get("/:PostId", async (req, res, next) => {
       ],
     });
 
+    if (!post) return res.status(404).json({ message: "존재하지 않은 게시글입니다.\n잠시후에 다시 시도해주세요" });
+
     res.json({ message: "특정 게시글을 불러오는데 성공했습니다.", post });
   } catch (error) {
     console.error("GET /post error >> ", error);
+    return next(error);
+  }
+});
+
+// 2021/12/28 - 특정 게시글 제거하기 - by 1-blue
+router.delete("/:PostId", async (req, res, next) => {
+  const PostId = +req.params.PostId;
+
+  try {
+    const removedPostCount = await Post.destroy({ where: { _id: PostId } });
+
+    if (removedPostCount === 0)
+      return res.status(404).json({ message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
+
+    res.status(200).json({ message: "게시글 삭제에 성공하셨습니다.", result: { removedPostId: PostId } });
+  } catch (error) {
+    console.error("DELETE /post/:PostId error >> ", error);
     return next(error);
   }
 });
