@@ -40,7 +40,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
           include: [
             {
               model: Image,
-              attributes: ["_id", "name"],
+              attributes: ["_id", "name", "url"],
             },
           ],
         },
@@ -61,7 +61,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
               include: [
                 {
                   model: Image,
-                  attributes: ["_id", "name"],
+                  attributes: ["_id", "name", "url"],
                 },
               ],
             },
@@ -117,7 +117,7 @@ router.get("/", async (req, res, next) => {
           include: [
             {
               model: Image,
-              attributes: ["_id", "name"],
+              attributes: ["_id", "name", "url"],
             },
           ],
         },
@@ -168,7 +168,7 @@ router.get("/:PostId", async (req, res, next) => {
           include: [
             {
               model: Image,
-              attributes: ["_id", "name"],
+              attributes: ["_id", "name", "url"],
             },
           ],
         },
@@ -189,7 +189,7 @@ router.get("/:PostId", async (req, res, next) => {
               include: [
                 {
                   model: Image,
-                  attributes: ["_id", "name"],
+                  attributes: ["_id", "name", "url"],
                 },
               ],
             },
@@ -205,7 +205,7 @@ router.get("/:PostId", async (req, res, next) => {
               include: [
                 {
                   model: Image,
-                  attributes: ["_id", "name"],
+                  attributes: ["_id", "name", "url"],
                 },
               ],
             },

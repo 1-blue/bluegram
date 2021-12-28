@@ -23,7 +23,11 @@ const PostCard = ({ post, onOpenModal }) => {
     >
       <section className="post-image-container">
         <img
-          src={process.env.IMAGE_URL + "/" + post.Images[post.Images.length - 1].name}
+          src={
+            (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+            "/" +
+            post.Images[post.Images.length - 1].name
+          }
           alt="유저가 업로드한 이미지"
           className="post-image"
         />

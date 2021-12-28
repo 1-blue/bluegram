@@ -28,7 +28,7 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
         attributes: ["_id", "name"],
         include: {
           model: Image,
-          attributes: ["_id", "name"],
+          attributes: ["_id", "name", "url"],
         },
       },
     });

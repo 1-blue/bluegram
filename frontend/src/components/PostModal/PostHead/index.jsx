@@ -17,7 +17,7 @@ const PostHead = ({ image, name, className, isMinePost, onRemovePost }) => {
 
   return (
     <Wrapper className={className}>
-      <Avatar width={40} height={40} src={image.name ? process.env.IMAGE_URL + "/" + image.name : image.url} />
+      <Avatar width={40} height={40} image={image} />
       <span className="post-head-username">{name}</span>
       <button type="button" className="post-conent-head-follow-button">
         팔로우

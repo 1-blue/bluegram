@@ -123,7 +123,14 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
             <ImageCarousel speed={300} length={imagePreviews.length}>
               {imagePreviews.map(imagePreview => (
                 <li key={imagePreview}>
-                  <img src={process.env.IMAGE_URL + "/" + imagePreview} alt="사용자가 등록한 이미지" />
+                  <img
+                    src={
+                      (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                      "/" +
+                      imagePreview
+                    }
+                    alt="사용자가 등록한 이미지"
+                  />
                 </li>
               ))}
             </ImageCarousel>
@@ -131,11 +138,7 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
             {/* 게시글 정보 입력 폼 */}
             <form className="modal-form" onSubmit={onSubmitPost}>
               <div className="modal-form-info">
-                <Avatar
-                  width={40}
-                  height={40}
-                  src={`${process.env.IMAGE_URL}/${me.Images[0].name ? me.Images[0].name : me.Images[0].url}`}
-                />
+                <Avatar width={40} height={40} image={me.Images[0]} />
                 <b>{me.name}</b>
               </div>
 

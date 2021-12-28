@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const authInstance = axios.create({
-  baseURL: `${process.env.SERVER_URL}/comment`,
+  baseURL:
+    (process.env.NODE_ENV === "production" ? process.env.PROD_SERVER_URL : process.env.DEV_SERVER_URL) + "/comment",
   withCredentials: true,
   timeout: 2500,
 });

@@ -93,7 +93,7 @@ const RightMenu = () => {
             <Avatar
               width={30}
               height={30}
-              src={me.Images[0].url ? me.Images[0].url : process.env.IMAGE_URL + "/" + me.Images[0].name}
+              image={me.Images[0]}
               alt="유저의 프로필 이미지"
               onClick={onClickShowProfileMenu}
             />

@@ -97,7 +97,7 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
       include: [
         {
           model: Image,
-          attributes: ["_id", "name"],
+          attributes: ["_id", "name", "url"],
         },
       ],
     });

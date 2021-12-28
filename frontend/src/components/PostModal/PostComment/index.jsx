@@ -20,7 +20,7 @@ const PostComment = ({ comment, isMineComment, onRemoveComment, onClickCommentLi
 
   return (
     <Wrapper>
-      <Avatar width={40} height={40} src={process.env.IMAGE_URL + "/" + comment.User?.Images[0].name} />
+      <Avatar width={40} height={40} image={comment.User?.Images[0]} />
       <div className="comment-container">
         <b className="comment-username">{comment.User.name}</b>
         <pre className="comment-content">{comment.content}</pre>

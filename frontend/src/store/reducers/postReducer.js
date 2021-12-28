@@ -375,7 +375,7 @@ function postReducer(prevState = initState, action) {
       };
     case APPEND_LIKE_TO_COMMENT_SUCCESS:
       const { commentLikerWithData } = action.data;
-      console.log("commentLikerWithData >> ", commentLikerWithData);
+
       return {
         ...prevState,
         appendLikeToCommentLoading: false,

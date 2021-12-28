@@ -75,7 +75,9 @@ const LoginPage = () => {
         </Button>
         {/* 카카오 로그인 버튼 */}
         <Button type="button" $kakao>
-          <a href={process.env.KAKAO_URL}>카카오 로그인</a>
+          <a href={process.env.NODE_ENV === "production" ? process.env.PROD_KAKAO_URL : process.env.DEV_KAKAO_URL}>
+            카카오 로그인
+          </a>
         </Button>
 
         <div className="form-footer">

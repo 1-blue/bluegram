@@ -8,10 +8,10 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   // 웹펙 시작 모드 설정
-  mode: process.env.NODE_ENV,
+  mode: "development",
 
   // 디버깅을 위한 설정 배포 시 eval
-  devtool: process.env.NODE_ENV === "production" ? "source-map" : "inline-source-map",
+  devtool: "inline-source-map",
 
   // 경로 및 확장자 설정
   resolve: {

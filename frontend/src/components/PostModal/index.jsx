@@ -188,7 +188,14 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
             <ImageCarousel speed={300} length={post.Images.length}>
               {post.Images.map(image => (
                 <li key={image._id}>
-                  <img src={process.env.IMAGE_URL + "/" + image.name} alt="게시글의 이미지" />
+                  <img
+                    src={
+                      (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                      "/" +
+                      image.name
+                    }
+                    alt="게시글의 이미지"
+                  />
                 </li>
               ))}
             </ImageCarousel>

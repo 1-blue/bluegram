@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack serve --open",
-    "build": "webpack build"
+    "dev": "cross-env NODE_ENV=development webpack serve --open --config webpack.development.js",
+    "build": "cross-env NODE_ENV=production webpack build --config webpack.production.js"
   },
   "author": "1-blue",
   "license": "ISC",
@@ -28,6 +28,8 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
     "@svgr/webpack": "^6.1.2",
     "babel-loader": "^8.2.3",
+    "clean-webpack-plugin": "^4.0.0",
+    "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "dotenv": "^10.0.0",
     "dotenv-webpack": "^7.0.3",

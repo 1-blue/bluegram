@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import express, { application } from "express";
+import express from "express";
 import passport from "passport";
 import axios from "axios";
 
@@ -57,7 +57,7 @@ router.get(
     failureRedirect: "/",
   }),
   (req, res) => {
-    res.redirect(process.env.CLIENT_URL);
+    res.redirect(process.env.NODE_ENV === "production" ? "http://bluegram.cf" : "http://localhost:8080");
   },
 );
 

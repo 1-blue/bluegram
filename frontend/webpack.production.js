@@ -8,10 +8,10 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
   // 웹펙 시작 모드 설정
-  mode: process.env.NODE_ENV,
+  mode: "production",
 
   // 디버깅을 위한 설정 배포 시 eval
-  devtool: process.env.NODE_ENV === "production" ? "source-map" : "inline-source-map",
+  devtool: "eval",
 
   // 경로 및 확장자 설정
   resolve: {
@@ -54,7 +54,7 @@ module.exports = {
           // @babel/preset-react는 jsx 지원
           presets: ["@babel/preset-env", "@babel/preset-react"],
           // dev server을 위한 설정, async와 await를 위한 설정
-          plugins: ["react-refresh/babel", "@babel/plugin-transform-runtime"],
+          plugins: ["@babel/plugin-transform-runtime"],
         },
       },
 
@@ -79,30 +79,4 @@ module.exports = {
     new DotenvWebpackPlugin(),
     new CleanWebpackPlugin(),
   ],
-
-  // 데브서버 설정
-  devServer: {
-    // 번들링한 결과물을 저장할 위치 ( 메모리상 )
-    devMiddleware: {
-      publicPath: "/dist",
-    },
-    // 정적 파일들의 위치 지정
-    static: {
-      // 내 컴퓨터에서 공유할 파일들이 있는 경로
-      directory: path.resolve(__dirname, "public"),
-      // 브라우저상에서 접근할 경로
-      publicPath: "/",
-      // 정적 파일 수정시 페이지 새로고침 여부
-      watch: true,
-      // index 파일 없으면 브라우저에서 폴더를 보여줄지 여부
-      serveIndex: true,
-    },
-    // 핫 모듈 리로딩 기능 ( 새로고침해도 기존 입력 정보는 유지 )
-    hot: true,
-    // 포트번호 설정
-    port: 8080,
-    // SPA의 react-router 같은 거 사용할 때 필수적으로 적용해 줘야 하는 옵션이다.
-    // 기본적으로 /login으로 요청 보내면 404에러가나기 때문에 그때 index.js로 요청을 넘기게 해주는 옵션 값
-    historyApiFallback: true,
-  },
 };
