@@ -32,7 +32,7 @@ const PostCard = ({ post, onOpenModal }) => {
             <div className="post-information">
               <div>
                 <Icon shape="fillHeart" width={24} height={24} fill="white" animation="rubber-band" />
-                <span>{post.Likers.length}</span>
+                <span>{post.PostLikers.length}</span>
               </div>
               <div>
                 <Icon shape="comment" width={24} height={24} fill="white" animation="rubber-band" />
@@ -91,7 +91,7 @@ PostCard.propTypes = {
         }),
       }),
     ).isRequired,
-    Likers: Proptypes.arrayOf(
+    PostLikers: Proptypes.arrayOf(
       Proptypes.shape({
         _id: Proptypes.number,
       }),

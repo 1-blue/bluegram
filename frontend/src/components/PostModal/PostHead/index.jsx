@@ -12,7 +12,7 @@ import useOpenClose from "@hooks/useOpenClose";
 // styled-component
 import { Wrapper } from "./style";
 
-const PostHead = ({ image, name, className, isMine, onRemovePost }) => {
+const PostHead = ({ image, name, className, isMinePost, onRemovePost }) => {
   const [showDialog, onOpenDialog, onCloseDialog] = useOpenClose(false);
 
   return (
@@ -26,7 +26,7 @@ const PostHead = ({ image, name, className, isMine, onRemovePost }) => {
 
       {showDialog && (
         <Dialog onClose={onCloseDialog} showDialog={showDialog}>
-          {isMine ? (
+          {isMinePost ? (
             <>
               <li onClick={onRemovePost}>삭제</li>
               <li>수정</li>
@@ -49,7 +49,7 @@ PostHead.propTypes = {
   }).isRequired,
   name: Proptypes.string.isRequired,
   className: Proptypes.string.isRequired,
-  isMine: Proptypes.bool.isRequired,
+  isMinePost: Proptypes.bool.isRequired,
   onRemovePost: Proptypes.func.isRequired,
 };
 

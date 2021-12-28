@@ -11,6 +11,8 @@ export const Wrapper = styled.li`
   & > .comment-container {
     flex: 1 0 auto;
 
+    position: relative;
+
     & > .comment-username {
       display: block;
       margin-bottom: 0.4em;
@@ -32,9 +34,16 @@ export const Wrapper = styled.li`
         font-size: 0.7rem;
       }
 
-      & i {
+      & > i {
         vertical-align: sub;
       }
+    }
+
+    & > i {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
     }
   }
 `;

@@ -61,13 +61,13 @@ const User = (sequelize, DataTypes) => {
   User.associate = db => {
     // 팔로우 ( N : M )
     db.User.belongsToMany(db.User, {
-      through: "follows",
+      through: "Follows",
       as: "Followings",
       foreignKey: "FollowerId",
       onDelete: "cascade",
     });
     db.User.belongsToMany(db.User, {
-      through: "follows",
+      through: "Follows",
       as: "Followers",
       foreignKey: "FollowingId",
       onDelete: "cascade",
@@ -79,8 +79,21 @@ const User = (sequelize, DataTypes) => {
     // 유저와 댓글 ( 1 : N )
     db.User.hasMany(db.Comment, { onDelete: "cascade" });
 
-    // 좋아요 ( N : M ) ( 유저와 게시글 )
-    db.User.belongsToMany(db.Post, { through: "likes", as: "Liked", foreignKey: "UserId", onDelete: "cascade" });
+    // 게시글 좋아요 ( N : M ) ( 유저와 게시글 )
+    db.User.belongsToMany(db.Post, {
+      through: "PostLikes",
+      as: "PostLiked",
+      foreignKey: "UserId",
+      onDelete: "cascade",
+    });
+
+    // 댓글 좋아요 ( N : M ) ( 유저와 댓글 )
+    db.User.belongsToMany(db.Comment, {
+      through: "CommentLikes",
+      as: "CommentLiked",
+      foreignKey: "UserId",
+      onDelete: "cascade",
+    });
 
     // 유저와 이미지 ( 1 : N )
     db.User.hasMany(db.Image, { onDelete: "cascade" });

@@ -11,6 +11,8 @@ import {
   REMOVE_LIKE_TO_POST_REQUEST, REMOVE_LIKE_TO_POST_SUCCESS, REMOVE_LIKE_TO_POST_FAILURE,
   APPEND_COMMENT_TO_POST_REQUEST, APPEND_COMMENT_TO_POST_SUCCESS, APPEND_COMMENT_TO_POST_FAILURE,
   REMOVE_COMMENT_TO_POST_REQUEST, REMOVE_COMMENT_TO_POST_SUCCESS, REMOVE_COMMENT_TO_POST_FAILURE,
+  APPEND_LIKE_TO_COMMENT_REQUEST, APPEND_LIKE_TO_COMMENT_SUCCESS, APPEND_LIKE_TO_COMMENT_FAILURE,
+  REMOVE_LIKE_TO_COMMENT_REQUEST, REMOVE_LIKE_TO_COMMENT_SUCCESS, REMOVE_LIKE_TO_COMMENT_FAILURE,
 } from "@store/types";
 
 const initState = {
@@ -59,6 +61,16 @@ const initState = {
   removeCommentToPostLoading: false,
   removeCommentToPostDone: null,
   removeCommentToPostError: null,
+
+  // 2021/12/25 - 댓글에 좋아요 추가 - by 1-blue
+  appendLikeToCommentLoading: false,
+  appendLikeToCommentDone: null,
+  appendLikeToCommentError: null,
+
+  // 2021/12/25 - 댓글에 좋아요 제거 - by 1-blue
+  removeLikeToCommentLoading: false,
+  removeLikeToCommentDone: null,
+  removeLikeToCommentError: null,
 };
 
 function postReducer(prevState = initState, action) {
@@ -90,6 +102,14 @@ function postReducer(prevState = initState, action) {
         removeCommentToPostLoading: false,
         removeCommentToPostDone: null,
         removeCommentToPostError: null,
+
+        appendLikeToCommentLoading: false,
+        appendLikeToCommentDone: null,
+        appendLikeToCommentError: null,
+
+        removeLikeToCommentLoading: false,
+        removeLikeToCommentDone: null,
+        removeLikeToCommentError: null,
       };
 
     // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주기 - by 1-blue
@@ -209,13 +229,13 @@ function postReducer(prevState = initState, action) {
 
           return {
             ...post,
-            Likers: [...post.Likers, { _id: action.data.result.UserId }],
+            PostLikers: [...post.PostLikers, { _id: action.data.result.UserId }],
           };
         }),
         // 2021/12/25 - 불변성 지키면서 특정 게시글 객체에 게시글에 좋아요 누른 인원 추가 - by 1-blue
         post: {
           ...prevState.post,
-          Likers: [...prevState.post.Likers, { _id: action.data.result.UserId }],
+          PostLikers: [...prevState.post.PostLikers, { _id: action.data.result.UserId }],
         },
       };
     case APPEND_LIKE_TO_POST_FAILURE:
@@ -245,13 +265,13 @@ function postReducer(prevState = initState, action) {
 
           return {
             ...post,
-            Likers: post.Likers.filter(liker => liker._id !== action.data.result.UserId),
+            PostLikers: post.PostLikers.filter(liker => liker._id !== action.data.result.UserId),
           };
         }),
         // 2021/12/25 - 불변성 지키면서 특정 게시글 객체에 게시글에 좋아요 누른 인원 제거 - by 1-blue
         post: {
           ...prevState.post,
-          Likers: prevState.post.Likers.filter(liker => liker._id !== action.data.result.UserId),
+          PostLikers: prevState.post.PostLikers.filter(liker => liker._id !== action.data.result.UserId),
         },
       };
     case REMOVE_LIKE_TO_POST_FAILURE:
@@ -296,6 +316,7 @@ function postReducer(prevState = initState, action) {
               content: createdCommentWithData.content,
               createdAt: createdCommentWithData.createdAt,
               User: { ...createdCommentWithData.User },
+              CommentLikers: [],
             },
           ],
         },
@@ -342,6 +363,78 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         removeCommentToPostLoading: false,
         removeCommentToPostError: action.data.message,
+      };
+
+    // 2021/12/28 - 댓글에 좋아요 추가 - by 1-blue
+    case APPEND_LIKE_TO_COMMENT_REQUEST:
+      return {
+        ...prevState,
+        appendLikeToCommentLoading: true,
+        appendLikeToCommentDone: null,
+        appendLikeToCommentError: null,
+      };
+    case APPEND_LIKE_TO_COMMENT_SUCCESS:
+      const { commentLikerWithData } = action.data;
+      console.log("commentLikerWithData >> ", commentLikerWithData);
+      return {
+        ...prevState,
+        appendLikeToCommentLoading: false,
+        appendLikeToCommentDone: action.data.message,
+
+        // 2021/12/28 - 댓글 좋아요 추가 후 post 처리 - by 1-blue
+        post: {
+          ...prevState.post,
+          Comments: prevState.post.Comments.map(comment => {
+            if (comment._id !== commentLikerWithData.CommentLikes.CommentId) return comment;
+
+            return {
+              ...comment,
+              CommentLikers: [...comment.CommentLikers, commentLikerWithData],
+            };
+          }),
+        },
+      };
+    case APPEND_LIKE_TO_COMMENT_FAILURE:
+      return {
+        ...prevState,
+        appendLikeToCommentLoading: false,
+        appendLikeToCommentError: action.data.message,
+      };
+
+    // 2021/12/28 - 댓글에 좋아요 제거 - by 1-blue
+    case REMOVE_LIKE_TO_COMMENT_REQUEST:
+      return {
+        ...prevState,
+        removeLikeToCommentLoading: true,
+        removeLikeToCommentDone: null,
+        removeLikeToCommentError: null,
+      };
+    case REMOVE_LIKE_TO_COMMENT_SUCCESS:
+      return {
+        ...prevState,
+        removeLikeToCommentLoading: false,
+        removeLikeToCommentDone: action.data.message,
+
+        // 2021/12/28 - 댓글 좋아요 추가 후 post 처리 - by 1-blue
+        post: {
+          ...prevState.post,
+          Comments: prevState.post.Comments.map(comment => {
+            if (comment._id !== action.data.result.CommentId) return comment;
+
+            return {
+              ...comment,
+              CommentLikers: comment.CommentLikers.filter(
+                commentLiker => commentLiker._id !== action.data.result.removedUserId,
+              ),
+            };
+          }),
+        },
+      };
+    case REMOVE_LIKE_TO_COMMENT_FAILURE:
+      return {
+        ...prevState,
+        removeLikeToCommentLoading: false,
+        removeLikeToCommentError: action.data.message,
       };
 
     default:

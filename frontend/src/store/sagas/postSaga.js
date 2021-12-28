@@ -12,8 +12,10 @@ import {
   REMOVE_LIKE_TO_POST_REQUEST, REMOVE_LIKE_TO_POST_SUCCESS, REMOVE_LIKE_TO_POST_FAILURE,
   APPEND_COMMENT_TO_POST_REQUEST, APPEND_COMMENT_TO_POST_SUCCESS, APPEND_COMMENT_TO_POST_FAILURE,
   REMOVE_COMMENT_TO_POST_REQUEST, REMOVE_COMMENT_TO_POST_SUCCESS, REMOVE_COMMENT_TO_POST_FAILURE,
+  APPEND_LIKE_TO_COMMENT_REQUEST, APPEND_LIKE_TO_COMMENT_SUCCESS, APPEND_LIKE_TO_COMMENT_FAILURE,
+  REMOVE_LIKE_TO_COMMENT_REQUEST, REMOVE_LIKE_TO_COMMENT_SUCCESS, REMOVE_LIKE_TO_COMMENT_FAILURE,
  } from "@store/types";
-
+ 
 // api
 import {
   apiCreatePost,
@@ -24,6 +26,8 @@ import {
   apiRemoveLikeToPost,
   apiAppendCommentToPost,
   apiRemoveCommentToPost,
+  apiAppendLikeToComment,
+  apiRemoveLikeToComment,
 } from "@store/api";
 
 function* createPost(action) {
@@ -154,6 +158,38 @@ function* removeCommentToPost(action) {
     });
   }
 }
+function* appendLikeToComment(action) {
+  try {
+    const { data } = yield call(apiAppendLikeToComment, action.data);
+
+    yield put({
+      type: APPEND_LIKE_TO_COMMENT_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: APPEND_LIKE_TO_COMMENT_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
+function* removeLikeToComment(action) {
+  try {
+    const { data } = yield call(apiRemoveLikeToComment, action.data);
+
+    yield put({
+      type: REMOVE_LIKE_TO_COMMENT_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: REMOVE_LIKE_TO_COMMENT_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
 
 function* watchCreatePost() {
   yield takeLatest(CREATE_POST_REQUEST, createPost);
@@ -179,6 +215,12 @@ function* watchAppendCommentToPost() {
 function* watchRemoveCommentToPost() {
   yield takeLatest(REMOVE_COMMENT_TO_POST_REQUEST, removeCommentToPost);
 }
+function* watchAppendLikeToComment() {
+  yield takeLatest(APPEND_LIKE_TO_COMMENT_REQUEST, appendLikeToComment);
+}
+function* watchRemoveLikeToComment() {
+  yield takeLatest(REMOVE_LIKE_TO_COMMENT_REQUEST, removeLikeToComment);
+}
 
 export default function* postSaga() {
   yield all([
@@ -190,5 +232,7 @@ export default function* postSaga() {
     fork(watchRemoveLikeToPost),
     fork(watchAppendCommentToPost),
     fork(watchRemoveCommentToPost),
+    fork(watchAppendLikeToComment),
+    fork(watchRemoveLikeToComment),
   ]);
 }

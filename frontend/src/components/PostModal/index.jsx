@@ -9,6 +9,10 @@ import {
   appendCommentToPostAction,
   removeCommentToPostAction,
   removePostAction,
+  appendLikeToPostAction,
+  removeLikeToPostAction,
+  appendLikeToCommentAction,
+  removeLikeToCommentAction,
 } from "@store/actions";
 
 // components
@@ -27,14 +31,22 @@ import { Wrapper } from "./style";
 const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
   const dispatch = useDispatch();
   const {
+    post,
     appendCommentToPostDone,
     appendCommentToPostError,
     removeCommentToPostDone,
     removeCommentToPostError,
     removePostDone,
     removePostError,
+    appendLikeToPostDone,
+    appendLikeToPostError,
+    removeLikeToPostDone,
+    removeLikeToPostError,
+    appendLikeToCommentDone,
+    appendLikeToCommentError,
+    removeLikeToCommentDone,
+    removeLikeToCommentError,
   } = useSelector(state => state.post);
-  const { post } = useSelector(state => state.post);
   const { me } = useSelector(state => state.user);
 
   // 2021/12/24 - 특정 게시글 상세 정보 요청 - by 1-blue
@@ -69,6 +81,38 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     dispatch(resetMessageAction());
   }, [removePostDone, removePostError]);
 
+  // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(appendLikeToPostDone || appendLikeToPostError)) return;
+    alert(appendLikeToPostDone || appendLikeToPostError);
+
+    dispatch(resetMessageAction());
+  }, [appendLikeToPostDone, appendLikeToPostError]);
+
+  // 2021/12/25 - 게시글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(removeLikeToPostDone || removeLikeToPostError)) return;
+    alert(removeLikeToPostDone || removeLikeToPostError);
+
+    dispatch(resetMessageAction());
+  }, [removeLikeToPostDone, removeLikeToPostError]);
+
+  // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(appendLikeToCommentDone || appendLikeToCommentError)) return;
+    alert(appendLikeToCommentDone || appendLikeToCommentError);
+
+    dispatch(resetMessageAction());
+  }, [appendLikeToCommentDone, appendLikeToCommentError]);
+
+  // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
+  useEffect(() => {
+    if (!(removeLikeToCommentDone || removeLikeToCommentError)) return;
+    alert(removeLikeToCommentDone || removeLikeToCommentError);
+
+    dispatch(resetMessageAction());
+  }, [removeLikeToCommentDone, removeLikeToCommentError]);
+
   // 2021/12/27 - 댓글 생성 ( using PostCommentForm ) - by 1-blue
   const onAppendComment = useCallback(
     (content, CommentId) => e => {
@@ -101,6 +145,27 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     [PostId],
   );
 
+  // 2021/12/25 - 게시글 좋아요 추가/삭제 요청 - by 1-blue
+  const onClickPostLike = useCallback(() => {
+    // 좋아요 제거
+    if (post.PostLikers.some(liker => liker._id === me._id)) return dispatch(removeLikeToPostAction({ PostId }));
+
+    // 좋아요 추가
+    return dispatch(appendLikeToPostAction({ PostId }));
+  }, [post, me]);
+
+  // 2021/12/28 - 댓글 좋아요 추가/삭제 요청 - by 1-blue
+  const onClickCommentLike = useCallback(
+    (CommentId, isMineCommentLike) => () => {
+      // 좋아요 제거
+      if (isMineCommentLike) return dispatch(removeLikeToCommentAction({ CommentId }));
+
+      // 좋아요 추가
+      return dispatch(appendLikeToCommentAction({ CommentId }));
+    },
+    [me],
+  );
+
   return (
     <Wrapper>
       <button type="button" className="close-modal-button" onClick={onCloseModal}>
@@ -115,7 +180,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
               image={post.User.Images[0]}
               name={post.User.name}
               className="post-head-1"
-              isMine={post.User._id === me._id}
+              isMinePost={post.User._id === me._id}
               onRemovePost={onRemovePost}
             />
 
@@ -134,7 +199,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
                 image={post.User.Images[0]}
                 name={post.User.name}
                 className="post-head-2"
-                isMine={post.User._id === me._id}
+                isMinePost={post.User._id === me._id}
                 onRemovePost={onRemovePost}
               />
 
@@ -148,18 +213,23 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
                     <PostComment
                       key={comment._id}
                       comment={comment}
-                      isMine={comment.User._id === me._id}
+                      isMineComment={comment.User._id === me._id}
                       onRemoveComment={onRemoveComment}
+                      onClickCommentLike={onClickCommentLike}
+                      isMineCommentLike={comment.CommentLikers.some(liker => liker._id === me._id)}
                     />
                   ))}
                 </ul>
               </div>
 
               {/* 아이콘 버튼 영역 */}
-              <PostIconButtons PostId={PostId} />
+              <PostIconButtons
+                onClickPostLike={onClickPostLike}
+                isPostLiked={post?.PostLikers.some(liker => liker._id === me._id)}
+              />
 
               {/* 좋아요 개수 및 게시글 작성 시간 */}
-              <PostInfo Likers={post.Likers} createdAt={post.createdAt} />
+              <PostInfo PostLikers={post.PostLikers} createdAt={post.createdAt} />
 
               {/* 댓글 폼 */}
               <PostCommentForm PostId={PostId} onAppendComment={onAppendComment} />

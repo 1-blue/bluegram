@@ -34,6 +34,14 @@ const Comment = (sequelize, DataTypes) => {
     // 게시글과 댓글 ( 1 : N )
     db.Comment.belongsTo(db.Post, { foreignKey: "PostId", onDelete: "cascade" });
 
+    // 댓글 좋아요 ( N : M ) ( 유저와 댓글 )
+    db.Comment.belongsToMany(db.User, {
+      through: "CommentLikes",
+      as: "CommentLikers",
+      foreignKey: "CommentId",
+      onDelete: "cascade",
+    });
+
     // 댓글과 답글 ( 1 : N )
     db.Comment.hasMany(db.Comment, { onDelete: "cascade" });
     db.Comment.belongsTo(db.Comment, { foreignKey: "CommentId", onDelete: "cascade" });

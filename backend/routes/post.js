@@ -65,12 +65,17 @@ router.post("/", isLoggedIn, async (req, res, next) => {
                 },
               ],
             },
+            // 게시글의 댓글과 답글들에 좋아요
+            {
+              model: User,
+              as: "CommentLikers",
+            },
           ],
         },
         // 게시글의 좋아요
         {
           model: User,
-          as: "Likers",
+          as: "PostLikers",
           attributes: ["_id"],
           through: {
             attributes: ["createdAt"],
@@ -129,7 +134,7 @@ router.get("/", async (req, res, next) => {
         // 게시글의 좋아요
         {
           model: User,
-          as: "Likers",
+          as: "PostLikers",
           attributes: ["_id"],
           through: {
             attributes: ["createdAt"],
@@ -188,15 +193,31 @@ router.get("/:PostId", async (req, res, next) => {
                 },
               ],
             },
+            // 게시글의 댓글과 답글들에 좋아요를 누른 유저
+            {
+              model: User,
+              as: "CommentLikers",
+              attributes: ["_id", "name"],
+              through: {
+                attributes: ["createdAt", "UserId", "CommentId"],
+              },
+              // 게시글의 댓글과 답글들에 좋아요를 누른 유저의 이미지
+              include: [
+                {
+                  model: Image,
+                  attributes: ["_id", "name"],
+                },
+              ],
+            },
           ],
         },
         // 게시글의 좋아요
         {
           model: User,
-          as: "Likers",
+          as: "PostLikers",
           attributes: ["_id"],
           through: {
-            attributes: ["updatedAt"],
+            attributes: ["createdAt"],
           },
         },
       ],

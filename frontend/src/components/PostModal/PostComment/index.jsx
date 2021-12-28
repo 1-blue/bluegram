@@ -15,7 +15,7 @@ import { timeFormat } from "@utils/dateFormat";
 // styled-components
 import { Wrapper } from "./style";
 
-const PostComment = ({ comment, isMine, onRemoveComment }) => {
+const PostComment = ({ comment, isMineComment, onRemoveComment, onClickCommentLike, isMineCommentLike }) => {
   const [showDialog, onOpenDialog, onCloseDialog] = useOpenClose(false);
 
   return (
@@ -26,16 +26,18 @@ const PostComment = ({ comment, isMine, onRemoveComment }) => {
         <pre className="comment-content">{comment.content}</pre>
         <div className="comment-option-list">
           <span className="comment-time">{timeFormat(comment.createdAt)}</span>
-          <button type="button" className="comment-like-button">
-            좋아요 X개
-          </button>
+          {comment.CommentLikers.length > 0 && (
+            <button type="button" className="comment-like-button">
+              좋아요 {comment.CommentLikers.length}개
+            </button>
+          )}
           <button type="button" className="comment-recomment-button">
             답글달기
           </button>
           <Icon shape="option" width={16} height={16} fill="gray" hoverfill="black" onClick={onOpenDialog} />
           {showDialog && (
             <Dialog onClose={onCloseDialog} showDialog={showDialog}>
-              {isMine ? (
+              {isMineComment ? (
                 <>
                   <li onClick={onRemoveComment(comment._id)}>삭제</li>
                   <li>수정</li>
@@ -48,6 +50,16 @@ const PostComment = ({ comment, isMine, onRemoveComment }) => {
             </Dialog>
           )}
         </div>
+
+        <Icon
+          shape={isMineCommentLike ? "fillHeart" : "heart"}
+          width={16}
+          height={16}
+          fill={isMineCommentLike ? "var(--heart-color)" : "gray"}
+          hoverfill={isMineCommentLike ? "red" : "black"}
+          animation="bounce-in"
+          onClick={onClickCommentLike(comment._id, isMineCommentLike)}
+        />
       </div>
     </Wrapper>
   );
@@ -70,9 +82,28 @@ PostComment.propTypes = {
         }),
       ),
     }),
+    CommentLikers: Proptypes.arrayOf(
+      Proptypes.shape({
+        _id: Proptypes.number,
+        name: Proptypes.string,
+        Images: Proptypes.arrayOf(
+          Proptypes.shape({
+            _id: Proptypes.number,
+            name: Proptypes.string,
+          }),
+        ),
+        CommentLikes: Proptypes.shape({
+          createdAt: Proptypes.string,
+          UserId: Proptypes.number,
+          CommentId: Proptypes.number,
+        }),
+      }),
+    ),
   }).isRequired,
-  isMine: Proptypes.bool.isRequired,
+  isMineComment: Proptypes.bool.isRequired,
   onRemoveComment: Proptypes.func.isRequired,
+  onClickCommentLike: Proptypes.func.isRequired,
+  isMineCommentLike: Proptypes.bool.isRequired,
 };
 
 export default PostComment;
