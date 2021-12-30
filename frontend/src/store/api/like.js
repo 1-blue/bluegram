@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const authInstance = axios.create({
+const likeInstance = axios.create({
   baseURL: (process.env.NODE_ENV === "production" ? process.env.PROD_SERVER_URL : process.env.DEV_SERVER_URL) + "/like",
   withCredentials: true,
   timeout: 2500,
@@ -8,20 +8,20 @@ const authInstance = axios.create({
 
 // 2021/12/25 - 게시글에 좋아요 추가 - by 1-blue
 export function apiAppendLikeToPost(body) {
-  return authInstance.post(`/post/${body.PostId}`);
+  return likeInstance.post(`/post/${body.PostId}`);
 }
 
 // 2021/12/25 - 게시글에 좋아요 삭제 - by 1-blue
 export function apiRemoveLikeToPost(body) {
-  return authInstance.delete(`/post/${body.PostId}`);
+  return likeInstance.delete(`/post/${body.PostId}`);
 }
 
 // 2021/12/28 - 댓글에 좋아요 추가 - by 1-blue
 export function apiAppendLikeToComment(body) {
-  return authInstance.post(`/comment/${body.CommentId}`);
+  return likeInstance.post(`/comment/${body.CommentId}`);
 }
 
 // 2021/12/28 - 댓글에 좋아요 삭제 - by 1-blue
 export function apiRemoveLikeToComment(body) {
-  return authInstance.delete(`/comment/${body.CommentId}`);
+  return likeInstance.delete(`/comment/${body.CommentId}`);
 }

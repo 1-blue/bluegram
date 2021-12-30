@@ -260,15 +260,28 @@
   3. `401`: 비로그인 접근
   4. `404`: 존재하지 않은 댓글 추가 요청
 
-## 5.2 DELETE /comment/post/:PostId
+## 5.2 DELETE /comment/post/:CommentId
 + 역할: 댓글 삭제
-+ 전송 데이터: params로 `PostId` 전송
++ 전송 데이터: params로 `CommentId` 전송
 + 응답 데이터: `{ message }`
 + 응답 코드
   1. `200`: 댓글 불러오기 성공
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
   4. `404`: 존재하지 않은 댓글 삭제 요청
+
+## 5.3 GET /comment/post/:CommentId
++ 역할: 특정 댓글의 답글들 불러오기
++ 전송 데이터: params로 `CommentId` 전송
++ 응답 데이터
+```javascript
+// 수정
+```
++ 응답 코드
+  1. `200`: 답글들 불러오기 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
+  4. `404`: 존재하지 않은 댓글의 답글들 요청
 
 # 6. following
 ## 6.1 GET /following/:UserId?lastId=?

@@ -102,7 +102,11 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
       ],
     });
 
-    res.json({ message: `${req.user.name}님 댓글에 좋아요를 누르셨습니다.`, commentLikerWithData });
+    res.json({
+      message: `${req.user.name}님 댓글에 좋아요를 누르셨습니다.`,
+      commentLikerWithData,
+      RecommentId: targetComment.RecommentId,
+    });
   } catch (error) {
     console.error("POST /comment/post/:CommentId >> ", error);
     next(error);
@@ -134,7 +138,7 @@ router.delete("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
 
     res.json({
       message: `${req.user.name}님 댓글에 좋아요를 취소하셨습니다.`,
-      result: { CommentId, removedUserId: UserId },
+      result: { CommentId, removedUserId: UserId, RecommentId: targetComment.RecommentId },
     });
   } catch (error) {
     console.error("DELETE /comment/post/:CommentId >> ", error);

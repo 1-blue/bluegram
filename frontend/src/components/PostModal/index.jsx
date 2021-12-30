@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect } from "react";
+import React, { forwardRef, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Proptypes from "prop-types";
 
@@ -13,17 +13,21 @@ import {
   removeLikeToPostAction,
   appendLikeToCommentAction,
   removeLikeToCommentAction,
+  loadRecommentsAction,
 } from "@store/actions";
 
 // components
 import PostHead from "./PostHead";
 import PostContent from "./PostContent";
 import PostComment from "./PostComment";
-import PostIconButtons from "./PostIconButtons";
+import PostButtons from "./PostButtons";
 import PostInfo from "./PostInfo";
 import PostCommentForm from "./PostCommentForm";
 import ImageCarousel from "@components/common/ImageCarousel";
 import Spinner from "@components/common/Spinner";
+
+// hook
+import useMessage from "@hooks/useMessage";
 
 // styled-component
 import { Wrapper } from "./style";
@@ -46,8 +50,11 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     appendLikeToCommentError,
     removeLikeToCommentDone,
     removeLikeToCommentError,
+    loadRecommentsDone,
+    loadRecommentsError,
   } = useSelector(state => state.post);
   const { me } = useSelector(state => state.user);
+  const [recommentData, setRecommentData] = useState({ RecommentId: null, username: null });
 
   // 2021/12/24 - 특정 게시글 상세 정보 요청 - by 1-blue
   useEffect(() => {
@@ -55,72 +62,45 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
   }, []);
 
   // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
-  useEffect(() => {
-    if (!(appendCommentToPostDone || appendCommentToPostError)) return;
+  useMessage(appendCommentToPostDone, appendCommentToPostError);
 
-    alert(appendCommentToPostDone || appendCommentToPostError);
-
-    dispatch(resetMessageAction());
-  }, [appendCommentToPostDone, appendCommentToPostError]);
-
-  // 2021/12/27 - 게시글의 댓글 제거 성공/실패 시 메시지 - by 1-blue
-  useEffect(() => {
-    if (!(removeCommentToPostDone || removeCommentToPostError)) return;
-
-    alert(removeCommentToPostDone || removeCommentToPostError);
-
-    dispatch(resetMessageAction());
-  }, [removeCommentToPostDone, removeCommentToPostError]);
+  // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
+  useMessage(removeCommentToPostDone, removeCommentToPostError);
 
   // 2021/12/28 - 게시글 제거 성공/실패 시 메시지 - by 1-blue
-  useEffect(() => {
-    if (!(removePostDone || removePostError)) return;
-
-    alert(removePostDone || removePostError);
-
-    dispatch(resetMessageAction());
-  }, [removePostDone, removePostError]);
+  useMessage(removePostDone, removePostError);
 
   // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
-  useEffect(() => {
-    if (!(appendLikeToPostDone || appendLikeToPostError)) return;
-    alert(appendLikeToPostDone || appendLikeToPostError);
+  useMessage(removePostDone, removePostError);
 
-    dispatch(resetMessageAction());
-  }, [appendLikeToPostDone, appendLikeToPostError]);
+  // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
+  useMessage(appendLikeToPostDone, appendLikeToPostError);
 
   // 2021/12/25 - 게시글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
-  useEffect(() => {
-    if (!(removeLikeToPostDone || removeLikeToPostError)) return;
-    alert(removeLikeToPostDone || removeLikeToPostError);
-
-    dispatch(resetMessageAction());
-  }, [removeLikeToPostDone, removeLikeToPostError]);
+  useMessage(removeLikeToPostDone, removeLikeToPostError);
 
   // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
-  useEffect(() => {
-    if (!(appendLikeToCommentDone || appendLikeToCommentError)) return;
-    alert(appendLikeToCommentDone || appendLikeToCommentError);
-
-    dispatch(resetMessageAction());
-  }, [appendLikeToCommentDone, appendLikeToCommentError]);
+  useMessage(appendLikeToCommentDone, appendLikeToCommentError);
 
   // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
-  useEffect(() => {
-    if (!(removeLikeToCommentDone || removeLikeToCommentError)) return;
-    alert(removeLikeToCommentDone || removeLikeToCommentError);
+  useMessage(removeLikeToCommentDone, removeLikeToCommentError);
 
-    dispatch(resetMessageAction());
-  }, [removeLikeToCommentDone, removeLikeToCommentError]);
+  // 2021/12/29 - 답글 불러오기 성공/실패 메시지 - by 1-blue
+  useMessage(loadRecommentsDone, loadRecommentsError);
 
   // 2021/12/27 - 댓글 생성 ( using PostCommentForm ) - by 1-blue
   const onAppendComment = useCallback(
-    (content, CommentId) => e => {
+    (content, RecommentId) => e => {
       e.preventDefault();
 
-      if (!content.trim()) return alert("댓글을 입력한 후에 제출해주세요!");
+      // 답글인 경우 앞에 @유저명 제외시키는 정규표현식
+      const processingContent = content.replace(/^@[\S]*\s/g, "");
 
-      dispatch(appendCommentToPostAction({ content, PostId, CommentId }));
+      if (!processingContent.trim()) return alert("댓글을 입력한 후에 제출해주세요!");
+
+      dispatch(appendCommentToPostAction({ content: processingContent, PostId, RecommentId }));
+
+      setRecommentData({ RecommentId: null, username: null });
     },
     [PostId],
   );
@@ -145,7 +125,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     [PostId],
   );
 
-  // 2021/12/25 - 게시글 좋아요 추가/삭제 요청 - by 1-blue
+  // 2021/12/25 - 게시글 좋아요 추가/삭제 요청  ( using PostButtons ) - by 1-blue
   const onClickPostLike = useCallback(() => {
     // 좋아요 제거
     if (post.PostLikers.some(liker => liker._id === me._id)) return dispatch(removeLikeToPostAction({ PostId }));
@@ -154,7 +134,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     return dispatch(appendLikeToPostAction({ PostId }));
   }, [post, me]);
 
-  // 2021/12/28 - 댓글 좋아요 추가/삭제 요청 - by 1-blue
+  // 2021/12/28 - 댓글 좋아요 추가/삭제 요청 ( using PostComment ) - by 1-blue
   const onClickCommentLike = useCallback(
     (CommentId, isMineCommentLike) => () => {
       // 좋아요 제거
@@ -163,7 +143,23 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
       // 좋아요 추가
       return dispatch(appendLikeToCommentAction({ CommentId }));
     },
-    [me],
+    [],
+  );
+
+  // 2021/12/29 - 댓글의 답글달기 ( using PostComment ) - by 1-blue
+  const onChangeRecommentData = useCallback(
+    (RecommentId, username) => () => {
+      setRecommentData({ RecommentId, username });
+    },
+    [],
+  );
+
+  // 2021/12/30 - 특정 댓글의 답글 불러오기 ( using PostComment ) - by 1-blue
+  const onClickLoadRecomment = useCallback(
+    CommentId => () => {
+      dispatch(loadRecommentsAction({ CommentId }));
+    },
+    [],
   );
 
   return (
@@ -220,17 +216,18 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
                     <PostComment
                       key={comment._id}
                       comment={comment}
-                      isMineComment={comment.User._id === me._id}
+                      UserId={me._id}
                       onRemoveComment={onRemoveComment}
                       onClickCommentLike={onClickCommentLike}
-                      isMineCommentLike={comment.CommentLikers.some(liker => liker._id === me._id)}
+                      onChangeRecommentData={onChangeRecommentData}
+                      onClickLoadRecomment={onClickLoadRecomment}
                     />
                   ))}
                 </ul>
               </div>
 
               {/* 아이콘 버튼 영역 */}
-              <PostIconButtons
+              <PostButtons
                 onClickPostLike={onClickPostLike}
                 isPostLiked={post?.PostLikers.some(liker => liker._id === me._id)}
               />
@@ -239,7 +236,12 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
               <PostInfo PostLikers={post.PostLikers} createdAt={post.createdAt} />
 
               {/* 댓글 폼 */}
-              <PostCommentForm PostId={PostId} onAppendComment={onAppendComment} />
+              <PostCommentForm
+                PostId={PostId}
+                onAppendComment={onAppendComment}
+                recommentData={recommentData}
+                setRecommentData={setRecommentData}
+              />
             </div>
           </>
         ) : (

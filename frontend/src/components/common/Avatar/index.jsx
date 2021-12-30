@@ -22,13 +22,12 @@ const Avatar = props => {
 Avatar.propTypes = {
   width: Proptypes.number,
   height: Proptypes.number,
-  image: Proptypes.arrayOf(
-    Proptypes.shape({
-      _id: Proptypes.number,
-      name: Proptypes.string,
-      url: Proptypes.string,
-    }),
-  ),
+  image: Proptypes.shape({
+    _id: Proptypes.number,
+    name: Proptypes.string,
+    url: Proptypes.string,
+  }),
+
   alt: Proptypes.string,
 };
 

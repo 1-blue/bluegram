@@ -12,6 +12,7 @@ Spinner.propTypes = {
   page: PropTypes.bool,
   modal: PropTypes.bool,
   button: PropTypes.bool,
+  comment: PropTypes.bool,
 };
 
 export default Spinner;
