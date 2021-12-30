@@ -42,6 +42,8 @@ export const Modal = styled.div`
           display: flex;
           flex-flow: column nowrap;
           min-height: 400px;
+          width: 80vw;
+          height: 80vh;
 
           & > .modal-flex-container {
             flex: 1 1 auto;
@@ -116,8 +118,8 @@ export const Modal = styled.div`
           }
         `
       : css`
-          /* width: 80vw;
-          height: 50vw; */
+          width: 80vw;
+          height: 80vh;
           min-width: 300px;
           min-height: 300px;
           max-height: 80vh;

@@ -118,20 +118,11 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
           // 이미지 업로드 후
           <div className="modal-flex-container">
             {/* image-carousel */}
-            <ImageCarousel speed={300} length={imagePreviews.length}>
-              {imagePreviews.map(imagePreview => (
-                <li key={imagePreview}>
-                  <img
-                    src={
-                      (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                      "/" +
-                      imagePreview
-                    }
-                    alt="사용자가 등록한 이미지"
-                  />
-                </li>
-              ))}
-            </ImageCarousel>
+            <ImageCarousel
+              speed={300}
+              length={imagePreviews.length}
+              images={imagePreviews.map((imagePreview, _id) => ({ name: imagePreview, _id }))}
+            />
 
             {/* 게시글 정보 입력 폼 */}
             <form className="modal-form" onSubmit={onSubmitPost}>

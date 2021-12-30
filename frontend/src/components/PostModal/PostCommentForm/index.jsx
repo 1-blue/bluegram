@@ -35,7 +35,7 @@ const PostCommentForm = ({ onAppendComment, recommentData, setRecommentData }) =
 
   useEffect(() => {
     setContent(recommentData.username ? "@" + recommentData.username + " " : "");
-    textareaRef.current.focus();
+    // textareaRef.current.focus();
   }, [recommentData.username, textareaRef.current]);
 
   return (

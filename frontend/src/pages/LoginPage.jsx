@@ -10,7 +10,6 @@ import Button from "@components/common/Button";
 
 // hooks
 import useInput from "@hooks/useInput";
-import useMessage from "@hooks/useMessage";
 
 // action
 import { resetMessageAction, localLoginAction } from "@store/actions";
@@ -33,10 +32,14 @@ const LoginPage = () => {
   const [password, onChangePassword] = useInput("");
 
   // 2021/12/20 - 로그인 성공 시 메시지와 redirect / 로그인 실패 시 메시지 - by 1-blue
-  useMessage(loginDone, loginError);
   useEffect(() => {
+    if (!(loginDone || loginError)) return;
+    alert(loginDone || loginError);
+
+    dispatch(resetMessageAction());
+
     if (loginDone) navigate("/explore");
-  }, [loginDone]);
+  }, [loginDone, loginError]);
 
   // 2021/12/20 - 로컬 로그인 요청 - by 1-blue
   const onLocalLogin = useCallback(
