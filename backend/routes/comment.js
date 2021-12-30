@@ -8,7 +8,7 @@ const { Post, Comment, User, Image } = db;
 
 // 2021/12/27 - 게시글에 댓글 추가 - by 1-blue
 router.post("/post", isLoggedIn, async (req, res, next) => {
-  const { content, PostId, CommentId } = req.body;
+  const { content, PostId, RecommentId } = req.body;
   const { _id: UserId } = req.user;
 
   try {
@@ -18,19 +18,31 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
       return res.status(404).json({ message: "존재하지 않는 게시글입니다.\n잠시후에 다시 시도해주세요" });
     }
 
-    const createdComment = await targetPost.createComment({ content, CommentId, UserId });
+    const createdComment = await targetPost.createComment({ content, RecommentId, UserId });
 
     const createdCommentWithData = await Comment.findOne({
       where: { _id: createdComment._id },
-      attributes: ["_id", "content", "createdAt", "UserId", "CommentId", "PostId"],
-      include: {
-        model: User,
-        attributes: ["_id", "name"],
-        include: {
-          model: Image,
-          attributes: ["_id", "name", "url"],
+      attributes: ["_id", "content", "createdAt", "UserId", "RecommentId", "PostId"],
+      include: [
+        {
+          model: User,
+          attributes: ["_id", "name"],
+          include: {
+            model: Image,
+            attributes: ["_id", "name", "url"],
+          },
         },
-      },
+        // 방금 생성한 댓글에 답글이 있을 수가 없으므로 그냥 include만 해줌... 빈 배열을 넘기기 위해서
+        {
+          model: Comment,
+          as: "Recomments",
+        },
+        // 방금 생성한 댓글에 좋아요가 있을 수가 없으므로 그냥 include만 해줌... 빈 배열을 넘기기 위해서
+        {
+          model: User,
+          as: "CommentLikers",
+        },
+      ],
     });
 
     res.json({ message: "댓글 생성이 생성되었습니다.", createdCommentWithData });
@@ -56,10 +68,53 @@ router.delete("/post/:CommentId", isLoggedIn, async (req, res, next) => {
 
     res.json({
       message: "댓글 삭제가 완료되었습니다.",
-      result: { removedCommentId: CommentId, removedPostId },
+      result: { removedCommentId: CommentId, removedPostId, RecommentId: targetComment.RecommentId },
     });
   } catch (error) {
     console.error("POST /comment >> ", error);
+    next(error);
+  }
+});
+
+// 2021/12/29 - 특정 댓글의 답글들 불러오기 - by 1-blue
+router.get("/post/:CommentId", isLoggedIn, async (req, res, next) => {
+  const CommentId = +req.params.CommentId;
+
+  try {
+    const targetComment = await Comment.findByPk(CommentId);
+
+    if (!targetComment) {
+      return res.status(404).json({ message: "존재하지 않은 댓글입니다.\n잠시후에 다시 시도해주세요" });
+    }
+
+    // 답글의 유저와 유저 프로필 이미지 불러오기
+    const recomments = await targetComment.getRecomments({
+      attributes: ["_id", "content", "createdAt", "UserId", "RecommentId"],
+      include: [
+        // 답글 작성자
+        {
+          model: User,
+          attributes: ["_id", "name"],
+          include: [
+            // 답글 작성자의 프로필 이미지
+            {
+              model: Image,
+              attributes: ["_id", "name"],
+            },
+          ],
+        },
+        // 답글의 좋아요
+        {
+          model: User,
+          as: "CommentLikers",
+          attributes: ["_id", "name"],
+        },
+      ],
+    });
+
+    res.status(200).json({ message: "답글들을 정상적으로 불러왔습니다.", Recomments: recomments });
+  } catch (error) {
+    console.error("POST /comment/post/:CommentId >> ", error);
     next(error);
   }
 });

@@ -43,8 +43,8 @@ const Comment = (sequelize, DataTypes) => {
     });
 
     // 댓글과 답글 ( 1 : N )
-    db.Comment.hasMany(db.Comment, { onDelete: "cascade" });
-    db.Comment.belongsTo(db.Comment, { foreignKey: "CommentId", onDelete: "cascade" });
+    db.Comment.hasMany(db.Comment, { foreignKey: "RecommentId", as: "Recomments", onDelete: "cascade" });
+    db.Comment.belongsTo(db.Comment, { foreignKey: "RecommentId", onDelete: "cascade" });
   };
 
   return Comment;

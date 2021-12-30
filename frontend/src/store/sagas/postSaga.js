@@ -14,6 +14,7 @@ import {
   REMOVE_COMMENT_TO_POST_REQUEST, REMOVE_COMMENT_TO_POST_SUCCESS, REMOVE_COMMENT_TO_POST_FAILURE,
   APPEND_LIKE_TO_COMMENT_REQUEST, APPEND_LIKE_TO_COMMENT_SUCCESS, APPEND_LIKE_TO_COMMENT_FAILURE,
   REMOVE_LIKE_TO_COMMENT_REQUEST, REMOVE_LIKE_TO_COMMENT_SUCCESS, REMOVE_LIKE_TO_COMMENT_FAILURE,
+  LOAD_RECOMMENTS_REQUEST, LOAD_RECOMMENTS_SUCCESS, LOAD_RECOMMENTS_FAILURE,
  } from "@store/types";
  
 // api
@@ -28,6 +29,7 @@ import {
   apiRemoveCommentToPost,
   apiAppendLikeToComment,
   apiRemoveLikeToComment,
+  apiLoadRecomments
 } from "@store/api";
 
 function* createPost(action) {
@@ -190,6 +192,22 @@ function* removeLikeToComment(action) {
     });
   }
 }
+function* loadRecomments(action) {
+  try {
+    const { data } = yield call(apiLoadRecomments, action.data);
+
+    yield put({
+      type: LOAD_RECOMMENTS_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_RECOMMENTS_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
 
 function* watchCreatePost() {
   yield takeLatest(CREATE_POST_REQUEST, createPost);
@@ -221,6 +239,9 @@ function* watchAppendLikeToComment() {
 function* watchRemoveLikeToComment() {
   yield takeLatest(REMOVE_LIKE_TO_COMMENT_REQUEST, removeLikeToComment);
 }
+function* watchLoadRecomments() {
+  yield takeLatest(LOAD_RECOMMENTS_REQUEST, loadRecomments);
+}
 
 export default function* postSaga() {
   yield all([
@@ -234,5 +255,6 @@ export default function* postSaga() {
     fork(watchRemoveCommentToPost),
     fork(watchAppendLikeToComment),
     fork(watchRemoveLikeToComment),
+    fork(watchLoadRecomments),
   ]);
 }

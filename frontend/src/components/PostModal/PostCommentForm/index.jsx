@@ -6,15 +6,20 @@ import useText from "@hooks/useText";
 
 // styled-components
 import { Wrapper } from "./style";
+import { useEffect } from "react";
 
-const PostCommentForm = ({ onAppendComment }) => {
+const PostCommentForm = ({ onAppendComment, recommentData, setRecommentData }) => {
   const [content, onChangeContent, setContent] = useText("");
   const [contentRows, setContentRows] = useState(1);
   const buttonRef = useRef(null);
+  const textareaRef = useRef(null);
 
   // 2021/12/27 - 엔터 클릭 시 댓글 제출/shift+enter시 줄바꿈 - by 1-blue
   const onKeyDown = useCallback(
     e => {
+      if (content.length === 0) {
+        setRecommentData({ RecommentId: null, username: null });
+      }
       if (e.keyCode === 13) {
         if (!e.shiftKey) {
           e.preventDefault();
@@ -25,11 +30,16 @@ const PostCommentForm = ({ onAppendComment }) => {
         }
       }
     },
-    [buttonRef.current],
+    [buttonRef.current, content],
   );
 
+  useEffect(() => {
+    setContent(recommentData.username ? "@" + recommentData.username + " " : "");
+    textareaRef.current.focus();
+  }, [recommentData.username, textareaRef.current]);
+
   return (
-    <Wrapper onSubmit={onAppendComment(content, null)}>
+    <Wrapper onSubmit={onAppendComment(content, recommentData.RecommentId)}>
       <textarea
         type="text"
         placeholder="댓글 달기..."
@@ -37,6 +47,7 @@ const PostCommentForm = ({ onAppendComment }) => {
         value={content}
         onChange={onChangeContent}
         onKeyDown={onKeyDown}
+        ref={textareaRef}
       />
       <button type="submit" ref={buttonRef}>
         게시
@@ -47,6 +58,10 @@ const PostCommentForm = ({ onAppendComment }) => {
 
 PostCommentForm.propTypes = {
   onAppendComment: Proptypes.func.isRequired,
+  recommentData: Proptypes.shape({
+    RecommentId: Proptypes.oneOfType([Proptypes.number, Proptypes.node]),
+    username: Proptypes.oneOfType([Proptypes.string, Proptypes.node]),
+  }),
 };
 
 export default PostCommentForm;

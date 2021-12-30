@@ -10,4 +10,4 @@ export { loadToMeAction, signupAction } from "./userAction";
 export { uploadImagesAction, resetImagePreview } from "./imageAction";
 export { resetPostAction, createPostAction, loadPostsAction, loadPostAction, removePostAction } from "./postAction";
 export { appendLikeToPostAction, removeLikeToPostAction, appendLikeToCommentAction, removeLikeToCommentAction } from "./likeAction";
-export { appendCommentToPostAction, removeCommentToPostAction } from "./commentAction";
+export { appendCommentToPostAction, removeCommentToPostAction, loadRecommentsAction } from "./commentAction";

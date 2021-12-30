@@ -35,11 +35,11 @@ export const Wrapper = styled.section`
     max-height: 750px;
     display: flex;
     background-color: white;
-    border-radius: 1rem;
+    border-radius: 0.4em;
 
     & > .post-one-image {
       width: 70%;
-      border-radius: 1rem 0 0 1rem;
+      border-radius: 0.4em 0 0 0.4em;
     }
 
     & > .post {
@@ -58,7 +58,7 @@ export const Wrapper = styled.section`
         }
 
         & > .post-comment {
-          padding: 0.4em;
+          padding: 1em;
         }
       }
     }
@@ -131,7 +131,7 @@ export const Wrapper = styled.section`
 
   @media (min-width: 1024px) {
     .modal > section > ul > li > img {
-      border-radius: 1rem 0 0 1rem;
+      border-radius: 0.4em 0 0 0.4em;
     }
   }
 
