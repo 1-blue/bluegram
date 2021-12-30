@@ -61,32 +61,32 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     dispatch(loadPostAction({ PostId }));
   }, []);
 
-  // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
-  useMessage(appendCommentToPostDone, appendCommentToPostError);
+  // // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
+  // useMessage(appendCommentToPostDone, appendCommentToPostError);
 
-  // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
-  useMessage(removeCommentToPostDone, removeCommentToPostError);
+  // // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
+  // useMessage(removeCommentToPostDone, removeCommentToPostError);
 
-  // 2021/12/28 - 게시글 제거 성공/실패 시 메시지 - by 1-blue
-  useMessage(removePostDone, removePostError);
+  // // 2021/12/28 - 게시글 제거 성공/실패 시 메시지 - by 1-blue
+  // useMessage(removePostDone, removePostError);
 
-  // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
-  useMessage(removePostDone, removePostError);
+  // // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
+  // useMessage(removePostDone, removePostError);
 
-  // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
-  useMessage(appendLikeToPostDone, appendLikeToPostError);
+  // // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
+  // useMessage(appendLikeToPostDone, appendLikeToPostError);
 
-  // 2021/12/25 - 게시글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
-  useMessage(removeLikeToPostDone, removeLikeToPostError);
+  // // 2021/12/25 - 게시글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
+  // useMessage(removeLikeToPostDone, removeLikeToPostError);
 
-  // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
-  useMessage(appendLikeToCommentDone, appendLikeToCommentError);
+  // // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
+  // useMessage(appendLikeToCommentDone, appendLikeToCommentError);
 
-  // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
-  useMessage(removeLikeToCommentDone, removeLikeToCommentError);
+  // // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
+  // useMessage(removeLikeToCommentDone, removeLikeToCommentError);
 
-  // 2021/12/29 - 답글 불러오기 성공/실패 메시지 - by 1-blue
-  useMessage(loadRecommentsDone, loadRecommentsError);
+  // // 2021/12/29 - 답글 불러오기 성공/실패 메시지 - by 1-blue
+  // useMessage(loadRecommentsDone, loadRecommentsError);
 
   // 2021/12/27 - 댓글 생성 ( using PostCommentForm ) - by 1-blue
   const onAppendComment = useCallback(
@@ -181,20 +181,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
             />
 
             {/* image-carousel */}
-            <ImageCarousel speed={300} length={post.Images.length}>
-              {post.Images.map(image => (
-                <li key={image._id}>
-                  <img
-                    src={
-                      (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                      "/" +
-                      image.name
-                    }
-                    alt="게시글의 이미지"
-                  />
-                </li>
-              ))}
-            </ImageCarousel>
+            <ImageCarousel speed={300} length={post.Images.length} images={post.Images} />
 
             <div className="post">
               {/* 머리 부분 */}

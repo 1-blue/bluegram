@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import { useDispatch, useSelector } from "react-redux";
+import PropTypes from "prop-types";
 
 // styled-components
 import { Wrapper, Modal } from "./style";
@@ -10,6 +10,7 @@ import { uploadImagesAction, createPostAction, resetMessageAction, resetImagePre
 
 // hook
 import useText from "@hooks/useText";
+import useMessage from "@hooks/useMessage";
 
 // components
 import Avatar from "@components/common/Avatar";
@@ -39,12 +40,9 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
   }, []);
 
   // 2021/12/22 - 게시글 생성 성공 or 실패 시 메시지 보여주고 모달 닫기
+  useMessage(createPostDone, createPostError);
   useEffect(() => {
     if (!(createPostDone || createPostError)) return;
-    alert(createPostDone || createPostError);
-
-    dispatch(resetMessageAction());
-
     onCloseModal();
   }, [createPostDone, createPostError, onCloseModal]);
 

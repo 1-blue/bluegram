@@ -31,8 +31,6 @@ export const Wrapper = styled.section`
 
   .modal {
     width: 80vw;
-    max-width: 1300px;
-    max-height: 750px;
     display: flex;
     background-color: white;
     border-radius: 0.4em;
@@ -115,22 +113,17 @@ export const Wrapper = styled.section`
   }
   @media (min-width: 768px) and (max-width: 1024px) {
     .modal {
-      height: 95vh;
+      height: 98vh;
     }
   }
   @media (min-width: 1024px) {
     .modal {
-      height: auto;
-    }
-  }
-  @media (min-width: 1600px) {
-    .modal {
-      height: 80vh;
+      height: 90vh;
     }
   }
 
   @media (min-width: 1024px) {
-    .modal > section > ul > li > img {
+    .modal > section > ul > li > figure {
       border-radius: 0.4em 0 0 0.4em;
     }
   }

@@ -1,15 +1,17 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Wrapper = styled.section`
   position: relative;
   width: 100%;
+  height: 100%;
 
   & > .image-container {
     display: -webkit-inline-box;
     overflow: hidden;
+    width: 100%;
     height: 100%;
 
-    & > li > img {
+    & > li {
       width: 100%;
       height: 100%;
     }
@@ -59,6 +61,8 @@ export const Wrapper = styled.section`
   }
 
   @media (max-width: 1024px) {
+    height: 80%;
+
     & > .image-number {
       top: 85%;
       padding: 0.2rem 0.5rem;
@@ -66,4 +70,22 @@ export const Wrapper = styled.section`
       font-size: 0.8rem;
     }
   }
+`;
+
+export const Image = styled.figure`
+  ${({ name }) =>
+    name &&
+    css`
+      background-image: url(${({ name }) => name});
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-color: black;
+
+      & > img {
+        display: none;
+      }
+    `}
 `;

@@ -116,8 +116,8 @@ export const Modal = styled.div`
           }
         `
       : css`
-          width: 80vw;
-          height: 50vw;
+          /* width: 80vw;
+          height: 50vw; */
           min-width: 300px;
           min-height: 300px;
           max-height: 80vh;
@@ -169,12 +169,12 @@ export const Modal = styled.div`
       font-size: 1rem;
     }
   }
-  @media (min-width: 1024px) {
+  /* @media (min-width: 1024px) {
     height: 60vh;
-  }
-  @media (min-width: 1600px) {
-    height: 80vh;
-  }
+  } */
+  /* @media (min-width: 1600px) {
+    height: 90vh;
+  } */
 
   animation-name: back-in-down;
   animation-duration: 1s;

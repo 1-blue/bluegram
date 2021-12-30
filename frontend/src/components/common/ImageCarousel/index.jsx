@@ -4,9 +4,9 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import Proptypes from "prop-types";
 
 // styled-components
-import { Wrapper } from "./style";
+import { Wrapper, Image } from "./style";
 
-const ImageCarousel = ({ children, speed, length }) => {
+const ImageCarousel = ({ speed, length, images }) => {
   const wrapperRef = useRef(null);
   const dotRef = useRef(null);
   const [imageNodes, setImageNodes] = useState(null);
@@ -111,12 +111,84 @@ const ImageCarousel = ({ children, speed, length }) => {
       {/* 이미지들 : 이미지가 두개 이상이라면 처음과 마지막에 마지막과 처음 이미지 추가 ( 무한 회전을 위함 )*/}
       <ul ref={wrapperRef} className="image-container">
         {length === 1 ? (
-          <>{children}</>
+          <>
+            <li>
+              <Image
+                name={
+                  (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                  "/" +
+                  images[0].name
+                }
+              >
+                <img
+                  src={
+                    (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                    "/" +
+                    images[0].name
+                  }
+                  alt="게시글의 이미지"
+                />
+              </Image>
+            </li>
+          </>
         ) : (
           <>
-            {children[children.length - 1]}
-            {children}
-            {children[0]}
+            <li>
+              <Image
+                name={
+                  (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                  "/" +
+                  images[images.length - 1].name
+                }
+              >
+                <img
+                  src={
+                    (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                    "/" +
+                    images[images.length - 1].name
+                  }
+                  alt="게시글의 이미지"
+                />
+              </Image>
+            </li>
+            {images.map(image => (
+              <li key={image._id}>
+                <Image
+                  name={
+                    (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                    "/" +
+                    image.name
+                  }
+                >
+                  <img
+                    src={
+                      (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                      "/" +
+                      image.name
+                    }
+                    alt="게시글의 이미지"
+                  />
+                </Image>
+              </li>
+            ))}
+            <li>
+              <Image
+                name={
+                  (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                  "/" +
+                  images[0].name
+                }
+              >
+                <img
+                  src={
+                    (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
+                    "/" +
+                    images[0].name
+                  }
+                  alt="게시글의 이미지"
+                />
+              </Image>
+            </li>
           </>
         )}
       </ul>
@@ -149,7 +221,6 @@ const ImageCarousel = ({ children, speed, length }) => {
 };
 
 ImageCarousel.propTypes = {
-  children: Proptypes.node.isRequired,
   speed: Proptypes.number,
   length: Proptypes.number.isRequired,
 };
