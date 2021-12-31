@@ -11,4 +11,4 @@ export { uploadImagesAction, resetImagePreview } from "./imageAction";
 export { resetPostAction, createPostAction, loadPostsAction, loadPostAction, removePostAction } from "./postAction";
 export { appendLikeToPostAction, removeLikeToPostAction, appendLikeToCommentAction, removeLikeToCommentAction } from "./likeAction";
 export { appendCommentToPostAction, removeCommentToPostAction, loadRecommentsAction } from "./commentAction";
-export { followAction, unfollowAction } from "./followAction";
+export { resetFollowAction, loadFollowersAction, loadFollowingsAction, followAction, unfollowAction } from "./followAction";

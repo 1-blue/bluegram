@@ -4,4 +4,4 @@ export { apiUploadImages } from "./image";
 export { apiCreatePost, apiLoadPosts, apiLoadPost, apiRemovePost } from "./post";
 export { apiAppendLikeToPost, apiRemoveLikeToPost, apiAppendLikeToComment, apiRemoveLikeToComment } from "./like";
 export { apiAppendCommentToPost, apiRemoveCommentToPost, apiLoadRecomments } from "./comment";
-export { apiFollow, apiUnfollow } from "./follow";
+export { apiLoadFollowers, apiLoadFollowings, apiFollow, apiUnfollow } from "./follow";

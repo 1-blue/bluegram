@@ -291,9 +291,9 @@
   4. `404`: 존재하지 않은 댓글의 답글들 요청
 
 # 6. following
-## 6.1 GET /following/:UserId?lastId=?
-+ 역할: 팔로잉 가져오기
-+ 전송 데이터: params로 `UserId` 전송, query로 `lastId` 전송
+## 6.1 GET /follow/:UserId
++ 역할: 특정 유저의 팔로우/팔로워 가져오기
++ 전송 데이터: params로 `UserId` 전송
 + 응답 데이터
 ```javascript
 [
