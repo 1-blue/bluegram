@@ -88,6 +88,7 @@ import userRouter from "./routes/user.js";
 import postRouter from "./routes/post.js";
 import likeRouter from "./routes/like.js";
 import commentRouter from "./routes/comment.js";
+import followRouter from "./routes/follow.js";
 
 // router 등록
 app.use("/auth", authRouter);
@@ -96,6 +97,7 @@ app.use("/user", userRouter);
 app.use("/post", postRouter);
 app.use("/like", likeRouter);
 app.use("/comment", commentRouter);
+app.use("/follow", followRouter);
 
 // // 404 에러처리 미들웨어
 // app.use((req, res, next) => {

@@ -6,8 +6,9 @@ import { RESET_MESSAGE } from "@store/types";
 export const resetMessageAction = () => ({ type: RESET_MESSAGE });
 
 export { localLoginAction, localLogoutAction } from "./authAction";
-export { loadToMeAction, signupAction } from "./userAction";
+export { loadToMeAction, signupAction, loadToUserAction } from "./userAction";
 export { uploadImagesAction, resetImagePreview } from "./imageAction";
 export { resetPostAction, createPostAction, loadPostsAction, loadPostAction, removePostAction } from "./postAction";
 export { appendLikeToPostAction, removeLikeToPostAction, appendLikeToCommentAction, removeLikeToCommentAction } from "./likeAction";
 export { appendCommentToPostAction, removeCommentToPostAction, loadRecommentsAction } from "./commentAction";
+export { followAction, unfollowAction } from "./followAction";
