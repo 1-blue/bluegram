@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<svg
+	version="1.1"
+	id="layer"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px"
+	y="0px"
+	viewBox="0 0 40 40"
+	xml:space="preserve"
+	width="current"
+	height="current"
+>
+	<path
+		d="M37,2H3C2.4,2,2,2.4,2,3v34c0,0.6,0.4,1,1,1h34c0.6,0,1-0.4,1-1V3C38,2.4,37.6,2,37,2z M34,23h-6v-7h6V23zM24,16v7h-7v-7H24z M34,6v6h-6V6H34z M24,6v6h-7V6H24z M6,6h7v6H6V6z M6,16h7v7H6V16z M6,34v-7h7v7H6z M17,34v-7h7v7H17z M28,34v-7h6v7H28z"
+		fill="current"
+	/>
+</svg>

@@ -101,7 +101,7 @@ const RightMenu = () => {
           {showProfileMenu && (
             <Menu>
               <li>
-                <NavLink to="/profile">
+                <NavLink to={`/profile/${me._id}`}>
                   <Icon shape="avatar" width={20} height={20} />
                   <span>프로필</span>
                 </NavLink>

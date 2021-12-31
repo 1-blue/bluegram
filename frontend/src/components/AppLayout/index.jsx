@@ -1,4 +1,5 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 // components
 import NavigationBar from "@components/NavigationBar";
@@ -6,12 +7,14 @@ import NavigationBar from "@components/NavigationBar";
 // styled-components
 import { Wrapper, MainContainer } from "./style";
 
-const AppLayout = ({ children }) => {
+const AppLayout = () => {
   return (
     <Wrapper>
       <NavigationBar />
 
-      <MainContainer>{children}</MainContainer>
+      <MainContainer>
+        <Outlet />
+      </MainContainer>
     </Wrapper>
   );
 };

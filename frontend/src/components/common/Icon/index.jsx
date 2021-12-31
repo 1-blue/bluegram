@@ -16,6 +16,8 @@ import {
   Images,
   Play,
   Option,
+  Post,
+  Tag,
 } from "../../../assets/icon";
 
 // styled-component
@@ -129,6 +131,18 @@ const Icon = (props) => {
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
           <Option {...props} />
+        </Wrapper>
+      );
+    case "post":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Post {...props} />
+        </Wrapper>
+      );
+    case "tag":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Tag {...props} />
         </Wrapper>
       );
 
