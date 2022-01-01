@@ -420,9 +420,9 @@
   5. `409`: 좋아요를 누르지 않은 상태에서 삭제 요청
 
 # 9. hashtag
-## 9.1 GET /hashtag/:hashtagName
+## 9.1 GET post/hashtag/:hashtagText
 + 역할: 해시태그를 작성한 게시글들 가져오기
-+ 전송 데이터: params로 `hashtagName` 전송
++ 전송 데이터: params로 `hashtagText` 전송
 + 응답 데이터
 ```javascript
 [
@@ -449,3 +449,4 @@
 + 응답 코드
   1. `200`: 해시태그를 등록한 게시글 불러오기 성공
   2. `500`: 서버측 에러 ( 원인불명 )
+  3. `204`: 존재하지 않은 해시태그 요청

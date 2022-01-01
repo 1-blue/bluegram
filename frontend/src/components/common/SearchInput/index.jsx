@@ -9,7 +9,9 @@ const SearchInput = props => {
 
 SearchInput.propTypes = {
   type: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
   placeholder: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
 };
 
 export default SearchInput;

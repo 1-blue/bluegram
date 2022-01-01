@@ -2,7 +2,8 @@
 
 // types
 import {
-  RESET_MESSAGE, RESET_POST,
+  RESET_MESSAGE,
+  RESET_POST,
   CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
   LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
@@ -14,6 +15,7 @@ import {
   APPEND_LIKE_TO_COMMENT_REQUEST, APPEND_LIKE_TO_COMMENT_SUCCESS, APPEND_LIKE_TO_COMMENT_FAILURE,
   REMOVE_LIKE_TO_COMMENT_REQUEST, REMOVE_LIKE_TO_COMMENT_SUCCESS, REMOVE_LIKE_TO_COMMENT_FAILURE,
   LOAD_RECOMMENTS_REQUEST, LOAD_RECOMMENTS_SUCCESS, LOAD_RECOMMENTS_FAILURE,
+  LOAD_POSTS_OF_HASHTAG_REQUEST, LOAD_POSTS_OF_HASHTAG_SUCCESS, LOAD_POSTS_OF_HASHTAG_FAILURE,
 } from "@store/types";
 
 
@@ -23,6 +25,9 @@ const initState = {
 
   // 특정 게시글
   post: null,
+
+  // 해시태그 검색한 게시글
+  postsOfHashtag: null,
 
   // 게시글 생성 요청
   createPostLoading: false,
@@ -78,6 +83,11 @@ const initState = {
   loadRecommentsLoading: false,
   loadRecommentsDone: null,
   loadRecommentsError: null,
+
+  // 2022/01/01 - 특정 해시태그의 게시글들 요청 - by 1-blue
+  loadPostsOfHashtagLoading: false,
+  loadPostsOfHashtagDone: null,
+  loadPostsOfHashtagError: null,
 };
 
 function postReducer(prevState = initState, action) {
@@ -122,6 +132,9 @@ function postReducer(prevState = initState, action) {
         loadRecommentsLoading: false,
         loadRecommentsDone: null,
         loadRecommentsError: null,
+        loadPostsOfHashtagLoading: false,
+        loadPostsOfHashtagDone: null,
+        loadPostsOfHashtagError: null,
       };
 
     // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주기 - by 1-blue
@@ -558,6 +571,28 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadRecommentsLoading: false,
         loadRecommentsError: action.data.message,
+      };
+
+    // 2022/01/01 - 특정 해시태그의 게시글들 요청 - by 1-blue
+    case LOAD_POSTS_OF_HASHTAG_REQUEST:
+      return {
+        ...prevState,
+        loadPostsOfHashtagLoading: true,
+        loadPostsOfHashtagDone: null,
+        loadPostsOfHashtagError: null,
+      };
+    case LOAD_POSTS_OF_HASHTAG_SUCCESS:
+      return {
+        ...prevState,
+        loadPostsOfHashtagLoading: false,
+        loadPostsOfHashtagDone: action.data.message,
+        postsOfHashtag: action.data.postsOfHashtag,
+      };
+    case LOAD_POSTS_OF_HASHTAG_FAILURE:
+      return {
+        ...prevState,
+        loadPostsOfHashtagLoading: false,
+        loadPostsOfHashtagError: action.data.message,
       };
 
     default:

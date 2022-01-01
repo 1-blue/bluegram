@@ -12,6 +12,7 @@ import ProfilePage from "@pages/ProfilePage";
 import SignupPage from "@pages/SignupPage";
 import DirectMessagePage from "@pages/DirectMessagePage";
 import ExplorePage from "@pages/ExplorePage";
+import HashtagPage from "@pages/HashtagPage";
 import NotFoundPage from "@pages/NotFoundPage";
 
 // action
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/directMessage" element={<DirectMessagePage />} />
           <Route path="/explore" element={<ExplorePage />} />
+          <Route path="/tags/:hashtagText" element={<HashtagPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
