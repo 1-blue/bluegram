@@ -14,6 +14,8 @@ import {
   appendLikeToCommentAction,
   removeLikeToCommentAction,
   loadRecommentsAction,
+  followAction,
+  unfollowAction,
 } from "@store/actions";
 
 // components
@@ -162,6 +164,15 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
     [],
   );
 
+  // 2021/12/30 - 게시글 작성자 팔로우/언팔로우하기 ( using PostHead ) - by 1-blue
+  const onFollow = useCallback(
+    (isFollow, UserId) => () => {
+      if (isFollow) return dispatch(unfollowAction({ UserId }));
+      return dispatch(followAction({ UserId }));
+    },
+    [],
+  );
+
   return (
     <Wrapper>
       <button type="button" className="close-modal-button" onClick={onCloseModal}>
@@ -172,26 +183,14 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
         {post ? (
           <>
             {/* 머리 부분 */}
-            <PostHead
-              image={post.User.Images[0]}
-              name={post.User.name}
-              className="post-head-1"
-              isMinePost={post.User._id === me._id}
-              onRemovePost={onRemovePost}
-            />
+            <PostHead me={me} post={post} className="post-head-1" onRemovePost={onRemovePost} onFollow={onFollow} />
 
             {/* image-carousel */}
-            <ImageCarousel speed={300} length={post.Images.length} images={post.Images} />
+            <ImageCarousel speed={300} images={post.Images} />
 
             <div className="post">
               {/* 머리 부분 */}
-              <PostHead
-                image={post.User.Images[0]}
-                name={post.User.name}
-                className="post-head-2"
-                isMinePost={post.User._id === me._id}
-                onRemovePost={onRemovePost}
-              />
+              <PostHead me={me} post={post} onFollow={onFollow} className="post-head-2" onRemovePost={onRemovePost} />
 
               <div className="post-scroll">
                 {/* 컨텐츠 부분 */}

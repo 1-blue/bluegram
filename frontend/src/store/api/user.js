@@ -15,3 +15,8 @@ export function apiLoadToMe() {
 export function apiSignup(body) {
   return userInstance.post("/", body);
 }
+
+// 2021/12/31 - 특정 유저 정보 요청 - by 1-blue
+export function apiLoadToUser(body) {
+  return userInstance.get(`/${body.UserId}`);
+}

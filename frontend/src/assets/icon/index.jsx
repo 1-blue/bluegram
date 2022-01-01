@@ -18,6 +18,8 @@ import Avatar from "@assets/icon/avatar.svg";
 import Images from "@assets/icon/images.svg";
 import Play from "@assets/icon/play.svg";
 import Option from "@assets/icon/option.svg"
+import Post from "@assets/icon/post.svg"
+import Tag from "@assets/icon/tag.svg"
 
 export {
   Home, FillHome,
@@ -31,4 +33,6 @@ export {
   Images,
   Play,
   Option,
+  Post,
+  Tag
 };

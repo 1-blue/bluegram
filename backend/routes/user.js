@@ -1,7 +1,7 @@
 import express from "express";
 import bcrypt from "bcrypt";
 
-import { isNotLoggedIn } from "../middleware/index.js";
+import { isNotLoggedIn, isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
 const { User, Image, Post } = db;
@@ -19,8 +19,22 @@ router.get("/me", async (req, res, next) => {
       include: [
         { model: Image },
         { model: Post, attributes: ["_id"] },
-        { model: User, as: "Followers" },
-        { model: User, as: "Followings" },
+        {
+          model: User,
+          as: "Followers",
+          attributes: ["_id"],
+          through: {
+            attributes: [],
+          },
+        },
+        {
+          model: User,
+          as: "Followings",
+          attributes: ["_id"],
+          through: {
+            attributes: [],
+          },
+        },
       ],
     });
 
@@ -58,6 +72,51 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
     return res.status(200).json({ message: `${name}님 회원가입이 완료되었습니다.\n로그인페이지로 이동합니다.` });
   } catch (error) {
     console.error("GET /user error >> ", error);
+    return next(error);
+  }
+});
+
+// 2021/12/31 - 특정 유저 정보 가져오기 - by 1-blue
+router.get("/:UserId", async (req, res, next) => {
+  const UserId = +req.params.UserId;
+
+  try {
+    const targetUser = await User.findOne({
+      where: { _id: UserId },
+      attributes: ["_id", "name"],
+      include: [
+        {
+          model: Image,
+          attributes: ["_id", "name"],
+        },
+        {
+          model: Post,
+          attributes: ["_id"],
+        },
+        {
+          model: User,
+          as: "Followers",
+          attributes: ["_id"],
+          through: {
+            attributes: [],
+          },
+        },
+        {
+          model: User,
+          as: "Followings",
+          attributes: ["_id"],
+          through: {
+            attributes: [],
+          },
+        },
+      ],
+    });
+
+    if (!targetUser) return res.status(404).json({ message: "유저가 존재하지 않습니다." });
+
+    return res.status(200).json({ message: "특정 유저의 정보를 가져오는데 성공했습니다.", user: targetUser });
+  } catch (error) {
+    console.error("GET /user/me error >> ", error);
     return next(error);
   }
 });

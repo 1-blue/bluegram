@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import Proptypes from "prop-types";
 
 // components
@@ -36,7 +37,9 @@ const PostComment = ({
 
   return (
     <Wrapper>
-      <Avatar width={32} height={32} image={comment.User?.Images[0]} />
+      <Link to={`/profile/${comment.User._id}`}>
+        <Avatar width={32} height={32} image={comment.User.Images[0]} />
+      </Link>
       <div className="comment-container">
         <b className="comment-username">{comment.User.name}</b>
         <pre className="comment-content">{comment.content}</pre>

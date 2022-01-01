@@ -120,7 +120,6 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
             {/* image-carousel */}
             <ImageCarousel
               speed={300}
-              length={imagePreviews.length}
               images={imagePreviews.map((imagePreview, _id) => ({ name: imagePreview, _id }))}
             />
 

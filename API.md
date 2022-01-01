@@ -58,6 +58,12 @@
     _id,
     name
   },
+  Posts: [
+    {
+      _id,
+    },
+    //...
+  ]
   Followers: [
     {
       User: {
@@ -90,6 +96,7 @@
   1. `200`: 특정 유저의 정보에 대한 응답 성공
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
+  4. `404`: 유저가 존재하지 않음
 
 ## 2.3 POST /user
 + 역할: 회원가입
@@ -284,9 +291,9 @@
   4. `404`: 존재하지 않은 댓글의 답글들 요청
 
 # 6. following
-## 6.1 GET /following/:UserId?lastId=?
-+ 역할: 팔로잉 가져오기
-+ 전송 데이터: params로 `UserId` 전송, query로 `lastId` 전송
+## 6.1 GET /follow/:UserId
++ 역할: 특정 유저의 팔로우/팔로워 가져오기
++ 전송 데이터: params로 `UserId` 전송
 + 응답 데이터
 ```javascript
 [
@@ -325,7 +332,7 @@
   3. `401`: 비로그인 접근
 
 # 7. follower
-## 7.1 GET /follower/:UserId?lastId=?
+## 7.1 GET /follower/:UserId?lastId=1
 + 역할: 팔로워 가져오기
 + 전송 데이터: params로 `UserId` 전송, query로 `lastId` 전송
 + 응답 데이터
@@ -347,7 +354,17 @@
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
 
-## 7.2 DELETE /follower
+## 7.2 POST /follower/:UserId
++ 역할: 팔로워 추가
++ 전송 데이터: `{ UserId }`
++ 응답 데이터: `{ message }`
++ 응답 코드
+  1. `200`: 팔로워 추가 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
+  4. `404`: 존재하지 않는 유저 팔로우
+
+## 7.3 DELETE /follower/:UserId
 + 역할: 팔로워 삭제
 + 전송 데이터: `{ UserId }`
 + 응답 데이터: `{ message }`
@@ -355,6 +372,7 @@
   1. `200`: 팔로워 삭제 성공
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
+  4. `404`: 존재하지 않는 유저 언팔로우
 
 # 8. like
 ## 8.1 POST /like/post/:PostId

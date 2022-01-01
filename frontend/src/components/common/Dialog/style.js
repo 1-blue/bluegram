@@ -20,9 +20,13 @@ export const Wrapper = styled.aside`
     border-radius: 1em;
 
     & > li {
-      width: 200px;
+      max-width: 400px;
+      min-width: 200px;
+      width: 30vw;
       height: 48px;
       line-height: 36px;
+      display: flex;
+      justify-content: center;
       padding: 0.4em 0.8em;
       text-align: center;
       border-bottom: 1px solid gray;
