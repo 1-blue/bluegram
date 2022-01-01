@@ -11,7 +11,6 @@ import ImageInput from "@components/common/ImageInput";
 
 // hook
 import useInput from "@hooks/useInput";
-import useMessage from "@hooks/useMessage";
 
 // action
 import { resetMessageAction, signupAction } from "@store/actions";
@@ -38,10 +37,14 @@ const SignupPage = () => {
   const [birthday, onChangeBirthday] = useInput("");
 
   // 2021/12/20 - 회원가입 성공 시 홈페이지로 이동 및 성공 or 실패 메시지 alert - by 1-blue
-  useMessage(signupDone, signupError);
   useEffect(() => {
+    if (!(signupDone || signupError)) return;
+    alert(signupDone || signupError);
+
+    dispatch(resetMessageAction());
+
     if (signupDone) navigate("/login");
-  }, [signupDone]);
+  }, [signupDone, signupError]);
 
   // 2021/12/20 - 회원가입 요청 - by 1-blue
   const onSubmit = useCallback(

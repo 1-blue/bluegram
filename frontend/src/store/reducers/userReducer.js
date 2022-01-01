@@ -202,16 +202,17 @@ function userReducer(prevState = initState, action) {
         followLoading: true,
         followDone: null,
         followError: null,
-        Followers: action.data.Follows,
       };
     case FOLLOW_SUCCESS:
       // 2021/12/31 - 본인 정보창에서 팔로우를 누를 경우 숫자를 증가시키기 위함 - by 1-blue
-      if (prevState.me._id === prevState.user._id) {
-        tempFollowers = [...prevState.user.Followers];
-        tempFollowings = [...prevState.user.Followings, { _id: action.data.Follow.FollowingId }];
-      } else {
-        tempFollowers = [...prevState.user.Followers, { _id: action.data.Follow.FollowerId }];
-        tempFollowings = [...prevState.user.Followings];
+      if (prevState.user) {
+        if (prevState.me._id === prevState.user?._id) {
+          tempFollowers = [...prevState.user.Followers];
+          tempFollowings = [...prevState.user.Followings, { _id: action.data.Follow.FollowingId }];
+        } else {
+          tempFollowers = [...prevState.user.Followers, { _id: action.data.Follow.FollowerId }];
+          tempFollowings = [...prevState.user.Followings];
+        }
       }
 
       return {
@@ -226,11 +227,13 @@ function userReducer(prevState = initState, action) {
         },
 
         // 2021/12/31 - 특정 유저 팔로우 (특정 유저의 팔로잉) - by 1-blue
-        user: {
-          ...prevState.user,
-          Followers: tempFollowers,
-          Followings: tempFollowings,
-        },
+        user: prevState.user
+          ? {
+              ...prevState.user,
+              Followers: tempFollowers,
+              Followings: tempFollowings,
+            }
+          : null,
       };
     case FOLLOW_FAILURE:
       return {
@@ -248,18 +251,19 @@ function userReducer(prevState = initState, action) {
         unfollowError: null,
       };
     case UNFOLLOW_SUCCESS:
-      console.log(action.data);
-
       // 2021/12/31 - 본인 정보창에서 언팔로우를 누를 경우 숫자를 감소시키기 위함 - by 1-blue
-      if (prevState.me._id === prevState.user._id) {
-        tempFollowers = [...prevState.user.Followers];
-        tempFollowings = prevState.user.Followings.filter(
-          following => following._id !== action.data.Follow.unfollowingId,
-        );
-      } else {
-        tempFollowers = prevState.user.Followers.filter(follower => follower._id !== action.data.Follow.unfollowerId);
-        tempFollowings = [...prevState.user.Followings];
+      if (prevState.user) {
+        if (prevState.me._id === prevState.user._id) {
+          tempFollowers = [...prevState.user.Followers];
+          tempFollowings = prevState.user.Followings.filter(
+            following => following._id !== action.data.Follow.unfollowingId,
+          );
+        } else {
+          tempFollowers = prevState.user.Followers.filter(follower => follower._id !== action.data.Follow.unfollowerId);
+          tempFollowings = [...prevState.user.Followings];
+        }
       }
+
       return {
         ...prevState,
         unfollowLoading: false,
@@ -272,11 +276,13 @@ function userReducer(prevState = initState, action) {
         },
 
         // 2021/12/31 - 특정 유저 팔로우 (특정 유저의 언팔로잉) - by 1-blue
-        user: {
-          ...prevState.user,
-          Followers: tempFollowers,
-          Followings: tempFollowings,
-        },
+        user: prevState.user
+          ? {
+              ...prevState.user,
+              Followers: tempFollowers,
+              Followings: tempFollowings,
+            }
+          : null,
       };
     case UNFOLLOW_FAILURE:
       return {

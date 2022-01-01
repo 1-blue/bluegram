@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const userInstance = axios.create({
-  baseURL: (process.env.NODE_ENV === "production" ? process.env.PROD_SERVER_URL : process.env.DEV_SERVER_URL) + "/user",
+  baseURL: process.env.SERVER_URL + "/user",
   withCredentials: true,
   timeout: 2500,
 });

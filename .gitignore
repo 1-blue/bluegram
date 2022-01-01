@@ -5,7 +5,7 @@
 */node_modules
 
 # env
-*/.env
+*/.env*
 
 # session-store ( file )
 */sessions
@@ -14,4 +14,4 @@
 */dist
 
 # aws-pem
-bluegram.pem
+*.pem

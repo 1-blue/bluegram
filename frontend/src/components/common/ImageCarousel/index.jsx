@@ -55,10 +55,10 @@ const ImageCarousel = ({ speed, images }) => {
       }, speed + 100);
 
       // 현재 이미지와 dot 동기화
-      dotNodes[currentIndex - images.length].style.color = "black";
+      dotNodes[currentIndex - images.length].style.color = "gray";
     } else {
       // 현재 이미지와 dot 동기화
-      dotNodes[currentIndex].style.color = "black";
+      dotNodes[currentIndex].style.color = "gray";
     }
   }, [imageNodes, currentIndex, click, dotNodes, images, speed]);
 
@@ -86,10 +86,10 @@ const ImageCarousel = ({ speed, images }) => {
         setClick(true);
       }, speed + 100);
       // 현재 이미지와 dot 동기화
-      dotNodes[images.length - 1].style.color = "black";
+      dotNodes[images.length - 1].style.color = "gray";
     } else {
       // 현재 이미지와 dot 동기화
-      dotNodes[currentIndex - 2].style.color = "black";
+      dotNodes[currentIndex - 2].style.color = "gray";
     }
   }, [imageNodes, currentIndex, click, dotNodes, images, speed]);
 
@@ -103,7 +103,7 @@ const ImageCarousel = ({ speed, images }) => {
   useEffect(() => {
     if (images.length === 1) return;
     if (!dotNodes) return;
-    dotNodes[0].style.color = "black";
+    dotNodes[0].style.color = "gray";
   }, [images, dotNodes]);
 
   return (
@@ -113,80 +113,28 @@ const ImageCarousel = ({ speed, images }) => {
         {images.length === 1 ? (
           <>
             <li>
-              <Image
-                name={
-                  (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                  "/" +
-                  images[0].name
-                }
-              >
-                <img
-                  src={
-                    (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                    "/" +
-                    images[0].name
-                  }
-                  alt="게시글의 이미지"
-                />
+              <Image name={process.env.IMAGE_URL + "/" + images[0].name}>
+                <img src={process.env.IMAGE_URL + "/" + images[0].name} alt="게시글의 이미지" />
               </Image>
             </li>
           </>
         ) : (
           <>
             <li>
-              <Image
-                name={
-                  (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                  "/" +
-                  images[images.length - 1].name
-                }
-              >
-                <img
-                  src={
-                    (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                    "/" +
-                    images[images.length - 1].name
-                  }
-                  alt="게시글의 이미지"
-                />
+              <Image name={process.env.IMAGE_URL + "/" + images[images.length - 1].name}>
+                <img src={process.env.IMAGE_URL + "/" + images[images.length - 1].name} alt="게시글의 이미지" />
               </Image>
             </li>
             {images.map(image => (
               <li key={image._id}>
-                <Image
-                  name={
-                    (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                    "/" +
-                    image.name
-                  }
-                >
-                  <img
-                    src={
-                      (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                      "/" +
-                      image.name
-                    }
-                    alt="게시글의 이미지"
-                  />
+                <Image name={process.env.IMAGE_URL + "/" + image.name}>
+                  <img src={process.env.IMAGE_URL + "/" + image.name} alt="게시글의 이미지" />
                 </Image>
               </li>
             ))}
             <li>
-              <Image
-                name={
-                  (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                  "/" +
-                  images[0].name
-                }
-              >
-                <img
-                  src={
-                    (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-                    "/" +
-                    images[0].name
-                  }
-                  alt="게시글의 이미지"
-                />
+              <Image name={process.env.IMAGE_URL + "/" + images[0].name}>
+                <img src={process.env.IMAGE_URL + "/" + images[0].name} alt="게시글의 이미지" />
               </Image>
             </li>
           </>

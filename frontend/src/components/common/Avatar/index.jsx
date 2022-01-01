@@ -6,16 +6,7 @@ import { Wrapper } from "./style";
 
 const Avatar = props => {
   return (
-    <Wrapper
-      {...props}
-      src={
-        props.image?.name
-          ? (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-            "/" +
-            props.image.name
-          : props.image?.url
-      }
-    />
+    <Wrapper {...props} src={props.image?.name ? process.env.IMAGE_URL + "/" + props.image.name : props.image?.url} />
   );
 };
 

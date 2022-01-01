@@ -35,7 +35,7 @@ const App = () => {
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/directMessage" element={<DirectMessagePage />} />
           <Route path="/explore" element={<ExplorePage />} />
-          <Route path="/tags/:hashtagText" element={<HashtagPage />} />
+          <Route path="/hashtag/:hashtagText" element={<HashtagPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

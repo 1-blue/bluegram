@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const likeInstance = axios.create({
-  baseURL: (process.env.NODE_ENV === "production" ? process.env.PROD_SERVER_URL : process.env.DEV_SERVER_URL) + "/like",
+  baseURL: process.env.SERVER_URL + "/like",
   withCredentials: true,
   timeout: 2500,
 });

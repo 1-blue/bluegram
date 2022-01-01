@@ -40,9 +40,12 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
   }, []);
 
   // 2021/12/22 - 게시글 생성 성공 or 실패 시 메시지 보여주고 모달 닫기
-  useMessage(createPostDone, createPostError);
   useEffect(() => {
     if (!(createPostDone || createPostError)) return;
+    alert(createPostDone || createPostError);
+
+    dispatch(resetMessageAction());
+
     onCloseModal();
   }, [createPostDone, createPostError, onCloseModal]);
 

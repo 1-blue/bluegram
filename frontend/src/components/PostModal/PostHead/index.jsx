@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Proptypes from "prop-types";
 
@@ -6,6 +7,7 @@ import Proptypes from "prop-types";
 import Avatar from "@components/common/Avatar";
 import Icon from "@components/common/Icon";
 import Dialog from "@components/common/Dialog";
+import Spinner from "@components/common/Spinner";
 
 // hook
 import useOpenClose from "@hooks/useOpenClose";
@@ -17,6 +19,7 @@ const PostHead = ({ me, post, className, onRemovePost, onFollow }) => {
   const [showDialog, onOpenDialog, onCloseDialog] = useOpenClose(false);
   // 2021/12/30 - 로그인한 유저가 게시글 작성자를 팔로우했는지 여부 - by 1-blue
   const isFollow = me.Followings.some(following => following._id === post.User._id);
+  const { followLoading, unfollowLoading } = useSelector(state => state.user);
 
   return (
     <Wrapper className={className}>
@@ -26,11 +29,10 @@ const PostHead = ({ me, post, className, onRemovePost, onFollow }) => {
       <span className="post-head-username">{post.User.name}</span>
       {post.User._id === me._id || (
         <button type="button" className="post-conent-head-follow-button" onClick={onFollow(isFollow, post.User._id)}>
-          {isFollow ? "언팔로우" : "팔로우"}
+          {followLoading || unfollowLoading ? <Spinner button /> : isFollow ? "언팔로우" : "팔로우"}
         </button>
       )}
       <Icon shape="option" fill="gray" hoverfill="black" onClick={onOpenDialog} />
-
       {showDialog && (
         <Dialog onClose={onCloseDialog} showDialog={showDialog}>
           {post.User._id === me._id ? (

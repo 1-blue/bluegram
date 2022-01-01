@@ -77,15 +77,13 @@ export const Wrapper = styled.section`
         height: 1.5rem;
       }
       & {
+        margin: auto;
         font-size: 10px;
-        position: absolute;
-        top: 5px;
-        left: 5px;
         text-indent: -9999em;
-        border-top: 5px solid rgba(0, 0, 0, 0.2);
+        border-top: 5px solid rgb(0, 0, 0);
         border-right: 5px solid rgba(0, 0, 0, 0.2);
         border-bottom: 5px solid rgba(0, 0, 0, 0.2);
-        border-left: 5px solid #ffffff;
+        border-left: 5px solid rgba(0, 0, 0, 0.2);
         -webkit-transform: translateZ(0);
         -ms-transform: translateZ(0);
         transform: translateZ(0);

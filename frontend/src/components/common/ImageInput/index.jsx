@@ -37,14 +37,7 @@ const ImageInput = () => {
       <input type="file" accept="image/*" onChange={onChangeProfileImage} ref={inputRef} hidden />
       <div>
         {imagePreviews ? (
-          <img
-            src={
-              (process.env.NODE_ENV === "production" ? process.env.PROD_IMAGE_URL : process.env.DEV_IMAGE_URL) +
-              "/" +
-              imagePreviews[0]
-            }
-            alt="회원가입 시 등록할 프로필 이미지"
-          />
+          <img src={process.env.IMAGE_URL + "/" + imagePreviews[0]} alt="회원가입 시 등록할 프로필 이미지" />
         ) : (
           <span>프로필 이미지 선택</span>
         )}
