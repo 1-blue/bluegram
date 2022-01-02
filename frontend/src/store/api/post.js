@@ -15,7 +15,7 @@ export function apiCreatePost(body) {
 
 // 2021/12/22 - 최신 게시글들 요청 - by 1-blue
 export function apiLoadPosts(body) {
-  return postInstance.get(`?lastId=${body.lastId}`);
+  return postInstance.get(`?lastId=${body.lastId}&limit=${body.limit}`);
 }
 
 // 2021/12/22 - 특정 게시글 요청 - by 1-blue
@@ -30,5 +30,5 @@ export function apiRemovePost(body) {
 
 // 2022/01/01 - 특정 해시태그의 게시글들 요청 - by 1-blue
 export function apiLoadPostsOfHashtag(body) {
-  return postInstance.get(`/hashtag/${body.hashtagText}`);
+  return postInstance.get(`/hashtag/${body.hashtagText}?lastId=${body.lastId}&limit=${body.limit}`);
 }

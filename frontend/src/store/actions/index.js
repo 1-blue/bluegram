@@ -8,7 +8,7 @@ export const resetMessageAction = () => ({ type: RESET_MESSAGE });
 export { localLoginAction, localLogoutAction } from "./authAction";
 export { loadToMeAction, signupAction, loadToUserAction } from "./userAction";
 export { uploadImagesAction, resetImagePreview } from "./imageAction";
-export { resetPostAction, createPostAction, loadPostsAction, loadPostAction, removePostAction, loadPostsOfHashtagAction } from "./postAction";
+export { resetPostAction, resetPostsAction, createPostAction, loadPostsAction, loadPostAction, removePostAction, loadPostsOfHashtagAction } from "./postAction";
 export { appendLikeToPostAction, removeLikeToPostAction, appendLikeToCommentAction, removeLikeToCommentAction } from "./likeAction";
 export { appendCommentToPostAction, removeCommentToPostAction, loadRecommentsAction } from "./commentAction";
 export { resetFollowAction, loadFollowersAction, loadFollowingsAction, followAction, unfollowAction } from "./followAction";

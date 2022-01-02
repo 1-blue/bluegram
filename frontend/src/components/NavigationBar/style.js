@@ -1,6 +1,10 @@
 import styled from "styled-components";
 
 export const Wrapper = styled.nav`
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 99;
   padding: 1em;
   margin-bottom: 2em;
   background-color: white;

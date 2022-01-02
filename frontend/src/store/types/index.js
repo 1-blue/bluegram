@@ -4,6 +4,9 @@ export const RESET_MESSAGE = "RESET_MESSAGE";
 // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주기 - by 1-blue
 export const RESET_POST = "RESET_POST";
 
+// 2022/01/02 - explore 페이지 들어올 때 게시글들 초기화 - by 1-blue
+export const RESET_POSTS = "RESET_POSTS";
+
 // 2021/12/26 - 이미지 프리뷰 비우기 - by 1-blue
 export const RESET_IMAGE_PREVIEW = "RESET_IMAGE_PREVIEW";
 

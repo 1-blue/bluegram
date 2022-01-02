@@ -1,5 +1,6 @@
 import {
   RESET_POST,
+  RESET_POSTS,
   CREATE_POST_REQUEST,
   LOAD_POSTS_REQUEST,
   LOAD_POST_REQUEST,
@@ -11,6 +12,14 @@ import {
 export function resetPostAction(data) {
   return {
     type: RESET_POST,
+    data,
+  };
+}
+
+// 2022/01/02 - ExplorePage 들어올 때 게시글들 초기화 액션 크리에이터 - by 1-blue
+export function resetPostsAction(data) {
+  return {
+    type: RESET_POSTS,
     data,
   };
 }
