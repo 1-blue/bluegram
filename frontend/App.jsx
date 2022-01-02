@@ -9,6 +9,7 @@ import AppLayout from "@components/AppLayout";
 import HomePage from "@pages/HomePage";
 import LoginPage from "@pages/LoginPage";
 import ProfilePage from "@pages/ProfilePage";
+import ProfileEditPage from "@pages/ProfileEditPage";
 import SignupPage from "@pages/SignupPage";
 import DirectMessagePage from "@pages/DirectMessagePage";
 import ExplorePage from "@pages/ExplorePage";
@@ -26,12 +27,12 @@ const App = () => {
 
   return (
     <BrowserRouter>
-      {/* <AppLayout> */}
       <Routes>
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/profile/:UserId" element={<ProfilePage />} />
+          <Route path="/profile/edit" element={<ProfileEditPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/directMessage" element={<DirectMessagePage />} />
           <Route path="/explore" element={<ExplorePage />} />
@@ -39,7 +40,6 @@ const App = () => {
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      {/* </AppLayout> */}
     </BrowserRouter>
   );
 };

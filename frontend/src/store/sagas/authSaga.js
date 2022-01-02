@@ -35,7 +35,7 @@ function* localLogin(action) {
 function* localLogout(action) {
   try {
     const { data } = yield call(apiLocalLogout, action.data);
-    console.log(data);
+    data.me = null;
 
     yield put({
       type: LOCAL_LOGOUT_SUCCESS,

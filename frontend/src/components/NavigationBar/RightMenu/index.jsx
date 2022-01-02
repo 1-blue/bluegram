@@ -61,7 +61,7 @@ const RightMenu = () => {
 
   return (
     <Wrapper>
-      {me ? (
+      {me._id ? (
         <>
           <li>
             <NavLink to="/">

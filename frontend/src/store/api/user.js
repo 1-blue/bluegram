@@ -20,3 +20,8 @@ export function apiSignup(body) {
 export function apiLoadToUser(body) {
   return userInstance.get(`/${body.UserId}`);
 }
+
+// 2022/01/02 - 로그인한 유저의 상세정보 가져오기 - by 1-blue
+export function apiLoadToMeDetail() {
+  return userInstance.get("/me/detail");
+}

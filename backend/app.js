@@ -49,7 +49,7 @@ app.use(
   expressSession({
     resave: false,
     saveUninitialized: false,
-    name: "session-cookie",
+    name: "auth-bluegram",
     secret: process.env.COOKIE_SECRET,
     cookie: {
       httpOnly: true,

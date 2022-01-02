@@ -13,6 +13,7 @@ import useInput from "@hooks/useInput";
 
 // action
 import { resetMessageAction, localLoginAction } from "@store/actions";
+import { useRef } from "react";
 
 // styled-component
 const Wrapper = styled.main`
@@ -30,6 +31,7 @@ const LoginPage = () => {
   const { loginLoading, loginDone, loginError } = useSelector(state => state.auth);
   const [id, onChangeId] = useInput("");
   const [password, onChangePassword] = useInput("");
+  const kakaoButtonRef = useRef("");
 
   // 2021/12/20 - 로그인 성공 시 메시지와 redirect / 로그인 실패 시 메시지 - by 1-blue
   useEffect(() => {
@@ -74,8 +76,8 @@ const LoginPage = () => {
           네이버 로그인
         </Button>
         {/* 카카오 로그인 버튼 */}
-        <Button type="button" $kakao>
-          <a href={process.env.NODE_ENV === "production" ? process.env.PROD_KAKAO_URL : process.env.DEV_KAKAO_URL}>
+        <Button type="button" $kakao onClick={() => kakaoButtonRef.current.click()}>
+          <a href={process.env.KAKAO_URL} ref={kakaoButtonRef}>
             카카오 로그인
           </a>
         </Button>

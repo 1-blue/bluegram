@@ -17,7 +17,7 @@ router.get("/me", async (req, res, next) => {
       attributes: ["_id", "name", "provider", "createdAt"],
       where: { _id: req.user._id },
       include: [
-        { model: Image },
+        { model: Image, attributes: ["_id", "name", "url"] },
         { model: Post, attributes: ["_id"] },
         {
           model: User,
@@ -39,6 +39,23 @@ router.get("/me", async (req, res, next) => {
     });
 
     return res.status(200).json({ message: "로그인한 유저의 정보를 가져오는데 성공했습니다.", user: fullUser });
+  } catch (error) {
+    console.error("GET /user/me error >> ", error);
+    return next(error);
+  }
+});
+
+// 로그인한 유저의 상세정보 가져오기
+router.get("/me/detail", async (req, res, next) => {
+  try {
+    const me = await User.findByPk(req.user._id, {
+      attributes: {
+        exclude: ["password", "updatedAt"],
+      },
+      include: [{ model: Image, attributes: ["_id", "name"] }],
+    });
+
+    return res.status(200).json({ message: "로그인한 유저의 상세정보를 가져오는데 성공했습니다.", me });
   } catch (error) {
     console.error("GET /user/me error >> ", error);
     return next(error);
@@ -77,7 +94,7 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
 });
 
 // 2021/12/31 - 특정 유저 정보 가져오기 - by 1-blue
-router.get("/:UserId", async (req, res, next) => {
+router.get("/:UserId", isLoggedIn, async (req, res, next) => {
   const UserId = +req.params.UserId;
 
   try {

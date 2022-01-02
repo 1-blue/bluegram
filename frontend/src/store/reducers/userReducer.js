@@ -23,11 +23,14 @@ import {
   LOAD_TO_USER_REQUEST,
   LOAD_TO_USER_SUCCESS,
   LOAD_TO_USER_FAILURE,
+  LOAD_TO_ME_DETAIL_REQUEST,
+  LOAD_TO_ME_DETAIL_SUCCESS,
+  LOAD_TO_ME_DETAIL_FAILURE,
 } from "@store/types";
 
 const initState = {
   // 로그인한 유저의 데이터
-  me: null,
+  me: {},
 
   // 특정 유저 정보
   user: null,
@@ -75,6 +78,7 @@ const initState = {
 function userReducer(prevState = initState, action) {
   let tempFollowers = null;
   let tempFollowings = null;
+  let tempMe = null;
 
   switch (action.type) {
     case RESET_MESSAGE:
@@ -118,11 +122,19 @@ function userReducer(prevState = initState, action) {
         loadToMeError: null,
       };
     case LOAD_TO_ME_SUCCESS:
+      if (action.data.me === null) {
+        tempMe = {};
+      } else {
+        tempMe = {
+          ...prevState.me,
+          ...action.data.user,
+        };
+      }
       return {
         ...prevState,
         loadToMeLoading: false,
         loadToMeDone: action.data.message,
-        me: action.data.user,
+        me: tempMe,
       };
     case LOAD_TO_ME_FAILURE:
       return {
@@ -311,6 +323,28 @@ function userReducer(prevState = initState, action) {
         ...prevState,
         loadToUserLoading: false,
         loadToUserError: action.data.message,
+      };
+
+    // 2022/01/02 - 로그인한 유저의 상세정보 가져오기 - by 1-blue
+    case LOAD_TO_ME_DETAIL_REQUEST:
+      return {
+        ...prevState,
+        loadToMeDetailLoading: true,
+        loadToMeDetailDone: null,
+        loadToMeDetailError: null,
+      };
+    case LOAD_TO_ME_DETAIL_SUCCESS:
+      return {
+        ...prevState,
+        loadToMeDetailLoading: false,
+        loadToMeDetailDone: action.data.message,
+        me: action.data.me,
+      };
+    case LOAD_TO_ME_DETAIL_FAILURE:
+      return {
+        ...prevState,
+        loadToMeDetailLoading: false,
+        loadToMeDetailError: action.data.message,
       };
 
     default:

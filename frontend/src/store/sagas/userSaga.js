@@ -11,10 +11,11 @@ import {
   FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE,
   UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
   LOAD_TO_USER_REQUEST, LOAD_TO_USER_SUCCESS, LOAD_TO_USER_FAILURE,
+  LOAD_TO_ME_DETAIL_REQUEST, LOAD_TO_ME_DETAIL_SUCCESS, LOAD_TO_ME_DETAIL_FAILURE,
  } from "@store/types";
 
 // api
-import { apiLoadToMe, apiSignup, apiLoadFollowers, apiLoadFollowings, apiFollow, apiUnfollow, apiLoadToUser } from "@store/api";
+import { apiLoadToMe, apiSignup, apiLoadFollowers, apiLoadFollowings, apiFollow, apiUnfollow, apiLoadToUser, apiLoadToMeDetail } from "@store/api";
 
 function* loadToMe(action) {
   try {
@@ -128,6 +129,22 @@ function* loadToUser(action) {
     });
   }
 }
+function* loadToMeDetail(action) {
+  try {
+    const { data } = yield call(apiLoadToMeDetail, action.data);
+
+    yield put({
+      type: LOAD_TO_ME_DETAIL_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: LOAD_TO_ME_DETAIL_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
 
 function* watchLoadToMe() {
   yield takeLatest(LOAD_TO_ME_REQUEST, loadToMe);
@@ -150,6 +167,9 @@ function* watchUnfollow() {
 function* watchLoadToUser() {
   yield takeLatest(LOAD_TO_USER_REQUEST, loadToUser);
 }
+function* watchLoadToMeDetail() {
+  yield takeLatest(LOAD_TO_ME_DETAIL_REQUEST, loadToMeDetail);
+}
 
 export default function* userSaga() {
   yield all([
@@ -160,5 +180,6 @@ export default function* userSaga() {
     fork(watchFollow),
     fork(watchUnfollow),
     fork(watchLoadToUser),
+    fork(watchLoadToMeDetail),
   ]);
 }

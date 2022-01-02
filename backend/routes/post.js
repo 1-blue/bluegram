@@ -8,8 +8,6 @@ const { Image, Post, Comment, User, Hashtag } = db;
 
 const router = express.Router();
 
-// /#[a-z0-9_가-힣]+/gm
-
 // 2021/12/22 - 게시글 생성하기 - by 1-blue
 router.post("/", isLoggedIn, async (req, res, next) => {
   const { content, images } = req.body;
@@ -28,17 +26,19 @@ router.post("/", isLoggedIn, async (req, res, next) => {
 
     // 2022/01/01 - 해시태그 생성 - by 1-blue
     const hashtags = content.match(/#[a-z0-9_가-힣]+/gm);
-    const hashtagPromiseList = hashtags.map(hashtag => {
-      const content = hashtag.substr(1, hashtag.length);
-      return Hashtag.findOrCreate({ where: { content } });
-    });
-    const results = await Promise.all(hashtagPromiseList);
+    if (hashtags) {
+      const hashtagPromiseList = hashtags.map(hashtag => {
+        const content = hashtag.substr(1, hashtag.length);
+        return Hashtag.findOrCreate({ where: { content } });
+      });
+      const results = await Promise.all(hashtagPromiseList);
 
-    // 2022/01/01 - 해시태그 게시글과 연결 - by 1-blue
-    const hashtagPostPromiseList = results.map(hashtag => {
-      return hashtag[0].addPostHashtaged(createdPost._id);
-    });
-    await Promise.all(hashtagPostPromiseList);
+      // 2022/01/01 - 해시태그 게시글과 연결 - by 1-blue
+      const hashtagPostPromiseList = results.map(hashtag => {
+        return hashtag[0].addPostHashtaged(createdPost._id);
+      });
+      await Promise.all(hashtagPostPromiseList);
+    }
 
     // 2021/12/22 - 생성된 게시글에 데이터를 합쳐서 전달 - by 1-blue
     const createdPostWithData = await Post.findOne({
@@ -114,6 +114,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
 // 2021/12/22 - 전체 게시글 불러오기 - by 1-blue
 router.get("/", async (req, res, next) => {
   const lastId = +req.query.lastId || -1;
+  const limit = +req.query.limit || 15;
 
   const where = {
     _id: lastId === -1 ? { [Op.gt]: lastId } : { [Op.lt]: lastId },
@@ -122,7 +123,7 @@ router.get("/", async (req, res, next) => {
   try {
     const posts = await Post.findAll({
       where,
-      limit: 30,
+      limit,
       order: [["createdAt", "DESC"]],
       attributes: ["_id", "content", "createdAt"],
       include: [
@@ -160,7 +161,7 @@ router.get("/", async (req, res, next) => {
       ],
     });
 
-    res.json({ message: "최신 게시글을 불러오는데 성공했습니다.", posts });
+    res.json({ message: "최신 게시글을 불러오는데 성공했습니다.", posts, limit });
   } catch (error) {
     console.error("GET /post error >> ", error);
     return next(error);
@@ -283,6 +284,12 @@ router.delete("/:PostId", async (req, res, next) => {
 // 2022/01/01 - 해시태그의 포스트들 불러오기 - by 1-blue
 router.get("/hashtag/:hashtagText", async (req, res, next) => {
   const hashtagText = decodeURI(req.params.hashtagText);
+  const lastId = +req.query.lastId || -1;
+  const limit = +req.query.limit || 15;
+
+  const where = {
+    _id: lastId === -1 ? { [Op.gt]: lastId } : { [Op.lt]: lastId },
+  };
 
   try {
     // 특정 해시태그 찾기
@@ -290,7 +297,20 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
       where: { content: hashtagText },
     });
 
+    if (!hashtag)
+      return res.status(200).json({
+        message: "해시태그가 존재하지 않습니다.",
+        postsOfHashtag: [],
+        metadata: {
+          limit,
+          postsOfHashtagCount: 0,
+          hashtagText,
+        },
+      });
+
     const postsOfHashtag = await hashtag.getPostHashtaged({
+      where,
+      limit,
       include: [
         // 게시글 작성자
         {
@@ -366,7 +386,17 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
       ],
     });
 
-    res.json({ message: "해시태그의 게시글들을 불러오는데 성공했습니다.", postsOfHashtag });
+    const postsOfHashtagCount = await hashtag.countPostHashtaged();
+
+    res.status(200).json({
+      message: "해시태그의 게시글들을 불러오는데 성공했습니다.",
+      postsOfHashtag,
+      metadata: {
+        limit,
+        postsOfHashtagCount,
+        hashtagText,
+      },
+    });
   } catch (error) {
     console.error("GET /post/hashtag/:hashtag error >> ", error);
     return next(error);

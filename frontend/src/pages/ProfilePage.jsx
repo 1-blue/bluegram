@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -100,6 +100,7 @@ const Wrapper = styled.section`
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { me, user, Followers, Followings } = useSelector(state => state.user);
   const { loadToUserLoading, loadFollowersLoading, loadFollowingsLoading, followLoading, unfollowLoading } =
     useSelector(state => state.user);
@@ -145,7 +146,9 @@ const ProfilePage = () => {
           <span>{user.name}</span>
 
           {user._id === me._id ? (
-            <button type="button">프로필 편집</button>
+            <button type="button" onClick={() => navigate("/profile/edit")}>
+              프로필 편집
+            </button>
           ) : (
             <button type="button" onClick={onFollow(isFollow, UserId)}>
               {followLoading || unfollowLoading ? <Spinner button /> : isFollow ? "언팔로우" : "팔로우"}
