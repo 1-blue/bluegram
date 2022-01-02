@@ -21,33 +21,31 @@ const PostCard = ({ post, onOpenModal }) => {
       isMouseHover={isMouseHover}
       onClick={onOpenModal(post._id)}
     >
-      <section className="post-image-container">
-        <img
-          src={process.env.IMAGE_URL + "/" + post.Images[post.Images.length - 1].name}
-          alt="유저가 업로드한 이미지"
-          className="post-image"
-        />
-        {isMouseHover && (
-          <>
-            <div className="post-information">
-              <div>
-                <Icon shape="fillHeart" width={24} height={24} fill="white" animation="rubber-band" />
-                <span>{post.PostLikers.length}</span>
-              </div>
-              <div>
-                <Icon shape="comment" width={24} height={24} fill="white" animation="rubber-band" />
-                <span>{post.Comments.length}</span>
-              </div>
+      <img
+        src={process.env.IMAGE_URL + "/" + post.Images[post.Images.length - 1].name}
+        alt="유저가 업로드한 이미지"
+        className="post-image"
+      />
+      {isMouseHover && (
+        <>
+          <div className="post-information">
+            <div>
+              <Icon shape="fillHeart" width={24} height={24} fill="white" animation="rubber-band" />
+              <span>{post.PostLikers.length}</span>
             </div>
+            <div>
+              <Icon shape="comment" width={24} height={24} fill="white" animation="rubber-band" />
+              <span>{post.Comments.length}</span>
+            </div>
+          </div>
 
-            {post.Images.length === 1 || (
-              <figure className="kinds">
-                <Icon shape="images" width={24} height={24} fill="white" animation="bounce" />
-              </figure>
-            )}
-          </>
-        )}
-      </section>
+          {post.Images.length === 1 || (
+            <figure className="kinds">
+              <Icon shape="images" width={24} height={24} fill="white" animation="bounce" />
+            </figure>
+          )}
+        </>
+      )}
     </Wrapper>
   );
 };

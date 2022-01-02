@@ -3,7 +3,7 @@
 // types
 import {
   RESET_MESSAGE,
-  RESET_POST,
+  RESET_POST, RESET_POSTS,
   CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
   LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
@@ -27,7 +27,17 @@ const initState = {
   post: null,
 
   // 해시태그 검색한 게시글
-  postsOfHashtag: null,
+  postsOfHashtag: [],
+  // 해시태그에 해당 데이터들
+  postsOfHashtagMetadata: {
+    isMoreHashtagPosts: true,
+    postsOfHashtagCount: 0,
+    hashtagText: "",
+  },
+
+  // 추가로 게시글들 요청할지 여부
+  isMorePosts: true,
+  isMoreHashtagPosts: true,
 
   // 게시글 생성 요청
   createPostLoading: false,
@@ -94,6 +104,7 @@ function postReducer(prevState = initState, action) {
   // 게시글, 댓글, 답글의 수정에 대한 임시 처리결과를 저장할 변수 ( feat: 불변성 )
   let tempPosts = null;
   let tempPost = null;
+  let tempPostsOfHashtag = null;
 
   switch (action.type) {
     case RESET_MESSAGE:
@@ -144,6 +155,13 @@ function postReducer(prevState = initState, action) {
         post: null,
       };
 
+    // 2022/01/02 - ExplorePage 들어올 때 게시글들 초기화 - by 1-blue
+    case RESET_POSTS:
+      return {
+        ...prevState,
+        posts: [],
+      };
+
     case CREATE_POST_REQUEST:
       return {
         ...prevState,
@@ -178,6 +196,7 @@ function postReducer(prevState = initState, action) {
         loadPostsLoading: false,
         loadPostsDone: action.data.message,
         posts: [...prevState.posts, ...action.data.posts],
+        isMorePosts: action.data.posts.length === action.data.limit,
       };
     case LOAD_POSTS_FAILURE:
       return {
@@ -582,11 +601,25 @@ function postReducer(prevState = initState, action) {
         loadPostsOfHashtagError: null,
       };
     case LOAD_POSTS_OF_HASHTAG_SUCCESS:
+      const { metadata } = action.data;
+
+      // 2022/01/02 - 기존 해시태그에서 추가적으로 요청하는건지 다른 해시태그를 요청하는건지 판단 - by 1-blue
+      if(prevState.postsOfHashtagMetadata.hashtagText === metadata.hashtagText){
+        tempPostsOfHashtag = [...prevState.postsOfHashtag, ...action.data.postsOfHashtag];
+      } else {
+        tempPostsOfHashtag = [...action.data.postsOfHashtag];
+      }
+
       return {
         ...prevState,
         loadPostsOfHashtagLoading: false,
         loadPostsOfHashtagDone: action.data.message,
-        postsOfHashtag: action.data.postsOfHashtag,
+        postsOfHashtag: tempPostsOfHashtag,
+        postsOfHashtagMetadata: {
+          isMoreHashtagPosts: action.data.postsOfHashtag.length === metadata.limit,
+          postsOfHashtagCount: metadata.postsOfHashtagCount,
+          hashtagText: metadata.hashtagText,
+        }
       };
     case LOAD_POSTS_OF_HASHTAG_FAILURE:
       return {

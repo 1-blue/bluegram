@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 // action
-import { loadPostsAction, resetPostAction } from "@store/actions/postAction";
+import { loadPostsAction, resetPostAction, resetPostsAction } from "@store/actions/postAction";
 
 // components
 import PostCard from "@components/PostCard";
@@ -17,9 +17,11 @@ const Wrapper = styled.ul`
 
   @media (max-width: 480px) {
     gap: 2px;
+    grid-template-columns: repeat(1, auto);
   }
   @media (min-width: 480px) and (max-width: 768px) {
     gap: 4px;
+    grid-template-columns: repeat(2, auto);
   }
   @media (min-width: 768px) and (max-width: 1024px) {
     gap: 8px;
@@ -31,14 +33,16 @@ const Wrapper = styled.ul`
 
 const ExplorePage = () => {
   const dispatch = useDispatch();
-  const { posts } = useSelector(state => state.post);
+  const { posts, isMorePosts, loadPostsLoading } = useSelector(state => state.post);
   const [showModal, setShowModal] = useState(false);
   const [openPostId, setOpenPostId] = useState(null);
   const modalRef = useRef(null);
 
+  // 2022/01/02 - 해당 페이지 들어올 때 게시글들 초기화 - by 1-blue
   // 2021/12/21 - 전체 게시글 요청 - by 1-blue
   useEffect(() => {
-    dispatch(loadPostsAction({ lastId: -1 }));
+    dispatch(resetPostsAction());
+    dispatch(loadPostsAction({ lastId: -1, limit: 15 }));
   }, []);
 
   // 2021/12/21 - 다른 영역 클릭 시 모달 닫기 이벤트 - by 1-blue
@@ -79,6 +83,24 @@ const ExplorePage = () => {
   // 2021/12/22 - 클릭 시 모달 닫기 - by 1-blue
   const onCloseModal = useCallback(() => setShowModal(false), [showModal]);
 
+  // 2022/01/02 - 무한스크롤링 이벤트 함수 - by 1-blue
+  const scrollEvent = useCallback(() => {
+    if (
+      window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 400 &&
+      isMorePosts &&
+      !loadPostsLoading
+    ) {
+      dispatch(loadPostsAction({ lastId: posts[posts.length - 1]._id, limit: 15 }));
+    }
+  }, [posts.length, isMorePosts, loadPostsLoading]);
+
+  // 2022/01/02 - 무한스크롤링 이벤트 등록 - by 1-blue
+  useEffect(() => {
+    window.addEventListener("scroll", scrollEvent);
+
+    return () => window.removeEventListener("scroll", scrollEvent);
+  }, [scrollEvent]);
+
   if (posts.length === 0) {
     return <Spinner page />;
   }
@@ -90,6 +112,8 @@ const ExplorePage = () => {
           <PostCard key={post._id} post={post} onOpenModal={onOpenModal} />
         ))}
       </Wrapper>
+
+      {loadPostsLoading && <Spinner page />}
 
       {showModal && <PostModal PostId={openPostId} onCloseModal={onCloseModal} ref={modalRef} />}
     </>

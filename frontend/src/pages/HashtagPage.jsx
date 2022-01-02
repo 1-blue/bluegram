@@ -18,9 +18,11 @@ const Wrapper = styled.ul`
 
   @media (max-width: 480px) {
     gap: 2px;
+    grid-template-columns: repeat(1, auto);
   }
   @media (min-width: 480px) and (max-width: 768px) {
     gap: 4px;
+    grid-template-columns: repeat(2, auto);
   }
   @media (min-width: 768px) and (max-width: 1024px) {
     gap: 8px;
@@ -34,6 +36,7 @@ const HashtagPage = () => {
   const dispatch = useDispatch();
   const { hashtagText } = useParams();
   const { postsOfHashtag, loadPostsOfHashtagLoading } = useSelector(state => state.post);
+  const { isMoreHashtagPosts, postsOfHashtagCount } = useSelector(state => state.post.postsOfHashtagMetadata);
   const [showModal, setShowModal] = useState(false);
   const [openPostId, setOpenPostId] = useState(null);
   const modalRef = useRef(null);
@@ -87,22 +90,44 @@ const HashtagPage = () => {
   // 2021/12/22 - 클릭 시 모달 닫기 - by 1-blue
   const onCloseModal = useCallback(() => setShowModal(false), [showModal]);
 
-  if (postsOfHashtag === null || loadPostsOfHashtagLoading) {
+  // 2022/01/02 - 무한스크롤링 이벤트 함수 - by 1-blue
+  const scrollEvent = useCallback(() => {
+    if (
+      window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 400 &&
+      isMoreHashtagPosts &&
+      !loadPostsOfHashtagLoading
+    ) {
+      dispatch(
+        loadPostsOfHashtagAction({ hashtagText, lastId: postsOfHashtag[postsOfHashtag.length - 1]._id, limit: 15 }),
+      );
+    }
+  }, [hashtagText, postsOfHashtag?.length, isMoreHashtagPosts, loadPostsOfHashtagLoading]);
+
+  // 2022/01/02 - 무한스크롤링 이벤트 등록 - by 1-blue
+  useEffect(() => {
+    window.addEventListener("scroll", scrollEvent);
+
+    return () => window.removeEventListener("scroll", scrollEvent);
+  }, [scrollEvent]);
+
+  if (postsOfHashtag.length === 0 && loadPostsOfHashtagLoading) {
     return <Spinner page />;
   }
 
   return (
     <>
       <h1>#{hashtagText}</h1>
-      <p style={{ marginBottom: "1em" }}>게시물 {postsOfHashtag?.length || 0}개</p>
+      <p style={{ marginBottom: "1em" }}>게시물 {postsOfHashtagCount}개</p>
 
       <Wrapper>
-        {postsOfHashtag ? (
-          postsOfHashtag.map(post => <PostCard key={post._id} post={post} onOpenModal={onOpenModal} />)
+        {postsOfHashtag.length === 0 ? (
+          <h1>해시태그에 해당하는 게시글이 존재하지 않습니다.</h1>
         ) : (
-          <h1>해시태그를 포함하는 게시글이 존재하지 않습니다.</h1>
+          postsOfHashtag.map(post => <PostCard key={post._id} post={post} onOpenModal={onOpenModal} />)
         )}
       </Wrapper>
+
+      {loadPostsOfHashtagLoading && <Spinner page />}
 
       {showModal && <PostModal PostId={openPostId} onCloseModal={onCloseModal} ref={modalRef} />}
     </>
