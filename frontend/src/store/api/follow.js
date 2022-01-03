@@ -3,7 +3,7 @@ import axios from "axios";
 const followInstance = axios.create({
   baseURL: process.env.SERVER_URL + "/follow",
   withCredentials: true,
-  timeout: 2500,
+  timeout: 10000,
 });
 
 // 2021/12/31 - 특정 유저의 팔로워들 정보 요청 - by 1-blue

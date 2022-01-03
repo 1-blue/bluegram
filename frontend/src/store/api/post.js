@@ -5,7 +5,7 @@ import axios from "axios";
 const postInstance = axios.create({
   baseURL: process.env.SERVER_URL + "/post",
   withCredentials: true,
-  timeout: 2500,
+  timeout: 10000,
 });
 
 // 2021/12/22 - 게시글 생성 요청 - by 1-blue

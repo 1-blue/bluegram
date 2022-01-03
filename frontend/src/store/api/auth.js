@@ -3,7 +3,7 @@ import axios from "axios";
 const authInstance = axios.create({
   baseURL: process.env.SERVER_URL + "/auth",
   withCredentials: true,
-  timeout: 2500,
+  timeout: 10000,
 });
 
 // const myRequestInterceptor = authInstance.interceptors.request.use(

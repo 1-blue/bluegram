@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 
@@ -24,6 +24,8 @@ const RightMenu = () => {
   const { logoutDone, logoutError } = useSelector(state => state.auth);
   const [showProfileMenu, onClickShowProfileMenu, setShowProfileMenu] = useToggle(false);
   const [showCreatePostModal, onClickShowCreatePostModal, setShowCreatePostModal] = useToggle(false);
+  const profileRef = useRef(null);
+  const bookmarkRef = useRef(null);
 
   // 2021/12/21 - 로그아웃 성공 및 실패 시 메시지 and 성공 시 리다이렉트 - by 1-blue
   useEffect(() => {
@@ -100,14 +102,14 @@ const RightMenu = () => {
           </li>
           {showProfileMenu && (
             <Menu>
-              <li>
-                <NavLink to={`/profile/${me._id}`}>
+              <li onClick={() => profileRef.current.click()}>
+                <NavLink to={`/profile/${me._id}`} ref={profileRef}>
                   <Icon shape="avatar" width={20} height={20} />
                   <span>프로필</span>
                 </NavLink>
               </li>
-              <li>
-                <NavLink to="/profile">
+              <li onClick={() => bookmarkRef.current.click()}>
+                <NavLink to="/profile" ref={bookmarkRef}>
                   <Icon shape="bookmark" width={20} height={20} />
                   <span>저장됨</span>
                 </NavLink>

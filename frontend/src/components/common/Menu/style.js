@@ -4,7 +4,9 @@ export const Wrapper = styled.div`
   position: absolute;
   top: 60px;
   right: 0;
-  width: 210px;
+  max-width: 250px;
+  min-width: 150px;
+  width: 20vw;
   height: auto;
   border-radius: 5px;
   background: white;
@@ -12,7 +14,7 @@ export const Wrapper = styled.div`
   z-index: 1;
 
   & > li {
-    padding: 0.5em 1em;
+    padding: 1em 1em;
     font-size: 0.8rem;
     cursor: pointer;
 
@@ -34,25 +36,6 @@ export const Wrapper = styled.div`
 
     & > a > span {
       margin-left: 0;
-    }
-  }
-
-  @media (max-width: 480px) {
-    width: 90px;
-    & > li {
-      font-size: 0.6rem;
-    }
-  }
-  @media (min-width: 480px) and (max-width: 768px) {
-    width: 130px;
-    & > li {
-      font-size: 0.7rem;
-    }
-  }
-  @media (min-width: 768px) and (max-width: 1024px) {
-    width: 170px;
-    & > li {
-      font-size: 0.8rem;
     }
   }
 

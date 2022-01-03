@@ -80,10 +80,10 @@ export const Wrapper = styled.section`
         margin: auto;
         font-size: 10px;
         text-indent: -9999em;
-        border-top: 5px solid rgb(0, 0, 0);
-        border-right: 5px solid rgba(0, 0, 0, 0.2);
-        border-bottom: 5px solid rgba(0, 0, 0, 0.2);
-        border-left: 5px solid rgba(0, 0, 0, 0.2);
+        border-top: 5px solid var(--light-blue);
+        border-right: 5px solid rgba(0, 149, 246, 0.2);
+        border-bottom: 5px solid rgba(0, 149, 246, 0.2);
+        border-left: 5px solid rgba(0, 149, 246, 0.2);
         -webkit-transform: translateZ(0);
         -ms-transform: translateZ(0);
         transform: translateZ(0);

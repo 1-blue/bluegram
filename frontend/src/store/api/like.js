@@ -3,7 +3,7 @@ import axios from "axios";
 const likeInstance = axios.create({
   baseURL: process.env.SERVER_URL + "/like",
   withCredentials: true,
-  timeout: 2500,
+  timeout: 10000,
 });
 
 // 2021/12/25 - 게시글에 좋아요 추가 - by 1-blue

@@ -12,10 +12,25 @@ import {
   UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
   LOAD_TO_USER_REQUEST, LOAD_TO_USER_SUCCESS, LOAD_TO_USER_FAILURE,
   LOAD_TO_ME_DETAIL_REQUEST, LOAD_TO_ME_DETAIL_SUCCESS, LOAD_TO_ME_DETAIL_FAILURE,
+  EDIT_TO_ME_ALL_REQUEST, EDIT_TO_ME_ALL_SUCCESS, EDIT_TO_ME_ALL_FAILURE,
+  EDIT_TO_ME_PASSWORD_REQUEST, EDIT_TO_ME_PASSWORD_SUCCESS, EDIT_TO_ME_PASSWORD_FAILURE,
+  SIGN_OUT_REQUEST, SIGN_OUT_SUCCESS, SIGN_OUT_FAILURE,
  } from "@store/types";
 
 // api
-import { apiLoadToMe, apiSignup, apiLoadFollowers, apiLoadFollowings, apiFollow, apiUnfollow, apiLoadToUser, apiLoadToMeDetail } from "@store/api";
+import {
+  apiLoadToMe,
+  apiSignup,
+  apiLoadFollowers,
+  apiLoadFollowings,
+  apiFollow,
+  apiUnfollow,
+  apiLoadToUser,
+  apiLoadToMeDetail,
+  apiEditToMeAll,
+  apiEditToMePassword,
+  apiSignOut,
+} from "@store/api";
 
 function* loadToMe(action) {
   try {
@@ -145,6 +160,54 @@ function* loadToMeDetail(action) {
     });
   }
 }
+function* editToMeAll(action) {
+  try {
+    const { data } = yield call(apiEditToMeAll, action.data);
+
+    yield put({
+      type: EDIT_TO_ME_ALL_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: EDIT_TO_ME_ALL_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
+function* editToMePassword(action) {
+  try {
+    const { data } = yield call(apiEditToMePassword, action.data);
+
+    yield put({
+      type: EDIT_TO_ME_PASSWORD_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: EDIT_TO_ME_PASSWORD_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
+function* signOut(action) {
+  try {
+    const { data } = yield call(apiSignOut, action.data);
+
+    yield put({
+      type: SIGN_OUT_SUCCESS,
+      data,
+    });
+  } catch (error) {
+    console.error(error);
+    yield put({
+      type: SIGN_OUT_FAILURE,
+      data: error.response.data,
+    });
+  }
+}
 
 function* watchLoadToMe() {
   yield takeLatest(LOAD_TO_ME_REQUEST, loadToMe);
@@ -170,6 +233,15 @@ function* watchLoadToUser() {
 function* watchLoadToMeDetail() {
   yield takeLatest(LOAD_TO_ME_DETAIL_REQUEST, loadToMeDetail);
 }
+function* watchEditToMeAll() {
+  yield takeLatest(EDIT_TO_ME_ALL_REQUEST, editToMeAll);
+}
+function* watchEditToMePassword() {
+  yield takeLatest(EDIT_TO_ME_PASSWORD_REQUEST, editToMePassword);
+}
+function* watchSignOut() {
+  yield takeLatest(SIGN_OUT_REQUEST, signOut);
+}
 
 export default function* userSaga() {
   yield all([
@@ -181,5 +253,8 @@ export default function* userSaga() {
     fork(watchUnfollow),
     fork(watchLoadToUser),
     fork(watchLoadToMeDetail),
+    fork(watchEditToMeAll),
+    fork(watchEditToMePassword),
+    fork(watchSignOut),
   ]);
 }

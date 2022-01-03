@@ -24,9 +24,13 @@ app.set("PORT", 3000);
 
 try {
   fs.accessSync(path.join(__dirname, "public"));
-  fs.accessSync(path.join(__dirname, "public", "images"));
 } catch (error) {
   fs.mkdirSync(path.join(__dirname, "public"));
+}
+
+try {
+  fs.accessSync(path.join(__dirname, "public", "images"));
+} catch (error) {
   fs.mkdirSync(path.join(__dirname, "public", "images"));
 }
 

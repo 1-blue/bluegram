@@ -138,4 +138,82 @@ router.get("/:UserId", isLoggedIn, async (req, res, next) => {
   }
 });
 
+// 2022/01/03 - 로그인한 유저의 기본 정보 변경 - by 1-blue
+router.put("/", isLoggedIn, async (req, res, next) => {
+  const { name, phone, birthday } = req.body;
+
+  try {
+    const me = await User.update(
+      {
+        name,
+        phone,
+        birthday,
+      },
+      {
+        where: {
+          _id: req.user._id,
+        },
+      },
+    );
+
+    console.log("me >> ", me);
+
+    res.status(200).json({ message: "유저의 정보변경에 성공했습니다.", result: { name, phone, birthday } });
+  } catch (error) {
+    console.error("PUT /user error >> ", error);
+    return next(error);
+  }
+});
+
+// 2022/01/03 - 로그인한 유저의 비밀번호 변경 - by 1-blue
+router.patch("/", isLoggedIn, async (req, res, next) => {
+  const { prevPassword, currPassword } = req.body;
+
+  try {
+    if (!(await bcrypt.compare(prevPassword, req.user.password))) {
+      return res.status(202).json({ message: "비밀번호가 불일치합니다." });
+    }
+
+    const hashedPassword = await bcrypt.hash(currPassword, 6);
+
+    await User.update(
+      {
+        password: hashedPassword,
+      },
+      {
+        where: { _id: req.user._id },
+      },
+    );
+
+    req.logout();
+    req.session.destroy();
+    res
+      .status(200)
+      .clearCookie("auth-bluegram")
+      .json({ message: "비밀번호 변경에 성공하셨습니다.\n강제로 로그아웃되며 로그인페이지로 이동합니다." });
+  } catch (error) {
+    console.error("PATCH /user error >> ", error);
+    return next(error);
+  }
+});
+
+// 2022/01/03 - 로그인한 유저 회원탈퇴 - by 1-blue
+router.delete("/", isLoggedIn, async (req, res, next) => {
+  try {
+    const result = await User.destroy({ where: { _id: req.user._id } });
+
+    console.log("result >> ", result);
+
+    req.logout();
+    req.session.destroy();
+    res
+      .status(200)
+      .clearCookie("auth-bluegram")
+      .json({ message: "회원탈퇴에 성공하셨습니다.\n강제로 로그아웃되며 회원가입페이지로 이동합니다." });
+  } catch (error) {
+    console.error("DELETE /user error >> ", error);
+    return next(error);
+  }
+});
+
 export default router;

@@ -26,6 +26,15 @@ import {
   LOAD_TO_ME_DETAIL_REQUEST,
   LOAD_TO_ME_DETAIL_SUCCESS,
   LOAD_TO_ME_DETAIL_FAILURE,
+  EDIT_TO_ME_ALL_REQUEST,
+  EDIT_TO_ME_ALL_SUCCESS,
+  EDIT_TO_ME_ALL_FAILURE,
+  EDIT_TO_ME_PASSWORD_REQUEST,
+  EDIT_TO_ME_PASSWORD_SUCCESS,
+  EDIT_TO_ME_PASSWORD_FAILURE,
+  SIGN_OUT_REQUEST,
+  SIGN_OUT_SUCCESS,
+  SIGN_OUT_FAILURE,
 } from "@store/types";
 
 const initState = {
@@ -73,6 +82,21 @@ const initState = {
   loadToUserLoading: false,
   loadToUserDone: null,
   loadToUserError: null,
+
+  // 2022/01/03 - 로그인한 유저의 기본정보 변경 - by 1-blue
+  editToMeAllLoading: false,
+  editToMeAllDone: null,
+  editToMeAllError: null,
+
+  // 2022/01/03 - 로그인한 유저의 비밀번호 변경 - by 1-blue
+  editToMePasswordLoading: false,
+  editToMePasswordDone: null,
+  editToMePasswordError: null,
+
+  // 2022/01/03 - 로그인한 유저의 회원탈퇴 - by 1-blue
+  signOutLoading: false,
+  signOutDone: null,
+  signOutError: null,
 };
 
 function userReducer(prevState = initState, action) {
@@ -105,6 +129,15 @@ function userReducer(prevState = initState, action) {
         loadToUserLoading: false,
         loadToUserDone: null,
         loadToUserError: null,
+        editToMeAllLoading: false,
+        editToMeAllDone: null,
+        editToMeAllError: null,
+        editToMePasswordLoading: false,
+        editToMePasswordDone: null,
+        editToMePasswordError: null,
+        signOutLoading: false,
+        signOutDone: null,
+        signOutError: null,
       };
 
     case RESET_FOLLOW:
@@ -345,6 +378,76 @@ function userReducer(prevState = initState, action) {
         ...prevState,
         loadToMeDetailLoading: false,
         loadToMeDetailError: action.data.message,
+      };
+
+    // 2022/01/03 - 로그인한 유저의 기본정보 변경 - by 1-blue
+    case EDIT_TO_ME_ALL_REQUEST:
+      return {
+        ...prevState,
+        editToMeAllLoading: true,
+        editToMeAllDone: null,
+        editToMeAllError: null,
+      };
+    case EDIT_TO_ME_ALL_SUCCESS:
+      return {
+        ...prevState,
+        editToMeAllLoading: false,
+        editToMeAllDone: action.data.message,
+        me: {
+          ...prevState.me,
+          name: action.data.result.name,
+          phone: action.data.result.phone,
+          birthday: action.data.result.birthday,
+        },
+      };
+    case EDIT_TO_ME_ALL_FAILURE:
+      return {
+        ...prevState,
+        editToMeAllLoading: false,
+        editToMeAllError: action.data.message,
+      };
+
+    // 2022/01/03 - 로그인한 유저의 비밀번호 변경 - by 1-blue
+    case EDIT_TO_ME_PASSWORD_REQUEST:
+      return {
+        ...prevState,
+        editToMePasswordLoading: true,
+        editToMePasswordDone: null,
+        editToMePasswordError: null,
+      };
+    case EDIT_TO_ME_PASSWORD_SUCCESS:
+      return {
+        ...prevState,
+        editToMePasswordLoading: false,
+        editToMePasswordDone: action.data.message,
+      };
+    case EDIT_TO_ME_PASSWORD_FAILURE:
+      return {
+        ...prevState,
+        editToMePasswordLoading: false,
+        editToMePasswordError: action.data.message,
+      };
+
+    // 2022/01/03 - 로그인한 유저의 회원탈퇴 - by 1-blue
+    case SIGN_OUT_REQUEST:
+      return {
+        ...prevState,
+        signOutLoading: true,
+        signOutDone: null,
+        signOutError: null,
+      };
+    case SIGN_OUT_SUCCESS:
+      return {
+        ...prevState,
+        signOutLoading: false,
+        signOutDone: action.data.message,
+        me: {},
+      };
+    case SIGN_OUT_FAILURE:
+      return {
+        ...prevState,
+        signOutLoading: false,
+        signOutError: action.data.message,
       };
 
     default:

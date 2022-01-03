@@ -107,7 +107,7 @@ const ProfilePage = () => {
   const { UserId } = useParams();
   const [isOpenFollowersDialog, onOpenFollowersDialog, , setIsOpenFollowersDialog] = useOpenClose(false);
   const [isOpenFollowingsDialog, onOpenFollowingsDialog, , setIsOpenFollowingsDialog] = useOpenClose(false);
-  const isFollow = me?.Followings.some(following => following._id === user?._id);
+  const isFollow = me.Followings?.some(following => following._id === user?._id);
 
   // 2021/12/31 - 특정 유저의 정보 요청 - by 1-blue
   useEffect(() => {
@@ -146,7 +146,7 @@ const ProfilePage = () => {
           <span>{user.name}</span>
 
           {user._id === me._id ? (
-            <button type="button" onClick={() => navigate("/profile/edit")}>
+            <button type="button" onClick={() => navigate("/profile/edit/account")}>
               프로필 편집
             </button>
           ) : (

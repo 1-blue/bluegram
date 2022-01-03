@@ -3,7 +3,7 @@ import axios from "axios";
 const commentInstance = axios.create({
   baseURL: process.env.SERVER_URL + "/comment",
   withCredentials: true,
-  timeout: 2500,
+  timeout: 10000,
 });
 
 // 2021/12/27 - 게시글에 댓글 추가 - by 1-blue
