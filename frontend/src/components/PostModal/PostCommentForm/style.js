@@ -11,7 +11,7 @@ export const Wrapper = styled.form`
     width: 100%;
     font-size: 1rem;
     font-weight: 450;
-    padding: 0.4em 1em;
+    padding: 0.8em 1em;
     border: 0;
     border-radius: 0 0 0 1em;
     resize: none;

@@ -47,6 +47,10 @@ const LoginPage = () => {
   const onLocalLogin = useCallback(
     e => {
       e.preventDefault();
+
+      if (!id) return alert("아이디를 입력해주세요");
+      if (!password) return alert("비밀번호를 입력해주세요");
+
       dispatch(localLoginAction({ id, password }));
     },
     [id, password],

@@ -32,11 +32,12 @@ const PostComment = ({
   const [toggleRecomment, onToggleRecomment] = useToggle(false);
   const { loadRecommentsLoading } = useSelector(state => state.post);
   const { Recomments } = useSelector(state => state.post.post.Comments.find(comment2 => comment2._id === comment._id));
+  const [showDialogToggle, onOpenDialogToggle, onCloseDialogToggle] = useOpenClose(false);
 
   const isMineCommentLike = comment.CommentLikers.some(liker => liker._id === UserId);
 
   return (
-    <Wrapper>
+    <Wrapper onMouseEnter={onOpenDialogToggle} onMouseLeave={onCloseDialogToggle}>
       <Link to={`/profile/${comment.User._id}`}>
         <Avatar width={32} height={32} image={comment.User.Images[0]} />
       </Link>
@@ -57,7 +58,9 @@ const PostComment = ({
           >
             답글달기
           </button>
-          <Icon shape="option" width={16} height={16} fill="gray" hoverfill="black" onClick={onOpenDialog} />
+          {showDialogToggle && (
+            <Icon shape="option" width={16} height={16} fill="gray" hoverfill="black" onClick={onOpenDialog} />
+          )}
 
           {comment.Recomments.length > 0 && (
             <div onClick={onClickLoadRecomment(comment._id)}>

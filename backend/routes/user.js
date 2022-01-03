@@ -140,10 +140,10 @@ router.get("/:UserId", isLoggedIn, async (req, res, next) => {
 
 // 2022/01/03 - 로그인한 유저의 기본 정보 변경 - by 1-blue
 router.put("/", isLoggedIn, async (req, res, next) => {
-  const { name, phone, birthday } = req.body;
+  const { name, phone, birthday, profileImage } = req.body;
 
   try {
-    const me = await User.update(
+    await User.update(
       {
         name,
         phone,
@@ -156,9 +156,19 @@ router.put("/", isLoggedIn, async (req, res, next) => {
       },
     );
 
-    console.log("me >> ", me);
+    if (profileImage) {
+      await Image.update(
+        {
+          name: profileImage,
+        },
+        { where: { UserId: req.user._id } },
+      );
+    }
 
-    res.status(200).json({ message: "유저의 정보변경에 성공했습니다.", result: { name, phone, birthday } });
+    res.status(200).json({
+      message: "유저의 정보변경에 성공했습니다.",
+      result: { name, phone, birthday, profileImage },
+    });
   } catch (error) {
     console.error("PUT /user error >> ", error);
     return next(error);

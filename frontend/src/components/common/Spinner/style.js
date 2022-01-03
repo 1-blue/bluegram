@@ -18,6 +18,9 @@ export const Wrapper = styled.section`
         -ms-transform: translateZ(0);
         transform: translateZ(0);
       }
+      @media (max-width: 768px) {
+        margin: 100px auto;
+      }
     `}
 
   ${({ modal }) =>

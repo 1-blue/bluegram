@@ -10,18 +10,18 @@ import { uploadImagesAction, createPostAction, resetMessageAction, resetImagePre
 
 // hook
 import useText from "@hooks/useText";
-import useMessage from "@hooks/useMessage";
 
 // components
 import Avatar from "@components/common/Avatar";
 import ImageCarousel from "@components/common/ImageCarousel";
 import Button from "@components/common/Button";
+import Spinner from "@components/common/Spinner";
 
 const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
   const dispatch = useDispatch();
   const { me } = useSelector(state => state.user);
   const { createPostDone, createPostError } = useSelector(state => state.post);
-  const { imagePreviews } = useSelector(state => state.image);
+  const { imagePreviews, uploadImagesLoading } = useSelector(state => state.image);
   const modalRef = useRef(null);
   const imageRef = useRef(null);
   const [title, setTitle] = useState("");
@@ -137,7 +137,7 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
                 className="modal-form-textarea"
                 value={text}
                 onChange={onInputText}
-                placeholder="🗨️텍스트를 입력하세요😀"
+                placeholder="🗨️ 텍스트를 입력하세요 👍"
               />
 
               <span className="modal-form-text-length">{text.length}/2,200</span>
@@ -147,8 +147,10 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
               </Button>
             </form>
           </div>
+        ) : // 이미지 업로드 전
+        uploadImagesLoading ? (
+          <Spinner page />
         ) : (
-          // 이미지 업로드 전
           <div className="modal-flex-container">
             <h2 className="modal-sub-title">사진과 동영상을 여기에 끌어다 놓으세요</h2>
             <input type="file" hidden ref={imageRef} accept="image/*" multiple onChange={imageSelect} />

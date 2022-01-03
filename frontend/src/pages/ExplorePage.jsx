@@ -33,6 +33,7 @@ const Wrapper = styled.ul`
 
 const ExplorePage = () => {
   const dispatch = useDispatch();
+  const { me } = useSelector(state => state.user);
   const { posts, isMorePosts, loadPostsLoading } = useSelector(state => state.post);
   const [showModal, setShowModal] = useState(false);
   const [openPostId, setOpenPostId] = useState(null);
@@ -75,10 +76,11 @@ const ExplorePage = () => {
   // 2021/12/22 - 클릭 시 모달 열기 및 열린 게시글의 식별자 기록 - by 1-blue
   const onOpenModal = useCallback(
     PostId => () => {
+      if (!me._id) return alert("로그인후에 접근이 가능합니다!");
       setShowModal(true);
       setOpenPostId(PostId);
     },
-    [],
+    [me],
   );
   // 2021/12/22 - 클릭 시 모달 닫기 - by 1-blue
   const onCloseModal = useCallback(() => setShowModal(false), [showModal]);

@@ -101,10 +101,10 @@ const Wrapper = styled.section`
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { UserId, role } = useParams();
   const { me, user, Followers, Followings } = useSelector(state => state.user);
   const { loadToUserLoading, loadFollowersLoading, loadFollowingsLoading, followLoading, unfollowLoading } =
     useSelector(state => state.user);
-  const { UserId } = useParams();
   const [isOpenFollowersDialog, onOpenFollowersDialog, , setIsOpenFollowersDialog] = useOpenClose(false);
   const [isOpenFollowingsDialog, onOpenFollowingsDialog, , setIsOpenFollowingsDialog] = useOpenClose(false);
   const isFollow = me.Followings?.some(following => following._id === user?._id);
@@ -134,6 +134,37 @@ const ProfilePage = () => {
   const onCloseFollowingsDialog = useCallback(() => {
     setIsOpenFollowingsDialog(false);
     dispatch(resetFollowAction());
+  }, []);
+
+  // 2022/01/03 - 보여줄 컨텐츠 - by 1-blue
+  const showContent = useCallback(role => {
+    switch (role) {
+      case "post":
+        return (
+          <>
+            <h1>내 게시글들</h1>
+          </>
+        );
+      case "bookmark":
+        return (
+          <>
+            <h1>내 북마크들</h1>
+          </>
+        );
+      case "tag":
+        return (
+          <>
+            <h1>내 태그된 목록</h1>
+          </>
+        );
+
+      default:
+        return (
+          <>
+            <h1>잘못된 접근입니다!!</h1>
+          </>
+        );
+    }
   }, []);
 
   if (!user || loadToUserLoading || !me) return <Spinner page />;
@@ -185,18 +216,16 @@ const ProfilePage = () => {
       </ul>
       <ul className="profile-nav">
         <li>
-          <Icon shape="post" />
+          <Icon shape="post" onClick={() => navigate(`/profile/${UserId}/post`)} />
         </li>
         <li>
-          <Icon shape="bookmark" />
+          <Icon shape="bookmark" onClick={() => navigate(`/profile/${UserId}/bookmark`)} />
         </li>
         <li>
-          <Icon shape="tag" />
+          <Icon shape="tag" onClick={() => navigate(`/profile/${UserId}/tag`)} />
         </li>
       </ul>
-      <section className="content">
-        <h1>아이콘에 대한 컨텐츠 넣기</h1>
-      </section>
+      <section className="content">{showContent(role)}</section>
 
       {/* 팔로워들에 대한 다이어로그창 */}
       {isOpenFollowersDialog && (

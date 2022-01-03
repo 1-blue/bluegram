@@ -8,11 +8,10 @@ import useText from "@hooks/useText";
 import { Wrapper } from "./style";
 import { useEffect } from "react";
 
-const PostCommentForm = ({ onAppendComment, recommentData, setRecommentData }) => {
+const PostCommentForm = ({ onAppendComment, recommentData, setRecommentData, commentInputRef }) => {
   const [content, onChangeContent, setContent] = useText("");
   const [contentRows, setContentRows] = useState(1);
   const buttonRef = useRef(null);
-  const textareaRef = useRef(null);
 
   // 2021/12/27 - 엔터 클릭 시 댓글 제출/shift+enter시 줄바꿈 - by 1-blue
   const onKeyDown = useCallback(
@@ -35,8 +34,9 @@ const PostCommentForm = ({ onAppendComment, recommentData, setRecommentData }) =
 
   useEffect(() => {
     setContent(recommentData.username ? "@" + recommentData.username + " " : "");
-    // textareaRef.current.focus();
-  }, [recommentData.username, textareaRef.current]);
+
+    if (recommentData.username) commentInputRef.current.focus();
+  }, [recommentData.username, commentInputRef.current]);
 
   return (
     <Wrapper onSubmit={onAppendComment(content, recommentData.RecommentId)}>
@@ -47,7 +47,7 @@ const PostCommentForm = ({ onAppendComment, recommentData, setRecommentData }) =
         value={content}
         onChange={onChangeContent}
         onKeyDown={onKeyDown}
-        ref={textareaRef}
+        ref={commentInputRef}
       />
       <button type="submit" ref={buttonRef}>
         게시
@@ -61,6 +61,9 @@ PostCommentForm.propTypes = {
   recommentData: Proptypes.shape({
     RecommentId: Proptypes.oneOfType([Proptypes.number, Proptypes.node]),
     username: Proptypes.oneOfType([Proptypes.string, Proptypes.node]),
+  }),
+  commentInputRef: Proptypes.shape({
+    current: Proptypes.instanceOf(Element),
   }),
 };
 

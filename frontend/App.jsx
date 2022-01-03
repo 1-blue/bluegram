@@ -31,7 +31,7 @@ const App = () => {
         <Route path="/" element={<AppLayout />}>
           <Route index element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/profile/:UserId" element={<ProfilePage />} />
+          <Route path="/profile/:UserId/:role" element={<ProfilePage />} />
           <Route path="/profile/edit/:role" element={<ProfileEditPage />} />
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/directMessage" element={<DirectMessagePage />} />

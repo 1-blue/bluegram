@@ -31,10 +31,6 @@ export const Wrapper = styled.div`
         font-size: 0.7rem;
         padding-right: 0.8em;
       }
-
-      & > i {
-        vertical-align: sub;
-      }
     }
 
     & > i {

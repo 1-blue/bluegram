@@ -7,7 +7,7 @@ import Icon from "@components/common/Icon";
 // styled-components
 import { Wrapper } from "./style";
 
-const PostIconButtons = ({ onClickPostLike, isPostLiked }) => {
+const PostIconButtons = ({ onClickPostLike, isPostLiked, commentInputRef }) => {
   return (
     <Wrapper>
       <li>
@@ -22,7 +22,7 @@ const PostIconButtons = ({ onClickPostLike, isPostLiked }) => {
         />
       </li>
       <li>
-        <Icon shape="comment" width={24} height={24} hoverfill="gray" />
+        <Icon shape="comment" width={24} height={24} hoverfill="gray" onClick={() => commentInputRef.current.focus()} />
       </li>
       <li>
         <Icon shape="airplane" width={24} height={24} hoverfill="gray" />
@@ -37,6 +37,9 @@ const PostIconButtons = ({ onClickPostLike, isPostLiked }) => {
 PostIconButtons.propTypes = {
   onClickPostLike: Proptypes.func.isRequired,
   isPostLiked: Proptypes.bool.isRequired,
+  commentInputRef: Proptypes.shape({
+    current: Proptypes.instanceOf(Element),
+  }),
 };
 
 export default PostIconButtons;

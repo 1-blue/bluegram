@@ -21,7 +21,9 @@ const CenterMenu = () => {
     [text],
   );
 
-  return <SearchInput type="search" placeholder="검색" value={text} onChange={onChangeText} onKeyDown={onKeyDown} />;
+  return (
+    <SearchInput type="search" placeholder="해시태그 검색" value={text} onChange={onChangeText} onKeyDown={onKeyDown} />
+  );
 };
 
 export default CenterMenu;

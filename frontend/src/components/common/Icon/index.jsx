@@ -5,6 +5,7 @@ import Proptypes from "prop-types";
 
 // assets
 import {
+  Logo,
   Home, FillHome,
   PostAdd, FillPostAdd,
   Compass, FillCompass,
@@ -25,6 +26,12 @@ import { Wrapper } from "./style";
 
 const Icon = (props) => {
   switch (props.shape) {
+    case "logo":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Logo {...props} />
+        </Wrapper>
+      );
     case "home":
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>

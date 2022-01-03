@@ -35,6 +35,7 @@ const Wrapper = styled.ul`
 const HashtagPage = () => {
   const dispatch = useDispatch();
   const { hashtagText } = useParams();
+  const { me } = useSelector(state => state.user);
   const { postsOfHashtag, loadPostsOfHashtagLoading } = useSelector(state => state.post);
   const { isMoreHashtagPosts, postsOfHashtagCount } = useSelector(state => state.post.postsOfHashtagMetadata);
   const [showModal, setShowModal] = useState(false);
@@ -82,6 +83,7 @@ const HashtagPage = () => {
   // 2021/12/22 - 클릭 시 모달 열기 및 열린 게시글의 식별자 기록 - by 1-blue
   const onOpenModal = useCallback(
     PostId => () => {
+      if (!me._id) return alert("로그인후에 접근이 가능합니다!");
       setShowModal(true);
       setOpenPostId(PostId);
     },

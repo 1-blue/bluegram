@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import styled, { css } from "styled-components";
@@ -16,6 +16,7 @@ import {
   editToMeAllAction,
   editToMePasswordAction,
   signOutAction,
+  uploadImagesAction,
 } from "@store/actions";
 
 // hook
@@ -158,12 +159,21 @@ const ProfileEditPage = () => {
     signOutDone,
     signOutError,
   } = useSelector(state => state.user);
+  const { imagePreviews } = useSelector(state => state.image);
   const [name, onChangeName, setName] = useInput("");
   const [phone, onChangePhone, setPhone] = useInput("");
   const [birthday, onChangeBirthday, setBirthday] = useInput("");
   const [prevPassword, onChangePrevPassword, setPrevPassword] = useInput("");
   const [currPassword, onChangeCurrPassword, setCurrPassword] = useInput("");
   const [currPasswordCheck, onChangeCurrPasswordCheck, setCurrPasswordCheck] = useInput("");
+  const imageRef = useRef(null);
+
+  // 2022/01/03 - 이미지 업로드 ( 파일 탐색기 이용 ) - by 1-blue
+  const onChangeProfileImage = useCallback(e => {
+    const formData = new FormData();
+    formData.append("images", e.target.files[0]);
+    dispatch(uploadImagesAction(formData));
+  }, []);
 
   // 2022/01/03 - 유저 정보 변경 성공/실패 메시지 - by 1-blue
   useEffect(() => {
@@ -215,7 +225,8 @@ const ProfileEditPage = () => {
           if (!phone || phone?.length !== 11) return alert("전화번호를 11자리로 입력해주세요");
           if (!birthday || birthday?.length !== 8) return alert("생일을 8자리로 입력해주세요");
 
-          return dispatch(editToMeAllAction({ name, phone, birthday }));
+          return dispatch(editToMeAllAction({ name, phone, birthday, profileImage: imagePreviews?.[0] }));
+
         case "password":
           if (!prevPassword) return alert("이전 비밀번호를 입력해주세요");
           if (!currPassword) return alert("변경할 비밀번호를 입력해주세요");
@@ -228,11 +239,12 @@ const ProfileEditPage = () => {
           setCurrPasswordCheck("");
           return;
         case "signout":
-          if (confirm("정말 회원탈퇴를 하시겠습니까?\n\n회원탈퇴를 하시면 기존에 정보를 되돌릴 수 없습니다"))
+          if (confirm("정말 회원탈퇴를 하시겠습니까?\n\n회원탈퇴를 하시면 기존에 정보를 되돌릴 수 없습니다")) {
             return dispatch(signOutAction());
+          }
       }
     },
-    [role, name, phone, birthday, prevPassword, currPassword, currPasswordCheck],
+    [role, name, phone, birthday, prevPassword, currPassword, currPasswordCheck, imagePreviews],
   );
 
   // 2022/01/03 - 조건에 따라 다른 컨텐츠 렌더링 - by 1-blue
@@ -305,7 +317,7 @@ const ProfileEditPage = () => {
           );
       }
     },
-    [name, phone, birthday, prevPassword, currPassword, currPasswordCheck],
+    [name, phone, birthday, prevPassword, currPassword, currPasswordCheck, imagePreviews],
   );
 
   if (loadToMeLoading || !me.phone) return <Spinner page />;
@@ -325,9 +337,16 @@ const ProfileEditPage = () => {
       </ul>
       <div className="content">
         <div className="top">
-          <Avatar width={38} height={38} image={me.Images[0]} />
+          <Avatar width={38} height={38} image={imagePreviews ? { name: imagePreviews[0] } : me.Images[0]} />
           <span>{me.name}</span>
-          <button type="button">프로필 사진 바꾸기</button>
+          {role === "account" && (
+            <>
+              <button type="button" onClick={() => imageRef.current.click()}>
+                프로필 사진 바꾸기
+              </button>
+              <input type="file" hidden ref={imageRef} onChange={onChangeProfileImage} />
+            </>
+          )}
         </div>
         {content(role)}
       </div>

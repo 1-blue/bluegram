@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useState } from "react";
+import React, { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Proptypes from "prop-types";
 
@@ -57,6 +57,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
   } = useSelector(state => state.post);
   const { me } = useSelector(state => state.user);
   const [recommentData, setRecommentData] = useState({ RecommentId: null, username: null });
+  const commentInputRef = useRef(null);
 
   // 2021/12/24 - 특정 게시글 상세 정보 요청 - by 1-blue
   useEffect(() => {
@@ -216,6 +217,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
               <PostButtons
                 onClickPostLike={onClickPostLike}
                 isPostLiked={post?.PostLikers.some(liker => liker._id === me._id)}
+                commentInputRef={commentInputRef}
               />
 
               {/* 좋아요 개수 및 게시글 작성 시간 */}
@@ -227,6 +229,7 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
                 onAppendComment={onAppendComment}
                 recommentData={recommentData}
                 setRecommentData={setRecommentData}
+                commentInputRef={commentInputRef}
               />
             </div>
           </>

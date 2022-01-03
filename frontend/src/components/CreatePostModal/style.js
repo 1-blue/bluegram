@@ -119,7 +119,7 @@ export const Modal = styled.div`
         `
       : css`
           width: 80vw;
-          height: 80vh;
+          height: 60vw;
           min-width: 300px;
           min-height: 300px;
           max-height: 80vh;

@@ -103,13 +103,13 @@ const RightMenu = () => {
           {showProfileMenu && (
             <Menu>
               <li onClick={() => profileRef.current.click()}>
-                <NavLink to={`/profile/${me._id}`} ref={profileRef}>
+                <NavLink to={`/profile/${me._id}/post`} ref={profileRef}>
                   <Icon shape="avatar" width={20} height={20} />
                   <span>프로필</span>
                 </NavLink>
               </li>
               <li onClick={() => bookmarkRef.current.click()}>
-                <NavLink to="/profile" ref={bookmarkRef}>
+                <NavLink to={`/profile/${me._id}/bookmark`} ref={bookmarkRef}>
                   <Icon shape="bookmark" width={20} height={20} />
                   <span>저장됨</span>
                 </NavLink>

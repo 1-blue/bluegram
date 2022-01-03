@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 
+import Logo from "@assets/icon/logo.svg"
 import Home from "@assets/icon/home.svg";
 import FillHome from "@assets/icon/fillHome.svg";
 import PostAdd from "@assets/icon/postAdd.svg";
@@ -22,6 +23,7 @@ import Post from "@assets/icon/post.svg"
 import Tag from "@assets/icon/tag.svg"
 
 export {
+  Logo,
   Home, FillHome,
   PostAdd, FillPostAdd,
   Compass, FillCompass,

@@ -4,7 +4,7 @@ export const Wrapper = styled.li`
   display: flex;
   padding: 0.4em 0;
 
-  & > img {
+  & > a > img {
     margin-right: 0.4em;
   }
 
@@ -35,10 +35,6 @@ export const Wrapper = styled.li`
         color: gray;
         font-size: 0.7rem;
         padding-right: 0.8em;
-      }
-
-      & > i {
-        vertical-align: sub;
       }
     }
 

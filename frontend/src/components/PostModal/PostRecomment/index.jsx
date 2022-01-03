@@ -17,9 +17,10 @@ import { Wrapper } from "./style";
 
 const PostRecomment = ({ recomment, isMineRecomment, isMineRecommentLike, onClickCommentLike, onRemoveComment }) => {
   const [showDialog, onOpenDialog, onCloseDialog] = useOpenClose(false);
+  const [showDialogToggle, onOpenDialogToggle, onCloseDialogToggle] = useOpenClose(false);
 
   return (
-    <Wrapper>
+    <Wrapper onMouseEnter={onOpenDialogToggle} onMouseLeave={onCloseDialogToggle}>
       <Avatar width={32} height={32} image={recomment.User?.Images[0]} />
       <div className="recomment-container">
         <b className="recomment-username">{recomment.User.name}</b>
@@ -31,7 +32,9 @@ const PostRecomment = ({ recomment, isMineRecomment, isMineRecommentLike, onClic
               좋아요 {recomment.CommentLikers.length}개
             </button>
           )}
-          <Icon shape="option" width={16} height={16} fill="gray" hoverfill="black" onClick={onOpenDialog} />
+          {showDialogToggle && (
+            <Icon shape="option" width={16} height={16} fill="gray" hoverfill="black" onClick={onOpenDialog} />
+          )}
 
           {showDialog && (
             <Dialog onClose={onCloseDialog} showDialog={showDialog}>

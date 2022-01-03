@@ -371,7 +371,10 @@ function userReducer(prevState = initState, action) {
         ...prevState,
         loadToMeDetailLoading: false,
         loadToMeDetailDone: action.data.message,
-        me: action.data.me,
+        me: {
+          ...prevState.me,
+          ...action.data.me,
+        },
       };
     case LOAD_TO_ME_DETAIL_FAILURE:
       return {
@@ -389,15 +392,18 @@ function userReducer(prevState = initState, action) {
         editToMeAllError: null,
       };
     case EDIT_TO_ME_ALL_SUCCESS:
+      const { name, phone, birthday, profileImage } = action.data.result;
+
       return {
         ...prevState,
         editToMeAllLoading: false,
         editToMeAllDone: action.data.message,
         me: {
           ...prevState.me,
-          name: action.data.result.name,
-          phone: action.data.result.phone,
-          birthday: action.data.result.birthday,
+          name,
+          phone,
+          birthday,
+          Images: profileImage ? [{ name: profileImage }] : [...prevState.me.Images],
         },
       };
     case EDIT_TO_ME_ALL_FAILURE:
