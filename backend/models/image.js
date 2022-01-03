@@ -10,9 +10,9 @@ const Image = (sequelize, DataTypes) => {
         comment: "이미지의 아이디 ( 이미지를 식별할 값 )",
       },
       name: {
-        type: DataTypes.STRING(40),
+        type: DataTypes.STRING(150),
         allowNull: true,
-        comment: "이미지 이름 ( 최대 40자리 )",
+        comment: "이미지 이름 ( 최대 150자리 )",
       },
       url: {
         type: DataTypes.STRING(150),
