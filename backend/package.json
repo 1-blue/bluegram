@@ -5,7 +5,8 @@
   "description": "SNS 클론 프로젝트 - 백엔드",
   "scripts": {
     "dev": "cross-env NODE_ENV=development npx nodemon app.js",
-    "dev:start": "cross-env NODE_ENV=production npx pm2 start app.js"
+    "dev:start": "cross-env NODE_ENV=production npx pm2 start app.js",
+    "start": "cross-env NODE_ENV=production pm2 start app.js"
   },
   "author": "1-blue",
   "license": "ISC",
