@@ -16,6 +16,7 @@ import {
   REMOVE_LIKE_TO_COMMENT_REQUEST, REMOVE_LIKE_TO_COMMENT_SUCCESS, REMOVE_LIKE_TO_COMMENT_FAILURE,
   LOAD_RECOMMENTS_REQUEST, LOAD_RECOMMENTS_SUCCESS, LOAD_RECOMMENTS_FAILURE,
   LOAD_POSTS_OF_HASHTAG_REQUEST, LOAD_POSTS_OF_HASHTAG_SUCCESS, LOAD_POSTS_OF_HASHTAG_FAILURE,
+  LOAD_POSTS_OF_USER_REQUEST, LOAD_POSTS_OF_USER_SUCCESS, LOAD_POSTS_OF_USER_FAILURE,
 } from "@store/types";
 
 
@@ -34,6 +35,9 @@ const initState = {
     postsOfHashtagCount: 0,
     hashtagText: "",
   },
+
+  // 로그인한 유저의 게시글들
+  postsOfUser: [],
 
   // 추가로 게시글들 요청할지 여부
   isMorePosts: true,
@@ -98,6 +102,11 @@ const initState = {
   loadPostsOfHashtagLoading: false,
   loadPostsOfHashtagDone: null,
   loadPostsOfHashtagError: null,
+
+  // 2022/01/04 - 로그인한 유저의 게시글들 요청 - by 1-blue
+  loadPostsOfUserLoading: false,
+  loadPostsOfUserDone: null,
+  loadPostsOfUserError: null,
 };
 
 function postReducer(prevState = initState, action) {
@@ -146,6 +155,9 @@ function postReducer(prevState = initState, action) {
         loadPostsOfHashtagLoading: false,
         loadPostsOfHashtagDone: null,
         loadPostsOfHashtagError: null,
+        loadPostsOfUserLoading: false,
+        loadPostsOfUserDone: null,
+        loadPostsOfUserError: null,
       };
 
     // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주기 - by 1-blue
@@ -626,6 +638,28 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadPostsOfHashtagLoading: false,
         loadPostsOfHashtagError: action.data.message,
+      };
+
+    // 2022/01/01 - 로그인한 유저의 게시글들 요청 - by 1-blue
+    case LOAD_POSTS_OF_USER_REQUEST:
+      return {
+        ...prevState,
+        loadPostsOfUserLoading: true,
+        loadPostsOfUserDone: null,
+        loadPostsOfUserError: null,
+      };
+    case LOAD_POSTS_OF_USER_SUCCESS:
+      return {
+        ...prevState,
+        loadPostsOfUserLoading: false,
+        loadPostsOfUserDone: action.data.message,
+        postsOfUser: action.data.posts
+      };
+    case LOAD_POSTS_OF_USER_FAILURE:
+      return {
+        ...prevState,
+        loadPostsOfUserLoading: false,
+        loadPostsOfUserError: action.data.message,
       };
 
     default:

@@ -68,6 +68,16 @@ const initState = {
   loadFollowingsDone: null,
   loadFollowingsError: null,
 
+  // 2021/12/30 - 팔로우 - 1-blue
+  followLoading: false,
+  followDone: null,
+  followError: null,
+
+  // 2021/12/30 - 언팔로우 - 1-blue
+  unfollowLoading: false,
+  unfollowDone: null,
+  unfollowError: null,
+
   // 2021/12/30 - 팔로우 요청 - by 1-blue
   followersLoading: false,
   followersDone: null,

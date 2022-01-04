@@ -103,9 +103,7 @@ const ExplorePage = () => {
     return () => window.removeEventListener("scroll", scrollEvent);
   }, [scrollEvent]);
 
-  if (posts.length === 0) {
-    return <Spinner page />;
-  }
+  if (posts.length === 0) return <Spinner page />;
 
   return (
     <>

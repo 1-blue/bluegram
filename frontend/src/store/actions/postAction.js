@@ -6,6 +6,7 @@ import {
   LOAD_POST_REQUEST,
   REMOVE_POST_REQUEST,
   LOAD_POSTS_OF_HASHTAG_REQUEST,
+  LOAD_POSTS_OF_USER_REQUEST,
 } from "@store/types";
 
 // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주는 액션 크리에이터 - by 1-blue
@@ -60,6 +61,14 @@ export function removePostAction(data) {
 export function loadPostsOfHashtagAction(data) {
   return {
     type: LOAD_POSTS_OF_HASHTAG_REQUEST,
+    data,
+  };
+}
+
+// 2022/01/04 - 로그인한 유저의 게시글들 요청 - by 1-blue
+export function loadPostsOfUserAction(data) {
+  return {
+    type: LOAD_POSTS_OF_USER_REQUEST,
     data,
   };
 }
