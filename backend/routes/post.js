@@ -85,6 +85,9 @@ router.post("/", isLoggedIn, async (req, res, next) => {
             {
               model: User,
               as: "CommentLikers",
+              through: {
+                attributes: [],
+              },
             },
           ],
         },
@@ -155,7 +158,7 @@ router.get("/", async (req, res, next) => {
           as: "PostLikers",
           attributes: ["_id"],
           through: {
-            attributes: ["createdAt"],
+            attributes: [],
           },
         },
       ],
@@ -215,21 +218,21 @@ router.get("/user/:UserId", isLoggedIn, async (req, res, next) => {
           as: "PostLikers",
           attributes: ["_id"],
           through: {
-            attributes: ["createdAt"],
+            attributes: [""],
           },
         },
       ],
     });
 
-    res.json({ message: "본인 게시글을 불러오는데 성공했습니다.", posts, limit });
+    res.json({ message: "특정 유저의 게시글들을 불러오는데 성공했습니다.", posts, limit });
   } catch (error) {
-    console.error("GET /post/me error >> ", error);
+    console.error("GET /post/user/:UserId error >> ", error);
     return next(error);
   }
 });
 
 // 2021/12/22 - 특정 게시글 불러오기 - by 1-blue
-router.get("/:PostId", async (req, res, next) => {
+router.get("/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
 
   try {
@@ -324,7 +327,7 @@ router.get("/:PostId", async (req, res, next) => {
   }
 });
 
-// 2021/12/28 - 특정 게시글 제거하기 - by 1-blue
+// 2021/12/28 - 특정 게시글 삭제하기 - by 1-blue
 router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
 
@@ -371,6 +374,7 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
     const postsOfHashtag = await hashtag.getPostHashtaged({
       where,
       limit,
+      attributes: ["_id", "createdAt", "UserId"],
       include: [
         // 게시글 작성자
         {

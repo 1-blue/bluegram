@@ -64,12 +64,12 @@ router.delete("/post/:PostId", isLoggedIn, async (req, res, next) => {
       result: { removedPostId: PostId, UserId },
     });
   } catch (error) {
-    console.error("POST /like/post/:PostId >> ", error);
+    console.error("DELETE /like/post/:PostId >> ", error);
     next(error);
   }
 });
 
-// 2021/12/28 - 댓글에 좋아요 추가 - by 1-blue
+// 2021/12/28 - 댓글/답글에 좋아요 추가 - by 1-blue
 router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
   const CommentId = +req.params.CommentId;
   const { _id: UserId } = req.user;
@@ -90,7 +90,7 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
     }
 
     // 2021/12/28 - 정상적으로 좋아요 추가 - by 1-blue
-    const [result] = await targetComment.addCommentLikers(UserId);
+    await targetComment.addCommentLikers(UserId);
 
     const [commentLikerWithData] = await targetComment.getCommentLikers({
       attributes: ["_id", "name"],
@@ -108,12 +108,12 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
       RecommentId: targetComment.RecommentId,
     });
   } catch (error) {
-    console.error("POST /comment/post/:CommentId >> ", error);
+    console.error("POST /like/comment/:CommentId >> ", error);
     next(error);
   }
 });
 
-// 2021/12/28 - 댓글에 좋아요 제거 - by 1-blue
+// 2021/12/28 - 댓글/답글에 좋아요 제거 - by 1-blue
 router.delete("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
   const CommentId = +req.params.CommentId;
   const { _id: UserId } = req.user;
@@ -141,7 +141,7 @@ router.delete("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
       result: { CommentId, removedUserId: UserId, RecommentId: targetComment.RecommentId },
     });
   } catch (error) {
-    console.error("DELETE /comment/post/:CommentId >> ", error);
+    console.error("DELETE /like/comment/:CommentId >> ", error);
     next(error);
   }
 });

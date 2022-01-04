@@ -33,10 +33,10 @@ router.post("/", isNotLoggedIn, (req, res, next) => {
 
       // 유저와 유저와 관련된 정보까지 모아서 찾음
       const fullUser = await User.findOne({
-        attributes: ["_id", "name", "createdAt"],
+        attributes: ["_id", "name"],
         where: { _id: user._id },
         include: [
-          { model: Image },
+          { model: Image, attributes: ["_id", "name", "url"] },
           { model: Post, attributes: ["_id"] },
           { model: User, as: "Followers" },
           { model: User, as: "Followings" },

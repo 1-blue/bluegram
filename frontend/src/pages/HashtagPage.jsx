@@ -87,7 +87,7 @@ const HashtagPage = () => {
       setShowModal(true);
       setOpenPostId(PostId);
     },
-    [],
+    [me],
   );
   // 2021/12/22 - 클릭 시 모달 닫기 - by 1-blue
   const onCloseModal = useCallback(() => setShowModal(false), [showModal]);

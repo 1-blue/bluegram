@@ -47,7 +47,7 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
 
     res.json({ message: "댓글 생성이 생성되었습니다.", createdCommentWithData });
   } catch (error) {
-    console.error("POST /comment >> ", error);
+    console.error("POST /comment/post >> ", error);
     next(error);
   }
 });
@@ -71,7 +71,7 @@ router.delete("/post/:CommentId", isLoggedIn, async (req, res, next) => {
       result: { removedCommentId: CommentId, removedPostId, RecommentId: targetComment.RecommentId },
     });
   } catch (error) {
-    console.error("POST /comment >> ", error);
+    console.error("DELETE /comment/post/:CommentId >> ", error);
     next(error);
   }
 });
@@ -114,7 +114,7 @@ router.get("/post/:CommentId", isLoggedIn, async (req, res, next) => {
 
     res.status(200).json({ message: "답글들을 정상적으로 불러왔습니다.", Recomments: recomments });
   } catch (error) {
-    console.error("POST /comment/post/:CommentId >> ", error);
+    console.error("GET /comment/post/:CommentId >> ", error);
     next(error);
   }
 });

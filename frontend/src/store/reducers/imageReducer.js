@@ -1,9 +1,10 @@
-/* eslint-disable prettier/prettier */
-
 //types
 import {
-  RESET_MESSAGE, RESET_IMAGE_PREVIEW,
-  UPLOAD_IMAGES_REQUEST, UPLOAD_IMAGES_SUCCESS, UPLOAD_IMAGES_FAILURE,
+  RESET_MESSAGE,
+  RESET_IMAGE_PREVIEW,
+  UPLOAD_IMAGES_REQUEST,
+  UPLOAD_IMAGES_SUCCESS,
+  UPLOAD_IMAGES_FAILURE,
 } from "@store/types";
 
 const initState = {
@@ -22,7 +23,7 @@ function imageReducer(prevState = initState, action) {
       return {
         ...prevState,
         imagePreviews: null,
-        
+
         uploadImagesLoading: false,
         uploadImagesDone: null,
         uploadImagesError: null,
@@ -46,7 +47,7 @@ function imageReducer(prevState = initState, action) {
         ...prevState,
         uploadImagesLoading: false,
         uploadImagesDone: action.data.message,
-        imagePreviews: action.data.images
+        imagePreviews: action.data.images,
       };
     case UPLOAD_IMAGES_FAILURE:
       return {

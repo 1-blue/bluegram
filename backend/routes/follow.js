@@ -25,7 +25,7 @@ router.get("/followers/:UserId", isLoggedIn, async (req, res, next) => {
           include: [
             {
               model: Image,
-              attributes: ["_id", "name"],
+              attributes: ["_id", "name", "url"],
             },
           ],
         },
@@ -64,7 +64,7 @@ router.get("/followings/:UserId", isLoggedIn, async (req, res, next) => {
           include: [
             {
               model: Image,
-              attributes: ["_id", "name"],
+              attributes: ["_id", "name", "url"],
             },
           ],
         },
@@ -87,6 +87,11 @@ router.post("/:UserId", isLoggedIn, async (req, res, next) => {
   try {
     const me = await User.findByPk(req.user._id);
 
+    // 2022/01/04 - 이미 팔로우한 상태에서 팔로우 요청인 경우 - by 1-blue
+    if (await me.hasFollowings(UserId)) {
+      return res.status(409).json({ message: "이미 팔로우한 유저입니다.\n새로 고침 후 다시 시도해 주세요." });
+    }
+
     const Following = await me.addFollowings(UserId);
 
     if (!Following)
@@ -106,9 +111,12 @@ router.delete("/:UserId", isLoggedIn, async (req, res, next) => {
   try {
     const me = await User.findByPk(req.user._id);
 
-    const result = await me.removeFollowings(UserId);
+    // 2022/01/04 - 이미 언팔로우한 상태에서 팔로우 요청인 경우 - by 1-blue
+    if (!(await me.hasFollowings(UserId))) {
+      return res.status(409).json({ message: "이미 팔로우한 유저입니다.\n새로 고침 후 다시 시도해 주세요." });
+    }
 
-    console.log(result);
+    const result = await me.removeFollowings(UserId);
 
     if (result === 0)
       return res.status(404).json({ message: "존재하지 않는 유저를 언팔로우하셨습니다.\n잠시후에 다시 시도해주세요" });
