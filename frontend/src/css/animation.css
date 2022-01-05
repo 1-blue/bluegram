@@ -70,6 +70,17 @@
   100% { transform: translateY(0px) }
 }
 
+@keyframes toast {
+  from {
+    transform: translate(50%, -10vh);
+    opacity: 0;
+  }
+  to {
+    transform: translate(50%, -50%);
+    opacity: 1;
+  }
+}
+
 /* by https://projects.lukehaas.me/css-loaders/ */
 @-webkit-keyframes spinner-page {
   0%,

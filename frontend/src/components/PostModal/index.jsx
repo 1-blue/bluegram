@@ -5,7 +5,6 @@ import Proptypes from "prop-types";
 // action
 import {
   loadPostAction,
-  resetMessageAction,
   appendCommentToPostAction,
   removeCommentToPostAction,
   removePostAction,
@@ -28,68 +27,18 @@ import PostCommentForm from "./PostCommentForm";
 import ImageCarousel from "@components/common/ImageCarousel";
 import Spinner from "@components/common/Spinner";
 
-// hook
-import useMessage from "@hooks/useMessage";
-
 // styled-component
 import { Wrapper } from "./style";
 
 const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
   const dispatch = useDispatch();
-  const {
-    post,
-    appendCommentToPostDone,
-    appendCommentToPostError,
-    removeCommentToPostDone,
-    removeCommentToPostError,
-    removePostDone,
-    removePostError,
-    appendLikeToPostDone,
-    appendLikeToPostError,
-    removeLikeToPostDone,
-    removeLikeToPostError,
-    appendLikeToCommentDone,
-    appendLikeToCommentError,
-    removeLikeToCommentDone,
-    removeLikeToCommentError,
-    loadRecommentsDone,
-    loadRecommentsError,
-  } = useSelector(state => state.post);
+  const { post } = useSelector(state => state.post);
   const { me } = useSelector(state => state.user);
   const [recommentData, setRecommentData] = useState({ RecommentId: null, username: null });
   const commentInputRef = useRef(null);
 
   // 2021/12/24 - 특정 게시글 상세 정보 요청 - by 1-blue
-  useEffect(() => {
-    dispatch(loadPostAction({ PostId }));
-  }, []);
-
-  // // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
-  // useMessage(appendCommentToPostDone, appendCommentToPostError);
-
-  // // 2021/12/27 - 게시글의 댓글 생성 성공/실패 시 메시지 - by 1-blue
-  // useMessage(removeCommentToPostDone, removeCommentToPostError);
-
-  // // 2021/12/28 - 게시글 제거 성공/실패 시 메시지 - by 1-blue
-  // useMessage(removePostDone, removePostError);
-
-  // // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
-  // useMessage(removePostDone, removePostError);
-
-  // // 2021/12/25 - 게시글 좋아요 추가 성공/실패 시 메시지 - by 1-blue
-  // useMessage(appendLikeToPostDone, appendLikeToPostError);
-
-  // // 2021/12/25 - 게시글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
-  // useMessage(removeLikeToPostDone, removeLikeToPostError);
-
-  // // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
-  // useMessage(appendLikeToCommentDone, appendLikeToCommentError);
-
-  // // 2021/12/28 - 댓글 좋아요 제거 성공/실패 시 메시지 - by 1-blue
-  // useMessage(removeLikeToCommentDone, removeLikeToCommentError);
-
-  // // 2021/12/29 - 답글 불러오기 성공/실패 메시지 - by 1-blue
-  // useMessage(loadRecommentsDone, loadRecommentsError);
+  useEffect(() => dispatch(loadPostAction({ PostId })), []);
 
   // 2021/12/27 - 댓글 생성 ( using PostCommentForm ) - by 1-blue
   const onAppendComment = useCallback(

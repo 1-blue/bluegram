@@ -10,6 +10,7 @@ import { loadPostsOfHashtagAction, resetPostAction } from "@store/actions/postAc
 import PostCard from "@components/PostCard";
 import PostModal from "@components/PostModal";
 import Spinner from "@components/common/Spinner";
+import Toast from "@components/common/Toast";
 
 const Wrapper = styled.ul`
   display: grid;
@@ -41,6 +42,27 @@ const HashtagPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [openPostId, setOpenPostId] = useState(null);
   const modalRef = useRef(null);
+  const {
+    removePostDone,
+    removePostError,
+    appendLikeToPostDone,
+    appendLikeToPostError,
+    removeLikeToPostDone,
+    removeLikeToPostError,
+    appendCommentToPostDone,
+    appendCommentToPostError,
+    removeCommentToPostDone,
+    removeCommentToPostError,
+    appendLikeToCommentDone,
+    appendLikeToCommentError,
+    removeLikeToCommentDone,
+    removeLikeToCommentError,
+    loadRecommentsError,
+    followDone,
+    followError,
+    unfollowDone,
+    unfollowError,
+  } = useSelector(state => state.post);
 
   // 2022/01/01 - 특정 해시태그에 해당하는 게시글들 요청 - by 1-blue
   useEffect(() => {
@@ -52,6 +74,12 @@ const HashtagPage = () => {
     e => {
       // 해시태그 클릭 시 모달창 닫기
       if (e.target.className === "hashtag") {
+        setShowModal(false);
+        dispatch(resetPostAction());
+      }
+
+      // 게시글 삭제 버튼 누르면 모달창 바로 닫기
+      if (e.target.className === "post-delete-button") {
         setShowModal(false);
         dispatch(resetPostAction());
       }
@@ -132,6 +160,60 @@ const HashtagPage = () => {
       {loadPostsOfHashtagLoading && <Spinner page />}
 
       {showModal && <PostModal PostId={openPostId} onCloseModal={onCloseModal} ref={modalRef} />}
+
+      {/* 성공 메시지 - 토스트 */}
+      {(appendCommentToPostDone ||
+        removeCommentToPostDone ||
+        removePostDone ||
+        appendLikeToPostDone ||
+        removeLikeToPostDone ||
+        appendLikeToCommentDone ||
+        removeLikeToCommentDone ||
+        followDone ||
+        unfollowDone) && (
+        <Toast
+          message={
+            appendCommentToPostDone ||
+            removeCommentToPostDone ||
+            removePostDone ||
+            appendLikeToPostDone ||
+            removeLikeToPostDone ||
+            appendLikeToCommentDone ||
+            removeLikeToCommentDone ||
+            followDone ||
+            unfollowDone
+          }
+          success
+        />
+      )}
+
+      {/* 실패 메시지 - 토스트 */}
+      {(appendCommentToPostError ||
+        removeCommentToPostError ||
+        removePostError ||
+        appendLikeToPostError ||
+        removeLikeToPostError ||
+        appendLikeToCommentError ||
+        removeLikeToCommentError ||
+        loadRecommentsError ||
+        followError ||
+        unfollowError) && (
+        <Toast
+          message={
+            appendCommentToPostError ||
+            removeCommentToPostError ||
+            removePostError ||
+            appendLikeToPostError ||
+            removeLikeToPostError ||
+            appendLikeToCommentError ||
+            removeLikeToCommentError ||
+            loadRecommentsError ||
+            followError ||
+            unfollowError
+          }
+          error
+        />
+      )}
     </>
   );
 };

@@ -6,7 +6,7 @@ import db from "../models/index.js";
 
 const { Post, Comment, User, Image } = db;
 
-// 2021/12/27 - 게시글에 댓글 추가 - by 1-blue
+// 2021/12/27 - 게시글에 댓글/답글 추가 - by 1-blue
 router.post("/post", isLoggedIn, async (req, res, next) => {
   const { content, PostId, RecommentId } = req.body;
   const { _id: UserId } = req.user;
@@ -45,14 +45,14 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
       ],
     });
 
-    res.json({ message: "댓글 생성이 생성되었습니다.", createdCommentWithData });
+    res.json({ message: `${RecommentId ? "답글" : "댓글"}이 생성되었습니다.`, createdCommentWithData });
   } catch (error) {
     console.error("POST /comment/post >> ", error);
     next(error);
   }
 });
 
-// 2021/12/27 - 게시글의 댓글 제거 - by 1-blue
+// 2021/12/27 - 게시글의 댓글/답글 제거 - by 1-blue
 router.delete("/post/:CommentId", isLoggedIn, async (req, res, next) => {
   const CommentId = +req.params.CommentId;
 
@@ -67,7 +67,7 @@ router.delete("/post/:CommentId", isLoggedIn, async (req, res, next) => {
     await Comment.destroy({ where: { _id: CommentId } });
 
     res.json({
-      message: "댓글 삭제가 완료되었습니다.",
+      message: `${targetComment.RecommentId ? "답글" : "댓글"}이 삭제되었습니다.`,
       result: { removedCommentId: CommentId, removedPostId, RecommentId: targetComment.RecommentId },
     });
   } catch (error) {

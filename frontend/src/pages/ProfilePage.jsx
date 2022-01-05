@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 // components
-import Avatar from "@components/common/Avatar";
 import Spinner from "@components/common/Spinner";
-import Dialog from "@components/common/Dialog";
+import Toast from "@components/common/Toast";
 
 import ProfileHead from "@components/ProfilePage/ProfileHead";
 import ProfileInfo from "@components/ProfilePage/ProfileInfo";
@@ -43,6 +42,24 @@ const ProfilePage = () => {
   const { loadToUserLoading, followLoading, unfollowLoading } = useSelector(state => state.user);
   const [isOpenFollowersDialog, onOpenFollowersDialog, , setIsOpenFollowersDialog] = useOpenClose(false);
   const [isOpenFollowingsDialog, onOpenFollowingsDialog, , setIsOpenFollowingsDialog] = useOpenClose(false);
+  const { followDone, followError, unfollowDone, unfollowError } = useSelector(state => state.user);
+  const {
+    removePostDone,
+    removePostError,
+    appendLikeToPostDone,
+    appendLikeToPostError,
+    removeLikeToPostDone,
+    removeLikeToPostError,
+    appendCommentToPostDone,
+    appendCommentToPostError,
+    removeCommentToPostDone,
+    removeCommentToPostError,
+    appendLikeToCommentDone,
+    appendLikeToCommentError,
+    removeLikeToCommentDone,
+    removeLikeToCommentError,
+    loadRecommentsError,
+  } = useSelector(state => state.post);
 
   // 2021/12/31 - 특정 유저의 정보 요청 - by 1-blue
   useEffect(() => {
@@ -113,6 +130,60 @@ const ProfilePage = () => {
           onCloseFollowingsDialog={onCloseFollowingsDialog}
           isOpenFollowingsDialog={isOpenFollowingsDialog}
           onFollow={onFollow}
+        />
+      )}
+
+      {/* 성공 메시지 - 토스트 */}
+      {(appendCommentToPostDone ||
+        removeCommentToPostDone ||
+        removePostDone ||
+        appendLikeToPostDone ||
+        removeLikeToPostDone ||
+        appendLikeToCommentDone ||
+        removeLikeToCommentDone ||
+        followDone ||
+        unfollowDone) && (
+        <Toast
+          message={
+            appendCommentToPostDone ||
+            removeCommentToPostDone ||
+            removePostDone ||
+            appendLikeToPostDone ||
+            removeLikeToPostDone ||
+            appendLikeToCommentDone ||
+            removeLikeToCommentDone ||
+            followDone ||
+            unfollowDone
+          }
+          success
+        />
+      )}
+
+      {/* 실패 메시지 - 토스트 */}
+      {(appendCommentToPostError ||
+        removeCommentToPostError ||
+        removePostError ||
+        appendLikeToPostError ||
+        removeLikeToPostError ||
+        appendLikeToCommentError ||
+        removeLikeToCommentError ||
+        loadRecommentsError ||
+        followError ||
+        unfollowError) && (
+        <Toast
+          message={
+            appendCommentToPostError ||
+            removeCommentToPostError ||
+            removePostError ||
+            appendLikeToPostError ||
+            removeLikeToPostError ||
+            appendLikeToCommentError ||
+            removeLikeToCommentError ||
+            loadRecommentsError ||
+            followError ||
+            unfollowError
+          }
+          error
         />
       )}
     </Wrapper>

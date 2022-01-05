@@ -37,7 +37,9 @@ const PostHead = ({ me, post, className, onRemovePost, onFollow }) => {
         <Dialog onClose={onCloseDialog} showDialog={showDialog}>
           {post.User._id === me._id ? (
             <>
-              <li onClick={onRemovePost}>삭제</li>
+              <li onClick={onRemovePost} className="post-delete-button">
+                삭제
+              </li>
               <li>수정</li>
             </>
           ) : (

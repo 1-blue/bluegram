@@ -9,6 +9,7 @@ import { loadPostsAction, resetPostAction, resetPostsAction } from "@store/actio
 import PostCard from "@components/PostCard";
 import PostModal from "@components/PostModal";
 import Spinner from "@components/common/Spinner";
+import Toast from "@components/common/Toast";
 
 const Wrapper = styled.ul`
   display: grid;
@@ -38,6 +39,24 @@ const ExplorePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [openPostId, setOpenPostId] = useState(null);
   const modalRef = useRef(null);
+  const { followDone, followError, unfollowDone, unfollowError } = useSelector(state => state.user);
+  const {
+    removePostDone,
+    removePostError,
+    appendLikeToPostDone,
+    appendLikeToPostError,
+    removeLikeToPostDone,
+    removeLikeToPostError,
+    appendCommentToPostDone,
+    appendCommentToPostError,
+    removeCommentToPostDone,
+    removeCommentToPostError,
+    appendLikeToCommentDone,
+    appendLikeToCommentError,
+    removeLikeToCommentDone,
+    removeLikeToCommentError,
+    loadRecommentsError,
+  } = useSelector(state => state.post);
 
   // 2022/01/02 - 해당 페이지 들어올 때 게시글들 초기화 - by 1-blue
   // 2021/12/21 - 전체 게시글 요청 - by 1-blue
@@ -49,6 +68,12 @@ const ExplorePage = () => {
   // 2021/12/21 - 다른 영역 클릭 시 모달 닫기 이벤트 - by 1-blue
   const handleCloseModal = useCallback(
     e => {
+      // 게시글 삭제 버튼 누르면 모달창 바로 닫기
+      if (e.target.className === "post-delete-button") {
+        setShowModal(false);
+        dispatch(resetPostAction());
+      }
+
       /**
        * 바로 아랫부분 추가한 이유는 게시글 모달창 내부에서 좋아요 같은 아이콘을 누르게 되면 즉시 다른 아이콘으로 변경해 줌
        * ex) heart 아이콘 ==> fillHeart 아이콘
@@ -116,6 +141,60 @@ const ExplorePage = () => {
       {loadPostsLoading && <Spinner page />}
 
       {showModal && <PostModal PostId={openPostId} onCloseModal={onCloseModal} ref={modalRef} />}
+
+      {/* 성공 메시지 - 토스트 */}
+      {(appendCommentToPostDone ||
+        removeCommentToPostDone ||
+        removePostDone ||
+        appendLikeToPostDone ||
+        removeLikeToPostDone ||
+        appendLikeToCommentDone ||
+        removeLikeToCommentDone ||
+        followDone ||
+        unfollowDone) && (
+        <Toast
+          message={
+            appendCommentToPostDone ||
+            removeCommentToPostDone ||
+            removePostDone ||
+            appendLikeToPostDone ||
+            removeLikeToPostDone ||
+            appendLikeToCommentDone ||
+            removeLikeToCommentDone ||
+            followDone ||
+            unfollowDone
+          }
+          success
+        />
+      )}
+
+      {/* 실패 메시지 - 토스트 */}
+      {(appendCommentToPostError ||
+        removeCommentToPostError ||
+        removePostError ||
+        appendLikeToPostError ||
+        removeLikeToPostError ||
+        appendLikeToCommentError ||
+        removeLikeToCommentError ||
+        loadRecommentsError ||
+        followError ||
+        unfollowError) && (
+        <Toast
+          message={
+            appendCommentToPostError ||
+            removeCommentToPostError ||
+            removePostError ||
+            appendLikeToPostError ||
+            removeLikeToPostError ||
+            appendLikeToCommentError ||
+            removeLikeToCommentError ||
+            loadRecommentsError ||
+            followError ||
+            unfollowError
+          }
+          error
+        />
+      )}
     </>
   );
 };

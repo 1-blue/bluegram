@@ -20,7 +20,7 @@ const __dirname = path.resolve();
 const dist = path.join(__dirname, "..", "frontend", "dist");
 const FileStore = fileStore(expressSession);
 const app = express();
-app.set("PORT", process.env.NODE_ENV ? 80 : 3000);
+app.set("PORT", process.env.NODE_ENV === "production" ? 80 : 3000);
 
 try {
   fs.accessSync(path.join(__dirname, "public"));

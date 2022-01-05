@@ -8,10 +8,8 @@
   
   --light-blue: #0095f6;
   --heart-color: #ED4956;
-}
 
-/* 임시 부여 */
-#root {
-  width: 100%;
-  height: 100%;
+  --success-color: #2F80ED;
+  --warning-color: #38ef7d;
+  --error-color: #DC281E;
 }

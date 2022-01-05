@@ -97,7 +97,9 @@ router.post("/:UserId", isLoggedIn, async (req, res, next) => {
     if (!Following)
       return res.status(404).json({ message: "존재하지 않는 유저를 팔로우하셨습니다.\n잠시후에 다시 시도해주세요" });
 
-    return res.json({ message: `팔로우에 성공하셨습니다.`, Follow: Following[0] });
+    const followUser = await User.findByPk(UserId, { attributes: ["name"] });
+
+    return res.json({ message: `${followUser.name}님을 팔로우했습니다.`, Follow: Following[0] });
   } catch (error) {
     console.error("POST /follow/:UserId >> ", error);
     next(error);
@@ -121,8 +123,10 @@ router.delete("/:UserId", isLoggedIn, async (req, res, next) => {
     if (result === 0)
       return res.status(404).json({ message: "존재하지 않는 유저를 언팔로우하셨습니다.\n잠시후에 다시 시도해주세요" });
 
+    const unfollowUser = await User.findByPk(UserId, { attributes: ["name"] });
+
     return res.json({
-      message: `언팔로우에 성공하셨습니다.`,
+      message: `${unfollowUser.name}님을 언팔로우했습니다.`,
       Follow: { unfollowingId: UserId, unfollowerId: req.user._id },
     });
   } catch (error) {

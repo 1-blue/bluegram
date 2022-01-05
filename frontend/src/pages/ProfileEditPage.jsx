@@ -8,6 +8,7 @@ import Spinner from "@components/common/Spinner";
 import Avatar from "@components/common/Avatar";
 import Input from "@components/common/Input";
 import Button from "@components/common/Button";
+import Toast from "@components/common/Toast";
 
 // action
 import {
@@ -174,14 +175,6 @@ const ProfileEditPage = () => {
     formData.append("images", e.target.files[0]);
     dispatch(uploadImagesAction(formData));
   }, []);
-
-  // 2022/01/03 - 유저 정보 변경 성공/실패 메시지 - by 1-blue
-  useEffect(() => {
-    if (!(editToMeAllDone || editToMeAllError)) return;
-    alert(editToMeAllDone || editToMeAllError);
-
-    dispatch(resetMessageAction());
-  }, [editToMeAllDone, editToMeAllError]);
 
   // 2022/01/03 - 비밀번호 변경 성공/실패 메시지 - by 1-blue
   useEffect(() => {
@@ -350,6 +343,12 @@ const ProfileEditPage = () => {
         </div>
         {content(role)}
       </div>
+
+      {/* 성공 메시지 - 토스트 */}
+      {editToMeAllDone && <Toast message={editToMeAllDone} success />}
+
+      {/* 실패 메시지 - 토스트 */}
+      {editToMeAllError && <Toast message={editToMeAllError} error />}
     </Wrapper>
   );
 };
