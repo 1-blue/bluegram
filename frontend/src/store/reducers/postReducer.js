@@ -3,6 +3,7 @@ import {
   RESET_MESSAGE,
   RESET_POST,
   RESET_POSTS,
+  RESET_POSTS_OF_USER,
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
   CREATE_POST_FAILURE,
@@ -66,6 +67,7 @@ const initState = {
   // 추가로 게시글들 요청할지 여부
   isMorePosts: true,
   isMoreHashtagPosts: true,
+  isMorePostsOfUser: true,
 
   // 게시글 생성 요청
   createPostLoading: false,
@@ -196,6 +198,13 @@ function postReducer(prevState = initState, action) {
       return {
         ...prevState,
         posts: [],
+      };
+
+    // 2022/01/05 - 유저 페이지 들어갔을 경우 특정 유저의 게시글들 초기화 - by 1-blue
+    case RESET_POSTS_OF_USER:
+      return {
+        ...prevState,
+        postsOfUser: [],
       };
 
     case CREATE_POST_REQUEST:
@@ -664,7 +673,7 @@ function postReducer(prevState = initState, action) {
         loadPostsOfHashtagError: action.data.message,
       };
 
-    // 2022/01/01 - 로그인한 유저의 게시글들 요청 - by 1-blue
+    // 2022/01/04 - 특정 유저의 게시글들 요청 - by 1-blue
     case LOAD_POSTS_OF_USER_REQUEST:
       return {
         ...prevState,
@@ -677,7 +686,8 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadPostsOfUserLoading: false,
         loadPostsOfUserDone: action.data.message,
-        postsOfUser: action.data.posts,
+        postsOfUser: [...prevState.postsOfUser, ...action.data.posts],
+        isMorePostsOfUser: action.data.posts.length === action.data.limit,
       };
     case LOAD_POSTS_OF_USER_FAILURE:
       return {

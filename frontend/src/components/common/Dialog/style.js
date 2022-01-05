@@ -17,7 +17,7 @@ export const Wrapper = styled.aside`
     display: flex;
     flex-flow: column nowrap;
     background: white;
-    border-radius: 1em;
+    border-radius: 0.4em;
 
     & > li {
       max-width: 400px;
@@ -36,6 +36,12 @@ export const Wrapper = styled.aside`
         border-bottom: 0;
       }
 
+      &:first-child {
+        border-radius: 0.4em 0.4em 0 0;
+      }
+      &:last-child {
+        border-radius: 0 0 0.4em 0.4em;
+      }
       &:hover {
         background: rgba(0, 0, 0, 0.1);
       }

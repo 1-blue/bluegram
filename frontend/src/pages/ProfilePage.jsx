@@ -13,6 +13,8 @@ import ProfileHead from "@components/ProfilePage/ProfileHead";
 import ProfileInfo from "@components/ProfilePage/ProfileInfo";
 import ProfileNav from "@components/ProfilePage/ProfileNav";
 import ProfileContent from "@components/ProfilePage/ProfileContent";
+import ProfileFollowersDialog from "@components/ProfilePage/ProfileFollowersDialog";
+import ProfileFollowingsDialog from "@components/ProfilePage/ProfileFollowingsDialog";
 
 // action
 import {
@@ -22,7 +24,6 @@ import {
   resetFollowAction,
   loadFollowersAction,
   loadFollowingsAction,
-  loadPostsOfUserAction,
 } from "@store/actions";
 
 // hook
@@ -32,39 +33,14 @@ import useOpenClose from "@hooks/useOpenClose";
 const Wrapper = styled.section`
   display: flex;
   flex-flow: column nowrap;
-
-  /* 다이어로그 */
-  & > aside > ul > li {
-    & > a > .dialog-user-name {
-      margin-right: 0.6em;
-
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-    & > .dialog-follow-button {
-      color: var(--light-blue);
-    }
-    & > .dialog-remove-button {
-      color: rgba(0, 0, 0, 0.8);
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      padding: 0.4em;
-    }
-
-    & > button:last-child {
-      margin-left: auto;
-    }
-  }
 `;
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { UserId, role } = useParams();
-  const { me, user, Followers, Followings } = useSelector(state => state.user);
-  const { loadToUserLoading, loadFollowersLoading, loadFollowingsLoading, followLoading, unfollowLoading } =
-    useSelector(state => state.user);
-  const { postsOfUser, loadPostsOfUserLoading } = useSelector(state => state.post);
+  const { me, user } = useSelector(state => state.user);
+  const { loadToUserLoading, followLoading, unfollowLoading } = useSelector(state => state.user);
   const [isOpenFollowersDialog, onOpenFollowersDialog, , setIsOpenFollowersDialog] = useOpenClose(false);
   const [isOpenFollowingsDialog, onOpenFollowingsDialog, , setIsOpenFollowingsDialog] = useOpenClose(false);
 
@@ -72,22 +48,6 @@ const ProfilePage = () => {
   useEffect(() => {
     dispatch(loadToUserAction({ UserId }));
   }, [UserId]);
-
-  // 2021/01/04 - params에 따른 각각의 요청 - by 1-blue
-  useEffect(() => {
-    switch (role) {
-      case "post":
-        dispatch(loadPostsOfUserAction({ UserId, lastId: -1, limit: 15 }));
-        break;
-      case "bookmark":
-        break;
-      case "tag":
-        break;
-
-      default:
-        break;
-    }
-  }, [role, UserId]);
 
   // 2021/12/31 - 팔로우/언팔로우 요청 - by 1-blue
   const onFollow = useCallback(
@@ -116,8 +76,8 @@ const ProfilePage = () => {
   return (
     <Wrapper>
       <ProfileHead
-        user={user}
         me={me}
+        user={user}
         followLoading={followLoading}
         unfollowLoading={unfollowLoading}
         navigate={navigate}
@@ -133,103 +93,27 @@ const ProfilePage = () => {
       />
       <ProfileNav UserId={UserId} navigate={navigate} />
 
-      <ProfileContent role={role} />
+      <ProfileContent role={role} me={me} UserId={UserId} />
 
       {/* 팔로워들에 대한 다이어로그창 */}
       {isOpenFollowersDialog && (
-        <Dialog onClose={onCloseFollowersDialog} showDialog={isOpenFollowersDialog}>
-          {loadFollowersLoading || !Followers ? (
-            <Spinner comment />
-          ) : (
-            Followers.map(follower => (
-              <li key={follower._id}>
-                <Link to={`/profile/${follower._id}/post`}>
-                  <Avatar
-                    width={30}
-                    height={30}
-                    image={follower.Images[0]}
-                    alt="유저 프로필 이미지"
-                    style={{ marginRight: "0.5em" }}
-                  />
-                </Link>
-                <Link to={`/profile/${follower._id}/post`}>
-                  <span className="dialog-user-name">{follower.name}</span>
-                </Link>
-                {me._id !== follower._id && (
-                  <>
-                    {/* 팔로우/팔로잉 */}
-                    <button
-                      type="button"
-                      className="dialog-follow-button"
-                      onClick={onFollow(
-                        me.Followings.some(myFollowing => myFollowing._id === follower._id),
-                        follower._id,
-                      )}
-                    >
-                      {followLoading || unfollowLoading ? (
-                        <Spinner button />
-                      ) : me.Followings.some(myFollowing => myFollowing._id === follower._id) ? (
-                        "언팔로우"
-                      ) : (
-                        "팔로우"
-                      )}
-                    </button>
-
-                    {/* 차단 ( 나를 팔로잉 하는 사람을 제거한다 ) */}
-                    <button type="button" className="dialog-remove-button" onClick={onFollow(true, follower._id)}>
-                      삭제
-                    </button>
-                  </>
-                )}
-              </li>
-            ))
-          )}
-        </Dialog>
+        <ProfileFollowersDialog
+          me={me}
+          onCloseFollowersDialog={onCloseFollowersDialog}
+          isOpenFollowersDialog={isOpenFollowersDialog}
+          onFollow={onFollow}
+        />
       )}
 
       {/* 팔로잉들에 대한 다이어로그창 */}
       {isOpenFollowingsDialog && (
-        <Dialog onClose={onCloseFollowingsDialog} showDialog={isOpenFollowingsDialog}>
-          {loadFollowingsLoading || !Followings ? (
-            <Spinner comment />
-          ) : (
-            Followings.map(following => (
-              <li key={following._id}>
-                <Link to={`/profile/${following._id}/post`}>
-                  <Avatar
-                    width={30}
-                    height={30}
-                    image={following.Images[0]}
-                    alt="유저 프로필 이미지"
-                    style={{ marginRight: "0.5em" }}
-                  />
-                </Link>
-                <Link to={`/profile/${following._id}/post`}>
-                  <span className="dialog-user-name">{following.name}</span>
-                </Link>
-                {/* 언팔로우(내가 팔로잉 하는 사람을 리스트에서 없앰) */}
-                {me._id !== following._id && (
-                  <button
-                    type="button"
-                    className="dialog-follow-button"
-                    onClick={onFollow(
-                      user.Followers.some(userFollower => userFollower._id === following._id),
-                      following._id,
-                    )}
-                  >
-                    {followLoading || unfollowLoading ? (
-                      <Spinner button />
-                    ) : user.Followers.some(userFollower => userFollower._id === following._id) ? (
-                      "언팔로우"
-                    ) : (
-                      "팔로우"
-                    )}
-                  </button>
-                )}
-              </li>
-            ))
-          )}
-        </Dialog>
+        <ProfileFollowingsDialog
+          me={me}
+          user={user}
+          onCloseFollowingsDialog={onCloseFollowingsDialog}
+          isOpenFollowingsDialog={isOpenFollowingsDialog}
+          onFollow={onFollow}
+        />
       )}
     </Wrapper>
   );

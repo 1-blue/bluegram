@@ -13,6 +13,9 @@ export const RESET_IMAGE_PREVIEW = "RESET_IMAGE_PREVIEW";
 // 2021/12/31 - 특정 유저의 팔로워/팔로잉 비우기 - by 1-blue
 export const RESET_FOLLOW = "RESET_FOLLOW";
 
+// 2022/01/05 - 특정 유저의 게시글들 비우기 - by 1-blue
+export const RESET_POSTS_OF_USER = "RESET_POSTS_OF_USER";
+
 // 2021/12/20 - 로컬 로그인 요청 - by 1-blue
 export const LOCAL_LOGIN_REQUEST = "LOCAL_LOGIN_REQUEST";
 export const LOCAL_LOGIN_SUCCESS = "LOCAL_LOGIN_SUCCESS";

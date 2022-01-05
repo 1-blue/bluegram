@@ -186,7 +186,7 @@ router.get("/user/:UserId", isLoggedIn, async (req, res, next) => {
 
     const posts = await user.getPosts({
       where,
-      limit: lastId === -1 ? 9 : limit,
+      limit,
       order: [["createdAt", "DESC"]],
       attributes: ["_id", "content", "createdAt"],
       include: [
@@ -218,7 +218,7 @@ router.get("/user/:UserId", isLoggedIn, async (req, res, next) => {
           as: "PostLikers",
           attributes: ["_id"],
           through: {
-            attributes: [""],
+            attributes: ["createdAt"],
           },
         },
       ],
