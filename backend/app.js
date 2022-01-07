@@ -20,7 +20,7 @@ const __dirname = path.resolve();
 const dist = path.join(__dirname, "..", "frontend", "dist");
 const FileStore = fileStore(expressSession);
 const app = express();
-app.set("PORT", process.env.NODE_ENV === "production" ? 80 : 3000);
+app.set("PORT", 3000);
 
 try {
   fs.accessSync(path.join(__dirname, "public"));
@@ -72,7 +72,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
       credentials: true,
-      origin: [process.env.CLIENT_URL, "http://bluegram.cf", "http://www.bluegram.cf"],
+      origin: "https://bluegram.cf",
     }),
   );
 } else {
@@ -103,15 +103,17 @@ app.use("/like", likeRouter);
 app.use("/comment", commentRouter);
 app.use("/follow", followRouter);
 
-// // 404 에러처리 미들웨어
-// app.use((req, res, next) => {
-//   console.log("404 에러처리 미들웨어");
-//   res.status(404).send("404");
-// });
-
-app.get("*", (req, res) => {
-  res.sendFile("index.html", { root: dist });
-});
+if (process.env.NODE_ENV === "production") {
+  app.get("*", (req, res) => {
+    res.sendFile("index.html", { root: dist });
+  });
+} else {
+  // 404 에러처리 미들웨어
+  app.use((req, res, next) => {
+    console.log("404 에러처리 미들웨어");
+    res.status(404).send("404");
+  });
+}
 
 // 에러처리 미들웨어
 app.use((error, req, res, next) => {
