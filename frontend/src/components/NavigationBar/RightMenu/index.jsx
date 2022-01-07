@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 
 // components
 import Icon from "@components/common/Icon";
@@ -16,16 +16,19 @@ import { localLogoutAction, resetMessageAction } from "@store/actions";
 
 // hook
 import useToggle from "@hooks/useToggle";
+import { useState } from "react";
 
 const RightMenu = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { pathname } = useLocation();
   const { me } = useSelector(state => state.user);
   const { logoutDone, logoutError } = useSelector(state => state.auth);
   const [showProfileMenu, onClickShowProfileMenu, setShowProfileMenu] = useToggle(false);
   const [showCreatePostModal, onClickShowCreatePostModal, setShowCreatePostModal] = useToggle(false);
   const profileRef = useRef(null);
   const bookmarkRef = useRef(null);
+  const [iconSize, setIconSize] = useState(0);
 
   // 2021/12/21 - 로그아웃 성공 및 실패 시 메시지 and 성공 시 리다이렉트 - by 1-blue
   useEffect(() => {
@@ -61,34 +64,55 @@ const RightMenu = () => {
     setShowCreatePostModal(false);
   }, []);
 
+  // 2022/01/07 - NavigationBar Icon resizing - by 1-blue
+  useEffect(() => {
+    if (document.documentElement.clientWidth <= 468) {
+      setIconSize(18);
+    } else if (document.documentElement.clientWidth < 768) {
+      setIconSize(20);
+    } else {
+      setIconSize(24);
+    }
+
+    window.addEventListener("resize", () => {
+      if (document.documentElement.clientWidth <= 468) {
+        setIconSize(18);
+      } else if (document.documentElement.clientWidth < 768) {
+        setIconSize(20);
+      } else {
+        setIconSize(24);
+      }
+    });
+  }, []);
+
   return (
     <Wrapper>
       {me._id ? (
         <>
           <li>
             <NavLink to="/">
-              <Icon shape="home" width={24} height={24} />
+              <Icon shape="home" width={iconSize} height={iconSize} $fill={pathname === "/"} />
             </NavLink>
           </li>
           <li>
             <NavLink to="/directMessage">
-              <Icon shape="airplane" width={24} height={24} />
+              <Icon shape="airplane" width={iconSize} height={iconSize} $fill={pathname.startsWith("/directMessage")} />
             </NavLink>
           </li>
           <li>
-            <Icon shape="postAdd" width={24} height={24} onClick={onClickShowCreatePostModal} />
+            <Icon shape="postAdd" width={iconSize} height={iconSize} onClick={onClickShowCreatePostModal} />
             {showCreatePostModal && (
               <CreatePostModal showCreatePostModal={showCreatePostModal} onCloseModal={onCloseCreatePostModal} />
             )}
           </li>
           <li>
             <NavLink to="/explore">
-              <Icon shape="compass" width={24} height={24} />
+              <Icon shape="compass" width={iconSize} height={iconSize} $fill={pathname.startsWith("/explore")} />
             </NavLink>
           </li>
           <li>
             <NavLink to="/">
-              <Icon shape="heart" width={24} height={24} />
+              <Icon shape="heart" width={iconSize} height={iconSize} />
             </NavLink>
           </li>
           <li>
@@ -104,13 +128,13 @@ const RightMenu = () => {
             <Menu>
               <li onClick={() => profileRef.current.click()}>
                 <NavLink to={`/profile/${me._id}/post`} ref={profileRef}>
-                  <Icon shape="avatar" width={20} height={20} />
+                  <Icon shape="avatar" width={20} height={20} $fill={pathname.endsWith("/post")} />
                   <span>프로필</span>
                 </NavLink>
               </li>
               <li onClick={() => bookmarkRef.current.click()}>
                 <NavLink to={`/profile/${me._id}/bookmark`} ref={bookmarkRef}>
-                  <Icon shape="bookmark" width={20} height={20} />
+                  <Icon shape="bookmark" width={20} height={20} $fill={pathname.endsWith("/bookmark")} />
                   <span>저장됨</span>
                 </NavLink>
               </li>

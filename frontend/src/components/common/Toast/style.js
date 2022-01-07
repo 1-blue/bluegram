@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 
 export const Wrapper = styled.aside`
   position: fixed;
-  top: 6%;
+  top: 8%;
   right: 50%;
   transform: translate(50%, -50%);
   width: 200px;

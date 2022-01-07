@@ -12,13 +12,14 @@ const PostIconButtons = ({ onClickPostLike, isPostLiked, commentInputRef }) => {
     <Wrapper>
       <li>
         <Icon
-          shape={isPostLiked ? "fillHeart" : "heart"}
+          shape="heart"
           width={24}
           height={24}
           fill={isPostLiked ? "var(--heart-color)" : "black"}
           hoverfill={isPostLiked ? "red" : "gray"}
           onClick={onClickPostLike}
           animation="bounce-in"
+          $fill={isPostLiked}
         />
       </li>
       <li>

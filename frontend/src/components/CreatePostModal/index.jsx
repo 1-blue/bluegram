@@ -97,6 +97,8 @@ const CreatePostModal = ({ showCreatePostModal, onCloseModal }) => {
     e => {
       e.preventDefault();
 
+      if (text.length > 500) return alert(`게시글 내용은 500자 이하만 가능합니다.\n( 현재 ${text.length}자 )`);
+
       dispatch(createPostAction({ content: text, images: imagePreviews }));
     },
     [text, imagePreviews],

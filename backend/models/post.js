@@ -10,9 +10,9 @@ const Post = (sequelize, DataTypes) => {
         comment: "게시글의 아이디 ( 게시글을 식별할 값 )",
       },
       content: {
-        type: DataTypes.STRING(200),
+        type: DataTypes.STRING(500),
         alllowNull: true,
-        comment: "게시글의 내용 ( 최대 200자, , 특수문자 가능 )",
+        comment: "게시글의 내용 ( 최대 500자, , 특수문자 가능 )",
       },
     },
     {

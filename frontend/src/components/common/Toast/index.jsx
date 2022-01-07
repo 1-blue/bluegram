@@ -21,10 +21,11 @@ const Toast = ({ message, time, success, warning, error }) => {
     }, time);
 
     return () => {
-      clearTimeout(timerId.current);
       dispatch(resetMessageAction());
+      setIsShow(false);
+      clearTimeout(timerId.current);
     };
-  }, [time]);
+  }, [time, message]);
 
   return (
     <>
@@ -46,7 +47,7 @@ Toast.propTypes = {
 };
 
 Toast.defaultProps = {
-  time: 4500,
+  time: 3000,
 };
 
 export default Toast;

@@ -43,7 +43,7 @@ const PostComment = ({
       </Link>
       <div className="comment-container">
         <b className="comment-username">{comment.User.name}</b>
-        <pre className="comment-content">{comment.content}</pre>
+        <span className="comment-content">{comment.content}</span>
         <div className="comment-option-list">
           <span className="comment-time">{timeFormat(comment.createdAt)}</span>
           {comment.CommentLikers.length > 0 && (
@@ -87,13 +87,14 @@ const PostComment = ({
         </div>
 
         <Icon
-          shape={isMineCommentLike ? "fillHeart" : "heart"}
+          shape="heart"
           width={16}
           height={16}
           fill={isMineCommentLike ? "var(--heart-color)" : "gray"}
           hoverfill={isMineCommentLike ? "red" : "black"}
           animation="bounce-in"
           onClick={onClickCommentLike(comment._id, isMineCommentLike)}
+          $fill={isMineCommentLike}
         />
 
         {/* 이거 답글 컴포넌트로 옮기기 */}

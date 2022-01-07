@@ -24,7 +24,7 @@ const PostRecomment = ({ recomment, isMineRecomment, isMineRecommentLike, onClic
       <Avatar width={32} height={32} image={recomment.User?.Images[0]} />
       <div className="recomment-container">
         <b className="recomment-username">{recomment.User.name}</b>
-        <pre className="recomment-content">{recomment.content}</pre>
+        <span className="recomment-content">{recomment.content}</span>
         <div className="recomment-option-list">
           <span className="recomment-time">{timeFormat(recomment.createdAt)}</span>
           {recomment.CommentLikers.length > 0 && (
@@ -53,13 +53,14 @@ const PostRecomment = ({ recomment, isMineRecomment, isMineRecommentLike, onClic
         </div>
 
         <Icon
-          shape={isMineRecommentLike ? "fillHeart" : "heart"}
+          shape="heart"
           width={16}
           height={16}
           fill={isMineRecommentLike ? "var(--heart-color)" : "gray"}
           hoverfill={isMineRecommentLike ? "red" : "black"}
           animation="bounce-in"
           onClick={onClickCommentLike(recomment._id, isMineRecommentLike)}
+          $fill={isMineRecommentLike}
         />
       </div>
     </Wrapper>

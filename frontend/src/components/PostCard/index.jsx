@@ -30,7 +30,7 @@ const PostCard = ({ post, onOpenModal }) => {
         <>
           <div className="post-information">
             <div>
-              <Icon shape="fillHeart" width={24} height={24} fill="white" animation="rubber-band" />
+              <Icon shape="heart" width={24} height={24} fill="white" animation="rubber-band" selected={true} />
               <span>{post.PostLikers.length}</span>
             </div>
             <div>

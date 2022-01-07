@@ -12,13 +12,19 @@ export const Wrapper = styled.li`
     flex: 1 0 auto;
 
     position: relative;
+    display: inline-block;
+    width: 80%;
 
     & > .comment-username {
       display: block;
       margin-bottom: 0.4em;
     }
     & > .comment-content {
-      margin-bottom: 0.8em;
+      display: inline-block;
+      margin-bottom: 0.4em;
+      width: 90%;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
     & > .comment-option-list {
       & > .comment-time {
@@ -40,7 +46,7 @@ export const Wrapper = styled.li`
 
     & > i {
       position: absolute;
-      top: 10px;
+      top: 0;
       right: 0;
     }
   }

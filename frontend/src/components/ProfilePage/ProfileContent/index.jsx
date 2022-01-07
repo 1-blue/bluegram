@@ -136,6 +136,12 @@ const ProfileContent = ({ role, me, UserId }) => {
     [postsOfUser, loadPostsOfUserLoading, showModal, openPostId, onCloseModal, onOpenModal],
   );
 
+  // 2022/01/07 - 모달창 open 시 외부 스크롤 불가능하도록 지정 - by 1-blue
+  useEffect(() => {
+    if (showModal) window.document.body.style = "overflow: hidden";
+    else window.document.body.style = "overflow: none";
+  }, [showModal]);
+
   return <Wrapper>{content(role)}</Wrapper>;
 };
 

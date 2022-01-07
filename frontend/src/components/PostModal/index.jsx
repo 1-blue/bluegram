@@ -49,6 +49,8 @@ const ReadPostModal = forwardRef(({ PostId, onCloseModal }, modalRef) => {
       const processingContent = content.replace(/^@[\S]*\s/g, "");
 
       if (!processingContent.trim()) return alert("댓글을 입력한 후에 제출해주세요!");
+      if (processingContent.length > 200)
+        return alert(`댓글을 199자 이하로 입력해주세요 ( 현재 ${processingContent.length}자 )`);
 
       dispatch(appendCommentToPostAction({ content: processingContent, PostId, RecommentId }));
 

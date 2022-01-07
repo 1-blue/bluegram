@@ -12,13 +12,19 @@ export const Wrapper = styled.div`
     flex: 1 0 auto;
 
     position: relative;
+    display: inline-block;
+    width: 80%;
 
     & > .recomment-username {
       display: block;
       margin-bottom: 0.4em;
     }
     & > .recomment-content {
-      margin-bottom: 0.8em;
+      display: inline-block;
+      margin-bottom: 0.4em;
+      width: 90%;
+      white-space: pre-wrap;
+      word-break: break-word;
     }
     & > .recomment-option-list {
       & > .recomment-time {
@@ -35,9 +41,8 @@ export const Wrapper = styled.div`
 
     & > i {
       position: absolute;
-      top: 50%;
+      top: 0;
       right: 0;
-      transform: translateY(-50%);
     }
   }
 `;

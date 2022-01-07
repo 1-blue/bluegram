@@ -140,6 +140,12 @@ const HashtagPage = () => {
     return () => window.removeEventListener("scroll", scrollEvent);
   }, [scrollEvent]);
 
+  // 2022/01/07 - 모달창 open 시 외부 스크롤 불가능하도록 지정 - by 1-blue
+  useEffect(() => {
+    if (showModal) window.document.body.style = "overflow: hidden";
+    else window.document.body.style = "overflow: none";
+  }, [showModal]);
+
   if (postsOfHashtag.length === 0 && loadPostsOfHashtagLoading) {
     return <Spinner page />;
   }

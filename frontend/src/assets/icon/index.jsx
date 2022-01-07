@@ -16,6 +16,7 @@ import FillComment from "@assets/icon/fillComment.svg";
 import Airplane from "@assets/icon/airplane.svg";
 import FillAirplane from "@assets/icon/fillAirplane.svg";
 import Avatar from "@assets/icon/avatar.svg";
+import FillAvatar from "@assets/icon/fillAvatar.svg";
 import Images from "@assets/icon/images.svg";
 import Play from "@assets/icon/play.svg";
 import Option from "@assets/icon/option.svg"
@@ -31,7 +32,7 @@ export {
   BookMark, FillBookMark,
   Comment, FillComment,
   Airplane,FillAirplane,
-  Avatar,
+  Avatar, FillAvatar,
   Images,
   Play,
   Option,

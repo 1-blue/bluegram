@@ -10,7 +10,4 @@ export const Wrapper = styled.input`
     color: rgba(0, 0, 0, 0.4);
     font-weight: 700;
   }
-  @media (max-width: 480px) {
-    display: none;
-  }
 `;

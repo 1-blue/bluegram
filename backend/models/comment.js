@@ -10,9 +10,9 @@ const Comment = (sequelize, DataTypes) => {
         comment: "댓글의 아이디 ( 댓글을 식별할 값 )",
       },
       content: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING(200),
         alllowNull: true,
-        comment: "댓글의 내용 ( 최대 100자, , 특수문자 가능 )",
+        comment: "댓글의 내용 ( 최대 200자, , 특수문자 가능 )",
       },
     },
     {

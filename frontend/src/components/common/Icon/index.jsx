@@ -13,18 +13,18 @@ import {
   BookMark, FillBookMark,
   Comment, FillComment,
   Airplane, FillAirplane,
-  Avatar,
+  Avatar, FillAvatar,
   Images,
   Play,
   Option,
   Post,
   Tag,
-} from "../../../assets/icon";
+} from "@assets/icon";
 
 // styled-component
 import { Wrapper } from "./style";
 
-const Icon = (props) => {
+const Icon = ({$fill, ...props}) => {
   switch (props.shape) {
     case "logo":
       return (
@@ -35,91 +35,49 @@ const Icon = (props) => {
     case "home":
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <Home {...props} />
-        </Wrapper>
-      );
-    case "fillHome":
-      return (
-        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <FillHome {...props} />
+          {$fill ? <FillHome {...props} /> : <Home {...props} />}
         </Wrapper>
       );
     case "postAdd":
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <PostAdd {...props} />
-        </Wrapper>
-      );
-    case "fillPostAdd":
-      return (
-        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <FillPostAdd {...props} />
+          {$fill ? <FillPostAdd {...props} /> : <PostAdd {...props} />}
         </Wrapper>
       );
     case "compass":
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <Compass {...props} />
-        </Wrapper>
-      );
-    case "fillCompass":
-      return (
-        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <FillCompass {...props} />
+          {$fill ? <FillCompass {...props} /> : <Compass {...props} />}
         </Wrapper>
       );
     case "heart":
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <Heart {...props} />
-        </Wrapper>
-      );
-    case "fillHeart":
-      return (
-        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <FillHeart {...props} />
+          {$fill ? <FillHeart {...props} /> : <Heart {...props} />}
         </Wrapper>
       );
     case "bookmark":
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <BookMark {...props} />
-        </Wrapper>
-      );
-    case "fillBookmark":
-      return (
-        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <FillBookMark {...props} />
+          {$fill ? <FillBookMark {...props} /> : <BookMark {...props} />}
         </Wrapper>
       );
     case "comment":
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <Comment {...props} />
-        </Wrapper>
-      );
-    case "fillComment":
-      return (
-        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <FillComment {...props} />
+          {$fill ? <FillComment {...props} /> : <Comment {...props} />}
         </Wrapper>
       );
     case "airplane":
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <Airplane {...props} />
-        </Wrapper>
-      );
-    case "fillAirplane":
-      return (
-        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <FillAirplane {...props} />
+          {$fill ? <FillAirplane {...props} /> : <Airplane {...props} />}
         </Wrapper>
       );
     case "avatar":
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
-          <Avatar {...props} />
+          {$fill ? <FillAvatar {...props} /> : <Avatar {...props} />}
         </Wrapper>
       );
     case "images":
@@ -170,6 +128,7 @@ Icon.propTypes = {
   onClick: Proptypes.func,
   hoverfill: Proptypes.string,
   animation: Proptypes.string,
+  $fill: Proptypes.bool,
 };
 
 Icon.defaultProps = {
@@ -180,6 +139,7 @@ Icon.defaultProps = {
   onClick: null,
   hoverfill: null,
   animation: null,
+  $fill: false,
 };
 
 export default Icon;
