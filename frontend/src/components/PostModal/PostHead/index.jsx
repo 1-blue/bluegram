@@ -23,7 +23,7 @@ const PostHead = ({ me, post, className, onRemovePost, onFollow }) => {
 
   return (
     <Wrapper className={className}>
-      <Link to={`/profile/${post.User._id}`}>
+      <Link to={`/profile/${post.User._id}/post`}>
         <Avatar width={40} height={40} image={post.User.Images[0]} />
       </Link>
       <span className="post-head-username">{post.User.name}</span>

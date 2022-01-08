@@ -38,7 +38,7 @@ const PostComment = ({
 
   return (
     <Wrapper onMouseEnter={onOpenDialogToggle} onMouseLeave={onCloseDialogToggle}>
-      <Link to={`/profile/${comment.User._id}`}>
+      <Link to={`/profile/${comment.User._id}/post`}>
         <Avatar width={32} height={32} image={comment.User.Images[0]} />
       </Link>
       <div className="comment-container">
