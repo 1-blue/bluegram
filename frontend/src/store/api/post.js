@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const postInstance = axios.create({
-  baseURL: process.env.SERVER_URL + "/post",
+  baseURL: process.env.NEXT_PUBLIC_SERVER_URL + "/post",
   withCredentials: true,
   timeout: 10000,
 });

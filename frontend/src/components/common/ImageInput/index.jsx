@@ -1,11 +1,19 @@
+/**
+ * 생성일: 2022/01/13
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 이미지 입력받는 input ( 회원가입폼에서 사용 )
+ */
+
 import React, { useCallback, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-// action
-import { uploadImagesAction } from "@store/actions";
-
 // styled-component
 import { Wrapper } from "./style";
+
+// action
+import { uploadImagesAction } from "@store/actions";
 
 const ImageInput = () => {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const commentInstance = axios.create({
-  baseURL: process.env.SERVER_URL + "/comment",
+  baseURL: process.env.NEXT_PUBLIC_SERVER_URL + "/comment",
   withCredentials: true,
   timeout: 10000,
 });

@@ -1,11 +1,19 @@
+/**
+ * 생성일: 2022/01/13
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 모든 버튼들 ( props를 이용해서 용도를 구분함 )
+ */
+
 import React from "react";
 import Proptypes from "prop-types";
 
-// component
-import Spinner from "@components/common/Spinner";
-
 // styled-component
 import { Wrapper } from "./style";
+
+// component
+import Spinner from "@components/common/Spinner";
 
 const Button = props => {
   return (

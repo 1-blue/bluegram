@@ -1,4 +1,10 @@
-// 2021/12/23 - image-carousel ( 게시글 읽기 모달 and 게시글 생성 모달에 사용 ) - by 1-blue
+/**
+ * 생성일: 2022/01/13
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 직접 만들어본 Image-Carousel ( 속도와 이미지명이 들어있는 배열만 넘겨주면 됨 )
+ */
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Proptypes from "prop-types";
