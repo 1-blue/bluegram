@@ -1,5 +1,13 @@
 /* eslint-disable prettier/prettier */
 
+/**
+ * 생성일: 2022/01/13
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 사용하는 모든 아이콘 ( props를 이용해서 종류, 크기, 색상 지정함 )
+ */
+
 import React from "react";
 import Proptypes from "prop-types";
 
@@ -24,7 +32,7 @@ import {
 // styled-component
 import { Wrapper } from "./style";
 
-const Icon = ({$fill, ...props}) => {
+const Icon = React.forwardRef(({$fill, ...props}, ref) => {
   switch (props.shape) {
     case "logo":
       return (
@@ -118,7 +126,7 @@ const Icon = ({$fill, ...props}) => {
         </Wrapper>
       );
   }
-};
+});
 
 Icon.propTypes = {
   shape: Proptypes.string,

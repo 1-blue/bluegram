@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const imageInstance = axios.create({
-  baseURL: process.env.SERVER_URL + "/image",
+  baseURL: process.env.NEXT_PUBLIC_SERVER_URL + "/image",
   withCredentials: true,
   timeout: 20000,
 });

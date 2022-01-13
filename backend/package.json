@@ -1,8 +1,8 @@
 {
   "name": "bluegram_backend",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "app.js",
-  "description": "SNS 클론 프로젝트 - 백엔드",
+  "description": "instagram 클론 프로젝트 - 백엔드",
   "scripts": {
     "dev": "cross-env NODE_ENV=development npx nodemon app.js",
     "dev:start": "cross-env NODE_ENV=production npx pm2 start app.js",

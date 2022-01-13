@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const followInstance = axios.create({
-  baseURL: process.env.SERVER_URL + "/follow",
+  baseURL: process.env.NEXT_PUBLIC_SERVER_URL + "/follow",
   withCredentials: true,
   timeout: 10000,
 });

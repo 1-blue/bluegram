@@ -57,7 +57,7 @@ router.get(
     failureRedirect: "/",
   }),
   (req, res) => {
-    res.redirect(process.env.NODE_ENV === "production" ? "http://www.bluegram.cf" : "http://localhost:8080");
+    res.redirect("https://bluegram.cf");
   },
 );
 

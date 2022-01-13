@@ -1,3 +1,11 @@
+/**
+ * 생성일: 2022/01/13
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 토스트 메시지
+ */
+
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import Proptypes from "prop-types";
