@@ -14,3 +14,8 @@ export function apiUploadImages(formData) {
     },
   });
 }
+
+// 2022/01/14 - 특정 프리뷰 제거 요청 - by 1-blue
+export function apiRemovePreview(body) {
+  return imageInstance.delete(`/${body.preview}`);
+}

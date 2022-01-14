@@ -1,4 +1,6 @@
 import {
+  OPEN_CREATE_POST_MODAL,
+  CLOSE_CREATE_POST_MODAL,
   RESET_POST,
   RESET_POSTS,
   CREATE_POST_REQUEST,
@@ -9,6 +11,21 @@ import {
   LOAD_POSTS_OF_USER_REQUEST,
   RESET_POSTS_OF_USER,
 } from "@store/types";
+
+// 2022/01/14 - 게시글 생성 모달 열기 액션 크리에이터 - by 1-blue
+export function openCreatePostModalAction(data) {
+  return {
+    type: OPEN_CREATE_POST_MODAL,
+    data,
+  };
+}
+// 2022/01/14 - 게시글 생성 모달 닫기 액션 크리에이터 - by 1-blue
+export function closeCreatePostModalAction(data) {
+  return {
+    type: CLOSE_CREATE_POST_MODAL,
+    data,
+  };
+}
 
 // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주는 액션 크리에이터 - by 1-blue
 export function resetPostAction(data) {

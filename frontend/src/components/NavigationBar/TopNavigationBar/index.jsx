@@ -1,9 +1,10 @@
 /**
  * 생성일: 2022/01/13
- * 수정일: -
+ * 수정일: 2022/01/14
  * 작성자: 1-blue
  *
  * 1024px 이상일 경우 상단 네비게이션 바 + 프로필 메뉴
+ * 게시글 생성 모달 open 함수 추가
  */
 
 import React, { useRef, useCallback, useEffect } from "react";
@@ -24,7 +25,7 @@ import NavCenter from "./NavCenter";
 import NavRight from "./NavRight";
 
 // action
-import { resetMessageAction, localLogoutAction } from "@store/actions";
+import { resetMessageAction, localLogoutAction, openCreatePostModalAction } from "@store/actions";
 
 // hook
 import useToggle from "@hooks/useToggle";
@@ -63,11 +64,14 @@ const TopNavigationBar = () => {
     return () => window.removeEventListener("click", handleCloseMenu);
   }, [handleCloseMenu]);
 
+  // 2022/01/14 - 게시글 생성 모달 클릭 - by 1-blue
+  const onClickCreatePostModal = useCallback(() => dispatch(openCreatePostModalAction()), []);
+
   return (
     <Wrapper>
       <NavLeft />
       <NavCenter />
-      <NavRight onClickProfileMenu={onClickProfileMenu} />
+      <NavRight onClickProfileMenu={onClickProfileMenu} onClickCreatePostModal={onClickCreatePostModal} />
 
       {/* 프로필 메뉴 */}
       {profileMenu && (

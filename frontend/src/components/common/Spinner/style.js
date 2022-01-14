@@ -47,4 +47,51 @@ export const Wrapper = styled.section`
         animation: spinner-button 1.1s infinite linear;
       }
     `}
+
+    ${({ $modal }) =>
+    $modal &&
+    css`
+      &,
+      &:before,
+      &:after {
+        background: gray;
+        -webkit-animation: spinner-modal 1s infinite ease-in-out;
+        animation: spinner-modal 1s infinite ease-in-out;
+        width: 1em;
+        height: 4em;
+      }
+      & {
+        height: 100%;
+        flex: none;
+        color: gray;
+        text-indent: -9999em;
+        margin: 0 auto;
+        position: relative;
+        font-size: 1.2rem;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
+        -webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s;
+      }
+      &:before,
+      &:after {
+        position: absolute;
+        top: 0;
+        content: "";
+      }
+      &:before {
+        left: -1.5em;
+        -webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s;
+      }
+      &:after {
+        left: 1.5em;
+      }
+      @media (max-width: 1024px) {
+        & {
+          font-size: 0.8rem;
+        }
+      }
+    `}
 `;
