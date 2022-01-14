@@ -27,11 +27,23 @@ try {
 } catch (error) {
   fs.mkdirSync(path.join(__dirname, "public"));
 }
-
+// 실제 사용될 이미지를 저장할 곳
 try {
   fs.accessSync(path.join(__dirname, "public", "images"));
 } catch (error) {
   fs.mkdirSync(path.join(__dirname, "public", "images"));
+}
+// 게시글 생성 전에 임시로 이미지를 저장해둘 곳
+try {
+  fs.accessSync(path.join(__dirname, "public", "images", "preview"));
+} catch (error) {
+  fs.mkdirSync(path.join(__dirname, "public", "images", "preview"));
+}
+// 삭제된 게시글의 이미지를 저장해둘 곳
+try {
+  fs.accessSync(path.join(__dirname, "public", "images", "deleted"));
+} catch (error) {
+  fs.mkdirSync(path.join(__dirname, "public", "images", "deleted"));
 }
 
 // sequelize

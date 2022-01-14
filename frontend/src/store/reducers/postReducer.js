@@ -1,6 +1,8 @@
 // types
 import {
   RESET_MESSAGE,
+  OPEN_CREATE_POST_MODAL,
+  CLOSE_CREATE_POST_MODAL,
   RESET_POST,
   RESET_POSTS,
   RESET_POSTS_OF_USER,
@@ -46,6 +48,8 @@ import {
 } from "@store/types";
 
 const initState = {
+  showCreatePostModal: false,
+
   // 최신 게시글들
   posts: [],
 
@@ -184,6 +188,19 @@ function postReducer(prevState = initState, action) {
         loadPostsOfUserLoading: false,
         loadPostsOfUserDone: null,
         loadPostsOfUserError: null,
+      };
+
+    // 2022/01/14 - 게시글 생성 모달 열기 - by 1-blue
+    case OPEN_CREATE_POST_MODAL:
+      return {
+        ...prevState,
+        showCreatePostModal: true,
+      };
+    // 2022/01/14 - 게시글 생성 모달 닫기 - by 1-blue
+    case CLOSE_CREATE_POST_MODAL:
+      return {
+        ...prevState,
+        showCreatePostModal: false,
       };
 
     // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주기 - by 1-blue

@@ -36,7 +36,6 @@ Button.propTypes = {
   $naver: Proptypes.bool,
   $kakao: Proptypes.bool,
   $upload: Proptypes.bool,
-  $submit: Proptypes.bool,
 };
 
 Button.defaultProps = {

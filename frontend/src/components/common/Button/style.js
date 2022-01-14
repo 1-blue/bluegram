@@ -133,29 +133,4 @@ export const Wrapper = styled.button`
       border-radius: 5px;
       font-weight: 700;
     `}
-
-    /* 폼 제출 버튼 */
-    ${({ $submit }) =>
-    $submit &&
-    css`
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 80px;
-      height: 51px;
-      padding: 0.5em;
-      color: var(--light-blue);
-      border-radius: 0 1rem 0 0;
-      font-weight: bold;
-
-      @media (max-width: 480px) {
-        height: 43px;
-      }
-      @media (min-width: 480px) and (max-width: 768px) {
-        height: 45px;
-      }
-      @media (min-width: 768px) and (max-width: 1024px) {
-        height: 48px;
-      }
-    `}
 `;

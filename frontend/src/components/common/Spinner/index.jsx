@@ -19,6 +19,7 @@ const Spinner = props => {
 Spinner.propTypes = {
   $page: PropTypes.bool,
   $button: PropTypes.bool,
+  $modal: PropTypes.bool,
 };
 
 export default Spinner;

@@ -20,9 +20,10 @@ import { Wrapper } from "./style";
 import Icon from "@components/common/Icon";
 import Avatar from "@components/common/Avatar";
 
-const RightMenu = ({ onClickProfileMenu }) => {
+const RightMenu = ({ onClickProfileMenu, onClickCreatePostModal }) => {
   const router = useRouter();
   const { me } = useSelector(state => state.user);
+  const { showCreatePostModal } = useSelector(state => state.post);
 
   return (
     <Wrapper>
@@ -31,20 +32,30 @@ const RightMenu = ({ onClickProfileMenu }) => {
         <>
           <Link href="/">
             <a className="nav-link">
-              <Icon shape="home" width={24} height={24} $fill={router.pathname === "/"} />
+              <Icon shape="home" width={24} height={24} $fill={!showCreatePostModal && router.pathname === "/"} />
             </a>
           </Link>
           <Link href="/dm">
             <a className="nav-link">
-              <Icon shape="airplane" width={24} height={24} $fill={router.pathname.startsWith("/dm")} />
+              <Icon
+                shape="airplane"
+                width={24}
+                height={24}
+                $fill={!showCreatePostModal && router.pathname.startsWith("/dm")}
+              />
             </a>
           </Link>
-          <i className="nav-link">
-            <Icon shape="postAdd" width={24} height={24} />
+          <i className="nav-link" onClick={onClickCreatePostModal}>
+            <Icon shape="postAdd" width={24} height={24} $fill={showCreatePostModal} />
           </i>
           <Link href="/notice">
             <a className="nav-link">
-              <Icon shape="heart" width={24} height={24} $fill={router.pathname.startsWith("/notice")} />
+              <Icon
+                shape="heart"
+                width={24}
+                height={24}
+                $fill={!showCreatePostModal && router.pathname.startsWith("/notice")}
+              />
             </a>
           </Link>
           <Avatar
@@ -73,6 +84,7 @@ const RightMenu = ({ onClickProfileMenu }) => {
 
 RightMenu.propTypes = {
   onClickProfileMenu: PropTypes.func.isRequired,
+  onClickCreatePostModal: PropTypes.func.isRequired,
 };
 
 export default RightMenu;

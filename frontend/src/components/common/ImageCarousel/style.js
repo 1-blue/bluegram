@@ -61,8 +61,6 @@ export const Wrapper = styled.section`
   }
 
   @media (max-width: 1024px) {
-    height: 40%;
-
     & > .image-number {
       top: 85%;
       padding: 0.2rem 0.5rem;
