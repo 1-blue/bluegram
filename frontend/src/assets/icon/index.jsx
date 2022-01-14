@@ -22,6 +22,10 @@ import Play from "@assets/icon/play.svg";
 import Option from "@assets/icon/option.svg"
 import Post from "@assets/icon/post.svg"
 import Tag from "@assets/icon/tag.svg"
+import Login from "@assets/icon/login.svg"
+import FillLogin from "@assets/icon/fillLogin.svg"
+import Signup from "@assets/icon/signup.svg"
+import FillSignup from "@assets/icon/fillSignup.svg"
 
 export {
   Logo,
@@ -37,5 +41,7 @@ export {
   Play,
   Option,
   Post,
-  Tag
+  Tag,
+  Login, FillLogin,
+  Signup, FillSignup,
 };
