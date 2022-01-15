@@ -3,7 +3,7 @@
 + 역할: 로그인 요청
 + 전송 데이터: `{ id, passowrd }`
 + 응답 데이터
-```json
+```javascript
 {
   _id,
   name,
@@ -37,7 +37,7 @@
 + 역할: 로그인한 유저의 정보 가져오기
 + 전송 데이터: `-`
 + 응답 데이터:
-```json
+```javascript
 {
   message,
   user: {
@@ -63,7 +63,7 @@
 + 역할: 로그인한 유저의 상세 정보 가져오기
 + 전송 데이터: `-`
 + 응답 데이터:
-```json
+```javascript
 {
   message,
   me: {
@@ -96,7 +96,7 @@
 + 역할: 특정 유저의 정보 가져오기
 + 전송 데이터: params으로 `UserId`
 + 응답 데이터:
-```json
+```javascript
 {
   message,
   user: {
@@ -123,7 +123,7 @@
 + 역할: 로그인한 유저의 기본 정보 수정
 + 전송 데이터: `{ name, phone, birthday, imageName }`
 + 응답 데이터
-```json
+```javascript
 {
   message,
   result: {
@@ -143,7 +143,7 @@
 + 역할: 로그인한 유저의 비밀번호 정보 변경
 + 전송 데이터: `{ password }`
 + 응답 데이터
-```json
+```javascript
 // 서버의 세션 제거
 // 클라이언트의 쿠키 제거
 {
@@ -160,7 +160,7 @@
 + 역할: 로그인한 유저의 회원탈퇴
 + 전송 데이터: 없음
 + 응답 데이터
-```json
+```javascript
 // 서버의 세션 제거
 // 클라이언트의 쿠키 제거
 {
@@ -177,7 +177,7 @@
 + 역할: 이미지 생성 ( 프로필이미지, 게시글이미지 )
 + 전송 데이터: `multipart/form-data`형식 `image`로 이미지(들) 전달
 + 응답 데이터
-```json
+```javascript
 {
   message,
   images: ["이미지이름"]
@@ -191,7 +191,7 @@
 + 역할: 프리뷰 제거
 + 전송 데이터: params, 프리뷰 이름
 + 응답 데이터
-```json
+```javascript
 {
   message,
   preview
@@ -206,14 +206,14 @@
 ## 4.1 POST /post
 + 역할: 게시글 생성
 + 전송 데이터
-```json
+```javascript
 {
   content,
   images: ["이미지 이름"]
 }
 ```
 + 응답 데이터
-```json
+```javascript
 {
   message,
   createdPost: {
@@ -241,73 +241,8 @@
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
 
-## 4.2 GET /post?lastId=❓limit=❓
-+ 역할: 게시글 목록 불러오기
-+ 전송 데이터: query로 `lastId`, `limit` 전달
-+ 응답 데이터
-```json
-// 정렬 기준은 게시글 생성시간을 기준으로 오름차순
-{
-  message,
-  posts: {
-    _id,
-    content,
-    createdAt,
-    // 게시글의 작성자
-    User: {
-      _id,
-      name,
-      // 게시글 작성자의 프로필 이미지
-      Images: [{ _id, name, url }]
-    },
-    // 게시글의 댓글들 ( 개수를 위해서 )
-    Comments: [{ _id }],
-    // 게시글의 좋아요 ( 개수를 위해서 )
-    PostLikers: [{ _id }],
-  },
-  limit
-}
-```
-+ 응답 코드
-  1. `200`: 게시글 불러오기 성공
-  2. `500`: 서버측 에러 ( 원인불명 )
-  3. `401`: 비로그인 접근
 
-## 4.3 GET /post/user/:UserId?lastId=❓&limit=❓
-+ 역할: 특정 유저의 게시글 목록 불러오기
-+ 전송 데이터: params로 `UserId`, query로 `lastId`, `limit` 전송
-+ 응답 데이터
-```json
-// 정렬 기준은 게시글 생성시간을 기준으로 오름차순
-{
-  message,
-  posts: {
-    _id,
-    content,
-    createdAt,
-    // 게시글의 작성자
-    User: {
-      _id,
-      name,
-      // 게시글의 작성자의 프로필 이미지
-      Images: [{ _id, name, url }]
-    },
-    // 게시글의 이미지들
-    Images: [{ _id, name }],
-    // 게시글의 댓글들 ( 개수를 위해서 )
-    Comment: [{ _id }],
-    // 게시글의 좋아요들 ( 개수를 위해서 )
-    PostLikers: [{ _id }],
-  },
-  limit
-}
-```
-+ 응답 코드
-  1. `200`: 게시글 불러오기 성공
-  2. `500`: 서버측 에러 ( 원인불명 )
-  3. `401`: 비로그인 접근
-
-## 4.4 GET /post/:PostId
+## 4.2 GET /post/:PostId
 + 역할: 특정 게시글 상세 정보 불러오기
 + 전송 데이터: params로 `PostId` 전송
 + 응답 데이터
@@ -373,11 +308,11 @@
   3. `401`: 비로그인 접근
   4. `404`: 존재하지 않은 게시글 요청
 
-## 4.5 DELETE /post/:PostId
+## 4.3 DELETE /post/:PostId
 + 역할: 게시글 삭제
 + 전송 데이터: params로 `PostId` 전송
 + 응답 데이터
-```json
+```javascript
 {
   message,
   result: {
@@ -391,11 +326,144 @@
   3. `401`: 비로그인 접근
   3. `404`: 존재하지 않은 게시글 삭제 요청
 
-## 4.6 GET /post/hashtag/:hashtagText
-+ 역할: 해시태그에 해당하는 게시글 불러오기
+# 5. posts
+## 5.1 GET /posts?lastId=❓limit=❓
++ 역할: 게시글들 불러오기
++ 전송 데이터: query로 `lastId`, `limit` 전달
++ 응답 데이터
+```javascript
+// 정렬 기준은 게시글 생성시간을 기준으로 오름차순
+{
+  message,
+  posts: {
+    _id,
+    content,
+    createdAt,
+    // 게시글의 작성자
+    User: {
+      _id,
+      name,
+      // 게시글 작성자의 프로필 이미지
+      Images: [{ _id, name, url }]
+    },
+    // 게시글의 댓글들 ( 개수를 위해서 )
+    Comments: [{ _id }],
+    // 게시글의 좋아요 ( 개수를 위해서 )
+    PostLikers: [{ _id }],
+  },
+  limit
+}
+```
++ 응답 코드
+  1. `200`: 게시글들 불러오기 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
+
+## 5.2 GET /posts/detail?lastId=❓limit=❓
++ 역할: 게시글들 상세 내용 불러오기
++ 전송 데이터: query로 `lastId`, `limit` 전달
++ 응답 데이터
+```javascript
+// 정렬 기준은 게시글 생성시간을 기준으로 오름차순
+{
+  message,
+  posts: {
+    _id,
+    content,
+    createdAt,
+    // 게시글의 작성자
+    User: {
+      _id,
+      name,
+      // 게시글 작성자의 프로필 이미지
+      Images: [{ _id, name, url }]
+    },
+    // 게시글의 댓글들 ( 개수를 위해서 )
+    Comments: [{
+      _id,
+      content,
+      UserId,
+      RecommentId,
+      createdAt,
+      // 게시글의 댓글의 작성자
+      User: {
+        _id,
+        name,
+        // 게시글의 댓글의 작성자의 프로필 이미지
+        Images: [{ _id, name }]
+      },
+      // 게시글의 댓글에 좋아요를 누른 유저들
+      CommentLikers: [{
+        _id,
+        name,
+        // 게시글의 댓글에 좋아요를 누른 유저의 프로필 이미지
+        Images: [{ _id, name, url }],
+        // 게시글의 댓글의 좋아요에 대한 정보
+        CommentLikes: {
+          createdAt,
+          UserId,
+          CommentId,
+        }
+      }],
+      // 게시글의 댓글의 답글들 ( 개수를 위함 )
+      Recomments: [{ _id }]
+    }],
+    // 게시글의 좋아요를 누른 유저 ( 개수파악과 본인이 좋아요 눌렀는지 여부 )
+    PostLikers: [{
+      _id,
+      PostLikes: { createdAt }
+    }],
+    // 게시글의 좋아요 ( 개수를 위해서 )
+    PostLikers: [{ _id }],
+  },
+  limit,
+}
+```
++ 응답 코드
+  1. `200`: 게시글들 불러오기 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
+
+## 5.3 GET /posts/user/:UserId?lastId=❓&limit=❓
++ 역할: 특정 유저의 게시글들 불러오기
++ 전송 데이터: params로 `UserId`, query로 `lastId`, `limit` 전송
++ 응답 데이터
+```javascript
+// 정렬 기준은 게시글 생성시간을 기준으로 오름차순
+{
+  message,
+  posts: {
+    _id,
+    content,
+    createdAt,
+    // 게시글의 작성자
+    User: {
+      _id,
+      name,
+      // 게시글의 작성자의 프로필 이미지
+      Images: [{ _id, name, url }]
+    },
+    // 게시글의 이미지들
+    Images: [{ _id, name }],
+    // 게시글의 댓글들 ( 개수를 위해서 )
+    Comment: [{ _id }],
+    // 게시글의 좋아요들 ( 개수를 위해서 )
+    PostLikers: [{ _id }],
+  },
+  limit
+}
+```
++ 응답 코드
+  1. `200`: 게시글 불러오기 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
+
+
+## 5.4 GET /posts/hashtag/:hashtagText
++ 역할: 해시태그에 해당하는 게시글들 불러오기
 + 전송 데이터: params로 `hashtagText`, query로 `lastId`, `limit` 전송
 + 응답 데이터
-```json
+```javascript
 {
   message,
   postsOfHashtag: {
@@ -467,7 +535,7 @@
 + 역할: 댓글 or 답글 생성
 + 전송 데이터: `{ content, PostId, RecommentId }`
 + 응답 데이터
-```json
+```javascript
 {
   message,
   createdCommentWithData: {
@@ -501,7 +569,7 @@
 + 역할: 댓글 삭제
 + 전송 데이터: params로 `CommentId` 전송
 + 응답 데이터
-```json
+```javascript
 {
   message,
   result: {
@@ -608,7 +676,7 @@
 + 역할: 로그인한 유저가 팔로우 요청
 + 전송 데이터: params로 `UserId` 전송
 + 응답 데이터
-```json
+```javascript
 {
   message,
   // 추가된 팔로우 정보
@@ -627,7 +695,7 @@
 + 역할: 로그인한 유저가 언팔로우 요청
 + 전송 데이터: params로 `UserId` 전송
 + 응답 데이터
-```json
+```javascript
 {
   message,
   // 언팔로우된 유저의 아이디
@@ -646,7 +714,7 @@
 + 역할: 게시글에 좋아요 추가
 + 전송 데이터: params로 `PostId` 전송
 + 응답 데이터
-```json
+```javascript
 {
   message,
   result: {
@@ -688,7 +756,7 @@
 + 역할: 댓글/답글에 좋아요 추가
 + 전송 데이터: params로 `CommentId` 전송
 + 응답 데이터
-```json
+```javascript
 {
   message,
   // 댓글에 좋아요 누른 유저 데이터
@@ -720,7 +788,7 @@
 + 역할: 댓글/답글에 좋아요 삭제
 + 전송 데이터: params로 `CommentId` 전송
 + 응답 데이터
-```json
+```javascript
 {
   message,
   result: {

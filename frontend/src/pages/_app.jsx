@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState, useCallback } from "react";
 import PropTypes from "prop-types";
 
 // redux + redux-saga
@@ -16,16 +15,8 @@ import BottomNavigationBar from "@components/NavigationBar/BottomNavigationBar";
 import Layout from "@components/Layout";
 import Footer from "@components/Footer";
 
-// action
-import { loadToMeAction } from "@store/actions";
-import { useCallback } from "react";
-
 const App = ({ Component, pageProps }) => {
-  const dispatch = useDispatch();
   const [width, setWidth] = useState(0);
-
-  // 2022/01/13 - 본인 정보 불러오기 - by 1-blue
-  useEffect(() => dispatch(loadToMeAction()), []);
 
   // 2022/01/13 - 창 넓이 구하기 - by 1-blue
   const resize = useCallback(() => setWidth(window.innerWidth), []);

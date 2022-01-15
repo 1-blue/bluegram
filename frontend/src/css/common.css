@@ -12,3 +12,9 @@
   --warning-color: #38ef7d;
   --error-color: #DC281E;
 }
+body {
+  -ms-overflow-style: none; 
+}
+body::-webkit-scrollbar {
+  display: none;
+}

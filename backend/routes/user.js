@@ -9,9 +9,7 @@ const { User, Image, Post } = db;
 const router = express.Router();
 
 // 로그인한 유저 정보 가져오기
-router.get("/me", async (req, res, next) => {
-  if (!req.user) return res.status(200).json({ message: "로그인하지 않았습니다.", user: null });
-
+router.get("/me", isLoggedIn, async (req, res, next) => {
   try {
     const fullUser = await User.findOne({
       attributes: ["_id", "name", "provider"],

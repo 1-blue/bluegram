@@ -18,12 +18,8 @@ const useNavAnimation = () => {
 
     ref.current.style.display = "inline-block";
     ref.current.style.animation = "animation-ball 1s linear forwards";
-    document.body.style.overflow = "hidden";
 
-    setTimeout(() => {
-      ref.current.style = "display:none; animation: none;";
-      document.body.style.overflow = "auto";
-    }, 1000);
+    setTimeout(() => (ref.current.style = "display:none; animation: none;"), 1000);
   }, [ref.current]);
 
   return [ref, onClickButton];

@@ -164,7 +164,7 @@ function userReducer(prevState = initState, action) {
       return {
         ...prevState,
         loadToMeLoading: false,
-        loadToMeError: action.data.message,
+        loadToMeError: action?.data?.message,
       };
 
     // 2022/01/15 - 회원가입 - by 1-blue

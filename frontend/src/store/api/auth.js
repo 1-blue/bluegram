@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const authInstance = axios.create({
+export const authInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URL + "/auth",
   withCredentials: true,
   timeout: 10000,

@@ -59,7 +59,7 @@ function* loadToMe(action) {
     yield put({ type: LOAD_TO_ME_SUCCESS, data });
   } catch (error) {
     console.error("userSaga loadToMe >> ", error);
-    yield put({ type: LOAD_TO_ME_FAILURE, data: error.response.data });
+    yield put({ type: LOAD_TO_ME_FAILURE, data: error?.response?.data });
   }
 }
 function* signup(action) {

@@ -366,7 +366,7 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadPostsOfDetailLoading: false,
         loadPostsOfDetailDone: action.data.message,
-        postsOfDetail: [...prevState.postsDetail, ...action.data.posts],
+        postsOfDetail: [...prevState.postsOfDetail, ...action.data.posts],
         isMorePostsOfDetail: action.data.posts.length === action.data.limit,
       };
     case LOAD_POSTS_DETAIL_FAILURE:

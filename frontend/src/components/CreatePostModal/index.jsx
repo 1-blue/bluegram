@@ -53,8 +53,12 @@ const CreatePostModal = ({ showModal, onCloseModal }) => {
   }, [setTitle, setText, setStep]);
 
   // 2021/12/25 - 게시글 생성 모달창 초기화 실행 - by 1-blue
+  useEffect(() => initializePostModal(), []);
+
+  // 2022/01/15 - 게시글 생성 모달창 오픈 시 스크롤 불가능하도록 구현 - by 1-blue
   useEffect(() => {
-    initializePostModal();
+    document.body.style.overflow = "hidden";
+    return () => (document.body.style.overflow = "auto");
   }, []);
 
   // 2021/12/22 - 게시글 생성 성공 or 실패 시 메시지 보여주고 모달 닫기

@@ -94,13 +94,23 @@ const BottomNavigationBar = () => {
           <>
             <Link href="/login">
               <a className="nav-link" onClick={onClickLogin}>
-                로그인
+                <Icon
+                  shape={router.pathname.startsWith("/login") ? "fillLogin" : "login"}
+                  width={48}
+                  height={24}
+                  style={{ transform: "translateY(4px)" }}
+                />
                 <div className="animation-ball" ref={loginAnimationBallRef} />
               </a>
             </Link>
             <Link href="/signup">
               <a className="nav-link" onClick={onClickSignup}>
-                회원가입
+                <Icon
+                  shape={router.pathname.startsWith("/signup") ? "fillSignup" : "signup"}
+                  width={48}
+                  height={24}
+                  style={{ transform: "translateY(4px)" }}
+                />
                 <div className="animation-ball" ref={signupAnimationBallRef} />
               </a>
             </Link>
