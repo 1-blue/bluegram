@@ -2,99 +2,25 @@ import {
   OPEN_CREATE_POST_MODAL,
   CLOSE_CREATE_POST_MODAL,
   RESET_POST,
-  RESET_POSTS,
   CREATE_POST_REQUEST,
-  LOAD_POSTS_REQUEST,
   LOAD_POST_REQUEST,
   REMOVE_POST_REQUEST,
-  LOAD_POSTS_OF_HASHTAG_REQUEST,
-  LOAD_POSTS_OF_USER_REQUEST,
-  RESET_POSTS_OF_USER,
 } from "@store/types";
 
 // 2022/01/14 - 게시글 생성 모달 열기 액션 크리에이터 - by 1-blue
-export function openCreatePostModalAction(data) {
-  return {
-    type: OPEN_CREATE_POST_MODAL,
-    data,
-  };
-}
+export const openCreatePostModalAction = data => ({ type: OPEN_CREATE_POST_MODAL, data });
+
 // 2022/01/14 - 게시글 생성 모달 닫기 액션 크리에이터 - by 1-blue
-export function closeCreatePostModalAction(data) {
-  return {
-    type: CLOSE_CREATE_POST_MODAL,
-    data,
-  };
-}
+export const closeCreatePostModalAction = data => ({ type: CLOSE_CREATE_POST_MODAL, data });
 
 // 2021/12/25 - 특정 게시글 모달창 나갈 때 기존 값 비워주는 액션 크리에이터 - by 1-blue
-export function resetPostAction(data) {
-  return {
-    type: RESET_POST,
-    data,
-  };
-}
-
-// 2022/01/02 - ExplorePage 들어올 때 게시글들 초기화 액션 크리에이터 - by 1-blue
-export function resetPostsAction(data) {
-  return {
-    type: RESET_POSTS,
-    data,
-  };
-}
+export const resetPostAction = data => ({ type: RESET_POST, data });
 
 // 2021/12/22 - 게시글 생성 요청 액션 크리에이터 - by 1-blue
-export function createPostAction(data) {
-  return {
-    type: CREATE_POST_REQUEST,
-    data,
-  };
-}
-
-// 2021/12/22 - 최신 게시글들 요청 액션 크리에이터 - by 1-blue
-export function loadPostsAction(data) {
-  return {
-    type: LOAD_POSTS_REQUEST,
-    data,
-  };
-}
+export const createPostAction = data => ({ type: CREATE_POST_REQUEST, data });
 
 // 2021/12/22 - 특정 게시글 요청 액션 크리에이터 - by 1-blue
-export function loadPostAction(data) {
-  return {
-    type: LOAD_POST_REQUEST,
-    data,
-  };
-}
+export const loadPostAction = data => ({ type: LOAD_POST_REQUEST, data });
 
 // 2021/12/27 - 특정 게시글 제거 요청 액션 크리에이터 - by 1-blue
-export function removePostAction(data) {
-  return {
-    type: REMOVE_POST_REQUEST,
-    data,
-  };
-}
-
-// 2022/01/01 - 특정 해시태그의 게시글들 요청 액션 크리에이터 - by 1-blue
-export function loadPostsOfHashtagAction(data) {
-  return {
-    type: LOAD_POSTS_OF_HASHTAG_REQUEST,
-    data,
-  };
-}
-
-// 2022/01/04 - 특정 유저의 게시글들 요청 - by 1-blue
-export function loadPostsOfUserAction(data) {
-  return {
-    type: LOAD_POSTS_OF_USER_REQUEST,
-    data,
-  };
-}
-
-// 2022/01/05 - 특정 유저의 게시글들 비우기 - by 1-blue
-export function resetPostsOfUserAction(data) {
-  return {
-    type: RESET_POSTS_OF_USER,
-    data,
-  };
-}
+export const removePostAction = data => ({ type: REMOVE_POST_REQUEST, data });
