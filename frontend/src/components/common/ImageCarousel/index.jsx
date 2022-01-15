@@ -121,7 +121,10 @@ const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview })
   }, [images, dotRef.current]);
 
   // 2022/01/14 - 현재 이미지 동기화 ( 외부에서 사용 ) - by 1-blue
-  useEffect(() => setImageNumber(currentIndex), [setImageNumber, currentIndex]);
+  useEffect(() => {
+    if (!setImageNumber) return;
+    setImageNumber(currentIndex);
+  }, [setImageNumber, currentIndex]);
 
   // 2022/01/14 - 이미지를 여러개 올리고나서 제거할 경우 - by 1-blue
   useEffect(() => {
