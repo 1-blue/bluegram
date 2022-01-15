@@ -1,8 +1,23 @@
-/* eslint-disable prettier/prettier */
-export { apiLocalLogin, apiLocalLogout } from "./auth";
-export { apiLoadToMe, apiSignup, apiLoadToUser, apiLoadToMeDetail, apiEditToMeAll, apiEditToMePassword, apiSignOut } from "./user";
-export { apiUploadImages, apiRemovePreview } from "./image";
-export { apiCreatePost, apiLoadPosts, apiLoadPost, apiRemovePost, apiLoadPostsOfHashtag, apiLoadPostsOfUser } from "./post";
-export { apiAppendLikeToPost, apiRemoveLikeToPost, apiAppendLikeToComment, apiRemoveLikeToComment } from "./like";
-export { apiAppendCommentToPost, apiRemoveCommentToPost, apiLoadRecomments } from "./comment";
-export { apiLoadFollowers, apiLoadFollowings, apiFollow, apiUnfollow } from "./follow";
+export { authInstance, apiLocalLogin, apiLocalLogout } from "./auth";
+export {
+  userInstance,
+  apiLoadToMe,
+  apiSignup,
+  apiLoadToUser,
+  apiLoadToMeDetail,
+  apiEditToMeAll,
+  apiEditToMePassword,
+  apiSignOut,
+} from "./user";
+export { imageInstance, apiUploadImages, apiRemovePreview } from "./image";
+export { postInstance, apiCreatePost, apiLoadPost, apiRemovePost } from "./post";
+export { postsInstance, apiLoadPosts, apiLoadPostsDetail, apiLoadPostsOfHashtag, apiLoadPostsOfUser } from "./posts";
+export {
+  likeInstance,
+  apiAppendLikeToPost,
+  apiRemoveLikeToPost,
+  apiAppendLikeToComment,
+  apiRemoveLikeToComment,
+} from "./like";
+export { commentInstance, apiAppendCommentToPost, apiRemoveCommentToPost, apiLoadRecomments } from "./comment";
+export { followInstance, apiLoadFollowers, apiLoadFollowings, apiFollow, apiUnfollow } from "./follow";
