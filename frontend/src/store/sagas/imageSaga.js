@@ -15,32 +15,20 @@ function* uploadImages(action) {
   try {
     const { data } = yield call(apiUploadImages, action.data);
 
-    yield put({
-      type: UPLOAD_IMAGES_SUCCESS,
-      data,
-    });
+    yield put({ type: UPLOAD_IMAGES_SUCCESS, data });
   } catch (error) {
-    console.error(error);
-    yield put({
-      type: UPLOAD_IMAGES_FAILURE,
-      data: error.response.data,
-    });
+    console.error("imageSaga uploadImages >> ", error);
+    yield put({ type: UPLOAD_IMAGES_FAILURE, data: error.response.data });
   }
 }
 function* removePreview(action) {
   try {
     const { data } = yield call(apiRemovePreview, action.data);
 
-    yield put({
-      type: REMOVE_PREVIEW_SUCCESS,
-      data,
-    });
+    yield put({ type: REMOVE_PREVIEW_SUCCESS, data });
   } catch (error) {
-    console.error(error);
-    yield put({
-      type: REMOVE_PREVIEW_FAILURE,
-      data: error.response.data,
-    });
+    console.error("imageSaga removePreview >> ", error);
+    yield put({ type: REMOVE_PREVIEW_FAILURE, data: error.response.data });
   }
 }
 

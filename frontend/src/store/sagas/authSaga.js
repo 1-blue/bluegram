@@ -16,20 +16,11 @@ function* localLogin(action) {
   try {
     const { data } = yield call(apiLocalLogin, action.data);
 
-    yield put({
-      type: LOCAL_LOGIN_SUCCESS,
-      data,
-    });
-    yield put({
-      type: LOAD_TO_ME_SUCCESS,
-      data,
-    });
+    yield put({ type: LOCAL_LOGIN_SUCCESS, data });
+    yield put({ type: LOAD_TO_ME_SUCCESS, data });
   } catch (error) {
-    console.error(error);
-    yield put({
-      type: LOCAL_LOGIN_FAILURE,
-      data: error.response.data,
-    });
+    console.error("authSaga localLogin >> ", error);
+    yield put({ type: LOCAL_LOGIN_FAILURE, data: error.response.data });
   }
 }
 function* localLogout(action) {
@@ -37,20 +28,11 @@ function* localLogout(action) {
     const { data } = yield call(apiLocalLogout, action.data);
     data.me = null;
 
-    yield put({
-      type: LOCAL_LOGOUT_SUCCESS,
-      data,
-    });
-    yield put({
-      type: LOAD_TO_ME_SUCCESS,
-      data,
-    });
+    yield put({ type: LOCAL_LOGOUT_SUCCESS, data });
+    yield put({ type: LOAD_TO_ME_SUCCESS, data });
   } catch (error) {
-    console.error(error);
-    yield put({
-      type: LOCAL_LOGOUT_FAILURE,
-      data: error.response.data,
-    });
+    console.error("authSaga localLogout >> ", error);
+    yield put({ type: LOCAL_LOGOUT_FAILURE, data: error.response.data });
   }
 }
 
