@@ -1,7 +1,7 @@
 # bluegram
-- [bluegram 사이트](http://www.bluegram.cf)
+- [bluegram 사이트](https://bluegram.cf/)
 - [velog 일지](https://velog.io/@1-blue/series/bluegram)
-- [youtube - 실행 영상(추가예정)]()
+- [youtube](https://www.youtube.com/watch?v=gUUmwcein7M)
 - [trello](https://trello.com/b/jBz14zzw/bluegram)
 
 ## 1. 설명
