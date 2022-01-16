@@ -141,4 +141,12 @@ export const Wrapper = styled.button`
       font-weight: bold;
       color: var(--light-blue);
     `}
+
+  /* 댓글 제출 버튼 */
+  ${({ $comment }) =>
+    $comment &&
+    css`
+      font-weight: bold;
+      color: var(--light-blue);
+    `}
 `;

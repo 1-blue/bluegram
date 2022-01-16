@@ -69,7 +69,9 @@ router.delete("/post/:CommentId", isLoggedIn, async (req, res, next) => {
 
     res.json({
       message: `${targetComment.RecommentId ? "답글" : "댓글"}이 삭제되었습니다.`,
-      result: { removedCommentId: CommentId, removedPostId, RecommentId: targetComment.RecommentId },
+      removedCommentId: CommentId,
+      removedPostId,
+      RecommentId: targetComment.RecommentId,
     });
   } catch (error) {
     console.error("DELETE /comment/post/:CommentId >> ", error);

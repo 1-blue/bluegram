@@ -539,44 +539,22 @@ function postReducer(prevState = initState, action) {
         removeCommentToPostError: null,
       };
     case REMOVE_COMMENT_TO_POST_SUCCESS:
-      const { result } = action.data;
-
-      // 2021/12/27 - 게시글의 댓글 삭제 후 posts 처리 - by 1-blue
-      tempPosts = prevState.posts.map(post => {
-        if (post._id !== action.data.result.removedPostId) return post;
+      // 2022/01/16 - 게시글의 댓글 삭제 후 postsOfDetail 처리 - by 1-blue
+      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+        if (post._id !== action.data.removedPostId) return post;
 
         return {
           ...post,
-          Comments: post.Comments.filter(comment => comment._id !== action.data.result.removedCommentId),
+          Comments: post.Comments.filter(comment => comment._id !== action.data.removedCommentId),
+          allCommentCount: post.allCommentCount - 1
         };
       });
-
-      // 2021/12/27 - 게시글의 댓글 삭제 후 post 처리 - by 1-blue
-      if (result.RecommentId) {
-        tempPost = {
-          ...prevState.post,
-          Comments: prevState.post.Comments.map(comment => {
-            if (comment._id !== result.RecommentId) return comment;
-
-            return {
-              ...comment,
-              Recomments: comment.Recomments.filter(recomment => recomment._id !== result.removedCommentId),
-            };
-          }),
-        };
-      } else {
-        tempPost = {
-          ...prevState.post,
-          Comments: prevState.post.Comments.filter(comment => comment._id !== result.removedCommentId),
-        };
-      }
 
       return {
         ...prevState,
         removeCommentToPostLoading: false,
         removeCommentToPostDone: action.data.message,
-        posts: tempPosts,
-        post: tempPost,
+        postsOfDetail: tempPostsOfDetail,
       };
     case REMOVE_COMMENT_TO_POST_FAILURE:
       return {
