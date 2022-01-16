@@ -36,7 +36,12 @@ export {
   appendLikeToCommentAction,
   removeLikeToCommentAction,
 } from "./likeAction";
-export { appendCommentToPostAction, removeCommentToPostAction, loadRecommentsAction } from "./commentAction";
+export {
+  appendCommentToPostAction,
+  removeCommentToPostAction,
+  loadCommentsAction,
+  loadRecommentsAction,
+} from "./commentAction";
 export {
   resetFollowAction,
   loadFollowersAction,

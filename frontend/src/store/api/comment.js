@@ -12,5 +12,10 @@ export const apiAppendCommentToPost = body => commentInstance.post("/post", body
 // 2021/12/27 - 게시글에 댓글 삭제 - by 1-blue
 export const apiRemoveCommentToPost = body => commentInstance.delete(`/post/${body.CommentId}`);
 
-// 2021/12/29 - 특정 댓글의 답글들 가져오기 - by 1-blue
-export const apiLoadRecomments = body => commentInstance.get(`/post/${body.CommentId}`);
+// 2022/01/16 - 특정 게시글의 댓글들 가져오기 - by 1-blue
+export const apiLoadComments = body =>
+  commentInstance.get(`/post/${body.PostId}?lastId=${body.lastId}&limit=${body.limit}`);
+
+// 2022/01/16 - 특정 댓글의 답글들 가져오기 - by 1-blue
+export const apiLoadRecomments = body =>
+  commentInstance.get(`/comment/${body.CommentId}?lastId=${body.lastId}&limit=${body.limit}`);

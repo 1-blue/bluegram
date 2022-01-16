@@ -11,6 +11,9 @@ import {
   CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
   LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
+  LOAD_POSTS_OF_HASHTAG_REQUEST, LOAD_POSTS_OF_HASHTAG_SUCCESS, LOAD_POSTS_OF_HASHTAG_FAILURE,
+  LOAD_POSTS_OF_USER_REQUEST, LOAD_POSTS_OF_USER_SUCCESS, LOAD_POSTS_OF_USER_FAILURE,
+  LOAD_POSTS_DETAIL_REQUEST, LOAD_POSTS_DETAIL_SUCCESS, LOAD_POSTS_DETAIL_FAILURE,
   REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
   APPEND_LIKE_TO_POST_REQUEST, APPEND_LIKE_TO_POST_SUCCESS, APPEND_LIKE_TO_POST_FAILURE,
   REMOVE_LIKE_TO_POST_REQUEST, REMOVE_LIKE_TO_POST_SUCCESS, REMOVE_LIKE_TO_POST_FAILURE,
@@ -18,10 +21,8 @@ import {
   REMOVE_COMMENT_TO_POST_REQUEST, REMOVE_COMMENT_TO_POST_SUCCESS, REMOVE_COMMENT_TO_POST_FAILURE,
   APPEND_LIKE_TO_COMMENT_REQUEST, APPEND_LIKE_TO_COMMENT_SUCCESS, APPEND_LIKE_TO_COMMENT_FAILURE,
   REMOVE_LIKE_TO_COMMENT_REQUEST, REMOVE_LIKE_TO_COMMENT_SUCCESS, REMOVE_LIKE_TO_COMMENT_FAILURE,
+  LOAD_COMMENTS_REQUEST, LOAD_COMMENTS_SUCCESS, LOAD_COMMENTS_FAILURE,
   LOAD_RECOMMENTS_REQUEST, LOAD_RECOMMENTS_SUCCESS, LOAD_RECOMMENTS_FAILURE,
-  LOAD_POSTS_OF_HASHTAG_REQUEST, LOAD_POSTS_OF_HASHTAG_SUCCESS, LOAD_POSTS_OF_HASHTAG_FAILURE,
-  LOAD_POSTS_OF_USER_REQUEST, LOAD_POSTS_OF_USER_SUCCESS, LOAD_POSTS_OF_USER_FAILURE,
-  LOAD_POSTS_DETAIL_REQUEST, LOAD_POSTS_DETAIL_SUCCESS, LOAD_POSTS_DETAIL_FAILURE,
 } from "@store/types";
 
 const initState = {
@@ -120,7 +121,12 @@ const initState = {
   removeLikeToCommentDone: null,
   removeLikeToCommentError: null,
 
-  // 2022/01/15 - 특정 댓글의 답글 요청 관련 변수 - by 1-blue
+  // 2022/01/16 - 특정 댓글의 답글 요청 관련 변수 - by 1-blue
+  loadCommentsLoading: false,
+  loadCommentsDone: null,
+  loadCommentsError: null,
+
+  // 2022/01/16 - 특정 댓글의 답글 요청 관련 변수 - by 1-blue
   loadRecommentsLoading: false,
   loadRecommentsDone: null,
   loadRecommentsError: null,
@@ -129,6 +135,7 @@ const initState = {
 function postReducer(prevState = initState, action) {
   // 게시글, 댓글, 답글의 수정에 대한 임시 처리결과를 저장할 변수 ( feat: 불변성 )
   let tempPosts = null;
+  let tempPostsOfDetail = null;
   let tempPost = null;
   let tempPostsOfHashtag = null;
 
@@ -187,6 +194,10 @@ function postReducer(prevState = initState, action) {
         removeLikeToCommentLoading: false,
         removeLikeToCommentDone: null,
         removeLikeToCommentError: null,
+
+        loadCommentsLoading: false,
+        loadCommentsDone: null,
+        loadCommentsError: null,
 
         loadRecommentsLoading: false,
         loadRecommentsDone: null,
@@ -285,7 +296,7 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadPostLoading: false,
         loadPostDone: action.data.message,
-        post: action.data.post,
+        post: { ...action.data.post },
       };
     case LOAD_POST_FAILURE:
       return {
@@ -366,7 +377,10 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadPostsOfDetailLoading: false,
         loadPostsOfDetailDone: action.data.message,
-        postsOfDetail: [...prevState.postsOfDetail, ...action.data.posts],
+        postsOfDetail: [
+          ...prevState.postsOfDetail,
+          ...action.data.posts.map(post => ({ ...post, hasMoreComments: true, allCommentCount: post.Comments.length })),
+        ],
         isMorePostsOfDetail: action.data.posts.length === action.data.limit,
       };
     case LOAD_POSTS_DETAIL_FAILURE:
@@ -481,7 +495,7 @@ function postReducer(prevState = initState, action) {
         removeLikeToPostError: action.data.message,
       };
 
-    // 2021/12/27 - 게시글 댓글 추가 - by 1-blue
+    // 2022/01/16 - 게시글 댓글 추가 - by 1-blue
     case APPEND_COMMENT_TO_POST_REQUEST:
       return {
         ...prevState,
@@ -492,42 +506,22 @@ function postReducer(prevState = initState, action) {
     case APPEND_COMMENT_TO_POST_SUCCESS:
       const { createdCommentWithData } = action.data;
 
-      // 2021/12/27 - 게시글의 댓글 추가 후 posts 처리 - by 1-blue
-      tempPosts = prevState.posts.map(post => {
+      // 2022/01/16 - 게시글의 댓글 추가 후 postsOfDetail 처리 - by 1-blue
+      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
         if (post._id !== createdCommentWithData.PostId) return post;
 
         return {
           ...post,
-          Comments: [{ _id: createdCommentWithData._id }, ...post.Comments],
+          Comments: [...post.Comments, { ...createdCommentWithData }],
+          allCommentCount: post.allCommentCount + 1
         };
       });
-
-      // 2021/12/27 - 게시글의 댓글 추가 후 post 처리 - by 1-blue
-      if (createdCommentWithData.RecommentId) {
-        tempPost = {
-          ...prevState.post,
-          Comments: prevState.post.Comments.map(comment => {
-            if (comment._id !== createdCommentWithData.RecommentId) return comment;
-
-            return {
-              ...comment,
-              Recomments: [...comment.Recomments, { _id: createdCommentWithData._id }],
-            };
-          }),
-        };
-      } else {
-        tempPost = {
-          ...prevState.post,
-          Comments: [...prevState.post.Comments, createdCommentWithData],
-        };
-      }
 
       return {
         ...prevState,
         appendCommentToPostLoading: false,
         appendCommentToPostDone: action.data.message,
-        posts: tempPosts,
-        post: tempPost,
+        postsOfDetail: tempPostsOfDetail
       };
     case APPEND_COMMENT_TO_POST_FAILURE:
       return {
@@ -707,7 +701,39 @@ function postReducer(prevState = initState, action) {
         removeLikeToCommentError: action.data.message,
       };
 
-    // 2021/12/29 - 특정 댓글의 답글들 요청 - by 1-blue
+    // 2022/01/16 - 특정 게시글에 댓글들 요청 - by 1-blue
+    case LOAD_COMMENTS_REQUEST:
+      return {
+        ...prevState,
+        loadCommentsLoading: true,
+        loadCommentsDone: null,
+        loadCommentsError: null,
+      };
+    case LOAD_COMMENTS_SUCCESS:
+      return {
+        ...prevState,
+        loadCommentsLoading: false,
+        loadCommentsDone: action.data.message,
+        postsOfDetail: prevState.postsOfDetail.map(post => {
+          if (post._id !== action.data.PostId) return post;
+
+          return {
+            ...post,
+            Comments: post.Comments[0]?.content
+              ? [...post.Comments, ...action.data.Comments]
+              : [...action.data.Comments],
+            hasMoreComments: action.data.limit === action.data.Comments.length,
+          };
+        }),
+      };
+    case LOAD_COMMENTS_FAILURE:
+      return {
+        ...prevState,
+        loadCommentsLoading: false,
+        loadCommentsError: action.data.message,
+      };
+
+    // 2022/01/16 - 특정 댓글의 답글들 요청 - by 1-blue
     case LOAD_RECOMMENTS_REQUEST:
       return {
         ...prevState,
