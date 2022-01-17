@@ -22,7 +22,7 @@ const PostCardCommentForm = ({ user, text, onChangeText, resize, onSubmitComment
   const textareaRef = useRef(null);
 
   return (
-    <Wrapper onSubmit={onSubmitComment(null, textareaRef)}>
+    <Wrapper onSubmit={onSubmitComment(textareaRef)}>
       <Avatar width={28} height={28} image={user.Images[0]} $cursor className="post-card-comment-form-avatar" />
 
       <textarea

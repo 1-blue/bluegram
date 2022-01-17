@@ -24,7 +24,9 @@ const PostCardLoadRecommentButton = ({ allRecommentCount, Recomments, onClickloa
       <button
         type="button"
         onClick={onClickloadMoreRecomment(
-          Recomments[Recomments.length - 1].content ? Recomments[Recomments.length - 1]._id : null,
+          Recomments[Recomments.length - 1].content && Recomments[0].content
+            ? Recomments[Recomments.length - 1]._id
+            : null,
           CommentId,
         )}
         className="post-card-load-more-recomment-button"

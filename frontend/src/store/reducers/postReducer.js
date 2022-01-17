@@ -494,7 +494,7 @@ function postReducer(prevState = initState, action) {
         removeLikeToPostError: action.data.message,
       };
 
-    // 2022/01/16 - 게시글 댓글 추가 - by 1-blue
+    // 2022/01/17 - 게시글 댓글/답글 추가 - by 1-blue
     case APPEND_COMMENT_TO_POST_REQUEST:
       return {
         ...prevState,
@@ -503,18 +503,40 @@ function postReducer(prevState = initState, action) {
         appendCommentToPostError: null,
       };
     case APPEND_COMMENT_TO_POST_SUCCESS:
-      const { createdCommentWithData } = action.data;
+      // RecommentId
 
       // 2022/01/16 - 게시글의 댓글 추가 후 postsOfDetail 처리 - by 1-blue
-      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
-        if (post._id !== createdCommentWithData.PostId) return post;
+      // 댓글 추가일 경우
+      if (!action.data.RecommentId) {
+        tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+          if (post._id !== action.data.createdCommentWithData.PostId) return post;
 
-        return {
-          ...post,
-          Comments: [...post.Comments, { ...createdCommentWithData }],
-          allCommentCount: post.allCommentCount + 1,
-        };
-      });
+          return {
+            ...post,
+            Comments: [...post.Comments, { ...action.data.createdCommentWithData }],
+            allCommentCount: post.allCommentCount + 1,
+          };
+        });
+      }
+      // 답글 추가일 경우
+      else {
+        tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+          if (post._id !== action.data.createdCommentWithData.PostId) return post;
+
+          return {
+            ...post,
+            Comments: post.Comments.map(comment => {
+              if (comment._id !== action.data.RecommentId) return comment;
+
+              return {
+                ...comment,
+                Recomments: [...comment.Recomments, action.data.createdCommentWithData],
+                allRecommentCount: comment.allRecommentCount + 1,
+              };
+            }),
+          };
+        });
+      }
 
       return {
         ...prevState,
@@ -540,10 +562,10 @@ function postReducer(prevState = initState, action) {
     case REMOVE_COMMENT_TO_POST_SUCCESS:
       // 2022/01/16 - 게시글의 댓글 삭제 후 postsOfDetail 처리 - by 1-blue
       // 댓글 삭제
-      if(!action.data.RecommentId){
+      if (!action.data.RecommentId) {
         tempPostsOfDetail = prevState.postsOfDetail.map(post => {
           if (post._id !== action.data.removedPostId) return post;
-  
+
           return {
             ...post,
             Comments: post.Comments.filter(comment => comment._id !== action.data.removedCommentId),
@@ -555,21 +577,20 @@ function postReducer(prevState = initState, action) {
       else {
         tempPostsOfDetail = prevState.postsOfDetail.map(post => {
           if (post._id !== action.data.removedPostId) return post;
-  
+
           return {
             ...post,
             Comments: post.Comments.map(comment => {
-              if(comment._id !== action.data.RecommentId) return comment;
+              if (comment._id !== action.data.RecommentId) return comment;
 
               return {
                 ...comment,
-                Recomments: comment.Recomments.filter(recomment => recomment._id !== action.data.removedCommentId)
-              }
+                Recomments: comment.Recomments.filter(recomment => recomment._id !== action.data.removedCommentId),
+              };
             }),
           };
         });
       }
-
 
       return {
         ...prevState,

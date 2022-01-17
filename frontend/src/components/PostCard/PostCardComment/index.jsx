@@ -29,7 +29,7 @@ import useToggle from "@hooks/useToggle";
 // utils
 import { timeFormat } from "@utils";
 
-const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment }) => {
+const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment, setRecommentData }) => {
   const [isShowMenu, onOpenMenu, onCloseMenu] = useOpenClose(false);
   const [isShowRecomment, onToggleComment] = useToggle(true);
 
@@ -57,7 +57,11 @@ const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment })
           {/* 댓글의 추가 정보 및 버튼 */}
           <div className="post-card-comment-info">
             <span className="post-card-comment-created-at">{timeFormat(comment.createdAt)}</span>
-            <button type="button" className="post-card-comment-recomment-button">
+            <button
+              type="button"
+              className="post-card-comment-recomment-button"
+              onClick={() => setRecommentData({ RecommentId: comment._id, username: comment.User.name })}
+            >
               <b>답글 달기</b>
             </button>
           </div>
@@ -140,6 +144,7 @@ PostCardComment.propTypes = {
   }).isRequired,
   onRemoveComment: Proptypes.func.isRequired,
   onClickloadMoreRecomment: Proptypes.func.isRequired,
+  setRecommentData: Proptypes.func.isRequired,
 };
 
 export default PostCardComment;
