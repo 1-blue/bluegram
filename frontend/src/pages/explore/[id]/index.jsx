@@ -1,14 +1,15 @@
 /**
  * 생성일: 2022/01/15
- * 수정일: -
+ * 수정일: 2022/01/17
  * 작성자: 1-blue
  *
  * 상세 게시글 페이지
+ * 인피니티 스크롤링 적용
  * 특정 게시글의 세부 정보도 보여주지만, 특정 게시글 외 다른 게시글들도 보여줌
  */
 
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useCallback, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 // styled-components
 import { Wrapper } from "./style";
@@ -21,11 +22,34 @@ import { userInstance, postsInstance } from "@store/api";
 // actions
 import { loadToMeAction, loadPostsDetailAction } from "@store/actions";
 
+// common-components
+import Spinner from "@components/common/Spinner";
+import Text from "@components/common/Text";
+
 // components
 import PostCard from "@components/PostCard";
 
 const Explore = () => {
-  const { postsOfDetail: posts } = useSelector(state => state.post);
+  const dispatch = useDispatch();
+  const { postsOfDetail: posts, isMorePostsOfDetail, loadPostsOfDetailLoading } = useSelector(state => state.post);
+
+  // 2022/01/17 - 인피니티 스크롤링 함수 - by 1-blue
+  const infiniteScrollEvent = useCallback(() => {
+    if (
+      window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 400 &&
+      isMorePostsOfDetail &&
+      !loadPostsOfDetailLoading
+    ) {
+      dispatch(loadPostsDetailAction({ lastId: posts[posts.length - 1]._id, limit: 8 }));
+    }
+  }, [posts.length, isMorePostsOfDetail, loadPostsOfDetailLoading]);
+
+  // 2022/01/17 - 무한 스크롤링 이벤트 등록/해제 - by 1-blue
+  useEffect(() => {
+    window.addEventListener("scroll", infiniteScrollEvent);
+
+    return () => window.removeEventListener("scroll", infiniteScrollEvent);
+  }, [infiniteScrollEvent]);
 
   return (
     <>
@@ -35,7 +59,9 @@ const Explore = () => {
       ))}
 
       {/* 게시글 추가 로드 */}
-      {/* {loadPostsLoading && <Spinner $page />} */}
+      {loadPostsOfDetailLoading && <Spinner $page />}
+
+      {!isMorePostsOfDetail && <Text $postEnd>더 이상 불러올 게시글이 존재하지 않습니다...</Text>}
     </>
   );
 };
@@ -48,7 +74,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async ({ r
   postsInstance.defaults.headers.Cookie = cookie;
 
   store.dispatch(loadToMeAction());
-  store.dispatch(loadPostsDetailAction({ lastId: +query.id + 1, limit: 15 }));
+  store.dispatch(loadPostsDetailAction({ lastId: +query.id + 1, limit: 8 }));
 
   store.dispatch(END);
   await store.sagaTask.toPromise();
