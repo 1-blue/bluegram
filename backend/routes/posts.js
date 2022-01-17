@@ -89,11 +89,9 @@ router.get("/detail", async (req, res, next) => {
         {
           model: Comment,
           attributes: ["_id"],
-          seperate: true,
+          separate: true,
           where: {
-            RecommentId: {
-              [Op.eq]: null,
-            },
+            RecommentId: { [Op.eq]: null },
           },
         },
         // 게시글의 좋아요
@@ -111,7 +109,7 @@ router.get("/detail", async (req, res, next) => {
 
     res.json({ message: "최신 게시글들을 불러오는데 성공했습니다.", posts, limit });
   } catch (error) {
-    console.error("GET /post error >> ", error);
+    console.error("GET /post/detail error >> ", error);
     return next(error);
   }
 });

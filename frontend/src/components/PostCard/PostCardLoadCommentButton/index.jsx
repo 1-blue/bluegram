@@ -18,7 +18,6 @@ import Spinner from "@components/common/Spinner";
 
 const PostCardLoadCommentButton = ({ Comments, allCommentCount, onClickloadMoreComment }) => {
   const { loadCommentsLoading } = useSelector(state => state.post);
-
   return (
     <Wrapper>
       <button
@@ -29,7 +28,7 @@ const PostCardLoadCommentButton = ({ Comments, allCommentCount, onClickloadMoreC
         댓글 {allCommentCount === Comments.length ? allCommentCount : allCommentCount - Comments.length}개 더 불러오기
       </button>
 
-      {loadCommentsLoading && <Spinner $page />}
+      {loadCommentsLoading && <Spinner $menu />}
     </Wrapper>
   );
 };

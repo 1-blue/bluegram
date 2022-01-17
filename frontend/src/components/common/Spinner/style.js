@@ -6,7 +6,7 @@ export const Wrapper = styled.section`
     css`
       & {
         margin: 200px auto;
-        font-size: 25px;
+        font-size: 20px;
         width: 1em;
         height: 1em;
         border-radius: 50%;
@@ -20,6 +20,26 @@ export const Wrapper = styled.section`
       }
       @media (max-width: 768px) {
         margin: 100px auto;
+        font-size: 15px;
+      }
+    `}
+
+  ${({ $menu }) =>
+    $menu &&
+    css`
+      & {
+        margin: 100px auto;
+        font-size: 15px;
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+        position: relative;
+        text-indent: -9999em;
+        -webkit-animation: spinner-page 1.1s infinite ease;
+        animation: spinner-page 1.1s infinite ease;
+        -webkit-transform: translateZ(0);
+        -ms-transform: translateZ(0);
+        transform: translateZ(0);
       }
     `}
 

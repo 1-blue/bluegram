@@ -6,11 +6,12 @@
  * 상세 게시글 컴포넌트
  * 게시글 CRD
  * 댓글 CD
+ * 답글 CD
  * 댓글 더 불러오기
  * 답글 더 불러오기
  */
 
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import Proptypes from "prop-types";
 
@@ -41,32 +42,51 @@ import {
 // hooks
 import useTextarea from "@hooks/useTextarea";
 import useToggle from "@hooks/useToggle";
+import { useEffect } from "react";
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const [text, onChangeText, setText, resize] = useTextarea("");
   const [isShowComment, onToggleComment] = useToggle(true);
+  // 2022/01/17 - 답글일 경우 답글에 대한 정보를 가지는 훅 - by 1-blue
+  const [recommentData, setRecommentData] = useState({ RecommentId: null, username: "" });
 
   // 2022/01/17 - 현재 게시글 제거 요청 - by 1-blue
   const onRemovePost = useCallback(() => dispatch(removePostAction({ PostId: post._id })), [post._id]);
 
-  // 2022/01/16 - 현재 게시글에 댓글 추가 요청 - by 1-blue
+  // 2022/01/17 - 답글 달기를 눌렀을 경우 답글임을 명시하기 위해 폼에 "@유저명 "을 넣어줌 - by 1-blue
+  useEffect(() => {
+    if (!recommentData.username) return;
+    setText(`@${recommentData.username} `);
+  }, [recommentData]);
+
+  // 2022/01/16 - 현재 게시글에 댓글/답글 생성 요청 - by 1-blue
   const onSubmitComment = useCallback(
-    (RecommentId, textareaRef) => e => {
+    textareaRef => e => {
       e.preventDefault();
-      const length = text.trim().length;
+
+      // 답글이라면 답글 식별자가 들어갈 변수
+      let RecommentId = null;
+
+      // 답글인지 판단 후 답글이라면 답글 식별자를 넣어줌
+      if (/^@[\S]*\s/g.test(text)) RecommentId = recommentData.RecommentId;
+
+      // 답글인 경우 앞에 "@유저명 " 제외시키는 정규표현식
+      const processingContent = text.replace(/^@[\S]*\s/g, "");
+
+      const length = processingContent.trim().length;
 
       if (length === 0) return alert("댓글을 입력하고 제출해주세요!");
       if (length > 200) return alert(`댓글의 최대 길이는 200자입니다.\n( 현재 길이 ${length} )`);
 
-      dispatch(appendCommentToPostAction({ content: text, PostId: post._id, RecommentId }));
+      dispatch(appendCommentToPostAction({ content: processingContent, PostId: post._id, RecommentId }));
 
       // textarea 초기화
       setText("");
       dispatch(resetMessageAction());
       resize(textareaRef)();
     },
-    [text, post._id, resize],
+    [text, post._id, resize, recommentData],
   );
 
   // 2022/01/16 - 현재 게시글에 댓글/답글 삭제 요청 - by 1-blue
@@ -125,6 +145,7 @@ const PostCard = ({ post }) => {
             comment={comment}
             onRemoveComment={onRemoveComment}
             onClickloadMoreRecomment={onClickloadMoreRecomment}
+            setRecommentData={setRecommentData}
           />
         ))}
 
@@ -144,6 +165,7 @@ const PostCard = ({ post }) => {
         onChangeText={onChangeText}
         resize={resize}
         onSubmitComment={onSubmitComment}
+        recommentData={recommentData}
       />
     </Wrapper>
   );

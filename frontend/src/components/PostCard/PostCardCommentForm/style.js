@@ -3,6 +3,7 @@ import styled from "styled-components";
 export const Wrapper = styled.form`
   position: relative;
   padding: 0.8em;
+  margin-bottom: 2em;
   display: flex;
   align-items: center;
   background: rgba(0, 0, 0, 0.08);

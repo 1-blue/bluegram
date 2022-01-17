@@ -24,6 +24,7 @@ import PostImageCard from "@components/PostImageCard";
 
 // common-components
 import Spinner from "@components/common/Spinner";
+import Text from "@components/common/Text";
 
 // styled-components
 const Wrapper = styled.ul`
@@ -75,6 +76,8 @@ const HomePage = () => {
       </Wrapper>
 
       {loadPostsLoading && <Spinner $page />}
+
+      {!isMorePosts && <Text $postEnd>더 이상 불러올 게시글이 존재하지 않습니다...</Text>}
     </>
   );
 };

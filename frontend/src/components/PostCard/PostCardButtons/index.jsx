@@ -1,3 +1,12 @@
+/**
+ * 생성일: 2022/01/15
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 상세 게시글 페이지의 버튼들
+ * 좋아요, 댓글, DM, 북마크 버튼 추가 ( 기능은 아직 없음 )
+ */
+
 import React from "react";
 import Proptypes from "prop-types";
 

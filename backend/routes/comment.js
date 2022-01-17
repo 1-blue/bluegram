@@ -46,7 +46,7 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
       ],
     });
 
-    res.json({ message: `${RecommentId ? "답글" : "댓글"}이 생성되었습니다.`, createdCommentWithData });
+    res.json({ message: `${RecommentId ? "답글" : "댓글"}이 생성되었습니다.`, createdCommentWithData, RecommentId });
   } catch (error) {
     console.error("POST /comment/post >> ", error);
     next(error);

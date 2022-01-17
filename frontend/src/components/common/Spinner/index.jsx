@@ -18,6 +18,7 @@ const Spinner = props => {
 
 Spinner.propTypes = {
   $page: PropTypes.bool,
+  $menu: PropTypes.bool,
   $button: PropTypes.bool,
   $modal: PropTypes.bool,
 };
