@@ -16,20 +16,18 @@ import { Wrapper } from "./style";
 // common-components
 import Spinner from "@components/common/Spinner";
 
-const PostCardLoadCommentButton = ({ Comments, hasMoreComments, allCommentCount, onClickloadMoreComment }) => {
+const PostCardLoadCommentButton = ({ Comments, allCommentCount, onClickloadMoreComment }) => {
   const { loadCommentsLoading } = useSelector(state => state.post);
 
   return (
     <Wrapper>
-      {Comments.length > 0 && hasMoreComments && (
-        <button
-          type="button"
-          onClick={onClickloadMoreComment(Comments[Comments.length - 1]._id)}
-          className="post-card-load-more-comment-button"
-        >
-          댓글 {allCommentCount === Comments.length ? allCommentCount : allCommentCount - Comments.length}개 더 불러오기
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={onClickloadMoreComment(Comments[Comments.length - 1]._id)}
+        className="post-card-load-more-comment-button"
+      >
+        댓글 {allCommentCount === Comments.length ? allCommentCount : allCommentCount - Comments.length}개 더 불러오기
+      </button>
 
       {loadCommentsLoading && <Spinner $page />}
     </Wrapper>
@@ -65,8 +63,7 @@ PostCardLoadCommentButton.propTypes = {
       ),
     }),
   ).isRequired,
-  hasMoreComments: Proptypes.bool.isRequired,
-  allCommentCount: Proptypes.bool.isRequired,
+  allCommentCount: Proptypes.oneOfType([Proptypes.bool, Proptypes.node]).isRequired,
   onClickloadMoreComment: Proptypes.func.isRequired,
 };
 

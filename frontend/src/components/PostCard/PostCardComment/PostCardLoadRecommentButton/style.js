@@ -5,7 +5,7 @@ export const Wrapper = styled.li`
   text-align: center;
   margin-bottom: 0.8em;
 
-  & .post-card-load-more-comment-button {
+  & .post-card-load-more-recomment-button {
     font-size: 0.82em;
     color: gray;
   }

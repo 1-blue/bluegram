@@ -368,7 +368,7 @@ function postReducer(prevState = initState, action) {
         loadPostsOfDetailLoading: false,
         loadPostsOfDetailError: action.data.message,
       };
-    
+
     // 2022/01/17 - 게시글 생성 - by 1-blue
     case CREATE_POST_REQUEST:
       return {
@@ -512,7 +512,7 @@ function postReducer(prevState = initState, action) {
         return {
           ...post,
           Comments: [...post.Comments, { ...createdCommentWithData }],
-          allCommentCount: post.allCommentCount + 1
+          allCommentCount: post.allCommentCount + 1,
         };
       });
 
@@ -520,7 +520,7 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         appendCommentToPostLoading: false,
         appendCommentToPostDone: action.data.message,
-        postsOfDetail: tempPostsOfDetail
+        postsOfDetail: tempPostsOfDetail,
       };
     case APPEND_COMMENT_TO_POST_FAILURE:
       return {
@@ -529,7 +529,7 @@ function postReducer(prevState = initState, action) {
         appendCommentToPostError: action.data.message,
       };
 
-    // 2021/12/27 - 게시글 댓글 삭제 - by 1-blue
+    // 2022/01/17 - 게시글 댓글/답글 삭제 - by 1-blue
     case REMOVE_COMMENT_TO_POST_REQUEST:
       return {
         ...prevState,
@@ -539,15 +539,37 @@ function postReducer(prevState = initState, action) {
       };
     case REMOVE_COMMENT_TO_POST_SUCCESS:
       // 2022/01/16 - 게시글의 댓글 삭제 후 postsOfDetail 처리 - by 1-blue
-      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
-        if (post._id !== action.data.removedPostId) return post;
+      // 댓글 삭제
+      if(!action.data.RecommentId){
+        tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+          if (post._id !== action.data.removedPostId) return post;
+  
+          return {
+            ...post,
+            Comments: post.Comments.filter(comment => comment._id !== action.data.removedCommentId),
+            allCommentCount: post.allCommentCount - 1,
+          };
+        });
+      }
+      // 답글 삭제
+      else {
+        tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+          if (post._id !== action.data.removedPostId) return post;
+  
+          return {
+            ...post,
+            Comments: post.Comments.map(comment => {
+              if(comment._id !== action.data.RecommentId) return comment;
 
-        return {
-          ...post,
-          Comments: post.Comments.filter(comment => comment._id !== action.data.removedCommentId),
-          allCommentCount: post.allCommentCount - 1
-        };
-      });
+              return {
+                ...comment,
+                Recomments: comment.Recomments.filter(recomment => recomment._id !== action.data.removedCommentId)
+              }
+            }),
+          };
+        });
+      }
+
 
       return {
         ...prevState,
@@ -687,21 +709,45 @@ function postReducer(prevState = initState, action) {
         loadCommentsError: null,
       };
     case LOAD_COMMENTS_SUCCESS:
+      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+        if (post._id !== action.data.PostId) return post;
+
+        // 2022/01/17 - 이미 댓글을 불러왔다면 - by 1-blue
+        if (post.Comments[0]?.content) {
+          return {
+            ...post,
+            Comments: [
+              ...post.Comments,
+              ...action.data.Comments.map(comment => ({
+                ...comment,
+                allRecommentCount: comment.Recomments.length,
+                hasMoreRecomments: true,
+              })),
+            ],
+            hasMoreComments: action.data.limit === action.data.Comments.length,
+          };
+        }
+        // 2022/01/17 - 처음 댓글을 불러온다면 - by 1-blue
+        else {
+          return {
+            ...post,
+            Comments: [
+              ...action.data.Comments.map(comment => ({
+                ...comment,
+                allRecommentCount: comment.Recomments.length,
+                hasMoreRecomments: true,
+              })),
+            ],
+            hasMoreComments: action.data.limit === action.data.Comments.length,
+          };
+        }
+      });
+
       return {
         ...prevState,
         loadCommentsLoading: false,
         loadCommentsDone: action.data.message,
-        postsOfDetail: prevState.postsOfDetail.map(post => {
-          if (post._id !== action.data.PostId) return post;
-
-          return {
-            ...post,
-            Comments: post.Comments[0]?.content
-              ? [...post.Comments, ...action.data.Comments]
-              : [...action.data.Comments],
-            hasMoreComments: action.data.limit === action.data.Comments.length,
-          };
-        }),
+        postsOfDetail: tempPostsOfDetail,
       };
     case LOAD_COMMENTS_FAILURE:
       return {
@@ -719,24 +765,40 @@ function postReducer(prevState = initState, action) {
         loadRecommentsError: null,
       };
     case LOAD_RECOMMENTS_SUCCESS:
-      // 게시글의 특정 댓글의 답글 추가
-      tempPost = {
-        ...prevState.post,
-        Comments: prevState.post.Comments.map(comment => {
-          if (comment._id !== action.data.Recomments[0].RecommentId) return comment;
+      // 2022/01/17 - 게시글의 특정 댓글의 답글 추가 - by 1-blue
+      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+        if (post._id !== action.data.targetPostId) return post;
 
-          return {
-            ...comment,
-            Recomments: [...action.data.Recomments],
-          };
-        }),
-      };
+        return {
+          ...post,
+          Comments: post.Comments.map(comment => {
+            if (comment._id !== action.data.targetCommentId) return comment;
+
+            // 이전에 답글을 불러온적이 있다면
+            if (comment.Recomments[0]?.content) {
+              return {
+                ...comment,
+                Recomments: [...comment.Recomments, ...action.data.Recomments],
+                hasMoreRecomments: action.data.Recomments.length === action.data.limit,
+              };
+            }
+            // 처음 답글을 불러온다면
+            else {
+              return {
+                ...comment,
+                Recomments: [...action.data.Recomments],
+                hasMoreRecomments: action.data.Recomments.length === action.data.limit,
+              };
+            }
+          }),
+        };
+      });
 
       return {
         ...prevState,
         loadRecommentsLoading: false,
         loadRecommentsDone: action.data.message,
-        post: tempPost,
+        postsOfDetail: tempPostsOfDetail,
       };
     case LOAD_RECOMMENTS_FAILURE:
       return {

@@ -192,7 +192,13 @@ router.get("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
       ],
     });
 
-    res.status(200).json({ message: "답글들을 정상적으로 불러왔습니다.", Recomments: recomments });
+    res.status(200).json({
+      message: "답글들을 정상적으로 불러왔습니다.",
+      targetPostId: targetComment.PostId,
+      targetCommentId: CommentId,
+      Recomments: recomments,
+      limit,
+    });
   } catch (error) {
     console.error("GET /comment/recomment/:CommentId >> ", error);
     next(error);

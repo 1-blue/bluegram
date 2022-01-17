@@ -17,18 +17,25 @@ import Avatar from "@components/common/Avatar";
 import Icon from "@components/common/Icon";
 import Menu from "@components/common/Menu";
 
+// components
+import PostCardRecomment from "./PostCardRecomment";
+import PostCardLoadRecommentButton from "./PostCardLoadRecommentButton";
+import PostCardCommentToggleButton from "../PostCardCommentToggleButton";
+
 // hooks
 import useOpenClose from "@hooks/useOpenClose";
+import useToggle from "@hooks/useToggle";
 
 // utils
 import { timeFormat } from "@utils";
 
-const PostCardComment = ({ comment, onRemoveComment }) => {
+const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment }) => {
   const [isShowMenu, onOpenMenu, onCloseMenu] = useOpenClose(false);
+  const [isShowRecomment, onToggleComment] = useToggle(true);
 
   return (
-    <Wrapper>
-      <li key={comment._id} className="post-card-comment">
+    <Wrapper className="post-card-comment-wrapper">
+      <li className="post-card-comment">
         {/* 작성자의 프로필 이미지 */}
         <Avatar
           width={30}
@@ -66,17 +73,39 @@ const PostCardComment = ({ comment, onRemoveComment }) => {
           </button>
         </div>
 
-        {/* 게시글 옵션 메뉴 */}
+        {/* 댓글 옵션 메뉴 */}
         {isShowMenu && (
           <Menu $comment onCloseMenu={onCloseMenu}>
-            <li className="post-card-comment-menu-list" onClick={onRemoveComment(comment._id)}>
+            <li className="menu-list" onClick={onRemoveComment(comment._id)}>
               삭제
             </li>
-            <li className="post-card-comment-menu-list">신고</li>
-            <li className="post-card-comment-menu-list">숨기기</li>
+            <li className="menu-list">신고</li>
+            <li className="menu-list">숨기기</li>
           </Menu>
         )}
       </li>
+
+      {/* 답글 토글 버튼 */}
+      {comment.Recomments.length > 0 && !comment.hasMoreRecomments && (
+        <PostCardCommentToggleButton isShowComment={isShowRecomment} onToggleComment={onToggleComment} $recomment />
+      )}
+
+      {/* 답글 더 보기 버튼 */}
+      {comment.Recomments.length > 0 && comment.hasMoreRecomments && (
+        <PostCardLoadRecommentButton
+          allRecommentCount={comment.allRecommentCount}
+          Recomments={comment.Recomments}
+          CommentId={comment._id}
+          onClickloadMoreRecomment={onClickloadMoreRecomment}
+        />
+      )}
+
+      {/* 답글 */}
+      {comment.Recomments[0]?.content &&
+        isShowRecomment &&
+        comment.Recomments.map(recomment => (
+          <PostCardRecomment key={recomment._id} recomment={recomment} onRemoveComment={onRemoveComment} />
+        ))}
     </Wrapper>
   );
 };
@@ -110,6 +139,7 @@ PostCardComment.propTypes = {
     ),
   }).isRequired,
   onRemoveComment: Proptypes.func.isRequired,
+  onClickloadMoreRecomment: Proptypes.func.isRequired,
 };
 
 export default PostCardComment;
