@@ -130,6 +130,8 @@ const initState = {
   loadRecommentsLoading: false,
   loadRecommentsDone: null,
   loadRecommentsError: null,
+  // 2022/01/17 - 답글 불러오기 스피너 동시동작을 막기 위한 변수 - by 1-blue
+  loadCommentId: null,
 };
 
 function postReducer(prevState = initState, action) {
@@ -203,6 +205,7 @@ function postReducer(prevState = initState, action) {
         loadRecommentsLoading: false,
         loadRecommentsDone: null,
         loadRecommentsError: null,
+        loadCommentId: null,
       };
 
     // 2022/01/14 - 게시글 생성 모달 열기 - by 1-blue
@@ -784,6 +787,7 @@ function postReducer(prevState = initState, action) {
         loadRecommentsLoading: true,
         loadRecommentsDone: null,
         loadRecommentsError: null,
+        loadCommentId: action.data.CommentId,
       };
     case LOAD_RECOMMENTS_SUCCESS:
       // 2022/01/17 - 게시글의 특정 댓글의 답글 추가 - by 1-blue
@@ -819,6 +823,7 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadRecommentsLoading: false,
         loadRecommentsDone: action.data.message,
+        loadCommentId: null,
         postsOfDetail: tempPostsOfDetail,
       };
     case LOAD_RECOMMENTS_FAILURE:
@@ -826,6 +831,7 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadRecommentsLoading: false,
         loadRecommentsError: action.data.message,
+        loadCommentId: null,
       };
 
     default:

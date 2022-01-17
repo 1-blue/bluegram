@@ -17,7 +17,7 @@ import { Wrapper } from "./style";
 import Spinner from "@components/common/Spinner";
 
 const PostCardLoadRecommentButton = ({ allRecommentCount, Recomments, onClickloadMoreRecomment, CommentId }) => {
-  const { loadRecommentsLoading } = useSelector(state => state.post);
+  const { loadRecommentsLoading, loadCommentId } = useSelector(state => state.post);
 
   return (
     <Wrapper>
@@ -36,7 +36,7 @@ const PostCardLoadRecommentButton = ({ allRecommentCount, Recomments, onClickloa
         불러오기
       </button>
 
-      {loadRecommentsLoading && <Spinner $page />}
+      {loadRecommentsLoading && loadCommentId === CommentId && <Spinner $menu />}
     </Wrapper>
   );
 };
