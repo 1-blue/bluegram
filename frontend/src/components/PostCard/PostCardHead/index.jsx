@@ -17,8 +17,14 @@ import { Wrapper } from "./style";
 import Avatar from "@components/common/Avatar";
 import Icon from "@components/common/Icon";
 import Button from "@components/common/Button";
+import Menu from "@components/common/Menu";
 
-const PostCardHead = ({ user }) => {
+// hooks
+import useOpenClose from "@hooks/useOpenClose";
+
+const PostCardHead = ({ user, onRemovePost }) => {
+  const [isShowMenu, onOpenMenu, onCloseMenu] = useOpenClose();
+
   return (
     <Wrapper>
       <Avatar
@@ -34,9 +40,20 @@ const PostCardHead = ({ user }) => {
         팔로우
       </Button>
       <div className="post-card-head-empty-place" />
-      <button type="button" className="post-card-head-option-button">
+      <button type="button" className="post-card-head-option-button" onClick={onOpenMenu}>
         <Icon width={24} height={24} shape="option" />
       </button>
+
+      {/* 댓글 옵션 메뉴 */}
+      {isShowMenu && (
+        <Menu $post onCloseMenu={onCloseMenu}>
+          <li className="menu-list" onClick={onRemovePost}>
+            삭제
+          </li>
+          <li className="menu-list">신고</li>
+          <li className="menu-list">숨기기</li>
+        </Menu>
+      )}
     </Wrapper>
   );
 };
@@ -53,6 +70,7 @@ PostCardHead.propTypes = {
       }),
     ),
   }).isRequired,
+  onRemovePost: Proptypes.func.isRequired,
 };
 
 export default PostCardHead;

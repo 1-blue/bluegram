@@ -8,12 +8,12 @@ import {
   RESET_POSTS,
   RESET_POSTS_OF_USER,
   
-  CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
   LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
   LOAD_POSTS_OF_HASHTAG_REQUEST, LOAD_POSTS_OF_HASHTAG_SUCCESS, LOAD_POSTS_OF_HASHTAG_FAILURE,
   LOAD_POSTS_OF_USER_REQUEST, LOAD_POSTS_OF_USER_SUCCESS, LOAD_POSTS_OF_USER_FAILURE,
   LOAD_POSTS_DETAIL_REQUEST, LOAD_POSTS_DETAIL_SUCCESS, LOAD_POSTS_DETAIL_FAILURE,
+  CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
   APPEND_LIKE_TO_POST_REQUEST, APPEND_LIKE_TO_POST_SUCCESS, APPEND_LIKE_TO_POST_FAILURE,
   REMOVE_LIKE_TO_POST_REQUEST, REMOVE_LIKE_TO_POST_SUCCESS, REMOVE_LIKE_TO_POST_FAILURE,
@@ -56,11 +56,6 @@ const initState = {
   isMorePostsOfDetail: true,
   isMorePostsOfUser: true,
 
-  // 2022/01/15 - 게시글 생성 관련 변수 - by 1-blue
-  createPostLoading: false,
-  createPostDone: null,
-  createPostError: null,
-
   // 2022/01/15 - HomePage게시글들 불러오기 관련 변수 - by 1-blue
   loadPostsLoading: false,
   loadPostsDone: null,
@@ -85,6 +80,11 @@ const initState = {
   loadPostsOfDetailLoading: false,
   loadPostsOfDetailDone: null,
   loadPostsOfDetailError: null,
+
+  // 2022/01/15 - 게시글 생성 관련 변수 - by 1-blue
+  createPostLoading: false,
+  createPostDone: null,
+  createPostError: null,
 
   // 2022/01/15 - 특정 게시글 제거 관련 변수 - by 1-blue
   removePostLoading: false,
@@ -143,9 +143,6 @@ function postReducer(prevState = initState, action) {
     case RESET_MESSAGE:
       return {
         ...prevState,
-        createPostLoading: false,
-        createPostDone: null,
-        createPostError: null,
 
         loadPostsLoading: false,
         loadPostsDone: null,
@@ -166,6 +163,10 @@ function postReducer(prevState = initState, action) {
         loadPostsOfDetailLoading: false,
         loadPostsOfDetailDone: null,
         loadPostsOfDetailError: null,
+
+        createPostLoading: false,
+        createPostDone: null,
+        createPostError: null,
 
         removePostLoading: false,
         removePostDone: null,
@@ -236,28 +237,6 @@ function postReducer(prevState = initState, action) {
       return {
         ...prevState,
         postsOfUser: [],
-      };
-
-    // 2022/01/15 - 게시글 생성 - by 1-blue
-    case CREATE_POST_REQUEST:
-      return {
-        ...prevState,
-        createPostLoading: true,
-        createPostDone: null,
-        createPostError: null,
-      };
-    case CREATE_POST_SUCCESS:
-      return {
-        ...prevState,
-        createPostLoading: false,
-        createPostDone: action.data.message,
-        posts: [action.data.createdPost, ...prevState.posts],
-      };
-    case CREATE_POST_FAILURE:
-      return {
-        ...prevState,
-        createPostLoading: false,
-        createPostError: action.data.message,
       };
 
     // 2022/01/15 - HomePage게시글들 요청 - by 1-blue
@@ -389,8 +368,31 @@ function postReducer(prevState = initState, action) {
         loadPostsOfDetailLoading: false,
         loadPostsOfDetailError: action.data.message,
       };
+    
+    // 2022/01/17 - 게시글 생성 - by 1-blue
+    case CREATE_POST_REQUEST:
+      return {
+        ...prevState,
+        createPostLoading: true,
+        createPostDone: null,
+        createPostError: null,
+      };
+    case CREATE_POST_SUCCESS:
+      return {
+        ...prevState,
+        createPostLoading: false,
+        createPostDone: action.data.message,
+        posts: [action.data.createdPost, ...prevState.posts],
+        postsOfDetail: [action.data.createdPost, ...prevState.postsOfDetail],
+      };
+    case CREATE_POST_FAILURE:
+      return {
+        ...prevState,
+        createPostLoading: false,
+        createPostError: action.data.message,
+      };
 
-    // 2021/12/28 특정 게시글 제거 - by 1-blue
+    // 2022/01/17 - 특정 게시글 제거 - by 1-blue
     case REMOVE_POST_REQUEST:
       return {
         ...prevState,
@@ -404,11 +406,8 @@ function postReducer(prevState = initState, action) {
         removePostLoading: false,
         removePostDone: action.data.message,
 
-        // 2021/12/28 특정 게시글 내용 비우기 - by 1-blue
-        posts: prevState.posts.filter(post => post._id !== action.data.result.removedPostId),
-
-        // 2021/12/28 특정 게시글 내용 비우기 - by 1-blue
-        post: null,
+        // 2022/01/17 - 특정 게시글 제거 - by 1-blue
+        postsOfDetail: prevState.postsOfDetail.filter(post => post._id !== action.data.removedPostId),
       };
     case REMOVE_POST_FAILURE:
       return {

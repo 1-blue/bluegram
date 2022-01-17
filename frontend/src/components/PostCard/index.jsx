@@ -1,3 +1,13 @@
+/**
+ * 생성일: 2022/01/15
+ * 수정일: 2022/01/17
+ * 작성자: 1-blue
+ *
+ * 상세 게시글 컴포넌트
+ * 댓글 CRD
+ * 게시글 CRD
+ */
+
 import React, { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import Proptypes from "prop-types";
@@ -21,6 +31,7 @@ import {
   loadCommentsAction,
   appendCommentToPostAction,
   removeCommentToPostAction,
+  removePostAction,
 } from "@store/actions";
 
 // hooks
@@ -66,9 +77,12 @@ const PostCard = ({ post }) => {
   // 2022/01/16 - 현재 게시글에 댓글 삭제 요청 - by 1-blue
   const onRemoveComment = useCallback(CommentId => () => dispatch(removeCommentToPostAction({ CommentId })), []);
 
+  // 2022/01/17 - 현재 게시글 제거 요청 - by 1-blue
+  const onRemovePost = useCallback(() => dispatch(removePostAction({ PostId: post._id })), [post._id]);
+
   return (
     <Wrapper>
-      <PostCardHead user={post.User} />
+      <PostCardHead user={post.User} onRemovePost={onRemovePost} />
       <PostCardImage images={post.Images} />
       <PostCardButtons />
       <PostCardInfo likeCount={post.PostLikers.length} createdAt={post.createdAt} />

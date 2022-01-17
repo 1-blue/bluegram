@@ -178,7 +178,7 @@ router.get("/:PostId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2021/12/28 - 특정 게시글 삭제하기 - by 1-blue
+// 2022/01/17 - 특정 게시글 삭제하기 - by 1-blue
 router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
 
@@ -188,7 +188,7 @@ router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
     if (removedPostCount === 0)
       return res.status(404).json({ message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
 
-    res.status(200).json({ message: "게시글 삭제에 성공하셨습니다.", result: { removedPostId: PostId } });
+    res.status(200).json({ message: "게시글 삭제에 성공하셨습니다.", removedPostId: PostId });
   } catch (error) {
     console.error("DELETE /post/:PostId error >> ", error);
     return next(error);
