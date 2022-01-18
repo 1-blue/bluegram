@@ -6,10 +6,12 @@
  * 게시글의 댓글들 컨테이너
  * 본인 댓글에만 삭제 권한 부여
  * 댓글에 좋아요 로직 추가
+ * 작성자 프로필 페이지 링크 추가
  */
 
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 import Proptypes from "prop-types";
 
 // styled-components
@@ -58,20 +60,28 @@ const PostCardComment = ({
     <Wrapper className="post-card-comment-wrapper">
       <li className="post-card-comment">
         {/* 작성자의 프로필 이미지 */}
-        <Avatar
-          width={30}
-          height={30}
-          image={comment.User.Images[0]}
-          alt="댓글 유저의 프로필 이미지"
-          $cursor
-          className="post-card-comment-avatar"
-        />
+        <Link href={`/profile/${comment.User._id}`}>
+          <a>
+            <Avatar
+              width={30}
+              height={30}
+              image={comment.User.Images[0]}
+              alt="댓글 유저의 프로필 이미지"
+              $cursor
+              className="post-card-comment-avatar"
+            />
+          </a>
+        </Link>
 
         {/* 댓글의 컨텐츠 wrapper */}
         <div className="post-card-comment-content-wrapper">
           {/* 작성자명, 작성내용 */}
           <div className="post-card-comment-content">
-            <span className="post-card-comment-user-name">{comment.User.name}</span>
+            <Link href={`/profile/${comment.User._id}`}>
+              <a>
+                <span className="post-card-comment-user-name">{comment.User.name}</span>
+              </a>
+            </Link>
             <span className="post-card-comment-text">{comment.content}</span>
           </div>
 

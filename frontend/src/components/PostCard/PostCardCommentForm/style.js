@@ -22,6 +22,7 @@ export const Wrapper = styled.form`
     font-size: 0.9rem;
     border-radius: 0.4em;
     padding: 0.4em;
+    font-family: inherit;
 
     &::placeholder {
       font-weight: bold;

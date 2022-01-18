@@ -6,10 +6,12 @@
  * 상세 게시글 페이지의 머리 부분
  * 작성자 프사, 작성자 이름, 팔로우 버튼, 게시글 옵션 버튼이 존재
  * 작성자만 삭제 권한 부여
+ * 작성자 프로필 페이지 링크 추가
  */
 
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 import Proptypes from "prop-types";
 
 // styled-components
@@ -34,15 +36,23 @@ const PostCardHead = ({ user, onRemovePost }) => {
 
   return (
     <Wrapper>
-      <Avatar
-        width={40}
-        height={40}
-        image={user.Images[0]}
-        alt="유저 프로필 이미지"
-        $cursor
-        className="post-card-head-user-avatar"
-      />
-      <span className="post-card-head-user-name">{user.name}</span>
+      <Link href={`/profile/${user._id}`}>
+        <a>
+          <Avatar
+            width={40}
+            height={40}
+            image={user.Images[0]}
+            alt="유저 프로필 이미지"
+            $cursor
+            className="post-card-head-user-avatar"
+          />
+        </a>
+      </Link>
+      <Link href={`/profile/${user._id}`}>
+        <a>
+          <span className="post-card-head-user-name">{user.name}</span>
+        </a>
+      </Link>
       <Button type="button" className="post-card-head-follow-button" $follow>
         팔로우
       </Button>

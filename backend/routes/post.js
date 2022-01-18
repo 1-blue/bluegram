@@ -5,7 +5,7 @@ import express from "express";
 import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
-const { Image, Post, Comment, User, Hashtag, sequelize } = db;
+const { Image, Post, Comment, User, Hashtag } = db;
 
 const router = express.Router();
 const __dirname = path.resolve();
@@ -178,15 +178,23 @@ router.get("/:PostId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2022/01/17 - 특정 게시글 삭제하기 - by 1-blue
+// 2022/01/18 - 특정 게시글 삭제하기 - by 1-blue
 router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
 
   try {
-    const removedPostCount = await Post.destroy({ where: { _id: PostId } });
+    const targetPost = await Post.findByPk(PostId, { include: { model: Image, attributes: ["name"] } });
 
-    if (removedPostCount === 0)
-      return res.status(404).json({ message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
+    if (!targetPost) return res.status(404).json({ message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
+
+    // 2022/01/18 - 게시글 생성 완료 시 추가한 이미지 위치 이동
+    targetPost.Images.forEach(image => {
+      const oldPath = path.join(__dirname, "public", "images", image.name);
+      const newPath = path.join(__dirname, "public", "images", "deleted", image.name);
+      fs.rename(oldPath, newPath, () => {});
+    });
+
+    await targetPost.destroy();
 
     res.status(200).json({ message: "게시글 삭제에 성공하셨습니다.", removedPostId: PostId });
   } catch (error) {

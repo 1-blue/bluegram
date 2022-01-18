@@ -6,10 +6,12 @@
  * 답글 컴포넌트
  * 답글 제거 기능
  * 답글에 좋아요 로직 추가
+ * 작성자 프로필 페이지 링크 추가
  */
 
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 import Proptypes from "prop-types";
 
 // styled-components
@@ -45,20 +47,27 @@ const PostCardRecomment = ({ recomment, onRemoveComment, onClickCommentLikeButto
     <Wrapper className="post-card-recomment-wrapper">
       <li className="post-card-recomment">
         {/* 작성자의 프로필 이미지 */}
-        <Avatar
-          width={30}
-          height={30}
-          image={recomment.User.Images[0]}
-          alt="답글 유저의 프로필 이미지"
-          $cursor
-          className="post-card-recomment-avatar"
-        />
-
+        <Link href={`/profile/${recomment.User._id}`}>
+          <a>
+            <Avatar
+              width={30}
+              height={30}
+              image={recomment.User.Images[0]}
+              alt="답글 유저의 프로필 이미지"
+              $cursor
+              className="post-card-recomment-avatar"
+            />
+          </a>
+        </Link>
         {/* 답글의 컨텐츠 wrapper */}
         <div className="post-card-recomment-content-wrapper">
           {/* 작성자명, 작성내용 */}
           <div className="post-card-recomment-content">
-            <span className="post-card-recomment-user-name">{recomment.User.name}</span>
+            <Link href={`/profile/${recomment.User._id}`}>
+              <a>
+                <span className="post-card-recomment-user-name">{recomment.User.name}</span>
+              </a>
+            </Link>
             <span className="post-card-recomment-text">{recomment.content}</span>
           </div>
 

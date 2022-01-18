@@ -31,7 +31,7 @@ const PostCardLoadRecommentButton = ({ allRecommentCount, Recomments, onClickloa
         )}
         className="post-card-load-more-recomment-button"
       >
-        답글
+        ㅡㅡㅡ 답글
         {allRecommentCount === Recomments.length ? allRecommentCount : allRecommentCount - Recomments.length}개 더
         불러오기
       </button>
