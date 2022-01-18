@@ -37,6 +37,8 @@ import {
   removeCommentToPostAction,
   loadCommentsAction,
   loadRecommentsAction,
+  appendLikeToPostAction,
+  removeLikeToPostAction,
 } from "@store/actions";
 
 // hooks
@@ -114,6 +116,18 @@ const PostCard = ({ post }) => {
     [],
   );
 
+  // 2022/01/18 - 게시글에 좋아요 추가/제거 - by 1-blue
+  const onClickPostLikeButton = useCallback(
+    isLikedPost => () => {
+      if (isLikedPost) {
+        dispatch(removeLikeToPostAction({ PostId: post._id }));
+      } else {
+        dispatch(appendLikeToPostAction({ PostId: post._id }));
+      }
+    },
+    [post._id],
+  );
+
   return (
     <Wrapper>
       {/* 게시글의 머리 부분 ( 작성자, 팔로우, 게시글 옵션 버튼 ) */}
@@ -123,7 +137,7 @@ const PostCard = ({ post }) => {
       <PostCardImage images={post.Images} />
 
       {/* 게시글 버튼들 ( 좋아요, 댓글, DM, 북마크 ) */}
-      <PostCardButtons />
+      <PostCardButtons likers={post.PostLikers} onClickPostLikeButton={onClickPostLikeButton} />
 
       {/* 게시글 정보 ( 좋아요 개수, 작성 시간 ) */}
       <PostCardInfo likeCount={post.PostLikers.length} createdAt={post.createdAt} />

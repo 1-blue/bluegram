@@ -419,7 +419,7 @@ function postReducer(prevState = initState, action) {
         removePostError: action.data.message,
       };
 
-    // 2021/12/25 - 게시글 좋아요 추가 - by 1-blue
+    // 2022/01/18 - 게시글 좋아요 추가 - by 1-blue
     case APPEND_LIKE_TO_POST_REQUEST:
       return {
         ...prevState,
@@ -428,28 +428,21 @@ function postReducer(prevState = initState, action) {
         appendLikeToPostError: null,
       };
     case APPEND_LIKE_TO_POST_SUCCESS:
-      // 2021/12/25 - 불변성 지키면서 게시글 배열에 게시글에 좋아요 누른 인원 추가 - by 1-blue
-      tempPosts = prevState.posts.map(post => {
-        if (post._id !== action.data.result.PostId) return post;
+      // 2022/01/18 - 불변성 지키면서 게시글 배열에 게시글에 좋아요 누른 인원 추가 - by 1-blue
+      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+        if (post._id !== action.data.likedPostId) return post;
 
         return {
           ...post,
-          PostLikers: [...post.PostLikers, { _id: action.data.result.UserId }],
+          PostLikers: [...post.PostLikers, { _id: action.data.UserId }],
         };
       });
-
-      // 2021/12/25 - 불변성 지키면서 특정 게시글 객체에 게시글에 좋아요 누른 인원 추가 - by 1-blue
-      tempPost = {
-        ...prevState.post,
-        PostLikers: [...prevState.post.PostLikers, { _id: action.data.result.UserId }],
-      };
 
       return {
         ...prevState,
         appendLikeToPostLoading: false,
         appendLikeToPostDone: action.data.message,
-        posts: tempPosts,
-        post: tempPost,
+        postsOfDetail: tempPostsOfDetail,
       };
     case APPEND_LIKE_TO_POST_FAILURE:
       return {
@@ -458,7 +451,7 @@ function postReducer(prevState = initState, action) {
         appendLikeToPostError: action.data.message,
       };
 
-    // 2021/12/25 - 게시글 좋아요 취소 - by 1-blue
+    // 2022/01/18 - 게시글 좋아요 취소 - by 1-blue
     case REMOVE_LIKE_TO_POST_REQUEST:
       return {
         ...prevState,
@@ -467,28 +460,21 @@ function postReducer(prevState = initState, action) {
         removeLikeToPostError: null,
       };
     case REMOVE_LIKE_TO_POST_SUCCESS:
-      // 2021/12/25 - 불변성 지키면서 게시글 배열에 게시글에 좋아요 누른 인원 제거 - by 1-blue
-      tempPosts = prevState.posts.map(post => {
-        if (post._id !== action.data.result.removedPostId) return post;
+      // 2022/01/18 - 불변성 지키면서 게시글 배열에 게시글에 좋아요 누른 인원 제거 - by 1-blue
+      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+        if (post._id !== action.data.unlikedPostId) return post;
 
         return {
           ...post,
-          PostLikers: post.PostLikers.filter(liker => liker._id !== action.data.result.UserId),
+          PostLikers: post.PostLikers.filter(liker => liker._id !== action.data.UserId),
         };
       });
-
-      // 2021/12/25 - 불변성 지키면서 특정 게시글 객체에 게시글에 좋아요 누른 인원 제거 - by 1-blue
-      tempPost = {
-        ...prevState.post,
-        PostLikers: prevState.post.PostLikers.filter(liker => liker._id !== action.data.result.UserId),
-      };
 
       return {
         ...prevState,
         removeLikeToPostLoading: false,
         removeLikeToPostDone: action.data.message,
-        posts: tempPosts,
-        post: tempPost,
+        postsOfDetail: tempPostsOfDetail,
       };
     case REMOVE_LIKE_TO_POST_FAILURE:
       return {
