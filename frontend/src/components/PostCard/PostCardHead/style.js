@@ -15,8 +15,12 @@ export const Wrapper = styled.li`
   // 게시글 작성자 이름
   & .post-card-head-user-name {
     font-weight: bold;
+  }
 
-    &::after {
+  // 게시글 작성자 팔로우/언팔로우 버튼
+  & .post-card-head-follow-button {
+    &::before {
+      color: black;
       content: "ㆍ";
     }
   }

@@ -1,6 +1,6 @@
 /**
  * 생성일: 2022/01/15
- * 수정일: 2022/01/17
+ * 수정일: 2022/01/19
  * 작성자: 1-blue
  *
  * 상세 게시글 컴포넌트
@@ -10,9 +10,10 @@
  * 댓글 더 불러오기
  * 답글 더 불러오기
  * 게시글/댓글/답글 좋아요 로직 추가
+ * 팔로우/언팔로우 로직 추가
  */
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Proptypes from "prop-types";
 
@@ -42,12 +43,13 @@ import {
   removeLikeToPostAction,
   appendLikeToCommentAction,
   removeLikeToCommentAction,
+  followAction,
+  unfollowAction,
 } from "@store/actions";
 
 // hooks
 import useTextarea from "@hooks/useTextarea";
 import useToggle from "@hooks/useToggle";
-import { useEffect } from "react";
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
@@ -61,15 +63,9 @@ const PostCard = ({ post }) => {
   // 2022/01/17 - 현재 게시글 제거 요청 - by 1-blue
   const onRemovePost = useCallback(() => dispatch(removePostAction({ PostId: post._id })), [post._id]);
 
-  // 2022/01/17 - 답글 달기를 눌렀을 경우 답글임을 명시하기 위해 폼에 "@유저명 "을 넣어줌 - by 1-blue
-  useEffect(() => {
-    if (!recommentData.username) return;
-    setText(`@${recommentData.username} `);
-  }, [recommentData]);
-
   // 2022/01/16 - 현재 게시글에 댓글/답글 생성 요청 - by 1-blue
   const onSubmitComment = useCallback(
-    textareaRef => e => {
+    e => {
       e.preventDefault();
 
       // 답글이라면 답글 식별자가 들어갈 변수
@@ -91,9 +87,9 @@ const PostCard = ({ post }) => {
       // textarea 초기화
       setText("");
       dispatch(resetMessageAction());
-      resize(textareaRef)();
+      textareaResize();
     },
-    [text, post._id, resize, recommentData],
+    [text, post._id, resize, recommentData, textareaResize],
   );
 
   // 2022/01/16 - 현재 게시글에 댓글/답글 삭제 요청 - by 1-blue
@@ -153,16 +149,33 @@ const PostCard = ({ post }) => {
     [post._id, appendLikeToCommentLoading, removeLikeToCommentLoading],
   );
 
+  // 2022/01/19 - 팔로우/언팔로우 - by 1-blue
+  const onClickFollowButton = useCallback(
+    (UserId, isFollow) => () => {
+      if (isFollow) {
+        dispatch(unfollowAction({ UserId }));
+      } else {
+        dispatch(followAction({ UserId }));
+      }
+    },
+    [],
+  );
+
   return (
     <Wrapper>
       {/* 게시글의 머리 부분 ( 작성자, 팔로우, 게시글 옵션 버튼 ) */}
-      <PostCardHead user={post.User} onRemovePost={onRemovePost} />
+      <PostCardHead user={post.User} onRemovePost={onRemovePost} onClickFollowButton={onClickFollowButton} />
 
       {/* 게시글의 이미지 */}
       <PostCardImage images={post.Images} />
 
       {/* 게시글 버튼들 ( 좋아요, 댓글, DM, 북마크 ) */}
-      <PostCardButtons likers={post.PostLikers} onClickPostLikeButton={onClickPostLikeButton} />
+      <PostCardButtons
+        likers={post.PostLikers}
+        onClickPostLikeButton={onClickPostLikeButton}
+        isFocus={isFocus}
+        onClickCommentIconButton={onClickCommentIconButton}
+      />
 
       {/* 게시글 정보 ( 좋아요 개수, 작성 시간 ) */}
       <PostCardInfo likeCount={post.PostLikers.length} createdAt={post.createdAt} />
@@ -184,8 +197,8 @@ const PostCard = ({ post }) => {
             comment={comment}
             onRemoveComment={onRemoveComment}
             onClickloadMoreRecomment={onClickloadMoreRecomment}
-            setRecommentData={setRecommentData}
             onClickCommentLikeButton={onClickCommentLikeButton}
+            onClickRecommentButton={onClickRecommentButton}
           />
         ))}
 
@@ -200,11 +213,13 @@ const PostCard = ({ post }) => {
 
       {/* 게시글의 댓글 입력 폼 */}
       <PostCardCommentForm
+        ref={textareaRef}
         text={text}
         onChangeText={onChangeText}
-        resize={resize}
+        textareaResize={textareaResize}
         onSubmitComment={onSubmitComment}
         recommentData={recommentData}
+        setIsFocus={setIsFocus}
       />
     </Wrapper>
   );

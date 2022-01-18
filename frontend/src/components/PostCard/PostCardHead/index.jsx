@@ -26,13 +26,17 @@ import Menu from "@components/common/Menu";
 // hooks
 import useOpenClose from "@hooks/useOpenClose";
 
-const PostCardHead = ({ user, onRemovePost }) => {
-  const { me } = useSelector(state => state.user);
+const PostCardHead = ({ user, onRemovePost, onClickFollowButton }) => {
+  const { me, followLoading, unfollowLoading } = useSelector(state => state.user);
   const [isShowMenu, onOpenMenu, onCloseMenu] = useOpenClose();
   const [isMine, setIsMine] = useState(false);
+  const [isFollow, setIsFollow] = useState(false);
 
   // 2022/01/18 - 본인 게시글인지 판단 - by 1-blue
   useEffect(() => setIsMine(user._id === me._id), [user._id, me._id]);
+
+  // 2022/01/19 - 본인이 팔로우한 유저인지 판단 - by 1-blue
+  useEffect(() => setIsFollow(me.Followings.some(following => following._id === user._id)), [user._id, me.Followings]);
 
   return (
     <Wrapper>
@@ -53,9 +57,17 @@ const PostCardHead = ({ user, onRemovePost }) => {
           <span className="post-card-head-user-name">{user.name}</span>
         </a>
       </Link>
-      <Button type="button" className="post-card-head-follow-button" $follow>
-        팔로우
-      </Button>
+      {!isMine && (
+        <Button
+          type="button"
+          className="post-card-head-follow-button"
+          $follow
+          loading={followLoading || unfollowLoading}
+          onClick={onClickFollowButton(user._id, isFollow)}
+        >
+          {isFollow ? "언팔로우" : "팔로우"}
+        </Button>
+      )}
       <div className="post-card-head-empty-place" />
       <button type="button" className="post-card-head-option-button" onClick={onOpenMenu}>
         <Icon width={24} height={24} shape="option" />
@@ -90,6 +102,7 @@ PostCardHead.propTypes = {
     ),
   }).isRequired,
   onRemovePost: Proptypes.func.isRequired,
+  onClickFollowButton: Proptypes.func.isRequired,
 };
 
 export default PostCardHead;

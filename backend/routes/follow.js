@@ -80,14 +80,19 @@ router.get("/followings/:UserId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2021/12/30 - 팔로우하기- by 1-blue
+// 2022/01/19 - 팔로우하기- by 1-blue
 router.post("/:UserId", isLoggedIn, async (req, res, next) => {
   const UserId = +req.params.UserId;
 
   try {
+    // 2022/01/19 - 본인을 팔로우 하는 요청인 경우 - by 1-blue
+    if (req.user._id === UserId) {
+      return res.status(409).json({ message: "본인이 본인을 팔로우할 수 없습니다.\n새로 고침 후 다시 시도해 주세요." });
+    }
+
     const me = await User.findByPk(req.user._id);
 
-    // 2022/01/04 - 이미 팔로우한 상태에서 팔로우 요청인 경우 - by 1-blue
+    // 2022/01/19 - 이미 팔로우한 상태에서 팔로우 요청인 경우 - by 1-blue
     if (await me.hasFollowings(UserId)) {
       return res.status(409).json({ message: "이미 팔로우한 유저입니다.\n새로 고침 후 다시 시도해 주세요." });
     }
@@ -99,7 +104,9 @@ router.post("/:UserId", isLoggedIn, async (req, res, next) => {
 
     const followUser = await User.findByPk(UserId, { attributes: ["name"] });
 
-    return res.json({ message: `${followUser.name}님을 팔로우했습니다.`, Follow: Following[0] });
+    const { FollowingId: followingId, FollowerId: followerId } = Following[0];
+
+    return res.json({ message: `${followUser.name}님을 팔로우했습니다.`, followingId, followerId });
   } catch (error) {
     console.error("POST /follow/:UserId >> ", error);
     next(error);
@@ -111,6 +118,13 @@ router.delete("/:UserId", isLoggedIn, async (req, res, next) => {
   const UserId = +req.params.UserId;
 
   try {
+    // 2022/01/19 - 본인을 언팔로우 하는 요청인 경우 - by 1-blue
+    if (req.user._id === UserId) {
+      return res
+        .status(409)
+        .json({ message: "본인이 본인을 언팔로우할 수 없습니다.\n새로 고침 후 다시 시도해 주세요." });
+    }
+
     const me = await User.findByPk(req.user._id);
 
     // 2022/01/04 - 이미 언팔로우한 상태에서 팔로우 요청인 경우 - by 1-blue
@@ -127,7 +141,8 @@ router.delete("/:UserId", isLoggedIn, async (req, res, next) => {
 
     return res.json({
       message: `${unfollowUser.name}님을 언팔로우했습니다.`,
-      Follow: { unfollowingId: UserId, unfollowerId: req.user._id },
+      unfollowingId: UserId,
+      unfollowerId: req.user._id,
     });
   } catch (error) {
     console.error("DELETE /follow/:UserId >> ", error);
