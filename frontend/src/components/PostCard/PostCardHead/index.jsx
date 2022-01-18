@@ -1,13 +1,15 @@
 /**
  * 생성일: 2022/01/15
- * 수정일: -
+ * 수정일: 2022/01/18
  * 작성자: 1-blue
  *
  * 상세 게시글 페이지의 머리 부분
  * 작성자 프사, 작성자 이름, 팔로우 버튼, 게시글 옵션 버튼이 존재
+ * 작성자만 삭제 권한 부여
  */
 
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import Proptypes from "prop-types";
 
 // styled-components
@@ -23,7 +25,12 @@ import Menu from "@components/common/Menu";
 import useOpenClose from "@hooks/useOpenClose";
 
 const PostCardHead = ({ user, onRemovePost }) => {
+  const { me } = useSelector(state => state.user);
   const [isShowMenu, onOpenMenu, onCloseMenu] = useOpenClose();
+  const [isMine, setIsMine] = useState(false);
+
+  // 2022/01/18 - 본인 게시글인지 판단 - by 1-blue
+  useEffect(() => setIsMine(user._id === me._id), [user._id, me._id]);
 
   return (
     <Wrapper>
@@ -47,9 +54,11 @@ const PostCardHead = ({ user, onRemovePost }) => {
       {/* 댓글 옵션 메뉴 */}
       {isShowMenu && (
         <Menu $post onCloseMenu={onCloseMenu}>
-          <li className="menu-list" onClick={onRemovePost}>
-            삭제
-          </li>
+          {isMine && (
+            <li className="menu-list" onClick={onRemovePost}>
+              삭제
+            </li>
+          )}
           <li className="menu-list">신고</li>
           <li className="menu-list">숨기기</li>
         </Menu>

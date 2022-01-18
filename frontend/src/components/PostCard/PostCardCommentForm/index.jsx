@@ -1,9 +1,10 @@
 /**
  * 생성일: 2022/01/16
- * 수정일: -
+ * 수정일: 2022/01/18
  * 작성자: 1-blue
  *
  * 게시글의 댓글 생성 폼
+ * 아바타 정보 수정 ( 로그인한 유저의 이미지 부여 )
  */
 
 import React, { useRef } from "react";
@@ -17,13 +18,14 @@ import { Wrapper } from "./style";
 import Avatar from "@components/common/Avatar";
 import Button from "@components/common/Button";
 
-const PostCardCommentForm = ({ user, text, onChangeText, resize, onSubmitComment }) => {
+const PostCardCommentForm = ({ text, onChangeText, resize, onSubmitComment }) => {
+  const { me } = useSelector(state => state.user);
   const { appendCommentToPostLoading } = useSelector(state => state.post);
   const textareaRef = useRef(null);
 
   return (
     <Wrapper onSubmit={onSubmitComment(textareaRef)}>
-      <Avatar width={28} height={28} image={user.Images[0]} $cursor className="post-card-comment-form-avatar" />
+      <Avatar width={28} height={28} image={me.Images[0]} $cursor className="post-card-comment-form-avatar" />
 
       <textarea
         value={text}
@@ -45,16 +47,6 @@ const PostCardCommentForm = ({ user, text, onChangeText, resize, onSubmitComment
 };
 
 PostCardCommentForm.propTypes = {
-  user: Proptypes.shape({
-    _id: Proptypes.number,
-    name: Proptypes.string,
-    Images: Proptypes.arrayOf(
-      Proptypes.shape({
-        _id: Proptypes.number,
-        name: Proptypes.string,
-      }),
-    ),
-  }),
   text: Proptypes.string.isRequired,
   onChangeText: Proptypes.func.isRequired,
   resize: Proptypes.func.isRequired,

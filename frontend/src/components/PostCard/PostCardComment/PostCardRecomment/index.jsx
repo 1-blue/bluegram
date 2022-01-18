@@ -7,7 +7,8 @@
  * 답글 제거 기능
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Proptypes from "prop-types";
 
 // styled-components
@@ -25,7 +26,12 @@ import useOpenClose from "@hooks/useOpenClose";
 import { timeFormat } from "@utils";
 
 const PostCardRecomment = ({ recomment, onRemoveComment }) => {
+  const { me } = useSelector(state => state.user);
   const [isShowMenu, onOpenMenu, onCloseMenu] = useOpenClose(false);
+  const [isMine, setIsMine] = useState(false);
+
+  // 2022/01/18 - 본인 답글인지 판단 - by 1-blue
+  useEffect(() => setIsMine(recomment.User._id === me._id), [recomment.User._id, me._id]);
 
   return (
     <Wrapper className="post-card-recomment-wrapper">
@@ -70,9 +76,11 @@ const PostCardRecomment = ({ recomment, onRemoveComment }) => {
         {/* 답글 옵션 메뉴 */}
         {isShowMenu && (
           <Menu $comment onCloseMenu={onCloseMenu}>
-            <li className="menu-list" onClick={onRemoveComment(recomment._id)}>
-              삭제
-            </li>
+            {isMine && (
+              <li className="menu-list" onClick={onRemoveComment(recomment._id)}>
+                삭제
+              </li>
+            )}
             <li className="menu-list">신고</li>
             <li className="menu-list">숨기기</li>
           </Menu>

@@ -174,7 +174,6 @@ const PostCard = ({ post }) => {
 
       {/* 게시글의 댓글 입력 폼 */}
       <PostCardCommentForm
-        user={post.User}
         text={text}
         onChangeText={onChangeText}
         resize={resize}

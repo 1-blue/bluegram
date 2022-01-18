@@ -1,12 +1,14 @@
 /**
  * 생성일: 2022/01/16
- * 수정일: -
+ * 수정일: 2022/01/18
  * 작성자: 1-blue
  *
  * 게시글의 댓글들 컨테이너
+ * 본인 댓글에만 삭제 권한 부여
  */
 
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Proptypes from "prop-types";
 
 // styled-components
@@ -30,8 +32,13 @@ import useToggle from "@hooks/useToggle";
 import { timeFormat } from "@utils";
 
 const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment, setRecommentData }) => {
+  const { me } = useSelector(state => state.user);
   const [isShowMenu, onOpenMenu, onCloseMenu] = useOpenClose(false);
   const [isShowRecomment, onToggleComment] = useToggle(true);
+  const [isMine, setIsMine] = useState(false);
+
+  // 2022/01/18 - 본인 댓글인지 판단 - by 1-blue
+  useEffect(() => setIsMine(comment.User._id === me._id), [comment.User._id, me._id]);
 
   return (
     <Wrapper className="post-card-comment-wrapper">
@@ -80,9 +87,11 @@ const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment, s
         {/* 댓글 옵션 메뉴 */}
         {isShowMenu && (
           <Menu $comment onCloseMenu={onCloseMenu}>
-            <li className="menu-list" onClick={onRemoveComment(comment._id)}>
-              삭제
-            </li>
+            {isMine && (
+              <li className="menu-list" onClick={onRemoveComment(comment._id)}>
+                삭제
+              </li>
+            )}
             <li className="menu-list">신고</li>
             <li className="menu-list">숨기기</li>
           </Menu>
