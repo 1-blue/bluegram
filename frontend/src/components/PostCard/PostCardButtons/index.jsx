@@ -1,11 +1,12 @@
 /**
  * 생성일: 2022/01/15
- * 수정일: 2022/01/18
+ * 수정일: 2022/01/19
  * 작성자: 1-blue
  *
  * 상세 게시글 페이지의 버튼들
  * 좋아요, 댓글, DM, 북마크 버튼 추가 ( 기능은 아직 없음 )
  * 좋아요 기능 추가
+ * 댓글 focus 시 아이콘 변경 및 댓글 아이콘 기능 focus 기능 추가
  */
 
 import React, { useState, useEffect } from "react";
@@ -18,7 +19,7 @@ import { Wrapper } from "./style";
 // common-components
 import Icon from "@components/common/Icon";
 
-const PostCardButtons = ({ likers, onClickPostLikeButton }) => {
+const PostCardButtons = ({ likers, onClickPostLikeButton, isFocus, onClickCommentIconButton }) => {
   const { me } = useSelector(state => state.user);
   const [isLikedPost, setIsLikedPost] = useState(false);
 
@@ -37,7 +38,15 @@ const PostCardButtons = ({ likers, onClickPostLikeButton }) => {
           animation="heart-scale"
         />
       </button>
-      <Icon width={24} height={24} shape="comment" className="post-card-buttons-comment" />
+      <Icon
+        width={24}
+        height={24}
+        shape="comment"
+        className="post-card-buttons-comment"
+        $fill={isFocus}
+        fill="var(--comment-color)"
+        onClick={onClickCommentIconButton}
+      />
       <Icon width={24} height={24} shape="airplane" className="post-card-buttons-airplane" />
       <div className="post-card-buttons-empty-place" />
       <Icon width={24} height={24} shape="bookmark" className="post-card-buttons-bookmark" />
@@ -55,6 +64,8 @@ PostCardButtons.propTypes = {
     }),
   ).isRequired,
   onClickPostLikeButton: Proptypes.func.isRequired,
+  isFocus: Proptypes.bool.isRequired,
+  onClickCommentIconButton: Proptypes.func.isRequired,
 };
 
 export default PostCardButtons;

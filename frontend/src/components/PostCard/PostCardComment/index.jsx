@@ -1,12 +1,13 @@
 /**
  * 생성일: 2022/01/16
- * 수정일: 2022/01/18
+ * 수정일: 2022/01/19
  * 작성자: 1-blue
  *
  * 게시글의 댓글들 컨테이너
  * 본인 댓글에만 삭제 권한 부여
  * 댓글에 좋아요 로직 추가
  * 작성자 프로필 페이지 링크 추가
+ * 답글 버큰 클릭 시 포커스 부여 및 답글 데이터 기록방법 수정
  */
 
 import React, { useEffect, useState } from "react";
@@ -38,8 +39,8 @@ const PostCardComment = ({
   comment,
   onRemoveComment,
   onClickloadMoreRecomment,
-  setRecommentData,
   onClickCommentLikeButton,
+  onClickRecommentButton,
 }) => {
   const { me } = useSelector(state => state.user);
   const [isShowMenu, onOpenMenu, onCloseMenu] = useOpenClose(false);
@@ -94,7 +95,7 @@ const PostCardComment = ({
             <button
               type="button"
               className="post-card-comment-recomment-button"
-              onClick={() => setRecommentData({ RecommentId: comment._id, username: comment.User.name })}
+              onClick={onClickRecommentButton(comment._id, comment.User.name)}
             >
               <b>답글 달기</b>
             </button>
@@ -196,8 +197,8 @@ PostCardComment.propTypes = {
   }).isRequired,
   onRemoveComment: Proptypes.func.isRequired,
   onClickloadMoreRecomment: Proptypes.func.isRequired,
-  setRecommentData: Proptypes.func.isRequired,
   onClickCommentLikeButton: Proptypes.func.isRequired,
+  onClickRecommentButton: Proptypes.func.isRequired,
 };
 
 export default PostCardComment;

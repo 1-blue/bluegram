@@ -11,6 +11,7 @@
  * 답글 더 불러오기
  * 게시글/댓글/답글 좋아요 로직 추가
  * 팔로우/언팔로우 로직 추가
+ * textareaRef 이동 ( focus 및 commentIcon 조정을 위함 )
  */
 
 import React, { useCallback, useState, useEffect, useRef } from "react";
@@ -55,10 +56,35 @@ const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const { appendLikeToPostLoading, removeLikeToPostLoading, appendLikeToCommentLoading, removeLikeToCommentLoading } =
     useSelector(state => state.post);
+  const textareaRef = useRef(null);
   const [text, onChangeText, setText, resize] = useTextarea("");
   const [isShowComment, onToggleComment] = useToggle(true);
   // 2022/01/17 - 답글일 경우 답글에 대한 정보를 가지는 훅 - by 1-blue
   const [recommentData, setRecommentData] = useState({ RecommentId: null, username: "" });
+  const [isFocus, setIsFocus] = useState(false);
+
+  // 2022/01/17 - 답글 달기를 눌렀을 경우 답글임을 명시하기 위해 폼에 "@유저명 "을 넣어줌 - by 1-blue
+  useEffect(() => {
+    if (!recommentData.username) return;
+    setText(`@${recommentData.username} `);
+  }, [recommentData]);
+
+  // 2022/01/19 - textarea resize - by 1-blue
+  const textareaResize = useCallback(() => resize(textareaRef), [resize, textareaRef]);
+
+  // 2022/01/19 - 버튼 아이콘 클릭 시 포커스 부여 - by 1-blue
+  const onClickCommentIconButton = useCallback(() => textareaRef.current.focus(), [textareaRef.current]);
+
+  // 2022/01/19 - 답글 달기 버튼 클릭 시 포커스 부여 + 답글에 대한 정보 기록 - by 1-blue
+  const onClickRecommentButton = useCallback(
+    (RecommentId, username) => () => {
+      setRecommentData({ RecommentId, username });
+      textareaRef.current.focus();
+    },
+    [textareaRef.current, setRecommentData],
+  );
+
+  // ==== 아래 부분은 API요청 ====
 
   // 2022/01/17 - 현재 게시글 제거 요청 - by 1-blue
   const onRemovePost = useCallback(() => dispatch(removePostAction({ PostId: post._id })), [post._id]);

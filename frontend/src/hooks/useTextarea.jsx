@@ -16,18 +16,14 @@ const useTextarea = initValue => {
   }, []);
 
   // ref => textarea, height => 최소 높이
-  const resize = useCallback(
-    (ref, height = 1) =>
-      () => {
-        if (ref.current.scrollHeight > height) {
-          setTimeout(() => {
-            ref.current.style.height = "1px";
-            ref.current.style.height = ref.current.scrollHeight + "px";
-          }, 0);
-        }
-      },
-    [],
-  );
+  const resize = useCallback((ref, height = 1) => {
+    if (ref.current.scrollHeight <= height) return;
+
+    setTimeout(() => {
+      ref.current.style.height = "1px";
+      ref.current.style.height = ref.current.scrollHeight + "px";
+    }, 0);
+  }, []);
 
   return [input, onChangeInput, setInput, resize];
 };
