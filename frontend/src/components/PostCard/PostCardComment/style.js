@@ -31,12 +31,13 @@ export const Wrapper = styled.ul`
   }
   /* 댓글 내용 */
   & .post-card-comment-text {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     word-break: break-all;
     white-space: pre-wrap;
   }
   /* 댓글 작성 시간 */
   & .post-card-comment-created-at,
+  .post-card-comment-like-button,
   .post-card-comment-recomment-button {
     font-size: 0.7rem;
     color: gray;

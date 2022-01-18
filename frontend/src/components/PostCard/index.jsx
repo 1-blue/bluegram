@@ -9,10 +9,11 @@
  * 답글 CD
  * 댓글 더 불러오기
  * 답글 더 불러오기
+ * 게시글/댓글/답글 좋아요 로직 추가
  */
 
 import React, { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Proptypes from "prop-types";
 
 // styled-components
@@ -39,6 +40,8 @@ import {
   loadRecommentsAction,
   appendLikeToPostAction,
   removeLikeToPostAction,
+  appendLikeToCommentAction,
+  removeLikeToCommentAction,
 } from "@store/actions";
 
 // hooks
@@ -48,6 +51,8 @@ import { useEffect } from "react";
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
+  const { appendLikeToPostLoading, removeLikeToPostLoading, appendLikeToCommentLoading, removeLikeToCommentLoading } =
+    useSelector(state => state.post);
   const [text, onChangeText, setText, resize] = useTextarea("");
   const [isShowComment, onToggleComment] = useToggle(true);
   // 2022/01/17 - 답글일 경우 답글에 대한 정보를 가지는 훅 - by 1-blue
@@ -119,13 +124,33 @@ const PostCard = ({ post }) => {
   // 2022/01/18 - 게시글에 좋아요 추가/제거 - by 1-blue
   const onClickPostLikeButton = useCallback(
     isLikedPost => () => {
+      // 이미 좋아요 처리중이라면 요청 중지
+      if (appendLikeToPostLoading || removeLikeToPostLoading)
+        return alert("이미 게시글에 좋아요 요청 처리중입니다.\n잠시후에 다시 시도해주세요");
+
       if (isLikedPost) {
         dispatch(removeLikeToPostAction({ PostId: post._id }));
       } else {
         dispatch(appendLikeToPostAction({ PostId: post._id }));
       }
     },
-    [post._id],
+    [post._id, appendLikeToPostLoading, removeLikeToPostLoading],
+  );
+
+  // 2022/01/18 - 댓글/답글에 좋아요 추가/제거 - by 1-blue
+  const onClickCommentLikeButton = useCallback(
+    (isLikedComment, CommentId) => () => {
+      // 이미 좋아요 처리중이라면 요청 중지
+      if (appendLikeToCommentLoading || removeLikeToCommentLoading)
+        return alert("이미 댓글에 좋아요 요청 처리중입니다.\n잠시후에 다시 시도해주세요");
+
+      if (isLikedComment) {
+        dispatch(removeLikeToCommentAction({ CommentId }));
+      } else {
+        dispatch(appendLikeToCommentAction({ CommentId }));
+      }
+    },
+    [post._id, appendLikeToCommentLoading, removeLikeToCommentLoading],
   );
 
   return (
@@ -160,6 +185,7 @@ const PostCard = ({ post }) => {
             onRemoveComment={onRemoveComment}
             onClickloadMoreRecomment={onClickloadMoreRecomment}
             setRecommentData={setRecommentData}
+            onClickCommentLikeButton={onClickCommentLikeButton}
           />
         ))}
 

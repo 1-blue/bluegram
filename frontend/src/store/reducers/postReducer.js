@@ -594,7 +594,7 @@ function postReducer(prevState = initState, action) {
         removeCommentToPostError: action.data.message,
       };
 
-    // 2021/12/28 - 댓글에 좋아요 추가 - by 1-blue
+    // 2022/01/18 - 댓글/답글에 좋아요 추가 - by 1-blue
     case APPEND_LIKE_TO_COMMENT_REQUEST:
       return {
         ...prevState,
@@ -603,45 +603,55 @@ function postReducer(prevState = initState, action) {
         appendLikeToCommentError: null,
       };
     case APPEND_LIKE_TO_COMMENT_SUCCESS:
-      const { commentLikerWithData, RecommentId } = action.data;
+      // 2022/01/18 - 댓글/답글에 좋아요 추가 - by 1-blue
+      // 답글에 좋아요 누른 경우
+      if (action.data.RecommentId) {
+        tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+          if (post._id !== action.data.PostId) return post;
 
-      // 2021/12/28 - 댓글 좋아요 추가 후 post 처리 - by 1-blue
-      if (RecommentId) {
-        tempPost = {
-          ...prevState.post,
-          Comments: prevState.post.Comments.map(comment => {
-            if (comment._id !== RecommentId) return comment;
-            return {
-              ...comment,
-              Recomments: comment.Recomments.map(recomment => {
-                if (recomment._id !== commentLikerWithData.CommentLikes.CommentId) return recomment;
+          return {
+            ...post,
+            Comments: post.Comments.map(comment => {
+              if (comment._id !== action.data.RecommentId) return comment;
+              return {
+                ...comment,
+                Recomments: comment.Recomments.map(recomment => {
+                  if (recomment._id !== action.data.CommentId) return recomment;
 
-                return {
-                  ...recomment,
-                  CommentLikers: [...recomment.CommentLikers, commentLikerWithData],
-                };
-              }),
-            };
-          }),
-        };
-      } else {
-        tempPost = {
-          ...prevState.post,
-          Comments: prevState.post.Comments.map(comment => {
-            if (comment._id !== commentLikerWithData.CommentLikes.CommentId) return comment;
-            return {
-              ...comment,
-              CommentLikers: [...comment.CommentLikers, commentLikerWithData],
-            };
-          }),
-        };
+                  return {
+                    ...recomment,
+                    CommentLikers: [...recomment.CommentLikers, action.data.commentLikerWithData],
+                  };
+                }),
+              };
+            }),
+          };
+        });
+      }
+      // 댓글에 좋아요 누른 경우
+      else {
+        tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+          if (post._id !== action.data.PostId) return post;
+
+          return {
+            ...post,
+            Comments: post.Comments.map(comment => {
+              if (comment._id !== action.data.CommentId) return comment;
+
+              return {
+                ...comment,
+                CommentLikers: [...comment.CommentLikers, action.data.commentLikerWithData],
+              };
+            }),
+          };
+        });
       }
 
       return {
         ...prevState,
         appendLikeToCommentLoading: false,
         appendLikeToCommentDone: action.data.message,
-        post: tempPost,
+        postsOfDetail: tempPostsOfDetail,
       };
     case APPEND_LIKE_TO_COMMENT_FAILURE:
       return {
@@ -650,7 +660,7 @@ function postReducer(prevState = initState, action) {
         appendLikeToCommentError: action.data.message,
       };
 
-    // 2021/12/28 - 댓글에 좋아요 취소 - by 1-blue
+    // 2022/01/18 - 댓글에 좋아요 취소 - by 1-blue
     case REMOVE_LIKE_TO_COMMENT_REQUEST:
       return {
         ...prevState,
@@ -659,49 +669,58 @@ function postReducer(prevState = initState, action) {
         removeLikeToCommentError: null,
       };
     case REMOVE_LIKE_TO_COMMENT_SUCCESS:
-      // 2021/12/28 - 댓글 좋아요 추가 후 post 처리 - by 1-blue
-      if (action.data.result.RecommentId) {
-        tempPost = {
-          ...prevState.post,
-          Comments: prevState.post.Comments.map(comment => {
-            if (comment._id !== action.data.result.RecommentId) return comment;
+      // 2022/01/18 - 댓글 좋아요 추가 후 post 처리 - by 1-blue
+      // 답글일 경우
+      if (action.data.RecommentId) {
+        tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+          if (post._id !== action.data.PostId) return post;
 
-            return {
-              ...comment,
-              Recomments: comment.Recomments.map(recomment => {
-                if (recomment._id !== action.data.result.CommentId) return recomment;
+          return {
+            ...post,
+            Comments: post.Comments.map(comment => {
+              if (comment._id !== action.data.RecommentId) return comment;
 
-                return {
-                  ...recomment,
-                  CommentLikers: comment.CommentLikers.filter(
-                    commentLiker => commentLiker._id !== action.data.result.removedUserId,
-                  ),
-                };
-              }),
-            };
-          }),
-        };
+              return {
+                ...comment,
+                Recomments: comment.Recomments.map(recomment => {
+                  if (recomment._id !== action.data.CommentId) return recomment;
+
+                  return {
+                    ...recomment,
+                    CommentLikers: comment.CommentLikers.filter(
+                      commentLiker => commentLiker._id !== action.data.UserId,
+                    ),
+                  };
+                }),
+              };
+            }),
+          };
+        });
+
+        // 댓글일 경우
       } else {
-        tempPost = {
-          ...prevState.post,
-          Comments: prevState.post.Comments.map(comment => {
-            if (comment._id !== action.data.result.CommentId) return comment;
+        tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+          if (post._id !== action.data.PostId) return post;
 
-            return {
-              ...comment,
-              CommentLikers: comment.CommentLikers.filter(
-                commentLiker => commentLiker._id !== action.data.result.removedUserId,
-              ),
-            };
-          }),
-        };
+          return {
+            ...post,
+            Comments: post.Comments.map(comment => {
+              if (comment._id !== action.data.CommentId) return comment;
+
+              return {
+                ...comment,
+                CommentLikers: comment.CommentLikers.filter(commentLiker => commentLiker._id !== action.data.UserId),
+              };
+            }),
+          };
+        });
       }
 
       return {
         ...prevState,
         removeLikeToCommentLoading: false,
         removeLikeToCommentDone: action.data.message,
-        post: tempPost,
+        postsOfDetail: tempPostsOfDetail,
       };
     case REMOVE_LIKE_TO_COMMENT_FAILURE:
       return {

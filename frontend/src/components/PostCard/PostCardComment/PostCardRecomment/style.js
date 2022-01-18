@@ -37,7 +37,7 @@ export const Wrapper = styled.ul`
   }
   /* 댓글 작성 시간 */
   & .post-card-recomment-created-at,
-  .post-card-recomment-button {
+  .post-card-recomment-like-button {
     font-size: 0.7rem;
     color: gray;
     margin-right: 0.8em;

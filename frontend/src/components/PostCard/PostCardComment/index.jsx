@@ -5,6 +5,7 @@
  *
  * 게시글의 댓글들 컨테이너
  * 본인 댓글에만 삭제 권한 부여
+ * 댓글에 좋아요 로직 추가
  */
 
 import React, { useEffect, useState } from "react";
@@ -31,14 +32,27 @@ import useToggle from "@hooks/useToggle";
 // utils
 import { timeFormat } from "@utils";
 
-const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment, setRecommentData }) => {
+const PostCardComment = ({
+  comment,
+  onRemoveComment,
+  onClickloadMoreRecomment,
+  setRecommentData,
+  onClickCommentLikeButton,
+}) => {
   const { me } = useSelector(state => state.user);
   const [isShowMenu, onOpenMenu, onCloseMenu] = useOpenClose(false);
   const [isShowRecomment, onToggleComment] = useToggle(true);
   const [isMine, setIsMine] = useState(false);
+  const [isLikedComment, setIsLikedComment] = useState(false);
 
   // 2022/01/18 - 본인 댓글인지 판단 - by 1-blue
   useEffect(() => setIsMine(comment.User._id === me._id), [comment.User._id, me._id]);
+
+  // 2022/01/18 - 댓글에 좋아요 눌렀는지 판단 - by 1-blue
+  useEffect(
+    () => setIsLikedComment(comment.CommentLikers.some(liker => liker._id === me._id)),
+    [comment.CommentLikers, me._id],
+  );
 
   return (
     <Wrapper className="post-card-comment-wrapper">
@@ -64,6 +78,9 @@ const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment, s
           {/* 댓글의 추가 정보 및 버튼 */}
           <div className="post-card-comment-info">
             <span className="post-card-comment-created-at">{timeFormat(comment.createdAt)}</span>
+            <button type="button" className="post-card-comment-like-button">
+              {comment.CommentLikers.length > 0 && <b>좋아요 {comment.CommentLikers.length}개</b>}
+            </button>
             <button
               type="button"
               className="post-card-comment-recomment-button"
@@ -79,8 +96,19 @@ const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment, s
           <button type="button" className="post-card-comment-option-button" onClick={onOpenMenu}>
             <Icon width={16} height={16} shape="option" />
           </button>
-          <button type="button" className="post-card-comment-heart-button">
-            <Icon width={16} height={16} shape="heart" />
+          <button
+            type="button"
+            className="post-card-comment-heart-button"
+            onClick={onClickCommentLikeButton(isLikedComment, comment._id)}
+          >
+            <Icon
+              width={16}
+              height={16}
+              shape="heart"
+              $fill={isLikedComment}
+              fill="var(--heart-color)"
+              animation="heart-scale"
+            />
           </button>
         </div>
 
@@ -117,7 +145,12 @@ const PostCardComment = ({ comment, onRemoveComment, onClickloadMoreRecomment, s
       {comment.Recomments[0]?.content &&
         isShowRecomment &&
         comment.Recomments.map(recomment => (
-          <PostCardRecomment key={recomment._id} recomment={recomment} onRemoveComment={onRemoveComment} />
+          <PostCardRecomment
+            key={recomment._id}
+            recomment={recomment}
+            onRemoveComment={onRemoveComment}
+            onClickCommentLikeButton={onClickCommentLikeButton}
+          />
         ))}
     </Wrapper>
   );
@@ -154,6 +187,7 @@ PostCardComment.propTypes = {
   onRemoveComment: Proptypes.func.isRequired,
   onClickloadMoreRecomment: Proptypes.func.isRequired,
   setRecommentData: Proptypes.func.isRequired,
+  onClickCommentLikeButton: Proptypes.func.isRequired,
 };
 
 export default PostCardComment;
