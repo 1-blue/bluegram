@@ -10,6 +10,7 @@ import "@css/common.css";
 import "@css/animation.css";
 
 // components
+import Scroll from "@components/Scroll";
 import TopNavigationBar from "@components/NavigationBar/TopNavigationBar";
 import BottomNavigationBar from "@components/NavigationBar/BottomNavigationBar";
 import Layout from "@components/Layout";
@@ -28,6 +29,8 @@ const App = ({ Component, pageProps }) => {
 
   return (
     <>
+      {/* scroll */}
+      <Scroll />
       {/* nav*/}
       {width > 1024 ? <TopNavigationBar /> : <BottomNavigationBar />}
 
