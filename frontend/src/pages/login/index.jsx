@@ -59,10 +59,10 @@ const LoginPage = () => {
 
   return (
     <Wrapper>
-      <Form onSubmit={onLocalLogin}>
+      <Form onSubmit={onLocalLogin} autoComplete="on">
         <h1 className="form-title">bluegram</h1>
         {/* id */}
-        <Input type="text" placeholder="아이디를 입력해주세요" value={id} onChange={onChangeId} />
+        <Input type="text" placeholder="아이디를 입력해주세요" value={id} onChange={onChangeId} autoFocus />
 
         {/* password */}
         <Input type="password" placeholder="비밀번호를 입력해주세요" value={password} onChange={onChangePassword} />

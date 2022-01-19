@@ -16,10 +16,10 @@ export const Wrapper = styled.button`
       &::after {
         content: "";
         position: absolute;
-        top: 0;
+        top: 0px;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 101%;
         background: purple;
         transform: scale(0, 1);
         transition: all 0.35s;

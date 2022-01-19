@@ -6,15 +6,15 @@
  * input ( 로그인, 회원가입 페이지에서 사용 )
  */
 
-import React from "react";
+import React, { forwardRef } from "react";
 import Proptypes from "prop-types";
 
 // styled-components
 import { Wrapper } from "./style";
 
-const Input = props => {
-  return <Wrapper {...props} />;
-};
+const Input = forwardRef((props, ref) => {
+  return <Wrapper {...props} ref={ref} />;
+});
 
 Input.propTypes = {
   type: Proptypes.string.isRequired,
