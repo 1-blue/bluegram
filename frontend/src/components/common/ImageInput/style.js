@@ -10,7 +10,7 @@ export const Wrapper = styled.section`
   & > div {
     width: 100%;
     height: 200px;
-    background-color: rgba(80, 0, 80, 0.6);
+    background-color: rgba(80, 80, 80, 0.6);
     border-radius: 10px;
     text-align: center;
     line-height: 200px;

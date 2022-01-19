@@ -9,6 +9,7 @@ export const Wrapper = styled.input`
     border: 1px solid purple;
     font-size: 1rem;
     font-weight: 500;
+    font-family: inherit;
   }
 
   &[type="file"] {
