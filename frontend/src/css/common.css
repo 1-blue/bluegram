@@ -7,6 +7,7 @@
   
   --light-blue: #0095f6;
   --heart-color: #ED4956;
+  --comment-color: #1A5F7A;
 
   --success-color: #2F80ED;
   --warning-color: #38ef7d;
@@ -14,6 +15,8 @@
 }
 body {
   -ms-overflow-style: none; 
+  /* 인스타그램에서 가져온 폰트 ( 이걸 사용하는지 정확히는 모르겠음 ) */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 body::-webkit-scrollbar {
   display: none;

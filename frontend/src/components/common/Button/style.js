@@ -133,4 +133,20 @@ export const Wrapper = styled.button`
       border-radius: 5px;
       font-weight: 700;
     `}
+
+  /* 팔로우 버튼 */
+  ${({ $follow }) =>
+    $follow &&
+    css`
+      font-weight: bold;
+      color: var(--light-blue);
+    `}
+
+  /* 댓글 제출 버튼 */
+  ${({ $comment }) =>
+    $comment &&
+    css`
+      font-weight: bold;
+      color: var(--light-blue);
+    `}
 `;

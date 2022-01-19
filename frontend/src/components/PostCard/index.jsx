@@ -1,0 +1,311 @@
+/**
+ * 생성일: 2022/01/15
+ * 수정일: 2022/01/19
+ * 작성자: 1-blue
+ *
+ * 상세 게시글 컴포넌트
+ * 게시글 CRD
+ * 댓글 CD
+ * 답글 CD
+ * 댓글 더 불러오기
+ * 답글 더 불러오기
+ * 게시글/댓글/답글 좋아요 로직 추가
+ * 팔로우/언팔로우 로직 추가
+ * textareaRef 이동 ( focus 및 commentIcon 조정을 위함 )
+ */
+
+import React, { useCallback, useState, useEffect, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Proptypes from "prop-types";
+
+// styled-components
+import { Wrapper } from "./style";
+
+// components
+import PostCardHead from "./PostCardHead";
+import PostCardImage from "./PostCardImage";
+import PostCardButtons from "./PostCardButtons";
+import PostCardInfo from "./PostCardInfo";
+import PostCardContent from "./PostCardContent";
+import PostCardCommentToggleButton from "./PostCardCommentToggleButton";
+import PostCardComment from "./PostCardComment";
+import PostCardLoadCommentButton from "./PostCardLoadCommentButton";
+import PostCardCommentForm from "./PostCardCommentForm";
+
+// actions
+import {
+  resetMessageAction,
+  removePostAction,
+  appendCommentToPostAction,
+  removeCommentToPostAction,
+  loadCommentsAction,
+  loadRecommentsAction,
+  appendLikeToPostAction,
+  removeLikeToPostAction,
+  appendLikeToCommentAction,
+  removeLikeToCommentAction,
+  followAction,
+  unfollowAction,
+} from "@store/actions";
+
+// hooks
+import useTextarea from "@hooks/useTextarea";
+import useToggle from "@hooks/useToggle";
+
+const PostCard = ({ post }) => {
+  const dispatch = useDispatch();
+  const { appendLikeToPostLoading, removeLikeToPostLoading, appendLikeToCommentLoading, removeLikeToCommentLoading } =
+    useSelector(state => state.post);
+  const textareaRef = useRef(null);
+  const [text, onChangeText, setText, resize] = useTextarea("");
+  const [isShowComment, onToggleComment] = useToggle(true);
+  // 2022/01/17 - 답글일 경우 답글에 대한 정보를 가지는 훅 - by 1-blue
+  const [recommentData, setRecommentData] = useState({ RecommentId: null, username: "" });
+  const [isFocus, setIsFocus] = useState(false);
+
+  // 2022/01/17 - 답글 달기를 눌렀을 경우 답글임을 명시하기 위해 폼에 "@유저명 "을 넣어줌 - by 1-blue
+  useEffect(() => {
+    if (!recommentData.username) return;
+    setText(`@${recommentData.username} `);
+  }, [recommentData]);
+
+  // 2022/01/19 - textarea resize - by 1-blue
+  const textareaResize = useCallback(() => resize(textareaRef), [resize, textareaRef]);
+
+  // 2022/01/19 - 버튼 아이콘 클릭 시 포커스 부여 - by 1-blue
+  const onClickCommentIconButton = useCallback(() => textareaRef.current.focus(), [textareaRef.current]);
+
+  // 2022/01/19 - 답글 달기 버튼 클릭 시 포커스 부여 + 답글에 대한 정보 기록 - by 1-blue
+  const onClickRecommentButton = useCallback(
+    (RecommentId, username) => () => {
+      setRecommentData({ RecommentId, username });
+      textareaRef.current.focus();
+    },
+    [textareaRef.current, setRecommentData],
+  );
+
+  // ==== 아래 부분은 API요청 ====
+
+  // 2022/01/17 - 현재 게시글 제거 요청 - by 1-blue
+  const onRemovePost = useCallback(() => dispatch(removePostAction({ PostId: post._id })), [post._id]);
+
+  // 2022/01/16 - 현재 게시글에 댓글/답글 생성 요청 - by 1-blue
+  const onSubmitComment = useCallback(
+    e => {
+      e.preventDefault();
+
+      // 답글이라면 답글 식별자가 들어갈 변수
+      let RecommentId = null;
+
+      // 답글인지 판단 후 답글이라면 답글 식별자를 넣어줌
+      if (/^@[\S]*\s/g.test(text)) RecommentId = recommentData.RecommentId;
+
+      // 답글인 경우 앞에 "@유저명 " 제외시키는 정규표현식
+      const processingContent = text.replace(/^@[\S]*\s/g, "");
+
+      const length = processingContent.trim().length;
+
+      if (length === 0) return alert("댓글을 입력하고 제출해주세요!");
+      if (length > 200) return alert(`댓글의 최대 길이는 200자입니다.\n( 현재 길이 ${length} )`);
+
+      dispatch(appendCommentToPostAction({ content: processingContent, PostId: post._id, RecommentId }));
+
+      // textarea 초기화
+      setText("");
+      dispatch(resetMessageAction());
+      textareaResize();
+    },
+    [text, post._id, resize, recommentData, textareaResize],
+  );
+
+  // 2022/01/16 - 현재 게시글에 댓글/답글 삭제 요청 - by 1-blue
+  const onRemoveComment = useCallback(CommentId => () => dispatch(removeCommentToPostAction({ CommentId })), []);
+
+  // 2022/01/16 - 현재 게시글의 댓글 더 불러오기 - by 1-blue
+  const onClickloadMoreComment = useCallback(
+    lastId => () => {
+      if (post.Comments[0]?.content) {
+        // 한 번 이상 요청하고 추가로 댓글 요청일 경우
+        dispatch(loadCommentsAction({ PostId: post._id, lastId, limit: 10 }));
+      } else {
+        // 최초 요청일 경우
+        dispatch(loadCommentsAction({ PostId: post._id, lastId: null, limit: 10 }));
+      }
+    },
+    [post],
+  );
+
+  // 2022/01/17 - 현재 게시글의 특정 댓글의 답글 불러오기 - by 1-blue
+  const onClickloadMoreRecomment = useCallback(
+    (lastId, CommentId) => () => {
+      dispatch(loadRecommentsAction({ CommentId, lastId, limit: 5 }));
+    },
+    [],
+  );
+
+  // 2022/01/18 - 게시글에 좋아요 추가/제거 - by 1-blue
+  const onClickPostLikeButton = useCallback(
+    isLikedPost => () => {
+      // 이미 좋아요 처리중이라면 요청 중지
+      if (appendLikeToPostLoading || removeLikeToPostLoading)
+        return alert("이미 게시글에 좋아요 요청 처리중입니다.\n잠시후에 다시 시도해주세요");
+
+      if (isLikedPost) {
+        dispatch(removeLikeToPostAction({ PostId: post._id }));
+      } else {
+        dispatch(appendLikeToPostAction({ PostId: post._id }));
+      }
+    },
+    [post._id, appendLikeToPostLoading, removeLikeToPostLoading],
+  );
+
+  // 2022/01/18 - 댓글/답글에 좋아요 추가/제거 - by 1-blue
+  const onClickCommentLikeButton = useCallback(
+    (isLikedComment, CommentId) => () => {
+      // 이미 좋아요 처리중이라면 요청 중지
+      if (appendLikeToCommentLoading || removeLikeToCommentLoading)
+        return alert("이미 댓글에 좋아요 요청 처리중입니다.\n잠시후에 다시 시도해주세요");
+
+      if (isLikedComment) {
+        dispatch(removeLikeToCommentAction({ CommentId }));
+      } else {
+        dispatch(appendLikeToCommentAction({ CommentId }));
+      }
+    },
+    [post._id, appendLikeToCommentLoading, removeLikeToCommentLoading],
+  );
+
+  // 2022/01/19 - 팔로우/언팔로우 - by 1-blue
+  const onClickFollowButton = useCallback(
+    (UserId, isFollow) => () => {
+      if (isFollow) {
+        dispatch(unfollowAction({ UserId }));
+      } else {
+        dispatch(followAction({ UserId }));
+      }
+    },
+    [],
+  );
+
+  return (
+    <Wrapper>
+      {/* 게시글의 머리 부분 ( 작성자, 팔로우, 게시글 옵션 버튼 ) */}
+      <PostCardHead user={post.User} onRemovePost={onRemovePost} onClickFollowButton={onClickFollowButton} />
+
+      {/* 게시글의 이미지 */}
+      <PostCardImage images={post.Images} />
+
+      {/* 게시글 버튼들 ( 좋아요, 댓글, DM, 북마크 ) */}
+      <PostCardButtons
+        likers={post.PostLikers}
+        onClickPostLikeButton={onClickPostLikeButton}
+        isFocus={isFocus}
+        onClickCommentIconButton={onClickCommentIconButton}
+      />
+
+      {/* 게시글 정보 ( 좋아요 개수, 작성 시간 ) */}
+      <PostCardInfo likeCount={post.PostLikers.length} createdAt={post.createdAt} />
+
+      {/* 게시글 내용 */}
+      <PostCardContent content={post.content} />
+
+      {/* 게시글의 댓글 토글 버튼 */}
+      {post.Comments.length > 0 && !post.hasMoreComments && (
+        <PostCardCommentToggleButton isShowComment={isShowComment} onToggleComment={onToggleComment} />
+      )}
+
+      {/* 게시글의 댓글들 */}
+      {post.Comments[0]?.content &&
+        isShowComment &&
+        post.Comments.map(comment => (
+          <PostCardComment
+            key={comment._id}
+            comment={comment}
+            onRemoveComment={onRemoveComment}
+            onClickloadMoreRecomment={onClickloadMoreRecomment}
+            onClickCommentLikeButton={onClickCommentLikeButton}
+            onClickRecommentButton={onClickRecommentButton}
+          />
+        ))}
+
+      {/* 게시글의 댓글 더 불러오기 버튼 */}
+      {post.Comments.length > 0 && post.hasMoreComments && (
+        <PostCardLoadCommentButton
+          Comments={post.Comments}
+          allCommentCount={post.allCommentCount}
+          onClickloadMoreComment={onClickloadMoreComment}
+        />
+      )}
+
+      {/* 게시글의 댓글 입력 폼 */}
+      <PostCardCommentForm
+        ref={textareaRef}
+        text={text}
+        onChangeText={onChangeText}
+        textareaResize={textareaResize}
+        onSubmitComment={onSubmitComment}
+        recommentData={recommentData}
+        setIsFocus={setIsFocus}
+      />
+    </Wrapper>
+  );
+};
+
+PostCard.propTypes = {
+  post: Proptypes.shape({
+    _id: Proptypes.number,
+    content: Proptypes.string,
+    createdAt: Proptypes.string,
+    User: Proptypes.shape({
+      _id: Proptypes.number,
+      name: Proptypes.string,
+      Images: Proptypes.arrayOf(
+        Proptypes.shape({
+          _id: Proptypes.number,
+          name: Proptypes.string,
+        }),
+      ),
+    }),
+    Images: Proptypes.arrayOf(
+      Proptypes.shape({
+        _id: Proptypes.number,
+        name: Proptypes.string,
+      }),
+    ),
+    Comments: Proptypes.arrayOf(
+      Proptypes.shape({
+        _id: Proptypes.number,
+        content: Proptypes.string,
+        createdAt: Proptypes.string,
+        UserId: Proptypes.number,
+        User: Proptypes.shape({
+          _id: Proptypes.number,
+          name: Proptypes.string,
+          Images: Proptypes.arrayOf(
+            Proptypes.shape({
+              _id: Proptypes.number,
+              name: Proptypes.string,
+            }),
+          ),
+        }),
+        CommentLikers: Proptypes.arrayOf(
+          Proptypes.shape({
+            _id: Proptypes.number,
+          }),
+        ),
+        Recomments: Proptypes.arrayOf(
+          Proptypes.shape({
+            _id: Proptypes.number,
+          }),
+        ),
+      }),
+    ),
+    PostLikers: Proptypes.arrayOf(
+      Proptypes.shape({
+        _id: Proptypes.number,
+      }),
+    ),
+  }).isRequired,
+};
+
+export default PostCard;

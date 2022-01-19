@@ -1,7 +1,6 @@
 import fs from "fs";
 import path from "path";
 import express from "express";
-import { Op } from "sequelize";
 
 import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
@@ -132,8 +131,6 @@ router.get("/:PostId", isLoggedIn, async (req, res, next) => {
     const post = await Post.findOne({
       where: {
         _id: PostId,
-        // 답글인 경우 제외
-        "$Comments.RecommentId$": { [Op.eq]: null },
       },
       attributes: ["_id", "content", "createdAt"],
       include: [
@@ -157,43 +154,7 @@ router.get("/:PostId", isLoggedIn, async (req, res, next) => {
         // 게시글의 댓글들
         {
           model: Comment,
-          attributes: ["_id", "content", "UserId", "RecommentId", "createdAt"],
-          include: [
-            // 게시글의 댓글의 작성자
-            {
-              model: User,
-              attributes: ["_id", "name"],
-              include: [
-                // 댓글 작성자의 프로필 이미지
-                {
-                  model: Image,
-                  attributes: ["_id", "name", "url"],
-                },
-              ],
-            },
-            // 게시글의 댓글들에 좋아요를 누른 유저
-            {
-              model: User,
-              as: "CommentLikers",
-              attributes: ["_id", "name"],
-              through: {
-                attributes: ["createdAt", "UserId", "CommentId"],
-              },
-              include: [
-                // 게시글의 댓글들에 좋아요를 누른 유저의 이미지
-                {
-                  model: Image,
-                  attributes: ["_id", "name", "url"],
-                },
-              ],
-            },
-            // 댓글의 답글들 개수를 위함
-            {
-              model: Comment,
-              as: "Recomments",
-              attributes: ["_id"],
-            },
-          ],
+          attributes: ["_id"],
         },
         // 게시글의 좋아요
         {
@@ -205,10 +166,7 @@ router.get("/:PostId", isLoggedIn, async (req, res, next) => {
           },
         },
       ],
-      order: [
-        ["createdAt", "DESC"],
-        [Comment, "createdAt", "ASC"],
-      ],
+      order: [["createdAt", "DESC"]],
     });
 
     if (!post) return res.status(404).json({ message: "존재하지 않은 게시글입니다.\n잠시후에 다시 시도해주세요" });
@@ -220,17 +178,25 @@ router.get("/:PostId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2021/12/28 - 특정 게시글 삭제하기 - by 1-blue
+// 2022/01/18 - 특정 게시글 삭제하기 - by 1-blue
 router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
 
   try {
-    const removedPostCount = await Post.destroy({ where: { _id: PostId } });
+    const targetPost = await Post.findByPk(PostId, { include: { model: Image, attributes: ["name"] } });
 
-    if (removedPostCount === 0)
-      return res.status(404).json({ message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
+    if (!targetPost) return res.status(404).json({ message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
 
-    res.status(200).json({ message: "게시글 삭제에 성공하셨습니다.", result: { removedPostId: PostId } });
+    // 2022/01/18 - 게시글 생성 완료 시 추가한 이미지 위치 이동
+    targetPost.Images.forEach(image => {
+      const oldPath = path.join(__dirname, "public", "images", image.name);
+      const newPath = path.join(__dirname, "public", "images", "deleted", image.name);
+      fs.rename(oldPath, newPath, () => {});
+    });
+
+    await targetPost.destroy();
+
+    res.status(200).json({ message: "게시글 삭제에 성공하셨습니다.", removedPostId: PostId });
   } catch (error) {
     console.error("DELETE /post/:PostId error >> ", error);
     return next(error);

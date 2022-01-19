@@ -34,7 +34,7 @@ import {
 // styled-component
 import { Wrapper } from "./style";
 
-const Icon = React.forwardRef(({$fill, ...props}, ref) => {
+const Icon = React.forwardRef(({$fill, ...props}, iconRef) => {
   switch (props.shape) {
     case "logo":
       return (

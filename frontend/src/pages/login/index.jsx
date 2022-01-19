@@ -68,7 +68,7 @@ const LoginPage = () => {
         <Input type="password" placeholder="비밀번호를 입력해주세요" value={password} onChange={onChangePassword} />
 
         {/* 일반 로그인 버튼 */}
-        <Button type="submit" $local $loading={loginLoading}>
+        <Button type="submit" $local loading={loginLoading}>
           로그인
         </Button>
 

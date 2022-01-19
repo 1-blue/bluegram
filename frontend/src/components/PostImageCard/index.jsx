@@ -77,48 +77,24 @@ const PostImageCard = ({ post }) => {
 
 PostImageCard.propTypes = {
   post: Proptypes.shape({
-    _id: Proptypes.number.isRequired,
-    content: Proptypes.string.isRequired,
-    createdAt: Proptypes.string.isRequired,
-    User: Proptypes.shape({
-      _id: Proptypes.number,
-      name: Proptypes.string,
-      Images: Proptypes.arrayOf(
-        Proptypes.shape({
-          _id: Proptypes.number,
-          name: Proptypes.string,
-        }),
-      ),
-    }).isRequired,
+    _id: Proptypes.number,
+    createdAt: Proptypes.string,
     Images: Proptypes.arrayOf(
       Proptypes.shape({
         _id: Proptypes.number,
         name: Proptypes.string,
       }),
-    ).isRequired,
+    ),
     Comments: Proptypes.arrayOf(
       Proptypes.shape({
         _id: Proptypes.number,
-        content: Proptypes.string,
-        UserId: Proptypes.number,
-        CommentId: Proptypes.number,
-        User: Proptypes.shape({
-          _id: Proptypes.number,
-          name: Proptypes.string,
-          Images: Proptypes.arrayOf(
-            Proptypes.shape({
-              _id: Proptypes.number,
-              name: Proptypes.string,
-            }),
-          ),
-        }),
       }),
-    ).isRequired,
+    ),
     PostLikers: Proptypes.arrayOf(
       Proptypes.shape({
         _id: Proptypes.number,
       }),
-    ).isRequired,
+    ),
   }).isRequired,
 };
 

@@ -15,11 +15,10 @@ import { Wrapper } from "./style";
 // component
 import Spinner from "@components/common/Spinner";
 
-const Button = props => {
+const Button = ({ loading, ...props }) => {
   return (
     <Wrapper {...props}>
-      {props.loading && <Spinner button />}
-      <span className="button-text">{props.children}</span>
+      {loading ? <Spinner $button /> : <span className="button-text">{props.children}</span>}
     </Wrapper>
   );
 };
@@ -28,7 +27,7 @@ Button.propTypes = {
   type: Proptypes.string.isRequired,
   onClick: Proptypes.func,
   children: Proptypes.oneOfType([Proptypes.string, Proptypes.node]),
-  $loading: Proptypes.bool,
+  loading: Proptypes.bool,
 
   $signup: Proptypes.bool,
   $local: Proptypes.bool,
@@ -36,10 +35,12 @@ Button.propTypes = {
   $naver: Proptypes.bool,
   $kakao: Proptypes.bool,
   $upload: Proptypes.bool,
+  $follow: Proptypes.bool,
+  $comment: Proptypes.bool,
 };
 
 Button.defaultProps = {
-  $loading: false,
+  loading: false,
   children: "click me",
 };
 

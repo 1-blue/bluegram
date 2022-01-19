@@ -19,5 +19,11 @@ export {
   apiAppendLikeToComment,
   apiRemoveLikeToComment,
 } from "./like";
-export { commentInstance, apiAppendCommentToPost, apiRemoveCommentToPost, apiLoadRecomments } from "./comment";
+export {
+  commentInstance,
+  apiAppendCommentToPost,
+  apiRemoveCommentToPost,
+  apiLoadComments,
+  apiLoadRecomments,
+} from "./comment";
 export { followInstance, apiLoadFollowers, apiLoadFollowings, apiFollow, apiUnfollow } from "./follow";

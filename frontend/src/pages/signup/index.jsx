@@ -28,7 +28,7 @@ import { resetMessageAction, signupAction } from "@store/actions";
 const SignupPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { signupDone, signupError } = useSelector(state => state.user);
+  const { signupDone, signupError, signupLoading } = useSelector(state => state.user);
   const { imagePreviews } = useSelector(state => state.image);
   const [id, onChangeId] = useInput("");
   const [password, onChangePassword] = useInput("");
@@ -111,20 +111,10 @@ const SignupPage = () => {
         <ImageInput />
 
         {/* 회원가입 버튼 */}
-        <Button type="submit" $signup>
+        <Button type="submit" $signup loading={signupLoading}>
           회원가입
         </Button>
       </Form>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
-      <p>1</p>
     </Wrapper>
   );
 };
