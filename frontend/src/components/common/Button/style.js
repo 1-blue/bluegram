@@ -149,4 +149,13 @@ export const Wrapper = styled.button`
       font-weight: bold;
       color: var(--light-blue);
     `}
+
+  /* 댓글 제출 버튼 */
+  ${({ $search }) =>
+    $search &&
+    css`
+      font-weight: bold;
+      background: var(--light-blue);
+      padding: 0.4em;
+    `}
 `;

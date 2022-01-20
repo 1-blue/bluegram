@@ -29,6 +29,8 @@ import {
   Tag,
   Login,FillLogin,
   Signup,FillSignup,
+  Search,
+  ArrowTop,
 } from "@assets/icon";
 
 // styled-component
@@ -142,6 +144,18 @@ const Icon = React.forwardRef(({$fill, ...props}, iconRef) => {
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
           <FillSignup {...props} />
+        </Wrapper>
+      );
+    case "search":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Search {...props} />
+        </Wrapper>
+      );
+    case "arrowTop":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <ArrowTop {...props} />
         </Wrapper>
       );
 

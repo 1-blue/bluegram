@@ -30,7 +30,7 @@ const HashtagPage = () => {
   const { query } = useRouter();
   const {
     postsOfHashtag: posts,
-    postsOfHashtagMetadata: { hasMoreHashtagPosts, postsOfHashtagCount },
+    postsOfHashtagMetadata: { hasMoreHashtagPosts, postsOfHashtagCount, hashtagText },
     loadPostsOfHashtagLoading,
   } = useSelector(state => state.post);
 
@@ -61,7 +61,9 @@ const HashtagPage = () => {
   return (
     <>
       {/* 해시태그 검색결과 총 개수 */}
-      <Text $hashtagTitle>👉 검색된 게시글 총 {postsOfHashtagCount}개 👈</Text>
+      <Text $hashtagTitle>
+        👉 검색된 게시글 총 {postsOfHashtagCount}개 ( 검색어: {hashtagText} ) 👈
+      </Text>
 
       {/* 나머지 추가로 보여줄 게시글들 ( 현재 기준은 페이지의 게시글 이후에 업로드된 게시글을 최신순으로 보여줌 ) */}
       {posts.map(post => (

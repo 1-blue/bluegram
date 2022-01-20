@@ -194,11 +194,9 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
       return res.status(200).json({
         message: "해시태그가 존재하지 않습니다.",
         postsOfHashtag: [],
-        metadata: {
-          limit,
-          postsOfHashtagCount: 0,
-          hashtagText,
-        },
+        limit,
+        postsOfHashtagCount: 0,
+        hashtagText,
       });
 
     const postsOfHashtag = await hashtag.getPostHashtaged({
