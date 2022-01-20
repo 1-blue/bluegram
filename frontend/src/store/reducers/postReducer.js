@@ -43,7 +43,7 @@ const initState = {
 
   // 2022/01/15 - 해시태그 게시글들을 보여줄 때 필요한 데이터 모음 - by 1-blue
   postsOfHashtagMetadata: {
-    isMoreHashtagPosts: true,
+    hasMoreHashtagPosts: true,
     postsOfHashtagCount: 0,
     hashtagText: "",
   },
@@ -296,10 +296,8 @@ function postReducer(prevState = initState, action) {
         loadPostsOfHashtagError: null,
       };
     case LOAD_POSTS_OF_HASHTAG_SUCCESS:
-      const { metadata } = action.data;
-
       // 2022/01/02 - 기존 해시태그에서 추가적으로 요청하는건지 다른 해시태그를 요청하는건지 판단 - by 1-blue
-      if (prevState.postsOfHashtagMetadata.hashtagText === metadata.hashtagText) {
+      if (prevState.postsOfHashtagMetadata.hashtagText === action.data.hashtagText) {
         tempPostsOfHashtag = [...prevState.postsOfHashtag, ...action.data.postsOfHashtag];
       } else {
         tempPostsOfHashtag = [...action.data.postsOfHashtag];
@@ -311,9 +309,9 @@ function postReducer(prevState = initState, action) {
         loadPostsOfHashtagDone: action.data.message,
         postsOfHashtag: tempPostsOfHashtag,
         postsOfHashtagMetadata: {
-          isMoreHashtagPosts: action.data.postsOfHashtag.length === metadata.limit,
-          postsOfHashtagCount: metadata.postsOfHashtagCount,
-          hashtagText: metadata.hashtagText,
+          hasMoreHashtagPosts: action.data.postsOfHashtag.length === action.data.limit,
+          postsOfHashtagCount: action.data.postsOfHashtagCount,
+          hashtagText: action.data.hashtagText,
         },
       };
     case LOAD_POSTS_OF_HASHTAG_FAILURE:

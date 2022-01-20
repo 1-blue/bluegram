@@ -26,6 +26,8 @@ import Login from "@assets/icon/login.svg"
 import FillLogin from "@assets/icon/fillLogin.svg"
 import Signup from "@assets/icon/signup.svg"
 import FillSignup from "@assets/icon/fillSignup.svg"
+import Search from "@assets/icon/search.svg"
+import ArrowTop from "@assets/icon/arrowTop.svg"
 
 export {
   Logo,
@@ -44,4 +46,6 @@ export {
   Tag,
   Login, FillLogin,
   Signup, FillSignup,
+  Search,
+  ArrowTop,
 };

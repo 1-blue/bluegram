@@ -6,6 +6,15 @@ export const Wrapper = styled.span`
   font-weight: bold;
   font-size: 1rem;
 
+  ${({ $hashtagTitle }) =>
+    $hashtagTitle &&
+    css`
+      font-size: 1.2rem;
+      margin: 3vh 0 6vh;
+      text-shadow: 0 0 4px black, 0 0 10px blueviolet, 0 0 20px purple;
+      color: white;
+    `}
+
   ${({ $postEnd }) =>
     $postEnd &&
     css`

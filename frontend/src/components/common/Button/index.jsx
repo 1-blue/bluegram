@@ -37,6 +37,7 @@ Button.propTypes = {
   $upload: Proptypes.bool,
   $follow: Proptypes.bool,
   $comment: Proptypes.bool,
+  $search: Proptypes.bool,
 };
 
 Button.defaultProps = {

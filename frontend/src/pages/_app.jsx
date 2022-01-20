@@ -15,6 +15,7 @@ import TopNavigationBar from "@components/NavigationBar/TopNavigationBar";
 import BottomNavigationBar from "@components/NavigationBar/BottomNavigationBar";
 import Layout from "@components/Layout";
 import Footer from "@components/Footer";
+import SideBar from "@components/SideBar";
 
 const App = ({ Component, pageProps }) => {
   const [width, setWidth] = useState(0);
@@ -31,6 +32,7 @@ const App = ({ Component, pageProps }) => {
     <>
       {/* scroll */}
       <Scroll />
+
       {/* nav*/}
       {width > 1024 ? <TopNavigationBar /> : <BottomNavigationBar />}
 
@@ -41,6 +43,9 @@ const App = ({ Component, pageProps }) => {
 
       {/* footer */}
       <Footer />
+
+      {/* side-bar */}
+      <SideBar />
     </>
   );
 };

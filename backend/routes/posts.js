@@ -174,7 +174,7 @@ router.get("/user/:UserId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2022/01/01 - 해시태그의 게시글들 불러오기 - by 1-blue
+// 2022/01/20 - 해시태그의 게시글들 불러오기 - by 1-blue
 router.get("/hashtag/:hashtagText", async (req, res, next) => {
   const hashtagText = decodeURI(req.params.hashtagText);
   const lastId = +req.query.lastId || -1;
@@ -194,17 +194,15 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
       return res.status(200).json({
         message: "해시태그가 존재하지 않습니다.",
         postsOfHashtag: [],
-        metadata: {
-          limit,
-          postsOfHashtagCount: 0,
-          hashtagText,
-        },
+        limit,
+        postsOfHashtagCount: 0,
+        hashtagText,
       });
 
     const postsOfHashtag = await hashtag.getPostHashtaged({
       where,
       limit,
-      attributes: ["_id", "createdAt", "UserId"],
+      attributes: ["_id", "createdAt", "content", "UserId"],
       include: [
         // 게시글 작성자
         {
@@ -285,11 +283,10 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
     res.status(200).json({
       message: "해시태그의 게시글들을 불러오는데 성공했습니다.",
       postsOfHashtag,
-      metadata: {
-        limit,
-        postsOfHashtagCount,
-        hashtagText,
-      },
+
+      limit,
+      postsOfHashtagCount,
+      hashtagText,
     });
   } catch (error) {
     console.error("GET /post/hashtag/:hashtag error >> ", error);
