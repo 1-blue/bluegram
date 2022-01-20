@@ -29,7 +29,7 @@ const HashtagPage = () => {
   const dispatch = useDispatch();
   const { query } = useRouter();
   const {
-    postsOfHashtag: posts,
+    postsOfDetail: posts,
     postsOfHashtagMetadata: { hasMoreHashtagPosts, postsOfHashtagCount, hashtagText },
     loadPostsOfHashtagLoading,
   } = useSelector(state => state.post);

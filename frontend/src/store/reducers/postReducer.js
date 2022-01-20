@@ -32,14 +32,11 @@ const initState = {
   // 2022/01/15 - HomePage에서 보여줄 게시글들을 넣을 변수 ( 최소한의 정보만 넣음 ) - by 1-blue
   posts: [],
 
-  // 2022/01/15 - ExplorePage에서 보여줄 게시글들을 넣을 변수 ( 게시글의 모든 정보를 넣음 ) - by 1-blue
+  // 2022/01/15 - ExplorePage, HashtagPage에서 보여줄 게시글들을 넣을 변수 ( 게시글의 모든 정보를 넣음 ) - by 1-blue
   postsOfDetail: [],
 
   // 2022/01/15 - 특정 게시글 정보를 넣을 변수 - by 1-blue
   post: null,
-
-  // 2022/01/15 - 해시태그에 해당하는 게시글들을 넣을 변수 - by 1-blue
-  postsOfHashtag: [],
 
   // 2022/01/15 - 해시태그 게시글들을 보여줄 때 필요한 데이터 모음 - by 1-blue
   postsOfHashtagMetadata: {
@@ -135,11 +132,8 @@ const initState = {
 };
 
 function postReducer(prevState = initState, action) {
-  // 게시글, 댓글, 답글의 수정에 대한 임시 처리결과를 저장할 변수 ( feat: 불변성 )
-  let tempPosts = null;
+  // 게시글 상세 정보에 대한 임시 처리결과를 저장할 변수 ( feat: 불변성 )
   let tempPostsOfDetail = null;
-  let tempPost = null;
-  let tempPostsOfHashtag = null;
 
   switch (action.type) {
     case RESET_MESSAGE:
@@ -296,18 +290,31 @@ function postReducer(prevState = initState, action) {
         loadPostsOfHashtagError: null,
       };
     case LOAD_POSTS_OF_HASHTAG_SUCCESS:
-      // 2022/01/02 - 기존 해시태그에서 추가적으로 요청하는건지 다른 해시태그를 요청하는건지 판단 - by 1-blue
+      // 2022/01/20 - 기존 해시태그에서 추가적으로 요청하는건지 다른 해시태그를 요청하는건지 판단 - by 1-blue
       if (prevState.postsOfHashtagMetadata.hashtagText === action.data.hashtagText) {
-        tempPostsOfHashtag = [...prevState.postsOfHashtag, ...action.data.postsOfHashtag];
+        tempPostsOfDetail = [
+          ...prevState.postsOfDetail,
+          ...action.data.postsOfHashtag.map(post => ({
+            ...post,
+            hasMoreComments: true,
+            allCommentCount: post.Comments.length,
+          })),
+        ];
       } else {
-        tempPostsOfHashtag = [...action.data.postsOfHashtag];
+        tempPostsOfDetail = [
+          ...action.data.postsOfHashtag.map(post => ({
+            ...post,
+            hasMoreComments: true,
+            allCommentCount: post.Comments.length,
+          })),
+        ];
       }
 
       return {
         ...prevState,
         loadPostsOfHashtagLoading: false,
         loadPostsOfHashtagDone: action.data.message,
-        postsOfHashtag: tempPostsOfHashtag,
+        postsOfDetail: tempPostsOfDetail,
         postsOfHashtagMetadata: {
           hasMoreHashtagPosts: action.data.postsOfHashtag.length === action.data.limit,
           postsOfHashtagCount: action.data.postsOfHashtagCount,

@@ -224,43 +224,11 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
         // 게시글의 댓글들
         {
           model: Comment,
-          attributes: ["_id", "content", "UserId", "RecommentId", "createdAt"],
-          include: [
-            // 게시글의 댓글의 작성자
-            {
-              model: User,
-              attributes: ["_id", "name"],
-              include: [
-                // 댓글 작성자의 프로필 이미지
-                {
-                  model: Image,
-                  attributes: ["_id", "name", "url"],
-                },
-              ],
-            },
-            // 게시글의 댓글들에 좋아요를 누른 유저
-            {
-              model: User,
-              as: "CommentLikers",
-              attributes: ["_id", "name"],
-              through: {
-                attributes: ["createdAt", "UserId", "CommentId"],
-              },
-              include: [
-                // 게시글의 댓글들에 좋아요를 누른 유저의 이미지
-                {
-                  model: Image,
-                  attributes: ["_id", "name", "url"],
-                },
-              ],
-            },
-            // 댓글의 답글들 개수를 위함
-            {
-              model: Comment,
-              as: "Recomments",
-              attributes: ["_id"],
-            },
-          ],
+          attributes: ["_id"],
+          separate: true,
+          where: {
+            RecommentId: { [Op.eq]: null },
+          },
         },
         // 게시글의 좋아요
         {
@@ -272,10 +240,7 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
           },
         },
       ],
-      order: [
-        ["createdAt", "DESC"],
-        [Comment, "createdAt", "ASC"],
-      ],
+      order: [["createdAt", "DESC"]],
     });
 
     const postsOfHashtagCount = await hashtag.countPostHashtaged();
