@@ -20,6 +20,7 @@ const Text = ({ children, ...props }) => {
 Text.propTypes = {
   children: Proptypes.node.isRequired,
 
+  $hashtagTitle: Proptypes.bool,
   $postEnd: Proptypes.bool,
   $success: Proptypes.bool,
   $error: Proptypes.bool,
