@@ -11,7 +11,14 @@ export {
 } from "./user";
 export { imageInstance, apiUploadImages, apiRemovePreview } from "./image";
 export { postInstance, apiCreatePost, apiLoadPost, apiRemovePost } from "./post";
-export { postsInstance, apiLoadPosts, apiLoadPostsDetail, apiLoadPostsOfHashtag, apiLoadPostsOfUser } from "./posts";
+export {
+  postsInstance,
+  apiLoadPosts,
+  apiLoadPostsDetail,
+  apiLoadPostsOfHashtag,
+  apiLoadPostsOfUser,
+  apiLoadPostsDetailOfUser,
+} from "./posts";
 export {
   likeInstance,
   apiAppendLikeToPost,

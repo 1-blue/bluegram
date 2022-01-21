@@ -6,13 +6,13 @@ import {
   CLOSE_CREATE_POST_MODAL,
   RESET_POST,
   RESET_POSTS,
-  RESET_POSTS_OF_USER,
   
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE,
   LOAD_POST_REQUEST, LOAD_POST_SUCCESS, LOAD_POST_FAILURE,
   LOAD_POSTS_OF_HASHTAG_REQUEST, LOAD_POSTS_OF_HASHTAG_SUCCESS, LOAD_POSTS_OF_HASHTAG_FAILURE,
   LOAD_POSTS_OF_USER_REQUEST, LOAD_POSTS_OF_USER_SUCCESS, LOAD_POSTS_OF_USER_FAILURE,
   LOAD_POSTS_DETAIL_REQUEST, LOAD_POSTS_DETAIL_SUCCESS, LOAD_POSTS_DETAIL_FAILURE,
+  LOAD_POSTS_DETAIL_OF_USER_REQUEST, LOAD_POSTS_DETAIL_OF_USER_SUCCESS, LOAD_POSTS_DETAIL_OF_USER_FAILURE,
   CREATE_POST_REQUEST, CREATE_POST_SUCCESS, CREATE_POST_FAILURE,
   REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
   APPEND_LIKE_TO_POST_REQUEST, APPEND_LIKE_TO_POST_SUCCESS, APPEND_LIKE_TO_POST_FAILURE,
@@ -29,7 +29,7 @@ const initState = {
   // 2022/01/15 - 게시글 생성 모달창 open/close 변수 - by 1-blue
   showCreatePostModal: false,
 
-  // 2022/01/15 - HomePage에서 보여줄 게시글들을 넣을 변수 ( 최소한의 정보만 넣음 ) - by 1-blue
+  // 2022/01/21 - HomePage, ProfilePage에서 보여줄 게시글들을 넣을 변수 ( 최소한의 정보만 넣음 ) - by 1-blue
   posts: [],
 
   // 2022/01/15 - ExplorePage, HashtagPage에서 보여줄 게시글들을 넣을 변수 ( 게시글의 모든 정보를 넣음 ) - by 1-blue
@@ -39,19 +39,15 @@ const initState = {
   post: null,
 
   // 2022/01/15 - 해시태그 게시글들을 보여줄 때 필요한 데이터 모음 - by 1-blue
-  postsOfHashtagMetadata: {
+  hashtagPostsMetadata: {
     hasMoreHashtagPosts: true,
     postsOfHashtagCount: 0,
     hashtagText: "",
   },
 
-  // 2022/01/15 - 특정 유저의 게시글들을 넣을 변수 - by 1-blue
-  postsOfUser: [],
-
   // 2022/01/15 - 게시글들을 추가로 요청할지 결정하는 변수 - by 1-blue
-  isMorePosts: true,
-  isMorePostsOfDetail: true,
-  isMorePostsOfUser: true,
+  hasMorePosts: true,
+  hasMorePostsOfDetail: true,
 
   // 2022/01/15 - HomePage게시글들 불러오기 관련 변수 - by 1-blue
   loadPostsLoading: false,
@@ -63,20 +59,20 @@ const initState = {
   loadPostDone: null,
   loadPostError: null,
 
-  // 2022/01/15 - 해시태그에 해당하는 게시글들 요청 관련 변수 - by 1-blue
-  loadPostsOfHashtagLoading: false,
-  loadPostsOfHashtagDone: null,
-  loadPostsOfHashtagError: null,
+  // 2022/01/21 - 해시태그에 해당하는 게시글들 요청 관련 변수 - by 1-blue
+  loadHashtagPostsLoading: false,
+  loadHashtagPostsDone: null,
+  loadHashtagPostsError: null,
 
   // 2022/01/15 - 특정 유저의 게시글들 요청 관련 변수 - by 1-blue
   loadPostsOfUserLoading: false,
   loadPostsOfUserDone: null,
   loadPostsOfUserError: null,
 
-  // 2022/01/15 - ExplorePage게시글들 상세 정보 요청 변수 - by 1-blue
-  loadPostsOfDetailLoading: false,
-  loadPostsOfDetailDone: null,
-  loadPostsOfDetailError: null,
+  // 2022/01/21 - ExplorePage게시글들 상세 정보 요청 변수 - by 1-blue
+  loadDetailPostsLoading: false,
+  loadDetailPostsDone: null,
+  loadDetailPostsError: null,
 
   // 2022/01/15 - 게시글 생성 관련 변수 - by 1-blue
   createPostLoading: false,
@@ -148,17 +144,21 @@ function postReducer(prevState = initState, action) {
         loadPostDone: null,
         loadPostError: null,
 
-        loadPostsOfHashtagLoading: false,
-        loadPostsOfHashtagDone: null,
-        loadPostsOfHashtagError: null,
+        loadHashtagPostsLoading: false,
+        loadHashtagPostsDone: null,
+        loadHashtagPostsError: null,
 
         loadPostsOfUserLoading: false,
         loadPostsOfUserDone: null,
         loadPostsOfUserError: null,
 
-        loadPostsOfDetailLoading: false,
-        loadPostsOfDetailDone: null,
-        loadPostsOfDetailError: null,
+        loadDetailPostsLoading: false,
+        loadDetailPostsDone: null,
+        loadDetailPostsError: null,
+        
+        loadPostsDetailOfUserLoading: false,
+        loadPostsDetailOfUserDone: null,
+        loadPostsDetailOfUserError: null,
 
         createPostLoading: false,
         createPostDone: null,
@@ -229,13 +229,6 @@ function postReducer(prevState = initState, action) {
         posts: [],
       };
 
-    // 2022/01/05 - 유저 페이지 들어갔을 경우 특정 유저의 게시글들 초기화 - by 1-blue
-    case RESET_POSTS_OF_USER:
-      return {
-        ...prevState,
-        postsOfUser: [],
-      };
-
     // 2022/01/15 - HomePage게시글들 요청 - by 1-blue
     case LOAD_POSTS_REQUEST:
       return {
@@ -250,7 +243,7 @@ function postReducer(prevState = initState, action) {
         loadPostsLoading: false,
         loadPostsDone: action.data.message,
         posts: [...prevState.posts, ...action.data.posts],
-        isMorePosts: action.data.posts.length === action.data.limit,
+        hasMorePosts: action.data.posts.length === action.data.limit,
       };
     case LOAD_POSTS_FAILURE:
       return {
@@ -285,13 +278,13 @@ function postReducer(prevState = initState, action) {
     case LOAD_POSTS_OF_HASHTAG_REQUEST:
       return {
         ...prevState,
-        loadPostsOfHashtagLoading: true,
-        loadPostsOfHashtagDone: null,
-        loadPostsOfHashtagError: null,
+        loadHashtagPostsLoading: true,
+        loadHashtagPostsDone: null,
+        loadHashtagPostsError: null,
       };
     case LOAD_POSTS_OF_HASHTAG_SUCCESS:
       // 2022/01/20 - 기존 해시태그에서 추가적으로 요청하는건지 다른 해시태그를 요청하는건지 판단 - by 1-blue
-      if (prevState.postsOfHashtagMetadata.hashtagText === action.data.hashtagText) {
+      if (prevState.hashtagPostsMetadata.hashtagText === action.data.hashtagText) {
         tempPostsOfDetail = [
           ...prevState.postsOfDetail,
           ...action.data.postsOfHashtag.map(post => ({
@@ -312,10 +305,10 @@ function postReducer(prevState = initState, action) {
 
       return {
         ...prevState,
-        loadPostsOfHashtagLoading: false,
-        loadPostsOfHashtagDone: action.data.message,
+        loadHashtagPostsLoading: false,
+        loadHashtagPostsDone: action.data.message,
         postsOfDetail: tempPostsOfDetail,
-        postsOfHashtagMetadata: {
+        hashtagPostsMetadata: {
           hasMoreHashtagPosts: action.data.postsOfHashtag.length === action.data.limit,
           postsOfHashtagCount: action.data.postsOfHashtagCount,
           hashtagText: action.data.hashtagText,
@@ -324,8 +317,8 @@ function postReducer(prevState = initState, action) {
     case LOAD_POSTS_OF_HASHTAG_FAILURE:
       return {
         ...prevState,
-        loadPostsOfHashtagLoading: false,
-        loadPostsOfHashtagError: action.data.message,
+        loadHashtagPostsLoading: false,
+        loadHashtagPostsError: action.data.message,
       };
 
     // 2022/01/04 - 특정 유저의 게시글들 요청 - by 1-blue
@@ -341,8 +334,8 @@ function postReducer(prevState = initState, action) {
         ...prevState,
         loadPostsOfUserLoading: false,
         loadPostsOfUserDone: action.data.message,
-        postsOfUser: [...prevState.postsOfUser, ...action.data.posts],
-        isMorePostsOfUser: action.data.posts.length === action.data.limit,
+        posts: [...prevState.posts, ...action.data.posts],
+        hasMorePosts: action.data.posts.length === action.data.limit,
       };
     case LOAD_POSTS_OF_USER_FAILURE:
       return {
@@ -355,26 +348,52 @@ function postReducer(prevState = initState, action) {
     case LOAD_POSTS_DETAIL_REQUEST:
       return {
         ...prevState,
-        loadPostsOfDetailLoading: true,
-        loadPostsOfDetailDone: null,
-        loadPostsOfDetailError: null,
+        loadDetailPostsLoading: true,
+        loadDetailPostsDone: null,
+        loadDetailPostsError: null,
       };
     case LOAD_POSTS_DETAIL_SUCCESS:
       return {
         ...prevState,
-        loadPostsOfDetailLoading: false,
-        loadPostsOfDetailDone: action.data.message,
+        loadDetailPostsLoading: false,
+        loadDetailPostsDone: action.data.message,
         postsOfDetail: [
           ...prevState.postsOfDetail,
           ...action.data.posts.map(post => ({ ...post, hasMoreComments: true, allCommentCount: post.Comments.length })),
         ],
-        isMorePostsOfDetail: action.data.posts.length === action.data.limit,
+        hasMorePostsOfDetail: action.data.posts.length === action.data.limit,
       };
     case LOAD_POSTS_DETAIL_FAILURE:
       return {
         ...prevState,
-        loadPostsOfDetailLoading: false,
-        loadPostsOfDetailError: action.data.message,
+        loadDetailPostsLoading: false,
+        loadDetailPostsError: action.data.message,
+      };
+
+    // 2022/01/21 - 특정 유저의 게시글들 상세 정보 요청 - by 1-blue
+    case LOAD_POSTS_DETAIL_OF_USER_REQUEST:
+      return {
+        ...prevState,
+        loadPostsDetailOfUserLoading: true,
+        loadPostsDetailOfUserDone: null,
+        loadPostsDetailOfUserError: null,
+      };
+    case LOAD_POSTS_DETAIL_OF_USER_SUCCESS:
+      return {
+        ...prevState,
+        loadPostsDetailOfUserLoading: false,
+        loadPostsDetailOfUserDone: action.data.message,
+        postsOfDetail: [
+          ...prevState.postsOfDetail,
+          ...action.data.posts.map(post => ({ ...post, hasMoreComments: true, allCommentCount: post.Comments.length })),
+        ],
+        hasMorePostsOfDetail: action.data.posts.length === action.data.limit,
+      };
+    case LOAD_POSTS_DETAIL_OF_USER_FAILURE:
+      return {
+        ...prevState,
+        loadPostsDetailOfUserLoading: false,
+        loadPostsDetailOfUserError: action.data.message,
       };
 
     // 2022/01/17 - 게시글 생성 - by 1-blue
@@ -497,8 +516,6 @@ function postReducer(prevState = initState, action) {
         appendCommentToPostError: null,
       };
     case APPEND_COMMENT_TO_POST_SUCCESS:
-      // RecommentId
-
       // 2022/01/16 - 게시글의 댓글 추가 후 postsOfDetail 처리 - by 1-blue
       // 댓글 추가일 경우
       if (!action.data.RecommentId) {

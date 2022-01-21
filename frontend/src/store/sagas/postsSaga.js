@@ -8,10 +8,11 @@ import {
   LOAD_POSTS_OF_HASHTAG_REQUEST, LOAD_POSTS_OF_HASHTAG_SUCCESS,  LOAD_POSTS_OF_HASHTAG_FAILURE,
   LOAD_POSTS_OF_USER_REQUEST, LOAD_POSTS_OF_USER_SUCCESS, LOAD_POSTS_OF_USER_FAILURE,
   LOAD_POSTS_DETAIL_REQUEST, LOAD_POSTS_DETAIL_SUCCESS, LOAD_POSTS_DETAIL_FAILURE,
+  LOAD_POSTS_DETAIL_OF_USER_REQUEST, LOAD_POSTS_DETAIL_OF_USER_SUCCESS, LOAD_POSTS_DETAIL_OF_USER_FAILURE,
  } from "@store/types";
 
 // api
-import { apiLoadPosts, apiLoadPostsOfHashtag, apiLoadPostsOfUser, apiLoadPostsDetail } from "@store/api";
+import { apiLoadPosts, apiLoadPostsOfHashtag, apiLoadPostsOfUser, apiLoadPostsDetail, apiLoadPostsDetailOfUser } from "@store/api";
 
 function* loadPosts(action) {
   try {
@@ -53,6 +54,16 @@ function* loadPostsDetail(action) {
     yield put({ type: LOAD_POSTS_DETAIL_FAILURE, data: error.response.data });
   }
 }
+function* loadPostsDetailOfUser(action) {
+  try {
+    const { data } = yield call(apiLoadPostsDetailOfUser, action.data);
+
+    yield put({ type: LOAD_POSTS_DETAIL_OF_USER_SUCCESS, data });
+  } catch (error) {
+    console.error("postsSaga loadPostsDetailOfUser >>", error);
+    yield put({ type: LOAD_POSTS_DETAIL_OF_USER_FAILURE, data: error.response.data });
+  }
+}
 
 function* watchLoadPosts() {
   yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
@@ -66,6 +77,9 @@ function* watchLoadPostsOfUser() {
 function* watchLoadPostsDetail() {
   yield takeLatest(LOAD_POSTS_DETAIL_REQUEST, loadPostsDetail);
 }
+function* watchLoadPostsDetailOfUser() {
+  yield takeLatest(LOAD_POSTS_DETAIL_OF_USER_REQUEST, loadPostsDetailOfUser);
+}
 
 export default function* postsSaga() {
   yield all([
@@ -73,5 +87,6 @@ export default function* postsSaga() {
     fork(watchLoadPostsOfHashtag),
     fork(watchLoadPostsOfUser),
     fork(watchLoadPostsDetail),
+    fork(watchLoadPostsDetailOfUser),
   ]);
 }
