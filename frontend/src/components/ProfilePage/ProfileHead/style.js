@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Wrapper = styled.section`
   display: flex;
@@ -28,4 +28,23 @@ export const Wrapper = styled.section`
     font-size: 0.8rem;
     font-weight: bold;
   }
+
+  & .profile-follow-button {
+    flex: 1;
+    text-align: center;
+    border-radius: 0.2em;
+    line-height: 26px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    background: var(--light-blue);
+    color: white;
+  }
+
+  ${({ followLoading }) =>
+    followLoading &&
+    css`
+      & .profile-follow-button {
+        background: #cccccc;
+      }
+    `}
 `;
