@@ -45,7 +45,10 @@ const ImageInput = () => {
       <input type="file" accept="image/*" onChange={onChangeProfileImage} ref={inputRef} hidden />
       <div>
         {imagePreviews.length > 0 ? (
-          <img src={process.env.IMAGE_URL + "/" + imagePreviews[0]} alt="회원가입 시 등록할 프로필 이미지" />
+          <img
+            src={process.env.NEXT_PUBLIC_PREVIEW_IMAGE_URL + "/" + imagePreviews[imagePreviews.length - 1]}
+            alt="회원가입 시 등록할 프로필 이미지"
+          />
         ) : (
           <span>프로필 이미지 선택</span>
         )}
