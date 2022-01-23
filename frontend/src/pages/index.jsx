@@ -31,6 +31,7 @@ const Wrapper = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, auto);
   gap: 12px;
+
   @media (max-width: 480px) {
     gap: 2px;
   }
@@ -47,18 +48,18 @@ const Wrapper = styled.ul`
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const { posts, isMorePosts, loadPostsLoading } = useSelector(state => state.post);
+  const { posts, hasMorePosts, loadPostsLoading } = useSelector(state => state.post);
 
   // 2022/01/15 - 무한 스크롤링 이벤트 함수 - by 1-blue
   const infiniteScrollEvent = useCallback(() => {
     if (
       window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 400 &&
-      isMorePosts &&
+      hasMorePosts &&
       !loadPostsLoading
     ) {
       dispatch(loadPostsAction({ lastId: posts[posts.length - 1]._id, limit: 15 }));
     }
-  }, [posts.length, isMorePosts, loadPostsLoading]);
+  }, [posts.length, hasMorePosts, loadPostsLoading]);
 
   // 2022/01/15 - 무한 스크롤링 이벤트 등록/해제 - by 1-blue
   useEffect(() => {
@@ -77,7 +78,7 @@ const HomePage = () => {
 
       {loadPostsLoading && <Spinner $page />}
 
-      {!isMorePosts && <Text $postEnd>더 이상 불러올 게시글이 존재하지 않습니다...</Text>}
+      {!hasMorePosts && <Text $postEnd>더 이상 불러올 게시글이 존재하지 않습니다...</Text>}
     </>
   );
 };

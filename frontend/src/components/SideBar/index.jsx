@@ -54,7 +54,7 @@ const SideBar = () => {
 
       {/* 해시태그 검색 메뉴 */}
       {isOpenSearch && (
-        <Modal isOpenSearch={isOpenSearch} onCloseModal={onCloseSearchModal}>
+        <Modal isOpen={isOpenSearch} onCloseModal={onCloseSearchModal}>
           <form autoComplete="on" onSubmit={onSearch} className="modal-search-form">
             <label htmlFor="search" hidden>
               해시태그 검색

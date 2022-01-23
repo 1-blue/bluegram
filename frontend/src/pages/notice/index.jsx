@@ -9,9 +9,7 @@
  */
 
 import React from "react";
-
-// styled-components
-import { Wrapper } from "./style";
+import styled from "styled-components";
 
 // Redux + SSR
 import wrapper from "@store/configureStore";
@@ -20,6 +18,9 @@ import { userInstance } from "@store/api/user";
 
 // actions
 import { loadToMeAction } from "@store/actions";
+
+// styled-components
+const Wrapper = styled.section``;
 
 const Notice = () => {
   return (

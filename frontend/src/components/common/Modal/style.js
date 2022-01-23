@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.section`
+export const Wrapper = styled.article`
   position: fixed;
   top: 0;
   left: 0;

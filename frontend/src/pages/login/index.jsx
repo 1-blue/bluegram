@@ -10,9 +10,7 @@ import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
-// styled-component
-import { Wrapper } from "./style";
+import styled from "styled-components";
 
 // common-components
 import Form from "@components/common/Form";
@@ -25,6 +23,17 @@ import useInput from "@hooks/useInput";
 // action
 import { resetMessageAction, localLoginAction } from "@store/actions";
 import { useRef } from "react";
+
+// styled-component
+const Wrapper = styled.section`
+  max-width: 400px;
+  margin: auto;
+  padding-top: 2em;
+
+  @media (max-width: 768px) {
+    max-width: 350px;
+  }
+`;
 
 const LoginPage = () => {
   const router = useRouter();

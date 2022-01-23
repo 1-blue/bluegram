@@ -30,8 +30,8 @@ const HashtagPage = () => {
   const { query } = useRouter();
   const {
     postsOfDetail: posts,
-    postsOfHashtagMetadata: { hasMoreHashtagPosts, postsOfHashtagCount, hashtagText },
-    loadPostsOfHashtagLoading,
+    hashtagPostsMetadata: { hasMoreHashtagPosts, postsOfHashtagCount, hashtagText },
+    loadHashtagPostsLoading,
   } = useSelector(state => state.post);
 
   // 2022/01/20 - 인피니티 스크롤링 함수 - by 1-blue
@@ -39,7 +39,7 @@ const HashtagPage = () => {
     if (
       window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 400 &&
       hasMoreHashtagPosts &&
-      !loadPostsOfHashtagLoading
+      !loadHashtagPostsLoading
     ) {
       dispatch(
         loadPostsOfHashtagAction({
@@ -49,7 +49,7 @@ const HashtagPage = () => {
         }),
       );
     }
-  }, [posts.length, hasMoreHashtagPosts, loadPostsOfHashtagLoading, query.hashtagText]);
+  }, [posts.length, hasMoreHashtagPosts, loadHashtagPostsLoading, query.hashtagText]);
 
   // 2022/01/20 - 무한 스크롤링 이벤트 등록/해제 - by 1-blue
   useEffect(() => {
@@ -71,7 +71,7 @@ const HashtagPage = () => {
       ))}
 
       {/* 게시글 추가 로드 */}
-      {loadPostsOfHashtagLoading && <Spinner $page />}
+      {loadHashtagPostsLoading && <Spinner $page />}
 
       {!hasMoreHashtagPosts && <Text $postEnd>더 이상 불러올 게시글이 존재하지 않습니다...</Text>}
     </>

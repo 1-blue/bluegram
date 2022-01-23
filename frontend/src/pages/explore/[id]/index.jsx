@@ -11,9 +11,6 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-// styled-components
-import { Wrapper } from "./style";
-
 // Redux + SSR
 import wrapper from "@store/configureStore";
 import { END } from "redux-saga";
@@ -31,18 +28,18 @@ import PostCard from "@components/PostCard";
 
 const Explore = () => {
   const dispatch = useDispatch();
-  const { postsOfDetail: posts, isMorePostsOfDetail, loadPostsOfDetailLoading } = useSelector(state => state.post);
+  const { postsOfDetail: posts, hasMorePostsOfDetail, loadDetailPostsLoading } = useSelector(state => state.post);
 
   // 2022/01/17 - 인피니티 스크롤링 함수 - by 1-blue
   const infiniteScrollEvent = useCallback(() => {
     if (
       window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 400 &&
-      isMorePostsOfDetail &&
-      !loadPostsOfDetailLoading
+      hasMorePostsOfDetail &&
+      !loadDetailPostsLoading
     ) {
       dispatch(loadPostsDetailAction({ lastId: posts[posts.length - 1]._id, limit: 8 }));
     }
-  }, [posts.length, isMorePostsOfDetail, loadPostsOfDetailLoading]);
+  }, [posts.length, hasMorePostsOfDetail, loadDetailPostsLoading]);
 
   // 2022/01/17 - 무한 스크롤링 이벤트 등록/해제 - by 1-blue
   useEffect(() => {
@@ -53,15 +50,15 @@ const Explore = () => {
 
   return (
     <>
-      {/* 나머지 추가로 보여줄 게시글들 ( 현재 기준은 페이지의 게시글 이후에 업로드된 게시글을 최신순으로 보여줌 ) */}
+      {/* 게시글들 ( 현재 기준은 페이지의 게시글 이후에 업로드된 게시글을 최신순으로 보여줌 ) */}
       {posts.map(post => (
         <PostCard key={post._id} post={post} />
       ))}
 
       {/* 게시글 추가 로드 */}
-      {loadPostsOfDetailLoading && <Spinner $page />}
+      {loadDetailPostsLoading && <Spinner $page />}
 
-      {!isMorePostsOfDetail && <Text $postEnd>더 이상 불러올 게시글이 존재하지 않습니다...</Text>}
+      {!hasMorePostsOfDetail && <Text $postEnd>더 이상 불러올 게시글이 존재하지 않습니다...</Text>}
     </>
   );
 };

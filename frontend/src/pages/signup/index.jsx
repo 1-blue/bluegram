@@ -11,9 +11,7 @@
 import React, { useCallback, useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
-
-// styled-components
-import { Wrapper } from "./style";
+import styled from "styled-components";
 
 // components
 import Form from "@components/common/Form";
@@ -28,6 +26,33 @@ import useText from "@hooks/useText";
 
 // action
 import { resetMessageAction, signupAction } from "@store/actions";
+
+// styled-components
+const Wrapper = styled.section`
+  max-width: 400px;
+  margin: auto;
+  padding-top: 2em;
+
+  /* 간단 자기 소개 */
+  .about {
+    width: 60%;
+    padding: 0.5em;
+    margin-bottom: 0.8em;
+    border: 1px solid purple;
+    font-size: 0.8rem;
+    font-weight: 500;
+    resize: none;
+    font-family: inherit;
+
+    &::placeholder {
+      font-size: 0.6rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    max-width: 350px;
+  }
+`;
 
 const SignupPage = () => {
   const router = useRouter();
