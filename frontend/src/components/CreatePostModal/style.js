@@ -114,7 +114,7 @@ export const Wrapper = styled.section`
     & .modal-form-info {
       display: flex;
       align-items: center;
-      margin-bottom: 1em;
+      margin: 0.5em 0;
     }
   }
 

@@ -55,7 +55,7 @@ const Wrapper = styled.article`
     width: 280px;
     background: white;
     border-radius: 0.4em;
-    padding: 0.2em 1em;
+    padding: 0.6em 1em;
   }
 
   /* 팔로워/팔로잉 리스트 */

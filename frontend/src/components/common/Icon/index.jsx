@@ -31,6 +31,7 @@ import {
   Signup,FillSignup,
   Search,
   ArrowTop,
+  PostDetail,
 } from "@assets/icon";
 
 // styled-component
@@ -156,6 +157,12 @@ const Icon = React.forwardRef(({$fill, ...props}, iconRef) => {
       return (
         <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
           <ArrowTop {...props} />
+        </Wrapper>
+      );
+    case "postDetail":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <PostDetail {...props} />
         </Wrapper>
       );
 

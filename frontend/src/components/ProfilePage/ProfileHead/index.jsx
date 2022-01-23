@@ -44,6 +44,7 @@ const ProfileHead = ({ onClickFollowButton }) => {
             {isMyFollower ? "언팔로우" : "팔로우"}
           </Button>
         )}
+        <p className="profile-user-about">{user.about}</p>
       </div>
     </Wrapper>
   );

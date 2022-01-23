@@ -1,3 +1,11 @@
+/**
+ * 생성일: 2022/01/23
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 프로필 페이지 query(kinds)에 따라 다른 컨텐츠 보여주도록 나누는 컴포넌트
+ */
+
 import React, { useCallback } from "react";
 import Proptypes from "prop-types";
 

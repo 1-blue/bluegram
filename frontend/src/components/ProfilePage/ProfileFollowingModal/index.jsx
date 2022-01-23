@@ -9,6 +9,7 @@
 
 import React from "react";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 import Proptypes from "prop-types";
 
 // common-component
@@ -36,8 +37,21 @@ const ProfileFollowingModal = ({ isOpenFollowing, onCloseFollowingModal, onClick
             <ul className="follow-modal">
               {Followings.map(following => (
                 <li className="follow-modal-follow-list">
-                  <Avatar width={30} height={30} image={following.Images[0]} className="follow-modal-follow-avatar" />
-                  <span className="follow-modal-follow-name">{following.name}</span>
+                  <Link href={`/profile/${following._id}`}>
+                    <a>
+                      <Avatar
+                        width={30}
+                        height={30}
+                        image={following.Images[0]}
+                        className="follow-modal-follow-avatar"
+                      />
+                    </a>
+                  </Link>
+                  <Link href={`/profile/${following._id}`}>
+                    <a>
+                      <span className="follow-modal-follow-name">{following.name}</span>
+                    </a>
+                  </Link>
                   <div className="no-content" />
                   {/* 본인일 경우 팔로우/언팔로우 버튼 제거 */}
                   {me._id !== following._id && (

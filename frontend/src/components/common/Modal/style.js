@@ -10,4 +10,5 @@ export const Wrapper = styled.article`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 `;

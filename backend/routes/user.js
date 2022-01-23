@@ -108,7 +108,7 @@ router.get("/:UserId", isLoggedIn, async (req, res, next) => {
   try {
     const targetUser = await User.findOne({
       where: { _id: UserId },
-      attributes: ["_id", "name"],
+      attributes: ["_id", "name", "about"],
       include: [
         {
           model: Image,

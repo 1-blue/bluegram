@@ -30,7 +30,7 @@ const ProfileNav = ({ id, kinds }) => {
       </Link>
       <Link href={`/profile/${id}?kinds=detailPost`}>
         <a className="nav-list">
-          <Icon width={24} height={24} shape="airplane" />
+          <Icon width={24} height={24} shape="postDetail" />
         </a>
       </Link>
       {me._id === +id && (

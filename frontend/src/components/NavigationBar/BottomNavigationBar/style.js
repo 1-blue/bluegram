@@ -11,6 +11,7 @@ export const Wrapper = styled.nav`
   justify-content: space-evenly;
   align-items: center;
   border-top: 2px solid gray;
+  height: 7vh;
 
   & .nav-link {
     position: relative;

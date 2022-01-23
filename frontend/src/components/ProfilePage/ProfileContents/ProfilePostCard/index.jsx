@@ -1,3 +1,11 @@
+/**
+ * 생성일: 2022/01/23
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 프로필 페이지 현재 유저의 상세 게시글 보기
+ */
+
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
