@@ -34,3 +34,4 @@ export {
   apiLoadRecomments,
 } from "./comment";
 export { followInstance, apiLoadFollowers, apiLoadFollowings, apiFollow, apiUnfollow } from "./follow";
+export { bookmarkInstance, apiAppendPostOfBookmark, apiRemovePostOfBookmark, apiLoadPostsOfBookmark } from "./bookmark";

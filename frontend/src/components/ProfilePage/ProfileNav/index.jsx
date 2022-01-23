@@ -1,12 +1,14 @@
 /**
  * 생성일: 2022/01/21
- * 수정일: 2022/01/22
+ * 수정일: 2022/01/23
  * 작성자: 1-blue
  *
  * 프로필 페이지 네비게이션 ( 유저 게시글, 유저 게시글 상세, 유저 북마크 )
+ * 유저 북마크 네비게이션 추가
  */
 
 import React from "react";
+import { useSelector } from "react-redux";
 import Link from "next/link";
 import Proptypes from "prop-types";
 
@@ -17,6 +19,8 @@ import { Wrapper } from "./style";
 import Icon from "@components/common/Icon";
 
 const ProfileNav = ({ id, kinds }) => {
+  const { me } = useSelector(state => state.user);
+
   return (
     <Wrapper kinds={kinds}>
       <Link href={`/profile/${id}?kinds=post`}>
@@ -29,11 +33,13 @@ const ProfileNav = ({ id, kinds }) => {
           <Icon width={24} height={24} shape="airplane" />
         </a>
       </Link>
-      <Link href={`/profile/${id}?kinds=bookmark`}>
-        <a className="nav-list">
-          <Icon width={24} height={24} shape="bookmark" />
-        </a>
-      </Link>
+      {me._id === +id && (
+        <Link href={`/profile/${id}?kinds=bookmark`}>
+          <a className="nav-list">
+            <Icon width={24} height={24} shape="bookmark" />
+          </a>
+        </Link>
+      )}
     </Wrapper>
   );
 };

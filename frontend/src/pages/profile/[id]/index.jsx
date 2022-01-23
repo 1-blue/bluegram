@@ -1,6 +1,6 @@
 /**
  * 생성일: 2022/01/13
- * 수정일: 2022/01/22
+ * 수정일: 2022/01/23
  * 작성자: 1-blue
  *
  * 프로필 페이지
@@ -8,6 +8,7 @@
  * ServerSideRedering 구문 추가
  * 팔로우/언팔로우 기능 추가
  * 팔로우/언팔로우 모달 추가
+ * 북마크된 게시글 보기 추가
  */
 
 import React, { useCallback } from "react";
@@ -18,7 +19,7 @@ import styled from "styled-components";
 // Redux + SSR
 import wrapper from "@store/configureStore";
 import { END } from "redux-saga";
-import { userInstance, postsInstance } from "@store/api";
+import { userInstance, postsInstance, bookmarkInstance } from "@store/api";
 
 // actions
 import {
@@ -30,6 +31,7 @@ import {
   unfollowAction,
   loadFollowersAction,
   loadFollowingsAction,
+  loadPostsOfBookmarkAction,
 } from "@store/actions";
 
 // components
@@ -177,6 +179,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async cont
   cookie = cookie ? cookie : "";
   userInstance.defaults.headers.Cookie = cookie;
   postsInstance.defaults.headers.Cookie = cookie;
+  bookmarkInstance.defaults.headers.Cookie = cookie;
 
   store.dispatch(loadToMeAction());
   store.dispatch(loadToUserAction({ UserId: context.query.id }));
@@ -190,8 +193,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async cont
       store.dispatch(loadPostsDetailOfUserAction({ UserId: context.query.id, lastId: -1, limit: 8 }));
       break;
     case "bookmark":
-      // 북마크한 게시글 불러오는 액션 추가하기
-      // store.dispatch(loadToUserAction({ UserId: context.query.id }));
+      store.dispatch(loadPostsOfBookmarkAction({ PostId: context.query.id, lastId: -1, limit: 8 }));
       break;
 
     default:
@@ -205,6 +207,7 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async cont
   // axios의 쿠키 제거
   userInstance.defaults.headers.Cookie = "";
   postsInstance.defaults.headers.Cookie = "";
+  bookmarkInstance.defaults.headers.Cookie = "";
 });
 
 export default Profile;

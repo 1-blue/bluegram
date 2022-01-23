@@ -103,6 +103,15 @@ router.get("/detail", async (req, res, next) => {
             attributes: ["createdAt"],
           },
         },
+        // 게시글을 북마크하는 유저들
+        {
+          model: User,
+          as: "PostBookmarks",
+          attributes: ["_id"],
+          through: {
+            attributes: [],
+          },
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
@@ -226,6 +235,15 @@ router.get("/user/detail/:UserId", isLoggedIn, async (req, res, next) => {
           attributes: ["_id"],
           through: {
             attributes: ["createdAt"],
+          },
+        },
+        // 게시글을 북마크하는 유저들
+        {
+          model: User,
+          as: "PostBookmarks",
+          attributes: ["_id"],
+          through: {
+            attributes: [],
           },
         },
       ],

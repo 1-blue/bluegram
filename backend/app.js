@@ -106,6 +106,7 @@ import postsRouter from "./routes/posts.js";
 import likeRouter from "./routes/like.js";
 import commentRouter from "./routes/comment.js";
 import followRouter from "./routes/follow.js";
+import bookmarkRouter from "./routes/bookmark.js";
 
 // router 등록
 app.use("/auth", authRouter);
@@ -116,6 +117,7 @@ app.use("/posts", postsRouter);
 app.use("/like", likeRouter);
 app.use("/comment", commentRouter);
 app.use("/follow", followRouter);
+app.use("/bookmark", bookmarkRouter);
 
 if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res) => {

@@ -49,3 +49,4 @@ export {
   followAction,
   unfollowAction,
 } from "./followAction";
+export { appendPostOfBookmarkAction, removePostOfBookmarkAction, loadPostsOfBookmarkAction } from "./bookmarkAction";

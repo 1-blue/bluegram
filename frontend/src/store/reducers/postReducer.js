@@ -23,6 +23,9 @@ import {
   REMOVE_LIKE_TO_COMMENT_REQUEST, REMOVE_LIKE_TO_COMMENT_SUCCESS, REMOVE_LIKE_TO_COMMENT_FAILURE,
   LOAD_COMMENTS_REQUEST, LOAD_COMMENTS_SUCCESS, LOAD_COMMENTS_FAILURE,
   LOAD_RECOMMENTS_REQUEST, LOAD_RECOMMENTS_SUCCESS, LOAD_RECOMMENTS_FAILURE,
+  APPEND_POST_OF_BOOKMARK_REQUEST, APPEND_POST_OF_BOOKMARK_SUCCESS, APPEND_POST_OF_BOOKMARK_FAILURE,
+  REMOVE_POST_OF_BOOKMARK_REQUEST, REMOVE_POST_OF_BOOKMARK_SUCCESS, REMOVE_POST_OF_BOOKMARK_FAILURE,
+  LOAD_POSTS_OF_BOOKMARK_REQUEST, LOAD_POSTS_OF_BOOKMARK_SUCCESS, LOAD_POSTS_OF_BOOKMARK_FAILURE,
 } from "@store/types";
 
 const initState = {
@@ -125,6 +128,21 @@ const initState = {
   loadRecommentsError: null,
   // 2022/01/17 - 답글 불러오기 스피너 동시동작을 막기 위한 변수 - by 1-blue
   loadCommentId: null,
+
+  // 2022/01/23 - 북마크 추가 요청 - by 1-blue
+  appendPostOfBookmarkLoading: false,
+  appendPostOfBookmarkDone: null,
+  appendPostOfBookmarkError: null,
+
+  // 2022/01/23 - 북마크 제거 요청 - by 1-blue
+  removePostOfBookmarkLoading: false,
+  removePostOfBookmarkDone: null,
+  removePostOfBookmarkError: null,
+
+  // 2022/01/23 - 로그인한 유저의 북마크된 게시글들 요청 - by 1-blue
+  loadPostsOfBookmarkLoading: false,
+  loadPostsOfBookmarkDone: null,
+  loadPostsOfBookmarkError: null,
 };
 
 function postReducer(prevState = initState, action) {
@@ -155,7 +173,7 @@ function postReducer(prevState = initState, action) {
         loadDetailPostsLoading: false,
         loadDetailPostsDone: null,
         loadDetailPostsError: null,
-        
+
         loadPostsDetailOfUserLoading: false,
         loadPostsDetailOfUserDone: null,
         loadPostsDetailOfUserError: null,
@@ -200,6 +218,18 @@ function postReducer(prevState = initState, action) {
         loadRecommentsDone: null,
         loadRecommentsError: null,
         loadCommentId: null,
+
+        appendPostOfBookmarkLoading: false,
+        appendPostOfBookmarkDone: null,
+        appendPostOfBookmarkError: null,
+
+        removePostOfBookmarkLoading: false,
+        removePostOfBookmarkDone: null,
+        removePostOfBookmarkError: null,
+
+        loadPostsOfBookmarkLoading: false,
+        loadPostsOfBookmarkDone: null,
+        loadPostsOfBookmarkError: null,
       };
 
     // 2022/01/14 - 게시글 생성 모달 열기 - by 1-blue
@@ -859,6 +889,89 @@ function postReducer(prevState = initState, action) {
         loadRecommentsLoading: false,
         loadRecommentsError: action.data.message,
         loadCommentId: null,
+      };
+
+    // 2022/01/23 - 북마크 추가 요청 - by 1-blue
+    case APPEND_POST_OF_BOOKMARK_REQUEST:
+      return {
+        ...prevState,
+        appendPostOfBookmarkLoading: true,
+        appendPostOfBookmarkDone: null,
+        appendPostOfBookmarkError: null,
+      };
+    case APPEND_POST_OF_BOOKMARK_SUCCESS:
+      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+        if (post._id !== action.data.PostId) return post;
+
+        return {
+          ...post,
+          PostBookmarks: [...post.PostBookmarks, { _id: action.data.UserId }],
+        };
+      });
+      return {
+        ...prevState,
+        appendPostOfBookmarkLoading: false,
+        appendPostOfBookmarkDone: action.data.message,
+        postsOfDetail: tempPostsOfDetail,
+      };
+    case APPEND_POST_OF_BOOKMARK_FAILURE:
+      return {
+        ...prevState,
+        appendPostOfBookmarkLoading: false,
+        appendPostOfBookmarkError: action.data.message,
+      };
+
+    // 2022/01/23 - 북마크 제거 요청 - by 1-blue
+    case REMOVE_POST_OF_BOOKMARK_REQUEST:
+      return {
+        ...prevState,
+        removePostOfBookmarkLoading: true,
+        removePostOfBookmarkDone: null,
+        removePostOfBookmarkError: null,
+      };
+    case REMOVE_POST_OF_BOOKMARK_SUCCESS:
+      tempPostsOfDetail = prevState.postsOfDetail.map(post => {
+        if (post._id !== action.data.PostId) return post;
+
+        return {
+          ...post,
+          PostBookmarks: post.PostBookmarks.filter(bookmark => bookmark._id !== action.data.UserId),
+        };
+      });
+      return {
+        ...prevState,
+        removePostOfBookmarkLoading: false,
+        removePostOfBookmarkDone: action.data.message,
+        postsOfDetail: tempPostsOfDetail,
+      };
+    case REMOVE_POST_OF_BOOKMARK_FAILURE:
+      return {
+        ...prevState,
+        removePostOfBookmarkLoading: false,
+        removePostOfBookmarkError: action.data.message,
+      };
+
+    // 2022/01/23 - 로그인한 유저의 북마크된 게시글들 요청 - by 1-blue
+    case LOAD_POSTS_OF_BOOKMARK_REQUEST:
+      return {
+        ...prevState,
+        loadPostsOfBookmarkLoading: true,
+        loadPostsOfBookmarkDone: null,
+        loadPostsOfBookmarkError: null,
+      };
+    case LOAD_POSTS_OF_BOOKMARK_SUCCESS:
+      return {
+        ...prevState,
+        loadPostsOfBookmarkLoading: false,
+        loadPostsOfBookmarkDone: action.data.message,
+        postsOfDetail: [...prevState.postsOfDetail, ...action.data.posts],
+        hasMorePostsOfDetail: action.data.posts.length === action.data.limit,
+      };
+    case LOAD_POSTS_OF_BOOKMARK_FAILURE:
+      return {
+        ...prevState,
+        loadPostsOfBookmarkLoading: false,
+        loadPostsOfBookmarkError: action.data.message,
       };
 
     default:

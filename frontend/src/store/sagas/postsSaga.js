@@ -9,10 +9,18 @@ import {
   LOAD_POSTS_OF_USER_REQUEST, LOAD_POSTS_OF_USER_SUCCESS, LOAD_POSTS_OF_USER_FAILURE,
   LOAD_POSTS_DETAIL_REQUEST, LOAD_POSTS_DETAIL_SUCCESS, LOAD_POSTS_DETAIL_FAILURE,
   LOAD_POSTS_DETAIL_OF_USER_REQUEST, LOAD_POSTS_DETAIL_OF_USER_SUCCESS, LOAD_POSTS_DETAIL_OF_USER_FAILURE,
+  LOAD_POSTS_OF_BOOKMARK_REQUEST, LOAD_POSTS_OF_BOOKMARK_SUCCESS, LOAD_POSTS_OF_BOOKMARK_FAILURE,
  } from "@store/types";
 
 // api
-import { apiLoadPosts, apiLoadPostsOfHashtag, apiLoadPostsOfUser, apiLoadPostsDetail, apiLoadPostsDetailOfUser } from "@store/api";
+import {
+  apiLoadPosts,
+  apiLoadPostsOfHashtag,
+  apiLoadPostsOfUser,
+  apiLoadPostsDetail,
+  apiLoadPostsDetailOfUser,
+  apiLoadPostsOfBookmark,
+} from "@store/api";
 
 function* loadPosts(action) {
   try {
@@ -64,6 +72,16 @@ function* loadPostsDetailOfUser(action) {
     yield put({ type: LOAD_POSTS_DETAIL_OF_USER_FAILURE, data: error.response.data });
   }
 }
+function* loadPostsOfBookmark(action) {
+  try {
+    const { data } = yield call(apiLoadPostsOfBookmark, action.data);
+
+    yield put({ type: LOAD_POSTS_OF_BOOKMARK_SUCCESS, data });
+  } catch (error) {
+    console.error("postsSaga loadPostsOfBookmark >>", error);
+    yield put({ type: LOAD_POSTS_OF_BOOKMARK_FAILURE, data: error.response.data });
+  }
+}
 
 function* watchLoadPosts() {
   yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
@@ -80,6 +98,9 @@ function* watchLoadPostsDetail() {
 function* watchLoadPostsDetailOfUser() {
   yield takeLatest(LOAD_POSTS_DETAIL_OF_USER_REQUEST, loadPostsDetailOfUser);
 }
+function* watchLoadPostsOfBookmark() {
+  yield takeLatest(LOAD_POSTS_OF_BOOKMARK_REQUEST, loadPostsOfBookmark);
+}
 
 export default function* postsSaga() {
   yield all([
@@ -88,5 +109,6 @@ export default function* postsSaga() {
     fork(watchLoadPostsOfUser),
     fork(watchLoadPostsDetail),
     fork(watchLoadPostsDetailOfUser),
+    fork(watchLoadPostsOfBookmark),
   ]);
 }
