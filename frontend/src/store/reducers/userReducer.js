@@ -28,6 +28,10 @@ const initState = {
   Followers: null,
   Followings: null,
 
+  // 프로필 페이지의 팔로우 모달에서 팔로우 스피너가 공유되는 문제 때문에 누구를 팔로우하는지 기록해두기 위한 변수
+  followId: null,
+  unfollowId: null,
+
   // 2022/01/15 - 로그인한 유저 정보 관련 변수 - by 1-blue
   loadToMeLoading: false,
   loadToMeDone: null,
@@ -196,6 +200,7 @@ function userReducer(prevState = initState, action) {
         followLoading: true,
         followDone: null,
         followError: null,
+        followId: action.data.UserId
       };
     case FOLLOW_SUCCESS:
       // 2022/01/19 - 나의 팔로잉 추가 ( 팔로우 ) - by 1-blue
@@ -206,7 +211,7 @@ function userReducer(prevState = initState, action) {
 
       // 2022/01/19 - 본인 정보창에서 팔로우를 누를 경우 숫자를 증가시키기 위함 - by 1-blue
       if (prevState.user) {
-        if (prevState.me._id === prevState.user?._id) {
+        if (prevState.me._id === prevState.user._id) {
           tempFollowers = [...prevState.user.Followers];
           tempFollowings = [...prevState.user.Followings, { _id: action.data.followingId }];
         } else {
@@ -226,6 +231,7 @@ function userReducer(prevState = initState, action) {
         ...prevState,
         followLoading: false,
         followDone: action.data.message,
+        followId: null,
 
         // 2022/01/19 - 특정 유저 팔로우 (나의 팔로워) - by 1-blue
         me: tempMe,
@@ -238,6 +244,7 @@ function userReducer(prevState = initState, action) {
         ...prevState,
         followLoading: false,
         followError: action.data.message,
+        followId: null,
       };
 
     // 2022/01/15 - 언팔로우 - by 1-blue
@@ -247,6 +254,7 @@ function userReducer(prevState = initState, action) {
         unfollowLoading: true,
         unfollowDone: null,
         unfollowError: null,
+        unfollowId: action.data.UserId
       };
     case UNFOLLOW_SUCCESS:
       // 2022/01/19 - 나의 팔로잉 제거 ( 언팔로우 ) - by 1-blue
@@ -277,12 +285,10 @@ function userReducer(prevState = initState, action) {
         ...prevState,
         unfollowLoading: false,
         unfollowDone: action.data.message,
+        unfollowId: null,
 
         // 2021/12/30 - 특정 유저 언팔로우 (나의 언팔로우) - by 1-blue
-        me: {
-          ...prevState.me,
-          Followings: prevState.me.Followings.filter(following => following._id !== action.data.Follow.unfollowingId),
-        },
+        me: tempMe,
 
         // 2021/12/31 - 특정 유저 팔로우 (특정 유저의 언팔로잉) - by 1-blue
         user: tempUser,
@@ -292,6 +298,7 @@ function userReducer(prevState = initState, action) {
         ...prevState,
         unfollowLoading: false,
         unfollowError: action.data.message,
+        unfollowId: null
       };
 
     // 2022/01/15 - 특정 유저 팔로워들 정보 요청 - by 1-blue

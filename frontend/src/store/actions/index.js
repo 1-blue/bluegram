@@ -27,8 +27,8 @@ export {
   loadPostsAction,
   loadPostsOfHashtagAction,
   loadPostsOfUserAction,
-  resetPostsOfUserAction,
   loadPostsDetailAction,
+  loadPostsDetailOfUserAction,
 } from "./postsAction";
 export {
   appendLikeToPostAction,

@@ -19,3 +19,7 @@ export const apiLoadPostsOfHashtag = body =>
 // 2022/01/04 - 로그인한 유저의 게시글들 요청 - by 1-blue
 export const apiLoadPostsOfUser = body =>
   postsInstance.get(`/user/${body.UserId}?lastId=${body.lastId}&limit=${body.limit}`);
+
+// 2022/01/21 - 특정 유저의 게시글들 상세 내용 요청 - by 1-blue
+export const apiLoadPostsDetailOfUser = body =>
+  postsInstance.get(`/user/detail/${body.UserId}?lastId=${body.lastId}&limit=${body.limit}`);

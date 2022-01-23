@@ -3,8 +3,8 @@ import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_OF_HASHTAG_REQUEST,
   LOAD_POSTS_OF_USER_REQUEST,
-  RESET_POSTS_OF_USER,
   LOAD_POSTS_DETAIL_REQUEST,
+  LOAD_POSTS_DETAIL_OF_USER_REQUEST,
 } from "@store/types";
 
 // 2022/01/02 - ExplorePage 들어올 때 게시글들 초기화 액션 크리에이터 - by 1-blue
@@ -19,8 +19,8 @@ export const loadPostsOfHashtagAction = data => ({ type: LOAD_POSTS_OF_HASHTAG_R
 // 2022/01/04 - 특정 유저의 게시글들 요청 - by 1-blue
 export const loadPostsOfUserAction = data => ({ type: LOAD_POSTS_OF_USER_REQUEST, data });
 
-// 2022/01/05 - 특정 유저의 게시글들 비우기 - by 1-blue
-export const resetPostsOfUserAction = data => ({ type: RESET_POSTS_OF_USER, data });
-
 // 2022/01/15 - 게시글들 상세 정보 요청 - by 1-blue
 export const loadPostsDetailAction = data => ({ type: LOAD_POSTS_DETAIL_REQUEST, data });
+
+// 2022/01/21 - 특정 유저의 게시글들 상세 정보 요청 - by 1-blue
+export const loadPostsDetailOfUserAction = data => ({ type: LOAD_POSTS_DETAIL_OF_USER_REQUEST, data });

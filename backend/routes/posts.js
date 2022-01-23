@@ -174,6 +174,70 @@ router.get("/user/:UserId", isLoggedIn, async (req, res, next) => {
   }
 });
 
+// 2022/01/21 - 특정 유저의 게시글들 상세 내용 불러오기 - by 1-blue
+router.get("/user/detail/:UserId", isLoggedIn, async (req, res, next) => {
+  const UserId = +req.params.UserId;
+  const lastId = +req.query.lastId || -1;
+  const limit = +req.query.limit || 15;
+
+  const where = {
+    _id: lastId === -1 ? { [Op.gt]: lastId } : { [Op.lt]: lastId },
+  };
+
+  try {
+    const user = await User.findByPk(UserId);
+
+    const posts = await user.getPosts({
+      where,
+      limit,
+      order: [["createdAt", "DESC"]],
+      attributes: ["_id", "content", "createdAt"],
+      include: [
+        // 게시글 작성자
+        {
+          model: User,
+          attributes: ["_id", "name"],
+          include: [
+            // 게시글 작성자의 프로필 이미지
+            {
+              model: Image,
+              attributes: ["_id", "name", "url"],
+            },
+          ],
+        },
+        // 게시글의 이미지들
+        {
+          model: Image,
+          attributes: ["_id", "name"],
+        },
+        // 게시글의 댓글들
+        {
+          model: Comment,
+          attributes: ["_id"],
+          separate: true,
+          where: {
+            RecommentId: { [Op.eq]: null },
+          },
+        },
+        // 게시글의 좋아요
+        {
+          model: User,
+          as: "PostLikers",
+          attributes: ["_id"],
+          through: {
+            attributes: ["createdAt"],
+          },
+        },
+      ],
+    });
+
+    res.json({ message: "특정 유저의 게시글들의 상세 내용을 불러오는데 성공했습니다.", posts, limit });
+  } catch (error) {
+    console.error("GET /post/user/detail/:UserId error >> ", error);
+    return next(error);
+  }
+});
+
 // 2022/01/20 - 해시태그의 게시글들 불러오기 - by 1-blue
 router.get("/hashtag/:hashtagText", async (req, res, next) => {
   const hashtagText = decodeURI(req.params.hashtagText);
