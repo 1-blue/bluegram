@@ -1,14 +1,15 @@
 /**
  * 생성일: 2022/01/13
- * 수정일: 2022/01/19
+ * 수정일: 2022/01/23
  * 작성자: 1-blue
  *
  * 회원가입 페이지
  * 유효성 검사, 포커스, 경고 텍스트 추가
  * 간단한 자기 소개 입력란 추가
+ * autoComplete 수정 및 preview 초기화 추가
  */
 
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -25,7 +26,7 @@ import useValidateInput from "@hooks/useValidateInput";
 import useText from "@hooks/useText";
 
 // action
-import { resetMessageAction, signupAction } from "@store/actions";
+import { resetMessageAction, signupAction, resetImagePreview } from "@store/actions";
 
 // styled-components
 const Wrapper = styled.section`
@@ -67,6 +68,7 @@ const SignupPage = () => {
   const [phone, onChangePhone, , phoneRef, phoneValidate] = useValidateInput("");
   const [birthday, onChangeBirthday, , birthdayRef, birthdayValidate] = useValidateInput("");
   const [about, onChangeAbout] = useText("");
+  const aboutRef = useRef(null);
   const inputCommonStyle = useMemo(() => ({ marginBottom: "0" }), []);
 
   // 2021/12/20 - 회원가입 성공 시 홈페이지로 이동 및 성공 or 실패 메시지 alert - by 1-blue
@@ -75,6 +77,7 @@ const SignupPage = () => {
     alert(signupDone || signupError);
 
     dispatch(resetMessageAction());
+    dispatch(resetImagePreview());
 
     if (signupDone) router.push("/login");
   }, [signupDone, signupError]);
@@ -120,8 +123,24 @@ const SignupPage = () => {
         birthdayRef.current.scrollIntoView();
         return birthdayRef.current.select();
       }
+      if (about.trim().length >= 100) {
+        alert("자기 소개는 100자 이내로 입력해주세요!");
+        aboutRef.current.scrollIntoView();
+        return aboutRef.current.select();
+      }
 
-      dispatch(signupAction({ id, password, name, email, phone, birthday, about, imageName: imagePreviews[0] }));
+      dispatch(
+        signupAction({
+          id,
+          password,
+          name,
+          email,
+          phone,
+          birthday,
+          about,
+          imageName: imagePreviews[imagePreviews.length - 1],
+        }),
+      );
     },
     [
       id,
@@ -140,6 +159,7 @@ const SignupPage = () => {
       emailRef,
       phoneRef,
       birthdayRef,
+      aboutRef,
       idValidate,
       passwordValidate,
       passwordCheckValidate,
@@ -168,6 +188,7 @@ const SignupPage = () => {
           autoFocus
           ref={idRef}
           style={inputCommonStyle}
+          autoComplete="username"
         />
         <Text $success={idValidate} $error={!idValidate}>
           숫자와 영어가 최소 한 글자 이상 포함되고, 최소 6자리여야 합니다.
@@ -186,6 +207,7 @@ const SignupPage = () => {
           onChange={onChangePassword("password")}
           ref={passwordRef}
           style={inputCommonStyle}
+          autoComplete="new-password"
         />
         <Text $success={passwordValidate} $error={!passwordValidate}>
           숫자와 영어가 최소 한 글자 이상 포함되고, 최소 8자리여야 합니다.
@@ -204,6 +226,7 @@ const SignupPage = () => {
           onChange={onChangePasswordCheck("password")}
           ref={passwordCheckRef}
           style={inputCommonStyle}
+          autoComplete="new-password"
         />
         <Text $success={password === passwordCheck} $error={!(password === passwordCheck)}>
           비밀번호와 비밀번호 확인이 일치해야 합니다.
@@ -222,6 +245,7 @@ const SignupPage = () => {
           onChange={onChangeName("name")}
           ref={nameRef}
           style={inputCommonStyle}
+          autoComplete="nickname"
         />
         <Text $success={nameValidate} $error={!nameValidate}>
           최소 1자 최대 20자 이내여야 합니다.
@@ -240,6 +264,7 @@ const SignupPage = () => {
           onChange={onChangeEmail("email")}
           ref={emailRef}
           style={inputCommonStyle}
+          autoComplete="email"
         />
         <Text $success={emailValidate} $error={!emailValidate}>
           이메일 형식에 맞게 입력해 주세요
@@ -247,7 +272,7 @@ const SignupPage = () => {
 
         {/* phone */}
         <label htmlFor="phone" hidden>
-          이메일 입력
+          휴대폰 번호 입력
         </label>
         <Input
           id="phone"
@@ -259,6 +284,7 @@ const SignupPage = () => {
           onChange={onChangePhone("phone")}
           ref={phoneRef}
           style={inputCommonStyle}
+          autoComplete="tel"
         />
         <Text $success={phoneValidate} $error={!phoneValidate}>
           숫자만 11자리 입력해 주세요
@@ -278,6 +304,7 @@ const SignupPage = () => {
           onChange={onChangeBirthday("birthday")}
           ref={birthdayRef}
           style={inputCommonStyle}
+          autoComplete="bday"
         />
         <Text $success={birthdayValidate} $error={!birthdayValidate}>
           숫자만 8자리 입력해 주세요
@@ -292,7 +319,12 @@ const SignupPage = () => {
           onChange={onChangeAbout}
           placeholder="5줄 이내로 간단한 자기소개를 입력해주세요"
           className="about"
+          autoComplete="on"
+          ref={aboutRef}
         />
+        <Text $success={about.trim().length <= 100} $error={about.trim().length > 100}>
+          100자 이내로 입력해주세요!
+        </Text>
 
         {/* profileImage */}
         <ImageInput />

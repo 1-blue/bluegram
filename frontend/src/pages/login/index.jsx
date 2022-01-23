@@ -1,9 +1,10 @@
 /**
  * 생성일: 2022/01/13
- * 수정일: -
+ * 수정일: 2022/01/23
  * 작성자: 1-blue
  *
  * 로그인 페이지
+ * autoComplete 수정
  */
 
 import React, { useCallback, useEffect } from "react";
@@ -71,10 +72,23 @@ const LoginPage = () => {
       <Form onSubmit={onLocalLogin} autoComplete="on">
         <h1 className="form-title">bluegram</h1>
         {/* id */}
-        <Input type="text" placeholder="아이디를 입력해주세요" value={id} onChange={onChangeId} autoFocus />
+        <Input
+          type="text"
+          placeholder="아이디를 입력해주세요"
+          value={id}
+          onChange={onChangeId}
+          autoFocus
+          autoComplete="username"
+        />
 
         {/* password */}
-        <Input type="password" placeholder="비밀번호를 입력해주세요" value={password} onChange={onChangePassword} />
+        <Input
+          type="password"
+          placeholder="비밀번호를 입력해주세요"
+          value={password}
+          onChange={onChangePassword}
+          autoComplete="new-password"
+        />
 
         {/* 일반 로그인 버튼 */}
         <Button type="submit" $local loading={loginLoading}>

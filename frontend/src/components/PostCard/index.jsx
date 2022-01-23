@@ -1,6 +1,6 @@
 /**
  * 생성일: 2022/01/15
- * 수정일: 2022/01/19
+ * 수정일: 2022/01/23
  * 작성자: 1-blue
  *
  * 상세 게시글 컴포넌트
@@ -12,6 +12,7 @@
  * 게시글/댓글/답글 좋아요 로직 추가
  * 팔로우/언팔로우 로직 추가
  * textareaRef 이동 ( focus 및 commentIcon 조정을 위함 )
+ * 북마크 기능 추가
  */
 
 import React, { useCallback, useState, useEffect, useRef } from "react";
@@ -46,6 +47,8 @@ import {
   removeLikeToCommentAction,
   followAction,
   unfollowAction,
+  appendPostOfBookmarkAction,
+  removePostOfBookmarkAction,
 } from "@store/actions";
 
 // hooks
@@ -54,8 +57,15 @@ import useToggle from "@hooks/useToggle";
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
-  const { appendLikeToPostLoading, removeLikeToPostLoading, appendLikeToCommentLoading, removeLikeToCommentLoading } =
-    useSelector(state => state.post);
+  const {
+    appendLikeToPostLoading,
+    removeLikeToPostLoading,
+    appendLikeToCommentLoading,
+    removeLikeToCommentLoading,
+    appendPostOfBookmarkLoading,
+    removePostOfBookmarkLoading,
+  } = useSelector(state => state.post);
+  const { followLoading, unfollowLoading } = useSelector(state => state.user);
   const textareaRef = useRef(null);
   const [text, onChangeText, setText, resize] = useTextarea("");
   const [isShowComment, onToggleComment] = useToggle(true);
@@ -178,13 +188,30 @@ const PostCard = ({ post }) => {
   // 2022/01/19 - 팔로우/언팔로우 - by 1-blue
   const onClickFollowButton = useCallback(
     (UserId, isFollow) => () => {
+      if (followLoading || unfollowLoading)
+        return alert("이미 팔로우/언팔로우 처리 중입니다.\n잠시후에 다시 시도해주세요!");
       if (isFollow) {
         dispatch(unfollowAction({ UserId }));
       } else {
         dispatch(followAction({ UserId }));
       }
     },
-    [],
+    [followLoading, unfollowLoading],
+  );
+
+  // 2022/01/23 - 북마크 추가/제거 - by 1-blue
+  const onClickBookmarkButton = useCallback(
+    isBookmark => () => {
+      if (appendPostOfBookmarkLoading || removePostOfBookmarkLoading)
+        return alert("이미 북마크 처리중입니다.\n잠시후에 다시 시도해주세요!");
+
+      if (isBookmark) {
+        dispatch(removePostOfBookmarkAction({ PostId: post._id }));
+      } else {
+        dispatch(appendPostOfBookmarkAction({ PostId: post._id }));
+      }
+    },
+    [post._id, appendPostOfBookmarkLoading, removePostOfBookmarkLoading],
   );
 
   return (
@@ -198,9 +225,11 @@ const PostCard = ({ post }) => {
       {/* 게시글 버튼들 ( 좋아요, 댓글, DM, 북마크 ) */}
       <PostCardButtons
         likers={post.PostLikers}
+        bookmarkers={post.PostBookmarks}
         onClickPostLikeButton={onClickPostLikeButton}
         isFocus={isFocus}
         onClickCommentIconButton={onClickCommentIconButton}
+        onClickBookmarkButton={onClickBookmarkButton}
       />
 
       {/* 게시글 정보 ( 좋아요 개수, 작성 시간 ) */}

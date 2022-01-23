@@ -1,3 +1,5 @@
+import path from "path";
+import fs from "fs";
 import express from "express";
 import bcrypt from "bcrypt";
 
@@ -7,6 +9,7 @@ import db from "../models/index.js";
 const { User, Image, Post } = db;
 
 const router = express.Router();
+const __dirname = path.resolve();
 
 // 로그인한 유저 정보 가져오기
 router.get("/me", isLoggedIn, async (req, res, next) => {
@@ -62,7 +65,7 @@ router.get("/me/detail", isLoggedIn, async (req, res, next) => {
 
 // 회원가입
 router.post("/", isNotLoggedIn, async (req, res, next) => {
-  const { id, password, name, phone, birthday, imageName } = req.body;
+  const { id, password, name, email, phone, birthday, about, imageName } = req.body;
 
   try {
     const exUser = await User.findOne({ where: { id } });
@@ -75,14 +78,21 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
       id,
       password: hashedPassword,
       name,
+      email,
       phone,
       birthday,
+      about,
     });
 
     await Image.create({
       name: imageName,
       UserId: createdUser._id,
     });
+
+    // 2022/01/23 - 게시글 생성 완료 시 추가한 이미지 위치 이동 - by 1-blue
+    const oldPath = path.join(__dirname, "public", "images", "preview", imageName);
+    const newPath = path.join(__dirname, "public", "images", imageName);
+    fs.rename(oldPath, newPath, () => {});
 
     return res.status(200).json({ message: `${name}님 회원가입이 완료되었습니다.\n로그인페이지로 이동합니다.` });
   } catch (error) {

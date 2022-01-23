@@ -19,15 +19,30 @@ import { Wrapper } from "./style";
 // common-components
 import Icon from "@components/common/Icon";
 
-const PostCardButtons = ({ likers, onClickPostLikeButton, isFocus, onClickCommentIconButton }) => {
+const PostCardButtons = ({
+  likers,
+  bookmarkers,
+  onClickPostLikeButton,
+  isFocus,
+  onClickCommentIconButton,
+  onClickBookmarkButton,
+}) => {
   const { me } = useSelector(state => state.user);
   const [isLikedPost, setIsLikedPost] = useState(false);
+  const [isBookmarkedPost, setIsBookmarkedPost] = useState(false);
 
   // 2022/01/18 - 본인이 게시글에 좋아요 눌렀는지 확인 - by 1-blue
   useEffect(() => setIsLikedPost(likers.some(liker => liker._id === me._id)), [me._id, likers]);
 
+  // 2022/01/18 - 본인이 게시글에 북마크 눌렀는지 확인 - by 1-blue
+  useEffect(
+    () => setIsBookmarkedPost(bookmarkers.some(bookmarker => bookmarker._id === me._id)),
+    [me._id, bookmarkers],
+  );
+
   return (
     <Wrapper>
+      {/* 좋아요 */}
       <button type="button" onClick={onClickPostLikeButton(isLikedPost)} className="post-card-buttons-heart">
         <Icon
           width={24}
@@ -38,18 +53,31 @@ const PostCardButtons = ({ likers, onClickPostLikeButton, isFocus, onClickCommen
           animation="heart-scale"
         />
       </button>
-      <Icon
-        width={24}
-        height={24}
-        shape="comment"
-        className="post-card-buttons-comment"
-        $fill={isFocus}
-        fill="var(--comment-color)"
-        onClick={onClickCommentIconButton}
-      />
-      <Icon width={24} height={24} shape="airplane" className="post-card-buttons-airplane" />
+
+      {/* 댓글 */}
+      <button type="button" onClick={onClickCommentIconButton} className="post-card-buttons-comment">
+        <Icon width={24} height={24} shape="comment" $fill={isFocus} fill="var(--comment-color)" />
+      </button>
+
+      {/* DM */}
+      <button type="button" className="post-card-buttons-airplane">
+        <Icon width={24} height={24} shape="airplane" className="post-card-buttons-airplane" />
+      </button>
+
+      {/* 빈 공간 차지 */}
       <div className="post-card-buttons-empty-place" />
-      <Icon width={24} height={24} shape="bookmark" className="post-card-buttons-bookmark" />
+
+      {/* 북마크 */}
+      <button type="button" onClick={onClickBookmarkButton(isBookmarkedPost)} className="post-card-buttons-bookmark">
+        <Icon
+          width={24}
+          height={24}
+          shape="bookmark"
+          $fill={isBookmarkedPost}
+          fill="var(--bookmark-color)"
+          animation="heart-scale"
+        />
+      </button>
     </Wrapper>
   );
 };
@@ -63,9 +91,15 @@ PostCardButtons.propTypes = {
       }),
     }),
   ).isRequired,
+  bookmarkers: Proptypes.arrayOf(
+    Proptypes.shape({
+      _id: Proptypes.number,
+    }),
+  ).isRequired,
   onClickPostLikeButton: Proptypes.func.isRequired,
   isFocus: Proptypes.bool.isRequired,
   onClickCommentIconButton: Proptypes.func.isRequired,
+  onClickBookmarkButton: Proptypes.func.isRequired,
 };
 
 export default PostCardButtons;

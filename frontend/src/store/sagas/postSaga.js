@@ -15,6 +15,8 @@ import {
   REMOVE_LIKE_TO_COMMENT_REQUEST, REMOVE_LIKE_TO_COMMENT_SUCCESS, REMOVE_LIKE_TO_COMMENT_FAILURE,
   LOAD_COMMENTS_REQUEST, LOAD_COMMENTS_SUCCESS, LOAD_COMMENTS_FAILURE,
   LOAD_RECOMMENTS_REQUEST, LOAD_RECOMMENTS_SUCCESS, LOAD_RECOMMENTS_FAILURE,
+  APPEND_POST_OF_BOOKMARK_REQUEST, APPEND_POST_OF_BOOKMARK_SUCCESS, APPEND_POST_OF_BOOKMARK_FAILURE,
+  REMOVE_POST_OF_BOOKMARK_REQUEST, REMOVE_POST_OF_BOOKMARK_SUCCESS, REMOVE_POST_OF_BOOKMARK_FAILURE,
  } from "@store/types";
 
 // api
@@ -30,6 +32,8 @@ import {
   apiRemoveLikeToComment,
   apiLoadComments,
   apiLoadRecomments,
+  apiAppendPostOfBookmark,
+  apiRemovePostOfBookmark,
 } from "@store/api";
 
 function* createPost(action) {
@@ -142,6 +146,26 @@ function* loadRecomments(action) {
     yield put({ type: LOAD_RECOMMENTS_FAILURE, data: error.response.data });
   }
 }
+function* appendPostOfBookmark(action) {
+  try {
+    const { data } = yield call(apiAppendPostOfBookmark, action.data);
+
+    yield put({ type: APPEND_POST_OF_BOOKMARK_SUCCESS, data });
+  } catch (error) {
+    console.error("postSaga appendPostOfBookmark >> ", error);
+    yield put({ type: APPEND_POST_OF_BOOKMARK_FAILURE, data: error.response.data });
+  }
+}
+function* removePostOfBookmark(action) {
+  try {
+    const { data } = yield call(apiRemovePostOfBookmark, action.data);
+
+    yield put({ type: REMOVE_POST_OF_BOOKMARK_SUCCESS, data });
+  } catch (error) {
+    console.error("postSaga removePostOfBookmark >> ", error);
+    yield put({ type: REMOVE_POST_OF_BOOKMARK_FAILURE, data: error.response.data });
+  }
+}
 
 function* watchCreatePost() {
   yield takeLatest(CREATE_POST_REQUEST, createPost);
@@ -176,6 +200,12 @@ function* watchLoadComments() {
 function* watchLoadRecomments() {
   yield takeLatest(LOAD_RECOMMENTS_REQUEST, loadRecomments);
 }
+function* watchAppendPostOfBookmark() {
+  yield takeLatest(APPEND_POST_OF_BOOKMARK_REQUEST, appendPostOfBookmark);
+}
+function* watchRemovePostOfBookmark() {
+  yield takeLatest(REMOVE_POST_OF_BOOKMARK_REQUEST, removePostOfBookmark);
+}
 
 export default function* postSaga() {
   yield all([
@@ -190,5 +220,7 @@ export default function* postSaga() {
     fork(watchRemoveLikeToComment),
     fork(watchLoadComments),
     fork(watchLoadRecomments),
+    fork(watchAppendPostOfBookmark),
+    fork(watchRemovePostOfBookmark),
   ]);
 }
