@@ -13,7 +13,7 @@ router.post("/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
 
   try {
-    const targetPost = await Post.findByPk(PostId);
+    const targetPost = await Post.findByPk(PostId, { include: [{ model: User, attributes: ["name"] }] });
 
     if (!targetPost)
       return res
@@ -25,7 +25,11 @@ router.post("/:PostId", isLoggedIn, async (req, res, next) => {
 
     await targetPost.addPostBookmarks(req.user._id);
 
-    res.json({ message: "해당 게시글을 북마크에 추가했습니다.", PostId: targetPost._id, UserId: req.user._id });
+    res.json({
+      message: `${targetPost.User.name}님의 게시글을 북마크에 추가했습니다.`,
+      PostId: targetPost._id,
+      UserId: req.user._id,
+    });
   } catch (error) {
     console.error("POST /bookmark error >> ", error);
     return next(error);
@@ -37,7 +41,7 @@ router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
 
   try {
-    const targetPost = await Post.findByPk(PostId);
+    const targetPost = await Post.findByPk(PostId, { include: [{ model: User, attributes: ["name"] }] });
 
     if (!targetPost)
       return res
@@ -49,7 +53,11 @@ router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
 
     await targetPost.removePostBookmarks(req.user._id);
 
-    res.json({ message: "해당 게시글의 북마크를 제거했습니다.", PostId: targetPost._id, UserId: req.user._id });
+    res.json({
+      message: `${targetPost.User.name}님의 게시글의 북마크를 제거했습니다.`,
+      PostId: targetPost._id,
+      UserId: req.user._id,
+    });
   } catch (error) {
     console.error("DELETE /bookmark error >> ", error);
     return next(error);
@@ -121,7 +129,12 @@ router.get("/", isLoggedIn, async (req, res, next) => {
       order: [["createdAt", "DESC"]],
     });
 
-    res.json({ message: "로그인한 유저의 북마크된 게시글들을 가져옵니다.", posts: bookmarkPosts, limit });
+    const message =
+      lastId === -1
+        ? `${me.name}님이 북마크한 게시글을 ${bookmarkPosts.length}개 가져왔습니다.`
+        : `${me.name}님이 북마크한 게시글을 추가로 ${bookmarkPosts.length}개 가져왔습니다.`;
+
+    res.json({ message, posts: bookmarkPosts, limit });
   } catch (error) {
     console.error("DELETE /bookmark error >> ", error);
     return next(error);

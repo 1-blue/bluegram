@@ -1,6 +1,6 @@
 /**
  * 생성일: 2022/01/13
- * 수정일: 2022/01/23
+ * 수정일: 2022/01/24
  * 작성자: 1-blue
  *
  * 프로필 페이지
@@ -9,6 +9,7 @@
  * 팔로우/언팔로우 기능 추가
  * 팔로우/언팔로우 모달 추가
  * 북마크된 게시글 보기 추가
+ * 로그아웃 추가
  */
 
 import React, { useCallback } from "react";
@@ -32,6 +33,7 @@ import {
   loadFollowersAction,
   loadFollowingsAction,
   loadPostsOfBookmarkAction,
+  localLogoutAction,
 } from "@store/actions";
 
 // components
@@ -111,8 +113,9 @@ const Profile = () => {
   const dispatch = useDispatch();
   const {
     query: { id, kinds },
+    push,
   } = useRouter();
-  const { followLoading, unfollowLoading } = useSelector(state => state.user);
+  const { me, followLoading, unfollowLoading } = useSelector(state => state.user);
   const [isOpenFollower, onOpenFollowerModal, onCloseFollowerModal] = useOpenClose(false);
   const [isOpenFollowing, onOpenFollowingModal, onCloseFollowingModal] = useOpenClose(false);
 
@@ -149,9 +152,20 @@ const Profile = () => {
     [onOpenFollowingModal],
   );
 
+  // 2022/01/24 - 로그아웃 요청 - by 1-blue
+  const onClickLogOut = useCallback(() => {
+    dispatch(localLogoutAction());
+
+    alert("로그아웃으로 인해 메인페이지로 이동됩니다.");
+
+    push("/");
+  }, []);
+
+  if (!me._id) return <h2>접근 권한이 없습니다.</h2>;
+
   return (
     <Wrapper>
-      <ProfileHead onClickFollowButton={onClickFollowButton} />
+      <ProfileHead onClickFollowButton={onClickFollowButton} onClickLogOut={onClickLogOut} />
       <ProfileButtons onClickFollowerButton={onClickFollowerButton} onClickFollowingButton={onClickFollowingButton} />
       <ProfileNav id={id} kinds={kinds} />
       <ProfileContents id={id} kinds={kinds} />

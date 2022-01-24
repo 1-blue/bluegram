@@ -16,7 +16,7 @@ import { resetMessageAction } from "@store/actions";
 // styled-components
 import { Wrapper } from "./style";
 
-const Toast = ({ message, time, success, warning, error }) => {
+const Toast = ({ message, time, ...restProps }) => {
   const dispatch = useDispatch();
   const [isShow, setIsShow] = useState(true);
   const timerId = useRef(null);
@@ -29,17 +29,17 @@ const Toast = ({ message, time, success, warning, error }) => {
     }, time);
 
     return () => {
-      dispatch(resetMessageAction());
       setIsShow(false);
+      dispatch(resetMessageAction());
       clearTimeout(timerId.current);
     };
-  }, [time, message]);
+  }, [time, timerId.current]);
 
   return (
     <>
       {isShow && (
-        <Wrapper success={success} warning={warning} error={error}>
-          <span>{message}</span>
+        <Wrapper {...restProps}>
+          <span className="toast-message">{message}</span>
         </Wrapper>
       )}
     </>
@@ -49,9 +49,9 @@ const Toast = ({ message, time, success, warning, error }) => {
 Toast.propTypes = {
   message: Proptypes.string.isRequired,
   time: Proptypes.number,
-  success: Proptypes.bool,
-  warning: Proptypes.bool,
-  error: Proptypes.bool,
+  $success: Proptypes.bool,
+  $warning: Proptypes.bool,
+  $error: Proptypes.bool,
 };
 
 Toast.defaultProps = {

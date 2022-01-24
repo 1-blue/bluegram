@@ -14,9 +14,9 @@ export const Wrapper = styled.aside`
   border-radius: 0.4em;
   text-align: center;
   overflow: hidden;
-  z-index: 9;
+  z-index: 100;
 
-  & > span {
+  & .toast-message {
     word-break: keep-all;
     white-space: pre-line;
   }
@@ -30,16 +30,16 @@ export const Wrapper = styled.aside`
   animation-direction: normal;
   animation-fill-mode: forwards;
 
-  ${({ success, warning, error }) => {
-    if (success) {
+  ${({ $success, $warning, $error }) => {
+    if ($success) {
       return css`
         background-color: var(--success-color);
       `;
-    } else if (warning) {
+    } else if ($warning) {
       return css`
         background-color: var(--warning-color);
       `;
-    } else if (error) {
+    } else if ($error) {
       return css`
         background-color: var(--error-color);
       `;

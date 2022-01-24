@@ -102,6 +102,15 @@ router.post("/", isLoggedIn, async (req, res, next) => {
             attributes: ["createdAt"],
           },
         },
+        // 게시글을 북마크하는 유저들
+        {
+          model: User,
+          as: "PostBookmarks",
+          attributes: ["_id"],
+          through: {
+            attributes: [],
+          },
+        },
       ],
       order: [
         ["createdAt", "DESC"],
@@ -116,7 +125,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
       fs.rename(oldPath, newPath, () => {});
     });
 
-    return res.status(201).json({ message: "게시글 생성이 완료되었습니다.", createdPost: createdPostWithData });
+    return res.status(201).json({ message: "게시글을 성공적으로 생성했습니다.", createdPost: createdPostWithData });
   } catch (error) {
     console.error("POST /post error >> ", error);
     return next(error);
@@ -171,7 +180,7 @@ router.get("/:PostId", isLoggedIn, async (req, res, next) => {
 
     if (!post) return res.status(404).json({ message: "존재하지 않은 게시글입니다.\n잠시후에 다시 시도해주세요" });
 
-    res.json({ message: "특정 게시글을 불러오는데 성공했습니다.", post });
+    res.json({ message: "특정 게시글을 불러왔습니다.", post });
   } catch (error) {
     console.error("GET /post error >> ", error);
     return next(error);
@@ -196,7 +205,7 @@ router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
 
     await targetPost.destroy();
 
-    res.status(200).json({ message: "게시글 삭제에 성공하셨습니다.", removedPostId: PostId });
+    res.status(200).json({ message: "게시글을 성공적으로 삭제했습니다.", removedPostId: PostId });
   } catch (error) {
     console.error("DELETE /post/:PostId error >> ", error);
     return next(error);

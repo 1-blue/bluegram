@@ -139,7 +139,9 @@ router.get("/:UserId", isLoggedIn, async (req, res, next) => {
 
     if (!targetUser) return res.status(404).json({ message: "유저가 존재하지 않습니다." });
 
-    return res.status(200).json({ message: "특정 유저의 정보를 가져오는데 성공했습니다.", user: targetUser });
+    return res
+      .status(200)
+      .json({ message: `${targetUser.name}님의 정보를 가져오는데 성공했습니다.`, user: targetUser });
   } catch (error) {
     console.error("GET /user/:UserId error >> ", error);
     return next(error);
@@ -181,7 +183,7 @@ router.put("/", isLoggedIn, async (req, res, next) => {
     }
 
     res.status(200).json({
-      message: "유저의 정보변경에 성공했습니다.",
+      message: `${name}님의 정보를 성공적으로 변경했습니다.`,
       name,
       email,
       phone,

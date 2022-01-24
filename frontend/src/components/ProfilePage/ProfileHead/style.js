@@ -10,16 +10,29 @@ export const Wrapper = styled.section`
   }
 
   /* 정렬을 위한 플렉스 적용 */
-  & .flex-container {
+  & .profile-head-right-container {
     flex: 1;
     display: inline-flex;
     flex-flow: column nowrap;
+  }
+
+  /* 정렬을 위한 플렉스 적용 */
+  & .profile-head-right-top-container {
+    display: flex;
+    justify-content: space-between;
   }
 
   /* 유저명 */
   & .user-name {
     font-size: 1.2rem;
     margin-bottom: 0.4em;
+  }
+
+  /* 로그아웃 버튼 */
+  & .logout-button {
+    color: gray;
+    font-weight: 900;
+    text-shadow: 0 0 10px black;
   }
 
   /* 본인 프로필 페이지일 경우 프로필 수정 버튼 */

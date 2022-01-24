@@ -4,7 +4,7 @@ const router = express.Router();
 import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
-const { Post, Comment, Image } = db;
+const { Post, Comment, Image, User } = db;
 
 // 2022/01/18 - 게시글에 좋아요 추가 - by 1-blue
 router.post("/post/:PostId", isLoggedIn, async (req, res, next) => {
@@ -12,7 +12,7 @@ router.post("/post/:PostId", isLoggedIn, async (req, res, next) => {
   const { _id: UserId } = req.user;
 
   try {
-    const targetPost = await Post.findOne({ where: { _id: PostId } });
+    const targetPost = await Post.findOne({ where: { _id: PostId }, include: [{ model: User, attributes: ["name"] }] });
 
     // 2022/01/18 - 존재 하지 않는 게시글에 좋아요 누른 경우 - by 1-blue
     if (!targetPost) {
@@ -30,7 +30,7 @@ router.post("/post/:PostId", isLoggedIn, async (req, res, next) => {
     await targetPost.addPostLikers(UserId);
 
     res.json({
-      message: `${req.user.name}님 게시글에 좋아요를 누르셨습니다.`,
+      message: `${targetPost.User.name}님의 게시글에 좋아요를 누르셨습니다.`,
       likedPostId: PostId,
       UserId,
     });
@@ -46,7 +46,7 @@ router.delete("/post/:PostId", isLoggedIn, async (req, res, next) => {
   const { _id: UserId } = req.user;
 
   try {
-    const targetPost = await Post.findOne({ where: { _id: PostId } });
+    const targetPost = await Post.findOne({ where: { _id: PostId }, include: [{ model: User, attributes: ["name"] }] });
 
     // 2022/01/18 - 존재 하지 않는 게시글에 좋아요 누른 경우 - by 1-blue
     if (!targetPost) {
@@ -64,7 +64,7 @@ router.delete("/post/:PostId", isLoggedIn, async (req, res, next) => {
     await targetPost.removePostLikers(UserId);
 
     res.json({
-      message: `${req.user.name}님 게시글에 좋아요를 취소하셨습니다.`,
+      message: `${targetPost.User.name}님 게시글에 좋아요를 취소하셨습니다.`,
       unlikedPostId: PostId,
       UserId,
     });
@@ -80,7 +80,10 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
   const { _id: UserId } = req.user;
 
   try {
-    const targetComment = await Comment.findOne({ where: { _id: CommentId } });
+    const targetComment = await Comment.findOne({
+      where: { _id: CommentId },
+      include: [{ model: User, attributes: ["name"] }],
+    });
 
     // 2022/01/18 - 존재 하지 않는 게시글에 좋아요 누른 경우 - by 1-blue
     if (!targetComment) {
@@ -110,8 +113,12 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
       },
     });
 
+    const message = `${targetComment.User.name}님의 ${
+      targetComment.RecommentId ? "답글" : "댓글"
+    }에 좋아요를 눌렀습니다.`;
+
     res.json({
-      message: `${req.user.name}님 댓글에 좋아요를 누르셨습니다.`,
+      message,
       PostId: targetComment.PostId,
       CommentId: targetComment._id,
       RecommentId: targetComment.RecommentId,
@@ -129,7 +136,10 @@ router.delete("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
   const { _id: UserId } = req.user;
 
   try {
-    const targetComment = await Comment.findOne({ where: { _id: CommentId } });
+    const targetComment = await Comment.findOne({
+      where: { _id: CommentId },
+      include: [{ model: User, attributes: ["name"] }],
+    });
 
     // 2021/12/28 - 존재 하지 않는 게시글에 좋아요 누른 경우 - by 1-blue
     if (!targetComment) {
@@ -146,8 +156,12 @@ router.delete("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
     // 2021/12/28 - 정상적으로 좋아요 제거 - by 1-blue
     await targetComment.removeCommentLikers(UserId);
 
+    const message = `${targetComment.User.name}님의 ${
+      targetComment.RecommentId ? "답글" : "댓글"
+    }에 좋아요를 취소하셨습니다.`;
+
     res.json({
-      message: `${req.user.name}님 댓글에 좋아요를 취소하셨습니다.`,
+      message,
       PostId: targetComment.PostId,
       CommentId: targetComment._id,
       RecommentId: targetComment.RecommentId,

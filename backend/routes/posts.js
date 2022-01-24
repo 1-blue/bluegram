@@ -46,7 +46,12 @@ router.get("/", async (req, res, next) => {
       ],
     });
 
-    res.json({ message: "최신 게시글들을 불러오는데 성공했습니다.", posts, limit });
+    const message =
+      lastId === -1
+        ? `최신 게시글 ${posts.length}개를 불러왔습니다.`
+        : `추가로 게시글 ${posts.length}개를 불러왔습니다.`;
+
+    res.json({ message, posts, limit });
   } catch (error) {
     console.error("GET /post error >> ", error);
     return next(error);
@@ -116,7 +121,12 @@ router.get("/detail", async (req, res, next) => {
       order: [["createdAt", "DESC"]],
     });
 
-    res.json({ message: "최신 게시글들을 불러오는데 성공했습니다.", posts, limit });
+    const message =
+      lastId === -1
+        ? `최신 게시글 ${posts.length}개를 불러왔습니다.`
+        : `추가로 게시글 ${posts.length}개를 불러왔습니다.`;
+
+    res.json({ message, posts, limit });
   } catch (error) {
     console.error("GET /post/detail error >> ", error);
     return next(error);
@@ -176,7 +186,12 @@ router.get("/user/:UserId", isLoggedIn, async (req, res, next) => {
       ],
     });
 
-    res.json({ message: "특정 유저의 게시글들을 불러오는데 성공했습니다.", posts, limit });
+    const message =
+      lastId === -1
+        ? `${user.name}님의 게시글 ${posts.length}개를 불러왔습니다.`
+        : `${user.name}님의 게시글을 추가로 ${posts.length}개를 불러왔습니다.`;
+
+    res.json({ message, posts, limit });
   } catch (error) {
     console.error("GET /post/user/:UserId error >> ", error);
     return next(error);
@@ -249,7 +264,12 @@ router.get("/user/detail/:UserId", isLoggedIn, async (req, res, next) => {
       ],
     });
 
-    res.json({ message: "특정 유저의 게시글들의 상세 내용을 불러오는데 성공했습니다.", posts, limit });
+    const message =
+      lastId === -1
+        ? `${user.name}님의 게시글 ${posts.length}개를 불러왔습니다.`
+        : `${user.name}님의 게시글을 추가로 ${posts.length}개를 불러왔습니다.`;
+
+    res.json({ message, posts, limit });
   } catch (error) {
     console.error("GET /post/user/detail/:UserId error >> ", error);
     return next(error);
@@ -321,14 +341,28 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
             attributes: ["createdAt"],
           },
         },
+        // 게시글을 북마크하는 유저들
+        {
+          model: User,
+          as: "PostBookmarks",
+          attributes: ["_id"],
+          through: {
+            attributes: [],
+          },
+        },
       ],
       order: [["createdAt", "DESC"]],
     });
 
     const postsOfHashtagCount = await hashtag.countPostHashtaged();
 
+    const message =
+      lastId === -1
+        ? `#${hashtagText}인 게시글을 ${postsOfHashtag.length}개를 불러왔습니다.`
+        : `#${hashtagText}인 게시글을 추가로 ${postsOfHashtag.length}개를 불러왔습니다.`;
+
     res.status(200).json({
-      message: "해시태그의 게시글들을 불러오는데 성공했습니다.",
+      message,
       postsOfHashtag,
 
       limit,
