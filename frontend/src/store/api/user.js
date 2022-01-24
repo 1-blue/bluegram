@@ -25,4 +25,4 @@ export const apiEditToMeAll = body => userInstance.put("/", body);
 export const apiEditToMePassword = body => userInstance.patch("/", body);
 
 // 2022/01/03 - 로그인한 유저의 회원탈퇴 - by 1-blue
-export const apiSignOut = () => userInstance.delete("/");
+export const apiSignOut = body => userInstance.delete(`/${body.password}`);

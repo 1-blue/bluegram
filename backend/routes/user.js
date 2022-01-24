@@ -146,16 +146,18 @@ router.get("/:UserId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2022/01/03 - 로그인한 유저의 기본 정보 변경 - by 1-blue
+// 2022/01/24 - 로그인한 유저의 기본 정보 변경 - by 1-blue
 router.put("/", isLoggedIn, async (req, res, next) => {
-  const { name, phone, birthday, profileImage } = req.body;
+  const { name, email, phone, birthday, about, profileImage } = req.body;
 
   try {
     await User.update(
       {
         name,
+        email,
         phone,
         birthday,
+        about,
       },
       {
         where: {
@@ -171,11 +173,21 @@ router.put("/", isLoggedIn, async (req, res, next) => {
         },
         { where: { UserId: req.user._id } },
       );
+
+      // 2022/01/23 - 게시글 생성 완료 시 추가한 이미지 위치 이동 - by 1-blue
+      const oldPath = path.join(__dirname, "public", "images", "preview", profileImage);
+      const newPath = path.join(__dirname, "public", "images", profileImage);
+      fs.rename(oldPath, newPath, () => {});
     }
 
     res.status(200).json({
       message: "유저의 정보변경에 성공했습니다.",
-      result: { name, phone, birthday, profileImage },
+      name,
+      email,
+      phone,
+      birthday,
+      about,
+      profileImage,
     });
   } catch (error) {
     console.error("PUT /user error >> ", error);
@@ -183,16 +195,16 @@ router.put("/", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2022/01/03 - 로그인한 유저의 비밀번호 변경 - by 1-blue
+// 2022/01/24 - 로그인한 유저의 비밀번호 변경 - by 1-blue
 router.patch("/", isLoggedIn, async (req, res, next) => {
-  const { prevPassword, currPassword } = req.body;
+  const { currentPassword, password } = req.body;
 
   try {
-    if (!(await bcrypt.compare(prevPassword, req.user.password))) {
-      return res.status(202).json({ message: "비밀번호가 불일치합니다." });
+    if (!(await bcrypt.compare(currentPassword, req.user.password))) {
+      return res.status(202).json({ message: "기존 비밀번호와 불일치합니다." });
     }
 
-    const hashedPassword = await bcrypt.hash(currPassword, 6);
+    const hashedPassword = await bcrypt.hash(password, 6);
 
     await User.update(
       {
@@ -215,9 +227,16 @@ router.patch("/", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2022/01/03 - 로그인한 유저 회원탈퇴 - by 1-blue
-router.delete("/", isLoggedIn, async (req, res, next) => {
+// 2022/01/24 - 로그인한 유저 회원탈퇴 - by 1-blue
+// 어차피 회원 탈퇴니까 password를 params형태로 넘겨도 상관없다고 판단함
+router.delete("/:password", isLoggedIn, async (req, res, next) => {
+  const { password } = req.params;
+
   try {
+    if (!(await bcrypt.compare(password, req.user.password))) {
+      return res.status(202).json({ message: "기존 비밀번호와 불일치합니다." });
+    }
+
     await User.destroy({ where: { _id: req.user._id } });
 
     req.logout();
@@ -227,7 +246,7 @@ router.delete("/", isLoggedIn, async (req, res, next) => {
       .clearCookie("auth-bluegram")
       .json({ message: "회원탈퇴에 성공하셨습니다.\n강제로 로그아웃되며 회원가입페이지로 이동합니다." });
   } catch (error) {
-    console.error("DELETE /user error >> ", error);
+    console.error("DELETE /user/:password error >> ", error);
     return next(error);
   }
 });
