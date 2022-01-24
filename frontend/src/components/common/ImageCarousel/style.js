@@ -46,7 +46,7 @@ export const Wrapper = styled.section`
 
     & > li {
       font-size: 2rem;
-      color: white;
+      color: gray;
     }
   }
   & > .image-number {
@@ -55,18 +55,10 @@ export const Wrapper = styled.section`
     left: 50%;
     background-color: rgba(100, 100, 100, 0.3);
     color: white;
-    padding: 0.5rem 1rem;
+    padding: 0.4em 0.8em;
+    font-size: 0.9rem;
     border-radius: 10px;
     transform: translateX(-50%);
-  }
-
-  @media (max-width: 1024px) {
-    & > .image-number {
-      top: 85%;
-      padding: 0.2rem 0.5rem;
-      border-radius: 8px;
-      font-size: 0.8rem;
-    }
   }
 `;
 

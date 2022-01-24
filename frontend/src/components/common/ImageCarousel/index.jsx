@@ -1,12 +1,12 @@
 /**
  * 생성일: 2022/01/13
- * 수정일: 2022/01/14 ( 끝에서 이미지 넘길때 버그 수정, 외부에서 현재 이미지의 인덱스 얻을 수 있도록 수정 )
+ * 수정일: 2022/01/25
  * 작성자: 1-blue
  *
  * 직접 만들어본 Image-Carousel ( 속도와 이미지명이 들어있는 배열만 넘겨주면 됨 )
- *
- * - 필요 사항
- * 1. dot의 위치가 제대로 안 잡히는 경우가 있어서 원인 찾고 해결해야 함
+ * 끝에서 이미지 넘길때 버그 수정, 외부에서 현재 이미지의 인덱스 얻을 수 있도록 수정
+ * 첫 번째 dot 동기화
+ * 끝에서 이미지 넘길 때 이미지 숫자 안 맞는 버그 수정
  */
 
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -15,12 +15,12 @@ import Proptypes from "prop-types";
 // styled-components
 import { Wrapper, Image } from "./style";
 
-const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview }) => {
+const ImageCarousel = ({ speed, images, setImageNumber, $preview }) => {
   const wrapperRef = useRef(null);
   const dotRef = useRef(null);
   const [imageNodes, setImageNodes] = useState(null);
   const [dotNodes, setDotNodes] = useState(null);
-  const [currentIndex, setCurrentIndex] = useState(images.length > 1 ? imageNumber + 1 : 0);
+  const [currentIndex, setCurrentIndex] = useState(images.length > 1 ? 1 : 0);
   const [click, setClick] = useState(true);
   const imageUrl = useMemo(
     () => ($preview ? process.env.NEXT_PUBLIC_PREVIEW_IMAGE_URL : process.env.NEXT_PUBLIC_IMAGE_URL),
@@ -42,12 +42,18 @@ const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview })
     }, 100);
   }, [images, imageNodes]);
 
-  // 2021/12/23 - 다음 이미지로 넘기는 함수 - by 1-blue
+  // 2022/01/25 - 첫 이미지 dot 동기화 - by 1-blue
+  useEffect(() => {
+    if (!dotNodes) return;
+    dotNodes[0].style.color = "white";
+  }, [dotNodes]);
+
+  // 2022/01/25 - 다음 이미지로 넘기는 함수 - by 1-blue
   const onClickNextButton = useCallback(() => {
     if (!click) return;
 
     // dot 모두 초기화 ( 이전에 이동이 앞인지 뒤인지 알 수 없으니 모두 초기화 )
-    dotNodes.forEach(dotNode => (dotNode.style.color = "white"));
+    dotNodes.forEach(dotNode => (dotNode.style.color = "gray"));
 
     // 다음 이미지로 변경
     imageNodes.forEach(imageNode => (imageNode.style.transform = `translateX(-${(currentIndex + 1) * 100}%)`));
@@ -56,6 +62,7 @@ const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview })
     // 마지막 이미지에서 다음버튼을 누를 경우 실행
     if (currentIndex + 1 === imageNodes.length - 1) {
       setClick(false);
+      setCurrentIndex(1);
       // 애니메이션 끄고
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transition = `all 0s`));
@@ -67,15 +74,14 @@ const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview })
       // 애니메이션 다시 키고 인덱스값 동기화하기
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transition = `all ${speed}ms`));
-        setCurrentIndex(1);
         setClick(true);
       }, speed + 100);
 
       // 현재 이미지와 dot 동기화
-      dotNodes[currentIndex - images.length].style.color = "gray";
+      dotNodes[currentIndex - images.length].style.color = "white";
     } else {
       // 현재 이미지와 dot 동기화
-      dotNodes[currentIndex].style.color = "gray";
+      dotNodes[currentIndex].style.color = "white";
     }
   }, [imageNodes, currentIndex, click, dotNodes, images, speed]);
 
@@ -84,7 +90,7 @@ const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview })
     if (!click) return;
 
     // dot 모두 초기화 ( 이전에 이동이 앞인지 뒤인지 알 수 없으니 모두 초기화 )
-    dotNodes.forEach(dotNode => (dotNode.style.color = "white"));
+    dotNodes.forEach(dotNode => (dotNode.style.color = "gray"));
 
     imageNodes.forEach(imageNode => (imageNode.style.transform = `translateX(-${(currentIndex - 1) * 100}%)`));
     setCurrentIndex(prev => prev - 1);
@@ -92,6 +98,7 @@ const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview })
     // 첫 이미지에서 이전버튼을 누를 경우 실행
     if (currentIndex - 1 === 0) {
       setClick(false);
+      setCurrentIndex(imageNodes.length - 2);
       // 애니메이션 끄기
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transition = `all 0s`));
@@ -103,14 +110,13 @@ const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview })
       // 애니메이션 다시 키고 인덱스 동기화
       setTimeout(() => {
         imageNodes.forEach(imageNode => (imageNode.style.transition = `all ${speed}ms`));
-        setCurrentIndex(imageNodes.length - 2);
         setClick(true);
       }, speed + 100);
       // 현재 이미지와 dot 동기화
-      dotNodes[images.length - 1].style.color = "gray";
+      dotNodes[images.length - 1].style.color = "white";
     } else {
       // 현재 이미지와 dot 동기화
-      dotNodes[currentIndex - 2].style.color = "gray";
+      dotNodes[currentIndex - 2].style.color = "white";
     }
   }, [imageNodes, currentIndex, click, dotNodes, images, speed]);
 
@@ -147,7 +153,7 @@ const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview })
           </>
         ) : (
           <>
-            <li>
+            <li key={images[0]._id + 100}>
               <Image name={imageUrl + "/" + images[images.length - 1].name}>
                 <img src={imageUrl + "/" + images[images.length - 1].name} alt="게시글의 이미지" />
               </Image>
@@ -159,7 +165,7 @@ const ImageCarousel = ({ speed, images, imageNumber, setImageNumber, $preview })
                 </Image>
               </li>
             ))}
-            <li>
+            <li key={images[0]._id - 100}>
               <Image name={imageUrl + "/" + images[0].name}>
                 <img src={imageUrl + "/" + images[0].name} alt="게시글의 이미지" />
               </Image>
@@ -203,14 +209,12 @@ ImageCarousel.propTypes = {
       name: Proptypes.string,
     }),
   ).isRequired,
-  imageNumber: Proptypes.number,
   setImageNumber: Proptypes.func,
   $preview: Proptypes.bool,
 };
 
 ImageCarousel.defaultProps = {
   speed: 1000,
-  imageNumber: 1,
 };
 
 export default ImageCarousel;

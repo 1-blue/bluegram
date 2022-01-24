@@ -20,8 +20,6 @@ router.get("/", async (req, res, next) => {
   try {
     const posts = await Post.findAll({
       where,
-      limit,
-      order: [["createdAt", "DESC"]],
       attributes: ["_id", "createdAt"],
       include: [
         // 게시글의 이미지들
@@ -43,6 +41,11 @@ router.get("/", async (req, res, next) => {
             attributes: [],
           },
         },
+      ],
+      limit,
+      order: [
+        ["createdAt", "DESC"],
+        [Image, "_id", "ASC"],
       ],
     });
 
@@ -118,7 +121,10 @@ router.get("/detail", async (req, res, next) => {
           },
         },
       ],
-      order: [["createdAt", "DESC"]],
+      order: [
+        ["createdAt", "DESC"],
+        [Image, "_id", "ASC"],
+      ],
     });
 
     const message =
