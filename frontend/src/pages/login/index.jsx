@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import styled from "styled-components";
 
 // common-components
+import HeadInfo from "@components/common/HeadInfo";
 import Form from "@components/common/Form";
 import Input from "@components/common/Input";
 import Button from "@components/common/Button";
@@ -68,58 +69,62 @@ const LoginPage = () => {
   );
 
   return (
-    <Wrapper>
-      <Form onSubmit={onLocalLogin} autoComplete="on">
-        <h1 className="form-title">bluegram</h1>
-        {/* id */}
-        <Input
-          type="text"
-          placeholder="아이디를 입력해주세요"
-          value={id}
-          onChange={onChangeId}
-          autoFocus
-          autoComplete="username"
-        />
+    <>
+      <HeadInfo title="bluegram - login" description="bluegram의 로그인 페이지" />
 
-        {/* password */}
-        <Input
-          type="password"
-          placeholder="비밀번호를 입력해주세요"
-          value={password}
-          onChange={onChangePassword}
-          autoComplete="new-password"
-        />
+      <Wrapper>
+        <Form onSubmit={onLocalLogin} autoComplete="on">
+          <h1 className="form-title">bluegram</h1>
+          {/* id */}
+          <Input
+            type="text"
+            placeholder="아이디를 입력해주세요"
+            value={id}
+            onChange={onChangeId}
+            autoFocus
+            autoComplete="username"
+          />
 
-        {/* 일반 로그인 버튼 */}
-        <Button type="submit" $local loading={loginLoading}>
-          로그인
-        </Button>
+          {/* password */}
+          <Input
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            value={password}
+            onChange={onChangePassword}
+            autoComplete="new-password"
+          />
 
-        {/* 페이스북 로그인 버튼 */}
-        <Button type="button" $facebook>
-          페이스북 로그인
-        </Button>
-        {/* 네이버 로그인 버튼 */}
-        <Button type="button" $naver>
-          네이버 로그인
-        </Button>
-        {/* 카카오 로그인 버튼 */}
-        <Button type="button" $kakao onClick={() => kakaoButtonRef.current.click()}>
-          <a href={process.env.KAKAO_URL} ref={kakaoButtonRef}>
-            카카오 로그인
-          </a>
-        </Button>
+          {/* 일반 로그인 버튼 */}
+          <Button type="submit" $local loading={loginLoading}>
+            로그인
+          </Button>
 
-        <div className="form-footer">
-          <Link href="/signup">
-            <a>가입하기</a>
-          </Link>
-          <Link href="#">
-            <a>아이디 / 비밀번호 찾기</a>
-          </Link>
-        </div>
-      </Form>
-    </Wrapper>
+          {/* 페이스북 로그인 버튼 */}
+          <Button type="button" $facebook>
+            페이스북 로그인
+          </Button>
+          {/* 네이버 로그인 버튼 */}
+          <Button type="button" $naver>
+            네이버 로그인
+          </Button>
+          {/* 카카오 로그인 버튼 */}
+          <Button type="button" $kakao onClick={() => kakaoButtonRef.current.click()}>
+            <a href={process.env.KAKAO_URL} ref={kakaoButtonRef}>
+              카카오 로그인
+            </a>
+          </Button>
+
+          <div className="form-footer">
+            <Link href="/signup">
+              <a>가입하기</a>
+            </Link>
+            <Link href="#">
+              <a>아이디 / 비밀번호 찾기</a>
+            </Link>
+          </div>
+        </Form>
+      </Wrapper>
+    </>
   );
 };
 

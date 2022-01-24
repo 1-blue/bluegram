@@ -36,6 +36,9 @@ import {
   localLogoutAction,
 } from "@store/actions";
 
+// common-components
+import HeadInfo from "@components/common/HeadInfo";
+
 // components
 import ProfileHead from "@components/ProfilePage/ProfileHead";
 import ProfileButtons from "@components/ProfilePage/ProfileButtons";
@@ -115,7 +118,7 @@ const Profile = () => {
     query: { id, kinds },
     push,
   } = useRouter();
-  const { me, followLoading, unfollowLoading } = useSelector(state => state.user);
+  const { me, user, followLoading, unfollowLoading } = useSelector(state => state.user);
   const [isOpenFollower, onOpenFollowerModal, onCloseFollowerModal] = useOpenClose(false);
   const [isOpenFollowing, onOpenFollowingModal, onCloseFollowingModal] = useOpenClose(false);
 
@@ -164,26 +167,34 @@ const Profile = () => {
   if (!me._id) return <h2>접근 권한이 없습니다.</h2>;
 
   return (
-    <Wrapper>
-      <ProfileHead onClickFollowButton={onClickFollowButton} onClickLogOut={onClickLogOut} />
-      <ProfileButtons onClickFollowerButton={onClickFollowerButton} onClickFollowingButton={onClickFollowingButton} />
-      <ProfileNav id={id} kinds={kinds} />
-      <ProfileContents id={id} kinds={kinds} />
-
-      {/* 팔로워 리스트 보여주는 모달 */}
-      <ProfileFollowerModal
-        isOpenFollower={isOpenFollower}
-        onCloseFollowerModal={onCloseFollowerModal}
-        onClickFollowButton={onClickFollowButton}
+    <>
+      <HeadInfo
+        title="bluegram - profile"
+        description={`bluegram ${user.name}님의 프로필 페이지`}
+        image={user.Images[0].name}
       />
 
-      {/* 팔로잉 리스트 보여주는 모달 */}
-      <ProfileFollowingModal
-        isOpenFollowing={isOpenFollowing}
-        onCloseFollowingModal={onCloseFollowingModal}
-        onClickFollowButton={onClickFollowButton}
-      />
-    </Wrapper>
+      <Wrapper>
+        <ProfileHead onClickFollowButton={onClickFollowButton} onClickLogOut={onClickLogOut} />
+        <ProfileButtons onClickFollowerButton={onClickFollowerButton} onClickFollowingButton={onClickFollowingButton} />
+        <ProfileNav id={id} kinds={kinds} />
+        <ProfileContents id={id} kinds={kinds} />
+
+        {/* 팔로워 리스트 보여주는 모달 */}
+        <ProfileFollowerModal
+          isOpenFollower={isOpenFollower}
+          onCloseFollowerModal={onCloseFollowerModal}
+          onClickFollowButton={onClickFollowButton}
+        />
+
+        {/* 팔로잉 리스트 보여주는 모달 */}
+        <ProfileFollowingModal
+          isOpenFollowing={isOpenFollowing}
+          onCloseFollowingModal={onCloseFollowingModal}
+          onClickFollowButton={onClickFollowButton}
+        />
+      </Wrapper>
+    </>
   );
 };
 

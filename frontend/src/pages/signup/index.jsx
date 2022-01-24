@@ -14,7 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import styled from "styled-components";
 
-// components
+// common-components
+import HeadInfo from "@components/common/HeadInfo";
 import Form from "@components/common/Form";
 import Input from "@components/common/Input";
 import Button from "@components/common/Button";
@@ -171,170 +172,173 @@ const SignupPage = () => {
   );
 
   return (
-    <Wrapper>
-      <Form onSubmit={onSubmit} autoComplete="on">
-        <h1 className="form-title">bluegram</h1>
-        {/* id */}
-        <label htmlFor="id" hidden>
-          아이디 입력
-        </label>
-        <Input
-          id="id"
-          name="id"
-          type="text"
-          placeholder="아이디를 입력해 주세요"
-          value={id}
-          onChange={onChangeId("id")}
-          autoFocus
-          ref={idRef}
-          style={inputCommonStyle}
-          autoComplete="username"
-        />
-        <Text $success={idValidate} $error={!idValidate}>
-          숫자와 영어가 최소 한 글자 이상 포함되고, 최소 6자리여야 합니다.
-        </Text>
+    <>
+      <HeadInfo title="bluegram - signup" description="bluegram 회원가입 페이지" />
+      <Wrapper>
+        <Form onSubmit={onSubmit} autoComplete="on">
+          <h1 className="form-title">bluegram</h1>
+          {/* id */}
+          <label htmlFor="id" hidden>
+            아이디 입력
+          </label>
+          <Input
+            id="id"
+            name="id"
+            type="text"
+            placeholder="아이디를 입력해 주세요"
+            value={id}
+            onChange={onChangeId("id")}
+            autoFocus
+            ref={idRef}
+            style={inputCommonStyle}
+            autoComplete="username"
+          />
+          <Text $success={idValidate} $error={!idValidate}>
+            숫자와 영어가 최소 한 글자 이상 포함되고, 최소 6자리여야 합니다.
+          </Text>
 
-        {/* password */}
-        <label htmlFor="password" hidden>
-          비밀번호 입력
-        </label>
-        <Input
-          id="password"
-          name="password"
-          type="password"
-          placeholder="비밀번호를 입력해 주세요"
-          value={password}
-          onChange={onChangePassword("password")}
-          ref={passwordRef}
-          style={inputCommonStyle}
-          autoComplete="new-password"
-        />
-        <Text $success={passwordValidate} $error={!passwordValidate}>
-          숫자와 영어가 최소 한 글자 이상 포함되고, 최소 8자리여야 합니다.
-        </Text>
+          {/* password */}
+          <label htmlFor="password" hidden>
+            비밀번호 입력
+          </label>
+          <Input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="비밀번호를 입력해 주세요"
+            value={password}
+            onChange={onChangePassword("password")}
+            ref={passwordRef}
+            style={inputCommonStyle}
+            autoComplete="new-password"
+          />
+          <Text $success={passwordValidate} $error={!passwordValidate}>
+            숫자와 영어가 최소 한 글자 이상 포함되고, 최소 8자리여야 합니다.
+          </Text>
 
-        {/* passwordCheck */}
-        <label htmlFor="passwordCheck" hidden>
-          비밀번호 확인 입력
-        </label>
-        <Input
-          id="passwordCheck"
-          name="passwordCheck"
-          type="password"
-          placeholder="비밀번호를 다시 입력해 주세요"
-          value={passwordCheck}
-          onChange={onChangePasswordCheck("password")}
-          ref={passwordCheckRef}
-          style={inputCommonStyle}
-          autoComplete="new-password"
-        />
-        <Text $success={password === passwordCheck} $error={!(password === passwordCheck)}>
-          비밀번호와 비밀번호 확인이 일치해야 합니다.
-        </Text>
+          {/* passwordCheck */}
+          <label htmlFor="passwordCheck" hidden>
+            비밀번호 확인 입력
+          </label>
+          <Input
+            id="passwordCheck"
+            name="passwordCheck"
+            type="password"
+            placeholder="비밀번호를 다시 입력해 주세요"
+            value={passwordCheck}
+            onChange={onChangePasswordCheck("password")}
+            ref={passwordCheckRef}
+            style={inputCommonStyle}
+            autoComplete="new-password"
+          />
+          <Text $success={password === passwordCheck} $error={!(password === passwordCheck)}>
+            비밀번호와 비밀번호 확인이 일치해야 합니다.
+          </Text>
 
-        {/* name */}
-        <label htmlFor="name" hidden>
-          이름 입력
-        </label>
-        <Input
-          id="name"
-          name="name"
-          type="text"
-          placeholder="성명을 입력해 주세요"
-          value={name}
-          onChange={onChangeName("name")}
-          ref={nameRef}
-          style={inputCommonStyle}
-          autoComplete="nickname"
-        />
-        <Text $success={nameValidate} $error={!nameValidate}>
-          최소 1자 최대 20자 이내여야 합니다.
-        </Text>
+          {/* name */}
+          <label htmlFor="name" hidden>
+            이름 입력
+          </label>
+          <Input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="성명을 입력해 주세요"
+            value={name}
+            onChange={onChangeName("name")}
+            ref={nameRef}
+            style={inputCommonStyle}
+            autoComplete="nickname"
+          />
+          <Text $success={nameValidate} $error={!nameValidate}>
+            최소 1자 최대 20자 이내여야 합니다.
+          </Text>
 
-        {/* email */}
-        <label htmlFor="email" hidden>
-          이메일 입력
-        </label>
-        <Input
-          id="email"
-          name="email"
-          type="text"
-          placeholder="이메일을 입력해 주세요 ( 1-blue98@naver.com )"
-          value={email}
-          onChange={onChangeEmail("email")}
-          ref={emailRef}
-          style={inputCommonStyle}
-          autoComplete="email"
-        />
-        <Text $success={emailValidate} $error={!emailValidate}>
-          이메일 형식에 맞게 입력해 주세요
-        </Text>
+          {/* email */}
+          <label htmlFor="email" hidden>
+            이메일 입력
+          </label>
+          <Input
+            id="email"
+            name="email"
+            type="text"
+            placeholder="이메일을 입력해 주세요 ( 1-blue98@naver.com )"
+            value={email}
+            onChange={onChangeEmail("email")}
+            ref={emailRef}
+            style={inputCommonStyle}
+            autoComplete="email"
+          />
+          <Text $success={emailValidate} $error={!emailValidate}>
+            이메일 형식에 맞게 입력해 주세요
+          </Text>
 
-        {/* phone */}
-        <label htmlFor="phone" hidden>
-          휴대폰 번호 입력
-        </label>
-        <Input
-          id="phone"
-          name="phone"
-          type="text"
-          placeholder="휴대폰번호를 숫자만 입력해 주세요"
-          maxLength={11}
-          value={phone}
-          onChange={onChangePhone("phone")}
-          ref={phoneRef}
-          style={inputCommonStyle}
-          autoComplete="tel"
-        />
-        <Text $success={phoneValidate} $error={!phoneValidate}>
-          숫자만 11자리 입력해 주세요
-        </Text>
+          {/* phone */}
+          <label htmlFor="phone" hidden>
+            휴대폰 번호 입력
+          </label>
+          <Input
+            id="phone"
+            name="phone"
+            type="text"
+            placeholder="휴대폰번호를 숫자만 입력해 주세요"
+            maxLength={11}
+            value={phone}
+            onChange={onChangePhone("phone")}
+            ref={phoneRef}
+            style={inputCommonStyle}
+            autoComplete="tel"
+          />
+          <Text $success={phoneValidate} $error={!phoneValidate}>
+            숫자만 11자리 입력해 주세요
+          </Text>
 
-        {/* birthday */}
-        <label htmlFor="birthday" hidden>
-          생일 입력
-        </label>
-        <Input
-          id="birthday"
-          name="birthday"
-          type="text"
-          placeholder="생년월일을 입력해 주세요 ( 19981106 )"
-          maxLength={8}
-          value={birthday}
-          onChange={onChangeBirthday("birthday")}
-          ref={birthdayRef}
-          style={inputCommonStyle}
-          autoComplete="bday"
-        />
-        <Text $success={birthdayValidate} $error={!birthdayValidate}>
-          숫자만 8자리 입력해 주세요
-        </Text>
+          {/* birthday */}
+          <label htmlFor="birthday" hidden>
+            생일 입력
+          </label>
+          <Input
+            id="birthday"
+            name="birthday"
+            type="text"
+            placeholder="생년월일을 입력해 주세요 ( 19981106 )"
+            maxLength={8}
+            value={birthday}
+            onChange={onChangeBirthday("birthday")}
+            ref={birthdayRef}
+            style={inputCommonStyle}
+            autoComplete="bday"
+          />
+          <Text $success={birthdayValidate} $error={!birthdayValidate}>
+            숫자만 8자리 입력해 주세요
+          </Text>
 
-        {/* 간단 자기 소개 */}
-        <textarea
-          name="about"
-          id="aout"
-          rows="5"
-          value={about}
-          onChange={onChangeAbout}
-          placeholder="5줄 이내로 간단한 자기소개를 입력해주세요"
-          className="about"
-          autoComplete="on"
-          ref={aboutRef}
-        />
-        <Text $success={about.trim().length <= 100} $error={about.trim().length > 100}>
-          100자 이내로 입력해주세요!
-        </Text>
+          {/* 간단 자기 소개 */}
+          <textarea
+            name="about"
+            id="aout"
+            rows="5"
+            value={about}
+            onChange={onChangeAbout}
+            placeholder="5줄 이내로 간단한 자기소개를 입력해주세요"
+            className="about"
+            autoComplete="on"
+            ref={aboutRef}
+          />
+          <Text $success={about.trim().length <= 100} $error={about.trim().length > 100}>
+            100자 이내로 입력해주세요!
+          </Text>
 
-        {/* profileImage */}
-        <ImageInput />
+          {/* profileImage */}
+          <ImageInput />
 
-        {/* 회원가입 버튼 */}
-        <Button type="submit" $signup loading={signupLoading}>
-          회원가입
-        </Button>
-      </Form>
-    </Wrapper>
+          {/* 회원가입 버튼 */}
+          <Button type="submit" $signup loading={signupLoading}>
+            회원가입
+          </Button>
+        </Form>
+      </Wrapper>
+    </>
   );
 };
 

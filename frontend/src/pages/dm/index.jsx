@@ -19,14 +19,21 @@ import { userInstance } from "@store/api/user";
 // actions
 import { loadToMeAction } from "@store/actions";
 
+// common-components
+import HeadInfo from "@components/common/HeadInfo";
+
 // styled-components
 const Wrapper = styled.section``;
 
 const DM = () => {
   return (
-    <Wrapper>
-      <h1>DM</h1>
-    </Wrapper>
+    <>
+      <HeadInfo title="bluegram - DM" description="bluegram의 다이렉트 메시지 페이지" />
+
+      <Wrapper>
+        <h1>DM</h1>
+      </Wrapper>
+    </>
   );
 };
 

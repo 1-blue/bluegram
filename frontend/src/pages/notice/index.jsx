@@ -9,6 +9,7 @@
  */
 
 import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
 
 // Redux + SSR
@@ -19,14 +20,27 @@ import { userInstance } from "@store/api/user";
 // actions
 import { loadToMeAction } from "@store/actions";
 
+// commom-components
+import HeadInfo from "@components/common/HeadInfo";
+
 // styled-components
 const Wrapper = styled.section``;
 
 const Notice = () => {
+  const { me } = useSelector(state => state.user);
+
   return (
-    <Wrapper>
-      <h1>Notice</h1>
-    </Wrapper>
+    <>
+      <HeadInfo
+        title="bluegram - notice"
+        description={`bluegram ${me.name}님의 알림/정보 페이지`}
+        image={me.Images[0].name}
+      />
+
+      <Wrapper>
+        <h1>Notice</h1>
+      </Wrapper>
+    </>
   );
 };
 

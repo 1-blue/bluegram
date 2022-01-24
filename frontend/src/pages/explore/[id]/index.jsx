@@ -20,6 +20,7 @@ import { userInstance, postsInstance } from "@store/api";
 import { loadToMeAction, loadPostsDetailAction } from "@store/actions";
 
 // common-components
+import HeadInfo from "@components/common/HeadInfo";
 import Spinner from "@components/common/Spinner";
 import Text from "@components/common/Text";
 
@@ -50,6 +51,12 @@ const Explore = () => {
 
   return (
     <>
+      <HeadInfo
+        title="bluegram - explore"
+        description="bluegram의 상세 게시글 페이지"
+        image={`${posts[0].Images[0].name}`}
+      />
+
       {/* 게시글들 ( 현재 기준은 페이지의 게시글 이후에 업로드된 게시글을 최신순으로 보여줌 ) */}
       {posts.map(post => (
         <PostCard key={post._id} post={post} />

@@ -20,6 +20,9 @@ import { userInstance } from "@store/api";
 // actions
 import { loadToMeDetailAction } from "@store/actions";
 
+// common-components
+import HeadInfo from "@components/common/HeadInfo";
+
 // components
 import NomalEdit from "@components/AccountEditPage/NomalEdit";
 import PasswordEdit from "@components/AccountEditPage/PasswordEdit";
@@ -73,21 +76,29 @@ const Account = () => {
   if (me._id !== +router.query.id) return <div>접근 권한이 없습니다.</div>;
 
   return (
-    <Wrapper>
-      <section className="account-edit-nav">
-        <Link href={`/account/edit/${router.query.id}?kinds=nomal`}>
-          <a className="account-edit-nav-link">기본 정보 수정</a>
-        </Link>
-        <Link href={`/account/edit/${router.query.id}?kinds=password`}>
-          <a className="account-edit-nav-link">비밀번호 수정</a>
-        </Link>
-        <Link href={`/account/edit/${router.query.id}?kinds=signout`}>
-          <a className="account-edit-nav-link">회원 탈퇴</a>
-        </Link>
-      </section>
+    <>
+      <HeadInfo
+        title="bluegram - account - edit"
+        description="bluegram의 본인 정보 수정 페이지"
+        image={`${me.Images[0].name}`}
+      />
 
-      {contents(router.query.kinds)}
-    </Wrapper>
+      <Wrapper>
+        <section className="account-edit-nav">
+          <Link href={`/account/edit/${router.query.id}?kinds=nomal`}>
+            <a className="account-edit-nav-link">기본 정보 수정</a>
+          </Link>
+          <Link href={`/account/edit/${router.query.id}?kinds=password`}>
+            <a className="account-edit-nav-link">비밀번호 수정</a>
+          </Link>
+          <Link href={`/account/edit/${router.query.id}?kinds=signout`}>
+            <a className="account-edit-nav-link">회원 탈퇴</a>
+          </Link>
+        </section>
+
+        {contents(router.query.kinds)}
+      </Wrapper>
+    </>
   );
 };
 

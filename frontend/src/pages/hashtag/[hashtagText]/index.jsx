@@ -19,6 +19,7 @@ import { userInstance, postsInstance } from "@store/api";
 import { loadToMeAction, loadPostsOfHashtagAction } from "@store/actions";
 
 // common-components
+import HeadInfo from "@components/common/HeadInfo";
 import Spinner from "@components/common/Spinner";
 import Text from "@components/common/Text";
 
@@ -60,6 +61,12 @@ const HashtagPage = () => {
 
   return (
     <>
+      <HeadInfo
+        title={`bluegram - hashtag - #${hashtagText}`}
+        description={`bluegram의 해시태그 페이지 ( #${hashtagText} )`}
+        image={`${posts[0].Images[0].name}`}
+      />
+
       {/* 해시태그 검색결과 총 개수 */}
       <Text $hashtagTitle>
         👉 검색된 게시글 총 {postsOfHashtagCount}개 ( 검색어: {hashtagText} ) 👈

@@ -19,6 +19,9 @@ import { userInstance } from "@store/api/user";
 // actions
 import { loadToMeAction, loadPostsAction } from "@store/actions";
 
+// common-components
+import HeadInfo from "@components/common/HeadInfo";
+
 // components
 import PostImageCard from "@components/PostImageCard";
 
@@ -70,6 +73,8 @@ const HomePage = () => {
 
   return (
     <>
+      <HeadInfo title="bluegram - home" description="bluegram 메인 페이지" />
+
       <Wrapper>
         {posts.map(post => (
           <PostImageCard key={post._id} post={post} />
