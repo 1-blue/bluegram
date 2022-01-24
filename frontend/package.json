@@ -4,9 +4,9 @@
   "description": "instagram clone project",
   "main": "index.js",
   "scripts": {
-    "dev": "env-cmd -f ./.env.development next dev -p 8080",
+    "dev": "env-cmd -f ./.env.development next dev",
     "build": "env-cmd -f ./.env.production next build",
-    "start": "env-cmd -f ./.env.production next start -p 8080"
+    "start": "env-cmd -f ./.env.production next start"
   },
   "author": "1-blue",
   "license": "ISC",
