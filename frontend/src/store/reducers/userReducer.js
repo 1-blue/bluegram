@@ -392,7 +392,7 @@ function userReducer(prevState = initState, action) {
         loadToMeDetailError: action.data.message,
       };
 
-    // 2022/01/15 - 로그인한 유저의 기본정보 변경 - by 1-blue
+    // 2022/01/24 - 로그인한 유저의 기본정보 변경 - by 1-blue
     case EDIT_TO_ME_ALL_REQUEST:
       return {
         ...prevState,
@@ -401,17 +401,17 @@ function userReducer(prevState = initState, action) {
         editToMeAllError: null,
       };
     case EDIT_TO_ME_ALL_SUCCESS:
-      const { name, phone, birthday, profileImage } = action.data.result;
-
       return {
         ...prevState,
         editToMeAllLoading: false,
         editToMeAllDone: action.data.message,
         me: {
           ...prevState.me,
-          name,
-          phone,
-          birthday,
+          name: action.data.name,
+          email: action.data.email,
+          phone: action.data.phone,
+          birthday: action.data.birthday,
+          about: action.data.about,
           Images: profileImage ? [{ name: profileImage }] : [...prevState.me.Images],
         },
       };

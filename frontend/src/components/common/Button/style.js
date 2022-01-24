@@ -6,11 +6,11 @@ export const Wrapper = styled.button`
     $signup &&
     css`
       position: relative;
-      margin: 1rem 0;
-      padding: 1rem 2rem;
-      border: 3px solid purple;
-      border-radius: 10px;
-      font-size: 1.5rem;
+      margin: 0.8rem 0;
+      padding: 0.8rem 1.6rem;
+      border: 2px solid purple;
+      border-radius: 8px;
+      font-size: 1.2rem;
       font-weight: bold;
 
       &::after {

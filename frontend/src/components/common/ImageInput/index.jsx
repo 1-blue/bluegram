@@ -1,6 +1,6 @@
 /**
  * 생성일: 2022/01/13
- * 수정일: -
+ * 수정일: 2022/01/24
  * 작성자: 1-blue
  *
  * 이미지 입력받는 input ( 회원가입폼에서 사용 )
@@ -17,6 +17,7 @@ import { uploadImagesAction } from "@store/actions";
 
 const ImageInput = () => {
   const dispatch = useDispatch();
+  const { me } = useSelector(state => state.user);
   const { imagePreviews } = useSelector(state => state.image);
   const inputRef = useRef(null);
 
@@ -47,10 +48,17 @@ const ImageInput = () => {
         {imagePreviews.length > 0 ? (
           <img
             src={process.env.NEXT_PUBLIC_PREVIEW_IMAGE_URL + "/" + imagePreviews[imagePreviews.length - 1]}
-            alt="회원가입 시 등록할 프로필 이미지"
+            alt="등록할 프로필 이미지"
           />
         ) : (
-          <span>프로필 이미지 선택</span>
+          <>
+            {/* 회원 정보 수정 시 기존 프로필 이미지가 존재하면 보여주기 */}
+            {me.Images[0].name ? (
+              <img src={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + me.Images[0].name} alt="현재 프로필 이미지" />
+            ) : (
+              <span>프로필 이미지 선택</span>
+            )}
+          </>
         )}
       </div>
     </Wrapper>
