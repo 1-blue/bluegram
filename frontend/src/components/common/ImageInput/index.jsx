@@ -53,7 +53,7 @@ const ImageInput = () => {
         ) : (
           <>
             {/* 회원 정보 수정 시 기존 프로필 이미지가 존재하면 보여주기 */}
-            {me.Images[0].name ? (
+            {me._id && me.Images[0].name ? (
               <img src={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + me.Images[0].name} alt="현재 프로필 이미지" />
             ) : (
               <span>프로필 이미지 선택</span>

@@ -30,7 +30,6 @@ const App = ({ Component, pageProps }) => {
     unfollowDone, unfollowError,
     loadFollowersDone, loadFollowersError,
     loadFollowingsDone, loadFollowingsError,
-    loadToUserDone, loadToUserError,
     editToMeAllDone, editToMeAllError,
   } = useSelector(state => state.user);
   const {
@@ -85,7 +84,7 @@ const App = ({ Component, pageProps }) => {
       {(
         // 유저 관련
         followDone || unfollowDone || loadFollowersDone || loadFollowingsDone ||
-        loadToUserDone || editToMeAllDone ||
+        editToMeAllDone ||
 
         // 게시글 관련
         loadPostsDone || loadPostDone || loadHashtagPostsDone || loadPostsOfUserDone ||
@@ -96,7 +95,7 @@ const App = ({ Component, pageProps }) => {
         <Toast
           message={
             followDone || unfollowDone || loadFollowersDone || loadFollowingsDone ||
-            loadToUserDone || editToMeAllDone ||
+            editToMeAllDone ||
             loadPostsDone || loadPostDone || loadHashtagPostsDone || loadPostsOfUserDone ||
             loadDetailPostsDone || createPostDone || removePostDone || appendLikeToPostDone ||
             removeLikeToPostDone || appendCommentToPostDone || removeCommentToPostDone || appendLikeToCommentDone ||
@@ -110,7 +109,7 @@ const App = ({ Component, pageProps }) => {
       {/* 실패 토스트 메시지 */}
       {(
         followError || unfollowError || loadFollowersError || loadFollowingsError ||
-        loadToUserError || editToMeAllError ||
+        editToMeAllError ||
         loadPostsError || loadPostError || loadHashtagPostsError || loadPostsOfUserError ||
         loadDetailPostsError || createPostError || removePostError || appendLikeToPostError ||
         removeLikeToPostError || appendCommentToPostError || removeCommentToPostError || appendLikeToCommentError ||
@@ -119,7 +118,7 @@ const App = ({ Component, pageProps }) => {
         <Toast
           message={
             followError || unfollowError || loadFollowersError || loadFollowingsError ||
-            loadToUserError || editToMeAllError ||
+            editToMeAllError ||
             loadPostsError || loadPostError || loadHashtagPostsError || loadPostsOfUserError ||
             loadDetailPostsError || createPostError || removePostError || appendLikeToPostError ||
             removeLikeToPostError || appendCommentToPostError || removeCommentToPostError || appendLikeToCommentError ||

@@ -36,7 +36,7 @@ const ProfileFollowerModal = ({ isOpenFollower, onCloseFollowerModal, onClickFol
           ) : (
             <ul className="follow-modal">
               {Followers.map(follower => (
-                <li className="follow-modal-follow-list">
+                <li key={follower._id} className="follow-modal-follow-list">
                   <Link href={`/profile/${follower._id}`}>
                     <a>
                       <Avatar

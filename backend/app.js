@@ -61,22 +61,6 @@ app.use("/", express.static(dist));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(
-  expressSession({
-    resave: false,
-    saveUninitialized: false,
-    name: "auth-bluegram",
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-    },
-    store: new FileStore(),
-  }),
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
 if (process.env.NODE_ENV === "production") {
   app.use(morgan("combined"));
   app.use(hpp());
@@ -87,6 +71,20 @@ if (process.env.NODE_ENV === "production") {
       origin: "https://bluegram.cf",
     }),
   );
+  app.use(
+    expressSession({
+      resave: false,
+      saveUninitialized: false,
+      name: "auth-bluegram",
+      secret: process.env.COOKIE_SECRET,
+      cookie: {
+        httpOnly: true,
+        secure: false,
+        domain: "bluegram.cf",
+      },
+      store: new FileStore(),
+    }),
+  );
 } else {
   app.use(morgan("dev"));
   app.use(
@@ -95,7 +93,23 @@ if (process.env.NODE_ENV === "production") {
       origin: "http://localhost:8080",
     }),
   );
+  app.use(
+    expressSession({
+      resave: false,
+      saveUninitialized: false,
+      name: "auth-bluegram",
+      secret: process.env.COOKIE_SECRET,
+      cookie: {
+        httpOnly: true,
+        secure: false,
+        domain: "bluegram.cf",
+      },
+      store: new FileStore(),
+    }),
+  );
 }
+app.use(passport.initialize());
+app.use(passport.session());
 
 // routes
 import authRouter from "./routes/auth.js";
@@ -119,17 +133,11 @@ app.use("/comment", commentRouter);
 app.use("/follow", followRouter);
 app.use("/bookmark", bookmarkRouter);
 
-if (process.env.NODE_ENV === "production") {
-  app.get("*", (req, res) => {
-    res.sendFile("index.html", { root: dist });
-  });
-} else {
-  // 404 에러처리 미들웨어
-  app.use((req, res, next) => {
-    console.log("404 에러처리 미들웨어");
-    res.status(404).send("404");
-  });
-}
+// 404 에러처리 미들웨어
+app.use((req, res, next) => {
+  console.log("404 에러처리 미들웨어");
+  res.status(404).send("404");
+});
 
 // 에러처리 미들웨어
 app.use((error, req, res, next) => {

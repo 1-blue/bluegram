@@ -174,6 +174,7 @@ const SignupPage = () => {
   return (
     <>
       <HeadInfo title="bluegram - signup" description="bluegram 회원가입 페이지" />
+
       <Wrapper>
         <Form onSubmit={onSubmit} autoComplete="on">
           <h1 className="form-title">bluegram</h1>
