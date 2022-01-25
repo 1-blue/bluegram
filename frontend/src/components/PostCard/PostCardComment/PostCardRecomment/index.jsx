@@ -1,12 +1,13 @@
 /**
  * 생성일: 2022/01/17
- * 수정일: -
+ * 수정일: 2022/01/26
  * 작성자: 1-blue
  *
  * 답글 컴포넌트
  * 답글 제거 기능
  * 답글에 좋아요 로직 추가
  * 작성자 프로필 페이지 링크 추가
+ * 비로그인시 접근 가능하도록 수정
  */
 
 import React, { useEffect, useState } from "react";
@@ -35,12 +36,12 @@ const PostCardRecomment = ({ recomment, onRemoveComment, onClickCommentLikeButto
   const [isLikedRecomment, setIsLikedRecomment] = useState(false);
 
   // 2022/01/18 - 본인 답글인지 판단 - by 1-blue
-  useEffect(() => setIsMine(recomment.User._id === me._id), [recomment.User._id, me._id]);
+  useEffect(() => setIsMine(recomment.User._id === me._id), [recomment.User._id, me]);
 
   // 2022/01/18 - 댓글에 좋아요 눌렀는지 판단 - by 1-blue
   useEffect(
     () => setIsLikedRecomment(recomment.CommentLikers.some(liker => liker._id === me._id)),
-    [recomment.CommentLikers, me._id],
+    [recomment.CommentLikers, me],
   );
 
   return (

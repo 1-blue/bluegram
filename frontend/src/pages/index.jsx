@@ -73,7 +73,11 @@ const HomePage = () => {
 
   return (
     <>
-      <HeadInfo title="bluegram - home" description="bluegram 메인 페이지" />
+      <HeadInfo
+        title="bluegram - home"
+        description="메인 페이지"
+        image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name}
+      />
 
       <Wrapper>
         {posts.map(post => (

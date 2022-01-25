@@ -1,11 +1,12 @@
 /**
  * 생성일: 2022/01/21
- * 수정일: 2022/01/24
+ * 수정일: 2022/01/26
  * 작성자: 1-blue
  *
  * 프로필 페이지 상단부분
  * 유저 정보 수정 or 팔로우/언팔로우 기능
  * 로그아웃 버튼 추가
+ * 로그아웃 버튼 수정
  */
 
 import React from "react";
@@ -23,7 +24,7 @@ import Button from "@components/common/Button";
 const ProfileHead = ({ onClickFollowButton, onClickLogOut }) => {
   const { me, user } = useSelector(state => state.user);
   const { followLoading, unfollowLoading } = useSelector(state => state.user);
-  const isMyFollower = me.Followings.some(following => following._id === user._id);
+  const isMyFollower = me?.Followings?.some(following => following._id === user._id);
 
   return (
     <Wrapper followLoading={followLoading || unfollowLoading}>
@@ -31,9 +32,11 @@ const ProfileHead = ({ onClickFollowButton, onClickLogOut }) => {
       <div className="profile-head-right-container">
         <div className="profile-head-right-top-container">
           <span className="user-name">{user.name}</span>
-          <button type="button" className="logout-button" onClick={onClickLogOut}>
-            로그아웃
-          </button>
+          {me._id === user._id && (
+            <button type="button" className="logout-button" onClick={onClickLogOut}>
+              로그아웃
+            </button>
+          )}
         </div>
         {me._id === user._id ? (
           <Link href={`/account/edit/${me._id}?kinds=nomal`}>

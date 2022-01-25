@@ -28,7 +28,7 @@ const Wrapper = styled.section``;
 const DM = () => {
   return (
     <>
-      <HeadInfo title="bluegram - DM" description="bluegram의 다이렉트 메시지 페이지" />
+      <HeadInfo title="bluegram - DM" description="다이렉트 메시지 페이지" />
 
       <Wrapper>
         <h1>DM</h1>

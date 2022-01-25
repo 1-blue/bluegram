@@ -63,8 +63,8 @@ const HashtagPage = () => {
     <>
       <HeadInfo
         title={`bluegram - hashtag - #${hashtagText}`}
-        description={`bluegram의 해시태그 페이지 ( #${hashtagText} )`}
-        image={`${posts[0].Images[0].name}`}
+        description={`해시태그 페이지 ( #${hashtagText} )`}
+        image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name}
       />
 
       {/* 해시태그 검색결과 총 개수 */}

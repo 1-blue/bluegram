@@ -140,7 +140,7 @@ router.get("/detail", async (req, res, next) => {
 });
 
 // 2022/01/04 - 특정 유저의 게시글들 불러오기 - by 1-blue
-router.get("/user/:UserId", isLoggedIn, async (req, res, next) => {
+router.get("/user/:UserId", async (req, res, next) => {
   const UserId = +req.params.UserId;
   const lastId = +req.query.lastId || -1;
   const limit = +req.query.limit || 15;
@@ -205,7 +205,7 @@ router.get("/user/:UserId", isLoggedIn, async (req, res, next) => {
 });
 
 // 2022/01/21 - 특정 유저의 게시글들 상세 내용 불러오기 - by 1-blue
-router.get("/user/detail/:UserId", isLoggedIn, async (req, res, next) => {
+router.get("/user/detail/:UserId", async (req, res, next) => {
   const UserId = +req.params.UserId;
   const lastId = +req.query.lastId || -1;
   const limit = +req.query.limit || 15;

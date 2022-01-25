@@ -1,6 +1,6 @@
 /**
  * 생성일: 2022/01/15
- * 수정일: 2022/01/23
+ * 수정일: 2022/01/26
  * 작성자: 1-blue
  *
  * 상세 게시글 컴포넌트
@@ -13,6 +13,7 @@
  * 팔로우/언팔로우 로직 추가
  * textareaRef 이동 ( focus 및 commentIcon 조정을 위함 )
  * 북마크 기능 추가
+ * 비로그인시 접근 가능하도록 수정
  */
 
 import React, { useCallback, useState, useEffect, useRef } from "react";
@@ -65,7 +66,7 @@ const PostCard = ({ post }) => {
     appendPostOfBookmarkLoading,
     removePostOfBookmarkLoading,
   } = useSelector(state => state.post);
-  const { followLoading, unfollowLoading } = useSelector(state => state.user);
+  const { me, followLoading, unfollowLoading } = useSelector(state => state.user);
   const textareaRef = useRef(null);
   const [text, onChangeText, setText, resize] = useTextarea("");
   const [isShowComment, onToggleComment] = useToggle(true);
@@ -83,15 +84,21 @@ const PostCard = ({ post }) => {
   const textareaResize = useCallback(() => resize(textareaRef), [resize, textareaRef]);
 
   // 2022/01/19 - 버튼 아이콘 클릭 시 포커스 부여 - by 1-blue
-  const onClickCommentIconButton = useCallback(() => textareaRef.current.focus(), [textareaRef.current]);
+  const onClickCommentIconButton = useCallback(() => {
+    if (!me._id) return alert("로그인후에 접근해주세요");
+
+    textareaRef.current.focus();
+  }, [me, textareaRef.current]);
 
   // 2022/01/19 - 답글 달기 버튼 클릭 시 포커스 부여 + 답글에 대한 정보 기록 - by 1-blue
   const onClickRecommentButton = useCallback(
     (RecommentId, username) => () => {
+      if (!me._id) return alert("로그인인후에 접근해주세요");
+
       setRecommentData({ RecommentId, username });
       textareaRef.current.focus();
     },
-    [textareaRef.current, setRecommentData],
+    [me, textareaRef.current, setRecommentData],
   );
 
   // ==== 아래 부분은 API요청 ====
@@ -156,6 +163,9 @@ const PostCard = ({ post }) => {
   // 2022/01/18 - 게시글에 좋아요 추가/제거 - by 1-blue
   const onClickPostLikeButton = useCallback(
     isLikedPost => () => {
+      // 비로그인 접근
+      if (!me._id) return alert("로그인후에 접근해주세요!");
+
       // 이미 좋아요 처리중이라면 요청 중지
       if (appendLikeToPostLoading || removeLikeToPostLoading)
         return alert("이미 게시글에 좋아요 요청 처리중입니다.\n잠시후에 다시 시도해주세요");
@@ -166,12 +176,15 @@ const PostCard = ({ post }) => {
         dispatch(appendLikeToPostAction({ PostId: post._id }));
       }
     },
-    [post._id, appendLikeToPostLoading, removeLikeToPostLoading],
+    [me, post._id, appendLikeToPostLoading, removeLikeToPostLoading],
   );
 
   // 2022/01/18 - 댓글/답글에 좋아요 추가/제거 - by 1-blue
   const onClickCommentLikeButton = useCallback(
     (isLikedComment, CommentId) => () => {
+      // 비로그인 접근
+      if (!me._id) return alert("로그인후에 접근해주세요!");
+
       // 이미 좋아요 처리중이라면 요청 중지
       if (appendLikeToCommentLoading || removeLikeToCommentLoading)
         return alert("이미 댓글에 좋아요 요청 처리중입니다.\n잠시후에 다시 시도해주세요");
@@ -182,26 +195,33 @@ const PostCard = ({ post }) => {
         dispatch(appendLikeToCommentAction({ CommentId }));
       }
     },
-    [post._id, appendLikeToCommentLoading, removeLikeToCommentLoading],
+    [me, post._id, appendLikeToCommentLoading, removeLikeToCommentLoading],
   );
 
   // 2022/01/19 - 팔로우/언팔로우 - by 1-blue
   const onClickFollowButton = useCallback(
     (UserId, isFollow) => () => {
+      // 비로그인 접근
+      if (!me._id) return alert("로그인후에 접근해주세요!");
+
       if (followLoading || unfollowLoading)
         return alert("이미 팔로우/언팔로우 처리 중입니다.\n잠시후에 다시 시도해주세요!");
+
       if (isFollow) {
         dispatch(unfollowAction({ UserId }));
       } else {
         dispatch(followAction({ UserId }));
       }
     },
-    [followLoading, unfollowLoading],
+    [me, followLoading, unfollowLoading],
   );
 
   // 2022/01/23 - 북마크 추가/제거 - by 1-blue
   const onClickBookmarkButton = useCallback(
     isBookmark => () => {
+      // 비로그인 접근
+      if (!me._id) return alert("로그인후에 접근해주세요!");
+
       if (appendPostOfBookmarkLoading || removePostOfBookmarkLoading)
         return alert("이미 북마크 처리중입니다.\n잠시후에 다시 시도해주세요!");
 
@@ -211,7 +231,7 @@ const PostCard = ({ post }) => {
         dispatch(appendPostOfBookmarkAction({ PostId: post._id }));
       }
     },
-    [post._id, appendPostOfBookmarkLoading, removePostOfBookmarkLoading],
+    [me, post._id, appendPostOfBookmarkLoading, removePostOfBookmarkLoading],
   );
 
   return (

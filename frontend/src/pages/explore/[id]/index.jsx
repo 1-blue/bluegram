@@ -53,8 +53,8 @@ const Explore = () => {
     <>
       <HeadInfo
         title="bluegram - explore"
-        description="bluegram의 상세 게시글 페이지"
-        image={`${posts[0].Images[0].name}`}
+        description={`${posts[0].User.name}님의 게시글 ( 좋아요 ${posts[0].PostLikers.length}개 )`}
+        image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name}
       />
 
       {/* 게시글들 ( 현재 기준은 페이지의 게시글 이후에 업로드된 게시글을 최신순으로 보여줌 ) */}

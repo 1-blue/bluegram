@@ -102,7 +102,7 @@ router.post("/", isNotLoggedIn, async (req, res, next) => {
 });
 
 // 2021/12/31 - 특정 유저 정보 가져오기 - by 1-blue
-router.get("/:UserId", isLoggedIn, async (req, res, next) => {
+router.get("/:UserId", async (req, res, next) => {
   const UserId = +req.params.UserId;
 
   try {

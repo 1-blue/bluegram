@@ -1,6 +1,6 @@
 /**
  * 생성일: 2022/01/15
- * 수정일: 2022/01/23
+ * 수정일: 2022/01/26
  * 작성자: 1-blue
  *
  * 상세 게시글 페이지의 버튼들
@@ -8,6 +8,7 @@
  * 좋아요 기능 추가
  * 댓글 focus 시 아이콘 변경 및 댓글 아이콘 기능 focus 기능 추가
  * 북마크 기능 추가
+ * 비로그인시에도 접근 가능하도록 수정
  */
 
 import React, { useState, useEffect } from "react";
@@ -33,13 +34,10 @@ const PostCardButtons = ({
   const [isBookmarkedPost, setIsBookmarkedPost] = useState(false);
 
   // 2022/01/18 - 본인이 게시글에 좋아요 눌렀는지 확인 - by 1-blue
-  useEffect(() => setIsLikedPost(likers.some(liker => liker._id === me._id)), [me._id, likers]);
+  useEffect(() => setIsLikedPost(likers.some(liker => liker._id === me._id)), [me, likers]);
 
   // 2022/01/18 - 본인이 게시글에 북마크 눌렀는지 확인 - by 1-blue
-  useEffect(
-    () => setIsBookmarkedPost(bookmarkers.some(bookmarker => bookmarker._id === me._id)),
-    [me._id, bookmarkers],
-  );
+  useEffect(() => setIsBookmarkedPost(bookmarkers.some(bookmarker => bookmarker._id === me._id)), [me, bookmarkers]);
 
   return (
     <Wrapper>

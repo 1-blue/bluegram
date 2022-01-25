@@ -1,6 +1,6 @@
 /**
  * 생성일: 2022/01/16
- * 수정일: 2022/01/19
+ * 수정일: 2022/01/16
  * 작성자: 1-blue
  *
  * 게시글의 댓글들 컨테이너
@@ -8,6 +8,7 @@
  * 댓글에 좋아요 로직 추가
  * 작성자 프로필 페이지 링크 추가
  * 답글 버큰 클릭 시 포커스 부여 및 답글 데이터 기록방법 수정
+ * 비로그인시에도 접근 가능하도록 수정
  */
 
 import React, { useEffect, useState } from "react";
@@ -49,12 +50,12 @@ const PostCardComment = ({
   const [isLikedComment, setIsLikedComment] = useState(false);
 
   // 2022/01/18 - 본인 댓글인지 판단 - by 1-blue
-  useEffect(() => setIsMine(comment.User._id === me._id), [comment.User._id, me._id]);
+  useEffect(() => setIsMine(comment.User._id === me._id), [comment.User._id, me]);
 
   // 2022/01/18 - 댓글에 좋아요 눌렀는지 판단 - by 1-blue
   useEffect(
     () => setIsLikedComment(comment.CommentLikers.some(liker => liker._id === me._id)),
-    [comment.CommentLikers, me._id],
+    [comment.CommentLikers, me],
   );
 
   return (

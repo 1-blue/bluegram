@@ -1,12 +1,13 @@
 /**
  * 생성일: 2022/01/15
- * 수정일: 2022/01/18
+ * 수정일: 2022/01/26
  * 작성자: 1-blue
  *
  * 상세 게시글 페이지의 머리 부분
  * 작성자 프사, 작성자 이름, 팔로우 버튼, 게시글 옵션 버튼이 존재
  * 작성자만 삭제 권한 부여
  * 작성자 프로필 페이지 링크 추가
+ * 비로그인시 접근 가능하도록 수정
  */
 
 import React, { useState, useEffect } from "react";
@@ -33,10 +34,10 @@ const PostCardHead = ({ user, onRemovePost, onClickFollowButton }) => {
   const [isFollow, setIsFollow] = useState(false);
 
   // 2022/01/18 - 본인 게시글인지 판단 - by 1-blue
-  useEffect(() => setIsMine(user._id === me._id), [user._id, me._id]);
+  useEffect(() => setIsMine(user._id === me._id), [user._id, me]);
 
   // 2022/01/19 - 본인이 팔로우한 유저인지 판단 - by 1-blue
-  useEffect(() => setIsFollow(me.Followings.some(following => following._id === user._id)), [user._id, me.Followings]);
+  useEffect(() => setIsFollow(me?.Followings?.some(following => following._id === user._id)), [user._id, me]);
 
   return (
     <Wrapper>

@@ -73,14 +73,20 @@ const Account = () => {
     }
   }, []);
 
-  if (me._id !== +router.query.id) return <div>접근 권한이 없습니다.</div>;
+  if (me._id !== +router.query.id)
+    return (
+      <>
+        <HeadInfo title="bluegram - account - edit" description="본인 정보 수정 페이지" />
+        <div>접근 권한이 없습니다.</div>
+      </>
+    );
 
   return (
     <>
       <HeadInfo
         title="bluegram - account - edit"
-        description="bluegram의 본인 정보 수정 페이지"
-        image={`${me.Images[0].name}`}
+        description="본인 정보 수정 페이지"
+        image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + me.Images[0].name}
       />
 
       <Wrapper>

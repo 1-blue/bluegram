@@ -1,14 +1,14 @@
 /**
  * 생성일: 2022/01/13
- * 수정일: 2022/01/15
+ * 수정일: 2022/01/26
  * 작성자: 1-blue
  *
  * 메인 페이지에서 보여줄 게시글 grid
+ * 비로그인 유저도 접근 가능하도록 수정
  */
 
 import React, { useCallback, useState } from "react";
 import { useRouter } from "next/router";
-import { useSelector } from "react-redux";
 import Proptypes from "prop-types";
 
 // styled-components
@@ -19,7 +19,6 @@ import Icon from "@components/common/Icon";
 
 const PostImageCard = ({ post }) => {
   const router = useRouter();
-  const { me } = useSelector(state => state.user);
   const [isMouseHover, setIsMouseHover] = useState(false);
 
   // 2021/12/22 - 마우스 enter/leave 이벤트 핸들러 - by 1-blue
@@ -27,15 +26,7 @@ const PostImageCard = ({ post }) => {
   const onMouseLeave = useCallback(() => setIsMouseHover(false), []);
 
   // 2022/01/15 - 클릭 시 상세 게시글 페이지(ExplorePage)로 이동 - by 1-blue
-  const goExplorePage = useCallback(() => {
-    if (!me._id) {
-      if (confirm("로그인 후에 접근이 가능합니다.\n로그인 페이지로 이동하시겠습니까?")) {
-        return router.push("/login");
-      }
-      return;
-    }
-    router.push(`/explore/${post._id}`);
-  }, [router]);
+  const goExplorePage = useCallback(() => router.push(`/explore/${post._id}`), [router]);
 
   return (
     <Wrapper

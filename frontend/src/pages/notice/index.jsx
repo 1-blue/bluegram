@@ -33,8 +33,8 @@ const Notice = () => {
     <>
       <HeadInfo
         title="bluegram - notice"
-        description={`bluegram ${me.name}님의 알림/정보 페이지`}
-        image={me.Images[0].name}
+        description={`${me.name}님의 알림/정보 페이지`}
+        image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + user.Images[0].name}
       />
 
       <Wrapper>

@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import path from "path";
-import fs from "fs";
 import express from "express";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
@@ -17,34 +16,9 @@ import db from "./models/index.js";
 import passportConfig from "./passport/index.js";
 
 const __dirname = path.resolve();
-const dist = path.join(__dirname, "..", "frontend", "dist");
 const FileStore = fileStore(expressSession);
 const app = express();
 app.set("PORT", 8080);
-
-try {
-  fs.accessSync(path.join(__dirname, "public"));
-} catch (error) {
-  fs.mkdirSync(path.join(__dirname, "public"));
-}
-// 실제 사용될 이미지를 저장할 곳
-try {
-  fs.accessSync(path.join(__dirname, "public", "images"));
-} catch (error) {
-  fs.mkdirSync(path.join(__dirname, "public", "images"));
-}
-// 게시글 생성 전에 임시로 이미지를 저장해둘 곳
-try {
-  fs.accessSync(path.join(__dirname, "public", "images", "preview"));
-} catch (error) {
-  fs.mkdirSync(path.join(__dirname, "public", "images", "preview"));
-}
-// 삭제된 게시글의 이미지를 저장해둘 곳
-try {
-  fs.accessSync(path.join(__dirname, "public", "images", "deleted"));
-} catch (error) {
-  fs.mkdirSync(path.join(__dirname, "public", "images", "deleted"));
-}
 
 // sequelize
 db.sequelize
@@ -57,7 +31,6 @@ passportConfig();
 
 // middleware
 app.use("/", express.static(path.join(__dirname, "public")));
-app.use("/", express.static(dist));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -90,7 +63,7 @@ if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
       credentials: true,
-      origin: "http://localhost:8080",
+      origin: "http://localhost:3000",
     }),
   );
   app.use(
@@ -102,7 +75,6 @@ if (process.env.NODE_ENV === "production") {
       cookie: {
         httpOnly: true,
         secure: false,
-        domain: "bluegram.cf",
       },
       store: new FileStore(),
     }),
@@ -136,13 +108,13 @@ app.use("/bookmark", bookmarkRouter);
 // 404 에러처리 미들웨어
 app.use((req, res, next) => {
   console.log("404 에러처리 미들웨어");
-  res.status(404).send("404");
+  res.status(404).send("404 에러처리 미들웨어");
 });
 
 // 에러처리 미들웨어
 app.use((error, req, res, next) => {
   console.error("에러처리 미들웨어 >>", error);
-  res.status(500).json({ error: "Error" });
+  res.status(500).json({ error: "500 Error처리 미들웨어" });
 });
 
 app.listen(app.get("PORT"), console.log(`${app.get("PORT")}번 대기중`));

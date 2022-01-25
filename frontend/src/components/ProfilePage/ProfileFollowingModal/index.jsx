@@ -1,10 +1,11 @@
 /**
  * 생성일: 2022/01/22
- * 수정일: -
+ * 수정일: 2022/01/26
  * 작성자: 1-blue
  *
  * 특정 유저의 팔로잉들을 보여주는 모달
  * 팔로우/언팔로우 기능 추가
+ * 비로그인시 접근 가능하도록 수정
  */
 
 import React from "react";
@@ -54,7 +55,7 @@ const ProfileFollowingModal = ({ isOpenFollowing, onCloseFollowingModal, onClick
                   </Link>
                   <div className="no-content" />
                   {/* 본인일 경우 팔로우/언팔로우 버튼 제거 */}
-                  {me._id !== following._id && (
+                  {me?._id !== following._id && (
                     <Button
                       type="button"
                       $follow
@@ -65,10 +66,10 @@ const ProfileFollowingModal = ({ isOpenFollowing, onCloseFollowingModal, onClick
                       }
                       onClick={onClickFollowButton(
                         following._id,
-                        me.Followings.some(meFollowing => meFollowing._id === following._id),
+                        me?.Followings?.some(meFollowing => meFollowing._id === following._id),
                       )}
                     >
-                      {me.Followings.some(meFollowing => meFollowing._id === following._id) ? "언팔로우" : "팔로우"}
+                      {me?.Followings?.some(meFollowing => meFollowing._id === following._id) ? "언팔로우" : "팔로우"}
                     </Button>
                   )}
                 </li>

@@ -7,7 +7,7 @@ import db from "../models/index.js";
 const { User, Image } = db;
 
 // 2021/12/31 - 특정 유저의 팔로워들 정보 요청 - by 1-blue
-router.get("/followers/:UserId", isLoggedIn, async (req, res, next) => {
+router.get("/followers/:UserId", async (req, res, next) => {
   const UserId = +req.params.UserId;
 
   try {
@@ -42,7 +42,7 @@ router.get("/followers/:UserId", isLoggedIn, async (req, res, next) => {
 });
 
 // 2021/12/31 - 특정 유저의 팔로잉들 정보 요청 - by 1-blue
-router.get("/followings/:UserId", isLoggedIn, async (req, res, next) => {
+router.get("/followings/:UserId", async (req, res, next) => {
   const UserId = +req.params.UserId;
 
   try {

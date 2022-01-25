@@ -1,6 +1,6 @@
 /**
  * 생성일: 2022/01/13
- * 수정일: 2022/01/24
+ * 수정일: 2022/01/26
  * 작성자: 1-blue
  *
  * 프로필 페이지
@@ -10,6 +10,7 @@
  * 팔로우/언팔로우 모달 추가
  * 북마크된 게시글 보기 추가
  * 로그아웃 추가
+ * 비로그인시 접근 가능하도록 수정
  */
 
 import React, { useCallback } from "react";
@@ -125,6 +126,8 @@ const Profile = () => {
   // 2022/01/22 - 팔로우/언팔로우 - by 1-blue
   const onClickFollowButton = useCallback(
     (UserId, isFollow) => () => {
+      if (!me._id) return alert("로그인후에 접근해주세요");
+
       if (followLoading || unfollowLoading)
         return alert("이미 팔로우/언팔로우 처리중입니다.\n잠시후에 다시 시도해주세요");
 
@@ -134,7 +137,7 @@ const Profile = () => {
         dispatch(followAction({ UserId }));
       }
     },
-    [followLoading, unfollowLoading],
+    [me, followLoading, unfollowLoading],
   );
 
   // 2022/01/22 - 현재 프로필 페이지의 유저의 팔로워들 정보 요청 + 팔로워 모달 열기 - by 1-blue
@@ -157,21 +160,21 @@ const Profile = () => {
 
   // 2022/01/24 - 로그아웃 요청 - by 1-blue
   const onClickLogOut = useCallback(() => {
+    if (!me._id) return alert("로그인후에 접근해주세요");
+
     dispatch(localLogoutAction());
 
     alert("로그아웃으로 인해 메인페이지로 이동됩니다.");
 
     push("/");
-  }, []);
-
-  if (!me._id) return <h2>접근 권한이 없습니다.</h2>;
+  }, [me]);
 
   return (
     <>
       <HeadInfo
         title="bluegram - profile"
-        description={`bluegram ${user.name}님의 프로필 페이지`}
-        image={user.Images[0].name}
+        description={`${user.name}님의 프로필\n( 게시글: ${user.Posts.length}, 팔로워: ${user.Followers.length}, 팔로잉: ${user.Followings.length})\n\n${user.about}`}
+        image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + user.Images[0].name}
       />
 
       <Wrapper>

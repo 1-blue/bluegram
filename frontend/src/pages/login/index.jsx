@@ -70,7 +70,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <HeadInfo title="bluegram - login" description="bluegram의 로그인 페이지" />
+      <HeadInfo title="bluegram - login" description="로그인 페이지" />
 
       <Wrapper>
         <Form onSubmit={onLocalLogin} autoComplete="on">

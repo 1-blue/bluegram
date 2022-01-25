@@ -144,7 +144,7 @@ router.get("/post/:PostId", async (req, res, next) => {
 });
 
 // 2022/01/16 - 특정 댓글의 답글들 불러오기 - by 1-blue
-router.get("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
+router.get("/comment/:CommentId", async (req, res, next) => {
   const CommentId = +req.params.CommentId;
   const lastId = +req.query.lastId || 999999;
   const limit = +req.query.limit || 10;
