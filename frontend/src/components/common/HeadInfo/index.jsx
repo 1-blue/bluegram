@@ -1,8 +1,10 @@
 import React from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import Proptypes from "prop-types";
 
-const HeadInfo = ({ title, description, image, url }) => {
+const HeadInfo = ({ title, description, image }) => {
+  const { asPath } = useRouter();
   return (
     <Head>
       {/* 현 페이지 제목 */}
@@ -17,10 +19,10 @@ const HeadInfo = ({ title, description, image, url }) => {
       <meta name="author" content="1-blue" />
 
       {/* 카카오톡 미리보기에 제공될 정보 */}
+      <meta property="og:url" content={`https://bluegram.cf${asPath}`} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
-      <meta property="og:url" content={`https://bluegram.cf${url}`} />
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="bluegram" />
       <meta property="og:locale" content="ko_KR" />
@@ -34,14 +36,12 @@ HeadInfo.propTypes = {
   title: Proptypes.string.isRequired,
   image: Proptypes.string.isRequired,
   description: Proptypes.string.isRequired,
-  url: Proptypes.string,
 };
 
 HeadInfo.defaultProps = {
   title: "bluegram",
   description: "Next.js를 이용한 인스타그램 클론 사이트 ( 상업용 아님 )",
   image: "/favicon.ico",
-  url: "",
 };
 
 export default HeadInfo;

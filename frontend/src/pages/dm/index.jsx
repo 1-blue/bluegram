@@ -10,7 +10,6 @@
 
 import React from "react";
 import styled from "styled-components";
-import { useRouter } from "next/router";
 
 // Redux + SSR
 import wrapper from "@store/configureStore";
@@ -27,11 +26,9 @@ import HeadInfo from "@components/common/HeadInfo";
 const Wrapper = styled.section``;
 
 const DM = () => {
-  const { asPath } = useRouter();
-
   return (
     <>
-      <HeadInfo title="bluegram - DM" description="다이렉트 메시지 페이지" url={asPath} />
+      <HeadInfo title="bluegram - DM" description="다이렉트 메시지 페이지" />
 
       <Wrapper>
         <h1>DM</h1>

@@ -118,7 +118,6 @@ const Profile = () => {
   const {
     query: { id, kinds },
     push,
-    asPath,
   } = useRouter();
   const { me, user, followLoading, unfollowLoading } = useSelector(state => state.user);
   const [isOpenFollower, onOpenFollowerModal, onCloseFollowerModal] = useOpenClose(false);
@@ -176,7 +175,6 @@ const Profile = () => {
         title="bluegram - profile"
         description={`${user.name}님의 프로필\n( 게시글: ${user.Posts.length}, 팔로워: ${user.Followers.length}, 팔로잉: ${user.Followings.length})\n\n${user.about}`}
         image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + user.Images[0].name}
-        url={asPath}
       />
 
       <Wrapper>

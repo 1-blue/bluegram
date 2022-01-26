@@ -87,7 +87,6 @@ const Account = () => {
         title="bluegram - account - edit"
         description="본인 정보 수정 페이지"
         image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + me.Images[0].name}
-        url={router.asPath}
       />
 
       <Wrapper>

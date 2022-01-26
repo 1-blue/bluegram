@@ -173,7 +173,7 @@ const SignupPage = () => {
 
   return (
     <>
-      <HeadInfo title="bluegram - signup" description="회원가입 페이지" url={router.asPath} />
+      <HeadInfo title="bluegram - signup" description="회원가입 페이지" />
 
       <Wrapper>
         <Form onSubmit={onSubmit} autoComplete="on">

@@ -28,7 +28,7 @@ import PostCard from "@components/PostCard";
 
 const HashtagPage = () => {
   const dispatch = useDispatch();
-  const { query, asPath } = useRouter();
+  const { query } = useRouter();
   const {
     postsOfDetail: posts,
     hashtagPostsMetadata: { hasMoreHashtagPosts, postsOfHashtagCount, hashtagText },
@@ -65,7 +65,6 @@ const HashtagPage = () => {
         title={`bluegram - hashtag - #${hashtagText}`}
         description={`해시태그 ( #${hashtagText} )`}
         image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name}
-        url={asPath}
       />
 
       {/* 해시태그 검색결과 총 개수 */}
