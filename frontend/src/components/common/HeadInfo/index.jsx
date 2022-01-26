@@ -2,7 +2,7 @@ import React from "react";
 import Head from "next/head";
 import Proptypes from "prop-types";
 
-const HeadInfo = ({ title, image, description }) => {
+const HeadInfo = ({ title, description, image, url }) => {
   return (
     <Head>
       {/* 현 페이지 제목 */}
@@ -20,13 +20,12 @@ const HeadInfo = ({ title, image, description }) => {
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       <meta property="og:image" content={image} />
+      <meta property="og:url" content={`https://bluegram.cf${url}`} />
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="bluegram" />
       <meta property="og:locale" content="ko_KR" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="600" />
-
-      {/* <meta property="og:url" content="https://bluegram.cf" /> */}
     </Head>
   );
 };
@@ -35,12 +34,14 @@ HeadInfo.propTypes = {
   title: Proptypes.string.isRequired,
   image: Proptypes.string.isRequired,
   description: Proptypes.string.isRequired,
+  url: Proptypes.string,
 };
 
 HeadInfo.defaultProps = {
   title: "bluegram",
-  image: "/favicon.ico",
   description: "Next.js를 이용한 인스타그램 클론 사이트 ( 상업용 아님 )",
+  image: "/favicon.ico",
+  url: "",
 };
 
 export default HeadInfo;

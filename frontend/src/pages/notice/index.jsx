@@ -10,6 +10,7 @@
 
 import React from "react";
 import { useSelector } from "react-redux";
+import { useRouter } from "next/router";
 import styled from "styled-components";
 
 // Redux + SSR
@@ -27,6 +28,7 @@ import HeadInfo from "@components/common/HeadInfo";
 const Wrapper = styled.section``;
 
 const Notice = () => {
+  const { asPath } = useRouter();
   const { me } = useSelector(state => state.user);
 
   return (
@@ -35,6 +37,7 @@ const Notice = () => {
         title="bluegram - notice"
         description={`${me.name}님의 알림/정보 페이지`}
         image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + user.Images[0].name}
+        url={asPath}
       />
 
       <Wrapper>

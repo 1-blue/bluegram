@@ -28,7 +28,7 @@ import PostCard from "@components/PostCard";
 
 const HashtagPage = () => {
   const dispatch = useDispatch();
-  const { query } = useRouter();
+  const { query, asPath } = useRouter();
   const {
     postsOfDetail: posts,
     hashtagPostsMetadata: { hasMoreHashtagPosts, postsOfHashtagCount, hashtagText },
@@ -59,15 +59,13 @@ const HashtagPage = () => {
     return () => window.removeEventListener("scroll", infiniteScrollEvent);
   }, [infiniteScrollEvent]);
 
-  // 2022/01/26 - 미리보기에 보여줄 게시글의 컨텐츠
-  const contents = posts[0].content.length > 100 ? posts[0].content.substring(0, 100) + "..." : posts[0].content;
-
   return (
     <>
       <HeadInfo
         title={`bluegram - hashtag - #${hashtagText}`}
         description={`해시태그 ( #${hashtagText} )`}
         image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name}
+        url={asPath}
       />
 
       {/* 해시태그 검색결과 총 개수 */}
