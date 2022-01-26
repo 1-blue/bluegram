@@ -49,11 +49,14 @@ const Explore = () => {
     return () => window.removeEventListener("scroll", infiniteScrollEvent);
   }, [infiniteScrollEvent]);
 
+  // 2022/01/26 - 미리보기에 보여줄 게시글의 컨텐츠
+  const contents = posts[0].content.length > 100 ? posts[0].content.substring(0, 100) + "..." : posts[0].content;
+
   return (
     <>
       <HeadInfo
         title="bluegram - explore"
-        description={`${posts[0].User.name}님의 게시글 ( 좋아요 ${posts[0].PostLikers.length}개 )`}
+        description={`${posts[0].User.name}님의 게시글\n( 좋아요: ${posts[0].PostLikers.length}, 댓글: ${posts[0].Comments.length})\n\n${contents}`}
         image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name}
       />
 

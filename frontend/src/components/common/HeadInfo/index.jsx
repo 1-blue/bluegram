@@ -19,13 +19,14 @@ const HeadInfo = ({ title, image, description }) => {
       {/* 카카오톡 미리보기에 제공될 정보 */}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:url" content="https://bluegram.cf" />
       <meta property="og:image" content={image} />
       <meta property="og:type" content="website" />
       <meta property="og:site_name" content="bluegram" />
       <meta property="og:locale" content="ko_KR" />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="600" />
+
+      {/* <meta property="og:url" content="https://bluegram.cf" /> */}
     </Head>
   );
 };
