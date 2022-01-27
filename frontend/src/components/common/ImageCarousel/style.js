@@ -74,7 +74,7 @@ export const Image = styled.figure`
       background-position: center;
       background-color: black;
 
-      & > img {
+      & img {
         display: none;
       }
     `}

@@ -23,13 +23,9 @@ const Toast = ({ message, time, ...restProps }) => {
 
   // 2022/01/05 - 토스트 메시지 보여줄 시간 지정 - by 1-blue
   useEffect(() => {
-    timerId.current = setTimeout(() => {
-      setIsShow(false);
-      dispatch(resetMessageAction());
-    }, time);
+    timerId.current = setTimeout(() => setIsShow(false), time);
 
     return () => {
-      setIsShow(false);
       dispatch(resetMessageAction());
       clearTimeout(timerId.current);
     };

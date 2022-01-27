@@ -7,7 +7,7 @@
  * autoComplete 수정
  */
 
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -24,7 +24,6 @@ import useInput from "@hooks/useInput";
 
 // action
 import { resetMessageAction, localLoginAction } from "@store/actions";
-import { useRef } from "react";
 
 // styled-component
 const Wrapper = styled.section`

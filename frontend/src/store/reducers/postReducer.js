@@ -154,80 +154,61 @@ function postReducer(prevState = initState, action) {
       return {
         ...prevState,
 
-        loadPostsLoading: false,
         loadPostsDone: null,
         loadPostsError: null,
 
-        loadPostLoading: false,
         loadPostDone: null,
         loadPostError: null,
 
-        loadHashtagPostsLoading: false,
         loadHashtagPostsDone: null,
         loadHashtagPostsError: null,
 
-        loadPostsOfUserLoading: false,
         loadPostsOfUserDone: null,
         loadPostsOfUserError: null,
 
-        loadDetailPostsLoading: false,
         loadDetailPostsDone: null,
         loadDetailPostsError: null,
 
-        loadPostsDetailOfUserLoading: false,
         loadPostsDetailOfUserDone: null,
         loadPostsDetailOfUserError: null,
 
-        createPostLoading: false,
         createPostDone: null,
         createPostError: null,
 
-        removePostLoading: false,
         removePostDone: null,
         removePostError: null,
 
-        appendLikeToPostLoading: false,
         appendLikeToPostDone: null,
         appendLikeToPostError: null,
 
-        removeLikeToPostLoading: false,
         removeLikeToPostDone: null,
         removeLikeToPostError: null,
 
-        appendCommentToPostLoading: false,
         appendCommentToPostDone: null,
         appendCommentToPostError: null,
 
-        removeCommentToPostLoading: false,
         removeCommentToPostDone: null,
         removeCommentToPostError: null,
 
-        appendLikeToCommentLoading: false,
         appendLikeToCommentDone: null,
         appendLikeToCommentError: null,
 
-        removeLikeToCommentLoading: false,
         removeLikeToCommentDone: null,
         removeLikeToCommentError: null,
 
-        loadCommentsLoading: false,
         loadCommentsDone: null,
         loadCommentsError: null,
 
-        loadRecommentsLoading: false,
         loadRecommentsDone: null,
         loadRecommentsError: null,
         loadCommentId: null,
 
-        appendPostOfBookmarkLoading: false,
         appendPostOfBookmarkDone: null,
         appendPostOfBookmarkError: null,
 
-        removePostOfBookmarkLoading: false,
         removePostOfBookmarkDone: null,
         removePostOfBookmarkError: null,
 
-        loadPostsOfBookmarkLoading: false,
         loadPostsOfBookmarkDone: null,
         loadPostsOfBookmarkError: null,
       };

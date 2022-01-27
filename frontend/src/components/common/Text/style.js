@@ -20,6 +20,10 @@ export const Wrapper = styled.span`
     css`
       font-size: 1.2rem;
       margin: 6vh 0;
+
+      @media (max-width: 768px) {
+        font-size: 0.8rem;
+      }
     `}
 
   ${({ $success }) =>

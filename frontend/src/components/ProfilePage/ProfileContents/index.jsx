@@ -1,20 +1,25 @@
 /**
  * 생성일: 2022/01/23
- * 수정일: -
+ * 수정일: 2022/01/27
  * 작성자: 1-blue
  *
  * 프로필 페이지 query(kinds)에 따라 다른 컨텐츠 보여주도록 나누는 컴포넌트
+ * props제거... 직접 router에서 값얻어서 사용
  */
 
 import React, { useCallback } from "react";
-import Proptypes from "prop-types";
+import { useRouter } from "next/router";
 
 // components
 import ProfilePostImageCard from "./ProfilePostImageCard";
 import ProfilePostCard from "./ProfilePostCard";
 import ProfilePostBookmarkCard from "./ProfilePostBookmarkCard";
 
-const ProfileContents = ({ id, kinds }) => {
+const ProfileContents = () => {
+  const {
+    query: { id, kinds },
+  } = useRouter();
+
   // 2022/01/21 - 내용 - by 1-blue
   const contents = useCallback(kinds => {
     switch (kinds) {
@@ -26,20 +31,11 @@ const ProfileContents = ({ id, kinds }) => {
         return <ProfilePostBookmarkCard id={id} />;
 
       default:
-        break;
+        return <ProfilePostImageCard id={id} />;
     }
   }, []);
 
-  return contents(kinds);
-};
-
-ProfileContents.propTypes = {
-  id: Proptypes.string.isRequired,
-  kinds: Proptypes.string.isRequired,
-};
-
-ProfileContents.defaultProps = {
-  kinds: "post",
+  return contents(kinds || "post");
 };
 
 export default ProfileContents;

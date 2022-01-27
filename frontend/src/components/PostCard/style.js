@@ -11,6 +11,8 @@ export const Wrapper = styled.ul`
   @media (max-width: 486px) {
     margin: 0;
     box-shadow: 0 0 0;
+    border-bottom: 2px solid gray;
+    border-radius: 0;
   }
 
   & .post-card-comment-wrapper:nth-last-of-type(1) {

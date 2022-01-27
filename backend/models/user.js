@@ -23,7 +23,7 @@ const User = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING(20),
         allowNull: false,
-        comment: "유저 성명",
+        comment: "유저 성명 ( 중복 가능 )",
       },
       email: {
         type: DataTypes.STRING(40),
@@ -41,9 +41,9 @@ const User = (sequelize, DataTypes) => {
         comment: "유저 생년월일",
       },
       about: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING(200),
         allowNull: true,
-        comment: "유저의 간단 자기소개",
+        comment: "유저의 간단 자기소개 ( 200자 이내 )",
       },
       snsId: {
         type: DataTypes.INTEGER,

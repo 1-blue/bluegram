@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const Wrapper = styled.footer`
   padding: 4vh 0 10vh;
-  margin-bottom: 7vh;
+  margin-bottom: 6vh;
   background: #272727;
   text-align: center;
 
@@ -34,5 +34,14 @@ export const Wrapper = styled.footer`
 
   @media (min-width: 1024px) {
     margin-bottom: 0;
+  }
+
+  @media (max-width: 768px) {
+    & .footer-title {
+      font-size: 1rem;
+    }
+    & .footer-link-list {
+      font-size: 0.8rem;
+    }
   }
 `;

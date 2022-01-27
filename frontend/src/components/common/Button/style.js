@@ -6,8 +6,8 @@ export const Wrapper = styled.button`
     $signup &&
     css`
       position: relative;
-      margin: 0.8rem 0;
-      padding: 0.8rem 1.6rem;
+      margin: 0.8em 0;
+      padding: 0.8em 1.6em;
       border: 2px solid purple;
       border-radius: 8px;
       font-size: 1.2rem;
@@ -39,15 +39,15 @@ export const Wrapper = styled.button`
       }
 
       @media (max-width: 480px) {
-        margin: 0.6rem 0;
-        padding: 0.6rem 1.4rem;
+        margin: 0.6em 0;
+        padding: 0.6em 1.4em;
         border: 1px solid purple;
         border-radius: 6px;
         font-size: 1rem;
       }
       @media (min-width: 480px) and (max-width: 768px) {
-        margin: 0.8rem 0;
-        padding: 0.8rem 1.6rem;
+        margin: 0.8em 0;
+        padding: 0.8em 1.6em;
         border: 2px solid purple;
         border-radius: 8px;
         font-size: 1.2rem;
@@ -60,10 +60,10 @@ export const Wrapper = styled.button`
     css`
       position: relative;
       width: 60%;
-      padding: 0.5rem;
+      padding: 0.5em;
       background: var(--main-color);
       color: white;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.3em;
       opacity: 0.9;
 
       &:hover {
@@ -77,10 +77,10 @@ export const Wrapper = styled.button`
     css`
       position: relative;
       width: 60%;
-      padding: 0.5rem;
+      padding: 0.5em;
       background: var(--facebook-color);
       color: white;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.3em;
       opacity: 0.9;
 
       &:hover {
@@ -94,10 +94,10 @@ export const Wrapper = styled.button`
     css`
       position: relative;
       width: 60%;
-      padding: 0.5rem;
+      padding: 0.5em;
       background: var(--naver-color);
       color: white;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.3em;
       opacity: 0.9;
 
       &:hover {
@@ -111,10 +111,10 @@ export const Wrapper = styled.button`
     css`
       position: relative;
       width: 60%;
-      padding: 0.5rem;
+      padding: 0.5em;
       background-color: var(--kakao-color);
       color: white;
-      margin-bottom: 1rem;
+      margin-bottom: 1em;
       opacity: 0.9;
 
       &:hover {
@@ -127,7 +127,7 @@ export const Wrapper = styled.button`
     $upload &&
     css`
       position: relative;
-      padding: 0.5rem 1rem;
+      padding: 0.5em 1em;
       background: #0095f6;
       color: white;
       border-radius: 5px;

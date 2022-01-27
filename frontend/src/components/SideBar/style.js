@@ -34,11 +34,11 @@ export const Wrapper = styled.aside`
 
   /* 검색 */
   .modal-search-input {
-    padding: 0.4em;
-    font-size: 0.9rem;
+    padding: 0.6em;
+    font-size: 1rem;
     font-weight: 700;
     font-family: inherit;
-    border: 1px solid var(--light-blue);
+    border: 2px solid var(--light-blue);
 
     &::placeholder {
       font-size: 0.8rem;

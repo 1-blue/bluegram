@@ -39,7 +39,6 @@ const Wrapper = styled.section`
   .about {
     width: 60%;
     padding: 0.5em;
-    margin-bottom: 0.8em;
     border: 1px solid purple;
     font-size: 0.8rem;
     font-weight: 500;
@@ -48,6 +47,8 @@ const Wrapper = styled.section`
 
     &::placeholder {
       font-size: 0.6rem;
+      word-break: keep-all;
+      text-align: center;
     }
   }
 
@@ -124,8 +125,8 @@ const SignupPage = () => {
         birthdayRef.current.scrollIntoView();
         return birthdayRef.current.select();
       }
-      if (about.trim().length >= 100) {
-        alert("자기 소개는 100자 이내로 입력해주세요!");
+      if (about.trim().length >= 200) {
+        alert(`자기 소개는 200자 이내로 입력해주세요!\n( 현재 ${about.trim().length}자 )`);
         aboutRef.current.scrollIntoView();
         return aboutRef.current.select();
       }
@@ -326,8 +327,8 @@ const SignupPage = () => {
             autoComplete="on"
             ref={aboutRef}
           />
-          <Text $success={about.trim().length <= 100} $error={about.trim().length > 100}>
-            100자 이내로 입력해주세요!
+          <Text $success={about.trim().length <= 200} $error={about.trim().length > 200}>
+            200자 이내로 입력해주세요! ( {`${about.trim().length}/200`} )
           </Text>
 
           {/* profileImage */}

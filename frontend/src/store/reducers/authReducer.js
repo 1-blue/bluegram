@@ -23,11 +23,10 @@ function authReducer(prevState = initState, action) {
     case RESET_MESSAGE:
       return {
         ...prevState,
-        loginLoading: false,
+        
         loginDone: null,
         loginError: null,
 
-        logoutLoading: false,
         logoutDone: null,
         logoutError: null,
       };

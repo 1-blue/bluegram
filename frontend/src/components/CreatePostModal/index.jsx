@@ -127,7 +127,7 @@ const CreatePostModal = ({ showModal, onCloseModal }) => {
     e => {
       e.preventDefault();
 
-      if (text.length > 500) return alert(`게시글 내용은 500자 이하만 가능합니다.\n( 현재 ${text.length}자 )`);
+      if (text.length > 2200) return alert(`게시글 내용은 2200자 이하만 가능합니다.\n( 현재 ${text.length}자 )`);
       if (text.trim().length === 0) return alert("게시글의 내용을 채우고 버튼을 눌러주세요!");
 
       dispatch(createPostAction({ content: text, images: imagePreviews }));
@@ -167,7 +167,6 @@ const CreatePostModal = ({ showModal, onCloseModal }) => {
                 <ImageCarousel
                   speed={300}
                   images={imagePreviews.map((imagePreview, _id) => ({ name: imagePreview, _id }))}
-                  imageNumber={imageNumber}
                   setImageNumber={setImageNumber}
                   $preview
                 />
@@ -186,7 +185,7 @@ const CreatePostModal = ({ showModal, onCloseModal }) => {
                   type="button"
                   onClick={() => imageRef.current.click()}
                   $upload
-                  style={{ width: "20%" }}
+                  loading={uploadImagesLoading}
                   className="modal-preview-append-button"
                 >
                   이미지 추가
@@ -201,7 +200,7 @@ const CreatePostModal = ({ showModal, onCloseModal }) => {
         return (
           <form className="modal-form" onSubmit={onSubmitPost}>
             <div className="modal-form-info">
-              <Avatar width={40} height={40} image={me.Images[0]} />
+              <Avatar width={36} height={36} image={me.Images[0]} style={{ marginRight: "0.5em" }} />
               <b>{me.name}</b>
             </div>
 
@@ -212,7 +211,7 @@ const CreatePostModal = ({ showModal, onCloseModal }) => {
               placeholder="🗨️ 텍스트를 입력하세요 🗨️"
             />
 
-            <span className="modal-form-text-length">{text.length}/500</span>
+            <span className="modal-form-text-length">{text.length}/2,200</span>
 
             <Button type="submit" className="modal-create-button" $submit>
               게시
@@ -257,7 +256,7 @@ const CreatePostModal = ({ showModal, onCloseModal }) => {
   }, [setTitle, setStep, step, initializePostModal]);
 
   return (
-    <Wrapper>
+    <Wrapper step={step}>
       {/* 모달 닫기 버튼 */}
       <button type="button" className="modal-close-button">
         ❌

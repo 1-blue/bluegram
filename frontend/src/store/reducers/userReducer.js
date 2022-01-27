@@ -93,43 +93,33 @@ function userReducer(prevState = initState, action) {
     case RESET_MESSAGE:
       return {
         ...prevState,
-        loadToMeLoading: false,
         loadToMeDone: null,
         loadToMeError: null,
 
-        signupLoading: false,
         signupDone: null,
         signupError: null,
 
-        followLoading: false,
         followDone: null,
         followError: null,
 
-        unfollowLoading: false,
         unfollowDone: null,
         unfollowError: null,
 
-        loadFollowersLoading: false,
         loadFollowersDone: null,
         loadFollowersError: null,
 
-        loadFollowingsLoading: false,
         loadFollowingsDone: null,
         loadFollowingsError: null,
 
-        loadToUserLoading: false,
         loadToUserDone: null,
         loadToUserError: null,
 
-        editToMeAllLoading: false,
         editToMeAllDone: null,
         editToMeAllError: null,
 
-        editToMePasswordLoading: false,
         editToMePasswordDone: null,
         editToMePasswordError: null,
 
-        signOutLoading: false,
         signOutDone: null,
         signOutError: null,
       };
@@ -200,7 +190,7 @@ function userReducer(prevState = initState, action) {
         followLoading: true,
         followDone: null,
         followError: null,
-        followId: action.data.UserId
+        followId: action.data.UserId,
       };
     case FOLLOW_SUCCESS:
       // 2022/01/19 - 나의 팔로잉 추가 ( 팔로우 ) - by 1-blue
@@ -254,7 +244,7 @@ function userReducer(prevState = initState, action) {
         unfollowLoading: true,
         unfollowDone: null,
         unfollowError: null,
-        unfollowId: action.data.UserId
+        unfollowId: action.data.UserId,
       };
     case UNFOLLOW_SUCCESS:
       // 2022/01/19 - 나의 팔로잉 제거 ( 언팔로우 ) - by 1-blue
@@ -298,7 +288,7 @@ function userReducer(prevState = initState, action) {
         ...prevState,
         unfollowLoading: false,
         unfollowError: action.data.message,
-        unfollowId: null
+        unfollowId: null,
       };
 
     // 2022/01/15 - 특정 유저 팔로워들 정보 요청 - by 1-blue

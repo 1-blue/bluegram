@@ -115,10 +115,7 @@ const Wrapper = styled.article`
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const {
-    query: { id, kinds },
-    push,
-  } = useRouter();
+  const { push } = useRouter();
   const { me, user, followLoading, unfollowLoading } = useSelector(state => state.user);
   const [isOpenFollower, onOpenFollowerModal, onCloseFollowerModal] = useOpenClose(false);
   const [isOpenFollowing, onOpenFollowingModal, onCloseFollowingModal] = useOpenClose(false);
@@ -180,8 +177,8 @@ const Profile = () => {
       <Wrapper>
         <ProfileHead onClickFollowButton={onClickFollowButton} onClickLogOut={onClickLogOut} />
         <ProfileButtons onClickFollowerButton={onClickFollowerButton} onClickFollowingButton={onClickFollowingButton} />
-        <ProfileNav id={id} kinds={kinds} />
-        <ProfileContents id={id} kinds={kinds} />
+        <ProfileNav />
+        <ProfileContents />
 
         {/* 팔로워 리스트 보여주는 모달 */}
         <ProfileFollowerModal

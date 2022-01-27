@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Wrapper = styled.section`
   position: fixed;
@@ -17,6 +17,7 @@ export const Wrapper = styled.section`
     position: relative;
     width: 80vw;
     height: 80vh;
+    min-height: 320px;
     display: flex;
     flex-flow: column nowrap;
     background: white;
@@ -123,6 +124,10 @@ export const Wrapper = styled.section`
     width: 100%;
     resize: none;
     border-radius: 0 0 0.2em 0.2em;
+
+    &::placeholder {
+      text-align: center;
+    }
   }
 
   & .modal-form-text-length {
@@ -155,6 +160,24 @@ export const Wrapper = styled.section`
     & .modal-previous-button {
       top: 1.4%;
       left: 1.4%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    & .modal {
+      ${({ step }) =>
+        step === 1 &&
+        css`
+          height: 70vw;
+        `}
+    }
+
+    & .modal-body-title {
+      font-size: 0.9rem;
+    }
+
+    & .modal-preview-append-button {
+      font-size: 0.6rem;
     }
   }
 `;

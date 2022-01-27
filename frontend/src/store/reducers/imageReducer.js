@@ -29,11 +29,9 @@ function imageReducer(prevState = initState, action) {
       return {
         ...prevState,
 
-        uploadImagesLoading: false,
         uploadImagesDone: null,
         uploadImagesError: null,
 
-        removePreviewLoading: false,
         removePreviewDone: null,
         removePreviewError: null,
       };

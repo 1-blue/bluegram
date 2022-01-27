@@ -12,11 +12,13 @@ import Proptypes from "prop-types";
 // components
 import { Wrapper } from "./style";
 
-const Avatar = props => {
+const Avatar = ({ image, width, height, ...restProps }) => {
   return (
     <Wrapper
-      {...props}
-      src={props.image?.name ? process.env.NEXT_PUBLIC_IMAGE_URL + "/" + props.image.name : props.image?.url}
+      width={width}
+      height={height}
+      src={image?.name ? process.env.NEXT_PUBLIC_IMAGE_URL + "/" + image.name : image?.url}
+      {...restProps}
     />
   );
 };

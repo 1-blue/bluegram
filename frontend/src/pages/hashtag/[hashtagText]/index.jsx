@@ -62,7 +62,7 @@ const HashtagPage = () => {
   return (
     <>
       <HeadInfo
-        title={`bluegram - hashtag - #${hashtagText}`}
+        title={`bluegram - #${hashtagText}`}
         description={`해시태그 ( #${hashtagText} )`}
         image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name}
       />

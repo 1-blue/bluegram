@@ -41,7 +41,7 @@ HeadInfo.propTypes = {
 HeadInfo.defaultProps = {
   title: "bluegram",
   description: "Next.js를 이용한 인스타그램 클론 사이트 ( 상업용 아님 )",
-  image: "/favicon.ico",
+  image: "https://bluegram.cf/favicon.ico",
 };
 
 export default HeadInfo;

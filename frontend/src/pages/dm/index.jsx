@@ -32,6 +32,7 @@ const DM = () => {
 
       <Wrapper>
         <h1>DM</h1>
+        <span>추후에 개발 진행 예정</span>
       </Wrapper>
     </>
   );
