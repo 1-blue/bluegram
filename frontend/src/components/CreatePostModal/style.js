@@ -17,6 +17,7 @@ export const Wrapper = styled.section`
     position: relative;
     width: 80vw;
     height: 80vh;
+    max-width: 1200px;
     min-height: 320px;
     display: flex;
     flex-flow: column nowrap;

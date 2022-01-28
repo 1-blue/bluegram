@@ -1,5 +1,5 @@
 {
-  "name": "bluegram_backend",
+  "name": "blegram_backend",
   "version": "2.0.0",
   "main": "app.js",
   "description": "instagram 클론 프로젝트 - 백엔드",

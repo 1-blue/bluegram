@@ -41,19 +41,19 @@ if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
       credentials: true,
-      origin: "https://bluegram.cf",
+      origin: "https://blegram.com",
     }),
   );
   app.use(
     expressSession({
       resave: false,
       saveUninitialized: false,
-      name: "auth-bluegram",
+      name: "auth-blegram",
       secret: process.env.COOKIE_SECRET,
       cookie: {
         httpOnly: true,
         secure: false,
-        domain: "bluegram.cf",
+        domain: "blegram.com",
       },
       store: new FileStore(),
     }),
@@ -70,7 +70,7 @@ if (process.env.NODE_ENV === "production") {
     expressSession({
       resave: false,
       saveUninitialized: false,
-      name: "auth-bluegram",
+      name: "auth-blegram",
       secret: process.env.COOKIE_SECRET,
       cookie: {
         httpOnly: true,

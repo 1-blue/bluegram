@@ -5,7 +5,7 @@ module.exports = {
     ignoreDuringBuilds: true,
   },
   images: {
-    domains: ["localhost", "api.bluegram.cf"],
+    domains: ["localhost", "api.blegram.com"],
   },
   webpack(config, options) {
     return {

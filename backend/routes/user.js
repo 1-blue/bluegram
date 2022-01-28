@@ -221,7 +221,7 @@ router.patch("/", isLoggedIn, async (req, res, next) => {
     req.session.destroy();
     res
       .status(200)
-      .clearCookie("auth-bluegram")
+      .clearCookie("auth-blegram")
       .json({ message: "비밀번호 변경에 성공하셨습니다.\n강제로 로그아웃되며 로그인페이지로 이동합니다." });
   } catch (error) {
     console.error("PATCH /user error >> ", error);
@@ -245,7 +245,7 @@ router.delete("/:password", isLoggedIn, async (req, res, next) => {
     req.session.destroy();
     res
       .status(200)
-      .clearCookie("auth-bluegram")
+      .clearCookie("auth-blegram")
       .json({ message: "회원탈퇴에 성공하셨습니다.\n강제로 로그아웃되며 회원가입페이지로 이동합니다." });
   } catch (error) {
     console.error("DELETE /user/:password error >> ", error);
