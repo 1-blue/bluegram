@@ -1,17 +1,17 @@
-# bluegram
-- [bluegram 사이트](https://bluegram.cf/)
+# blegram
+- [blegram 사이트](https://blegram.com/)
 - [velog 일지](https://velog.io/@1-blue/series/bluegram)
 - [youtube](https://www.youtube.com/watch?v=gUUmwcein7M)
 - [trello](https://trello.com/b/jBz14zzw/bluegram)
 
 ## 1. 설명
 공부용으로 만든 인스타그램 클론 웹사이트  
-`React.js`, `Node.js`, `Mysql`, `AWS`를 이용해서 구현
+`Next.js`(`React.js`), `Node.js`, `Mysql`, `AWS`를 이용해서 구현
 
 ### 1.1 version 1.0.0
 + 구현한 기능
   1. 유저 CRUD
-  2. 로그인 ( local, kakao )
+  2. 로그인 ( local )
   3. 게시글 CRD ( 영상처리 불가능 )
   4. 댓글/답글 CRD
   5. 게시글/댓글/답글의 좋아요 CRD
@@ -23,12 +23,16 @@
   11. 내 게시글들 보기
 
 - 이후에 업데이트할 기능들
-  1. 게시글 업데이트
-  2. 유저 태그
-  3. 유저 알림
-  4. DM
-  5. image-resizing
-  6. image-crop
+  1. 게시글 업로드 이미지 순서 변경
+  2. 게시글 업로드 이미지 크롭
+  3. 게시글 업로드 이미지 리사이징
+  4. 게시글 업로드 이미지 저장 위치 변경 ( 현재는 백엔드 서버에 저장 )
+  5. 좋아요 및 팔로우 시 알림
+  6. DM
+  7. ImageCarousel 드래그로 이미지 넘기기
+  8. 유저 검색 추가
+  9. 검색 시 추천 검색어 보여주기
+  10. 팔로우 시 인기 유저 보여주기
 
 ## 2. 제작환경
 1. OS: `Window11`
@@ -50,14 +54,25 @@ $ npm install
 
 - `.env.production` 생성
 ```
-SERVER_URL=
-SERVER_IMAGE_URL=
-SERVER_KAKAO_URL=
+NEXT_PUBLIC_NODE_ENV=
+NEXT_PUBLIC_SERVER_URL=
+NEXT_PUBLIC_IMAGE_URL=
+NEXT_PUBLIC_PREVIEW_IMAGE_URL=
+NEXT_PUBLIC_KAKAO_URL=
 ```
 
 - 빌드
-```
+```bash
 $ npm run build
+```
+
+- 실행
+```bash
+# 개발 시
+$ sudo npm run dev
+
+# 배포 시
+$ sudo pm2 start npm -- start
 ```
 
 ### 3.2 백엔드

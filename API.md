@@ -121,15 +121,17 @@
 
 ## 2.5 PUT /user
 + 역할: 로그인한 유저의 기본 정보 수정
-+ 전송 데이터: `{ name, phone, birthday, imageName }`
++ 전송 데이터: `{ name, email, phone, birthday, about, imageName }`
 + 응답 데이터
 ```javascript
 {
   message,
   result: {
     name,
+    email,
     phone,
     birthday,
+    about,
     profileImage
   },
 }
@@ -141,7 +143,7 @@
 
 ## 2.5 PATCH /user
 + 역할: 로그인한 유저의 비밀번호 정보 변경
-+ 전송 데이터: `{ password }`
++ 전송 데이터: `{ currentPassword, password }`
 + 응답 데이터
 ```javascript
 // 서버의 세션 제거
@@ -158,7 +160,7 @@
 
 ## 2.6 DELETE /user
 + 역할: 로그인한 유저의 회원탈퇴
-+ 전송 데이터: 없음
++ 전송 데이터: params로 `passowrd` 전송
 + 응답 데이터
 ```javascript
 // 서버의 세션 제거
@@ -169,8 +171,9 @@
 ```
 + 응답 코드
   1. `200`: 회원탈퇴 성공
-  2. `500`: 서버측 에러 ( 원인불명 )
-  3. `401`: 비로그인 접근
+  2. `202`: 비밀번호 불일치
+  3. `500`: 서버측 에러 ( 원인불명 )
+  4. `401`: 비로그인 접근
 
 # 3. image
 ## 3.1 POST /image
@@ -265,35 +268,7 @@
     // 게시글의 이미지들
     Images: [{ _id, name }],
     // 게시글의 댓글들
-    Comments: [{
-      _id,
-      content,
-      UserId,
-      RecommentId,
-      createdAt,
-      // 게시글의 댓글의 작성자
-      User: {
-        _id,
-        name,
-        // 게시글의 댓글의 작성자의 프로필 이미지
-        Images: [{ _id, name }]
-      },
-      // 게시글의 댓글에 좋아요를 누른 유저들
-      CommentLikers: [{
-        _id,
-        name,
-        // 게시글의 댓글에 좋아요를 누른 유저의 프로필 이미지
-        Images: [{ _id, name, url }],
-        // 게시글의 댓글의 좋아요에 대한 정보
-        CommentLikes: {
-          createdAt,
-          UserId,
-          CommentId,
-        }
-      }],
-      // 게시글의 댓글의 답글들 ( 개수를 위함 )
-      Recomments: [{ _id }]
-    }],
+    Comments: [{ _id }],
     // 게시글의 좋아요를 누른 유저 ( 개수파악과 본인이 좋아요 눌렀는지 여부 )
     PostLikers: [{
       _id,
@@ -315,9 +290,7 @@
 ```javascript
 {
   message,
-  result: {
-    removedPostId
-  }
+  removedPostId,
 }
 ```
 + 응답 코드
@@ -337,20 +310,16 @@
   message,
   posts: {
     _id,
-    content,
     createdAt,
-    // 게시글의 작성자
-    User: {
-      _id,
-      name,
-      // 게시글 작성자의 프로필 이미지
-      Images: [{ _id, name, url }]
-    },
     // 게시글의 댓글들 ( 개수를 위해서 )
     Comments: [{ _id }],
     // 게시글의 좋아요 ( 개수를 위해서 )
-    PostLikers: [{ _id }],
-  },
+    PostLikers: [
+      {
+        _id,
+        PostLikes: { createdAt },
+      },
+    ],
   limit
 }
 ```
@@ -379,42 +348,14 @@
       Images: [{ _id, name, url }]
     },
     // 게시글의 댓글들 ( 개수를 위해서 )
-    Comments: [{
-      _id,
-      content,
-      UserId,
-      RecommentId,
-      createdAt,
-      // 게시글의 댓글의 작성자
-      User: {
-        _id,
-        name,
-        // 게시글의 댓글의 작성자의 프로필 이미지
-        Images: [{ _id, name }]
-      },
-      // 게시글의 댓글에 좋아요를 누른 유저들
-      CommentLikers: [{
-        _id,
-        name,
-        // 게시글의 댓글에 좋아요를 누른 유저의 프로필 이미지
-        Images: [{ _id, name, url }],
-        // 게시글의 댓글의 좋아요에 대한 정보
-        CommentLikes: {
-          createdAt,
-          UserId,
-          CommentId,
-        }
-      }],
-      // 게시글의 댓글의 답글들 ( 개수를 위함 )
-      Recomments: [{ _id }]
-    }],
-    // 게시글의 좋아요를 누른 유저 ( 개수파악과 본인이 좋아요 눌렀는지 여부 )
-    PostLikers: [{
-      _id,
-      PostLikes: { createdAt }
-    }],
+    Comments: [{ _id }],
     // 게시글의 좋아요 ( 개수를 위해서 )
-    PostLikers: [{ _id }],
+    PostLikers: [
+      {
+        _id,
+        PostLikes: { createdAt },
+      },
+    ],
   },
   limit,
 }
@@ -458,8 +399,44 @@
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
 
+## 5.4 GET /posts/user/detail/:UserId?lastId=❓limit=❓
++ 역할: 특정 유저의 게시글들 상세 내용 불러오기
++ 전송 데이터: params으로 `UserID`, query로 `lastId`, `limit` 전달
++ 응답 데이터
+```javascript
+// 정렬 기준은 게시글 생성시간을 기준으로 오름차순
+{
+  message,
+  posts: {
+    _id,
+    content,
+    createdAt,
+    // 게시글의 작성자
+    User: {
+      _id,
+      name,
+      // 게시글 작성자의 프로필 이미지
+      Images: [{ _id, name, url }]
+    },
+    // 게시글의 댓글들 ( 개수를 위해서 )
+    Comments: [{ _id }],
+    // 게시글의 좋아요 ( 개수를 위해서 )
+    PostLikers: [
+      {
+        _id,
+        PostLikes: { createdAt },
+      },
+    ],
+  },
+  limit,
+}
+```
++ 응답 코드
+  1. `200`: 게시글들 불러오기 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
 
-## 5.4 GET /posts/hashtag/:hashtagText
+## 5.5 GET /posts/hashtag/:hashtagText
 + 역할: 해시태그에 해당하는 게시글들 불러오기
 + 전송 데이터: params로 `hashtagText`, query로 `lastId`, `limit` 전송
 + 응답 데이터
@@ -515,13 +492,11 @@
       PostLikes: { createdAt }
     }],
   },
-  metadata: {
-    limit,
-    // 해시태그에 해당하는 게시글 총 개수
-    postsOfHashtagCount,
-    // 해시태그 내용
-    hastagText
-  }
+  limit,
+  // 해시태그에 해당하는 게시글 총 개수
+  postsOfHashtagCount,
+  // 해시태그 내용
+  hastagText
 }
 ```
 + 응답 코드
@@ -530,8 +505,8 @@
   3. `401`: 비로그인 접근
   4. `200`: 존재하는 해시태그 없음
 
-# 5. comment
-## 5.1 POST /comment/post
+# 6. comment
+## 6.1 POST /comment/post
 + 역할: 댓글 or 답글 생성
 + 전송 데이터: `{ content, PostId, RecommentId }`
 + 응답 데이터
@@ -565,18 +540,16 @@
   3. `401`: 비로그인 접근
   4. `404`: 존재하지 않은 게시글에 댓글 추가 요청
 
-## 5.2 DELETE /comment/post/:CommentId
+## 6.2 DELETE /comment/post/:CommentId
 + 역할: 댓글 삭제
 + 전송 데이터: params로 `CommentId` 전송
 + 응답 데이터
 ```javascript
 {
   message,
-  result: {
-    removedCommentId,
-    RemovedPostId,
-    RecommentId
-  }
+  removedCommentId,
+  RemovedPostId,
+  RecommentId
 }
 ```
 + 응답 코드
@@ -585,14 +558,14 @@
   3. `401`: 비로그인 접근
   4. `404`: 존재하지 않은 게시글의 댓글 삭제 요청
 
-## 5.3 GET /comment/post/:CommentId
-+ 역할: 특정 댓글의 답글들 불러오기
-+ 전송 데이터: params로 `CommentId` 전송
+## 6.3 GET /comment/post/:PostId?lastId=❓&limit=❓
++ 역할: 특정 게시글의 댓글 불러오기
++ 전송 데이터: params로 `PostId`, query로 `lastId`, `limit` 전송
 + 응답 데이터
 ```javascript
 {
   message,
-  recomments: {
+  Comments: {
     _id,
     content,
     createdAt,
@@ -608,8 +581,47 @@
     // 답글의 좋아요를 누른 유저
     CommentLikers: [{
       _id,
-      name
-    }]
+      name,
+      CommentLikes: [{ createdAt }],
+    }],
+  }
+  PostId,
+  limit,
+}
+```
++ 응답 코드
+  1. `200`: 답글들 불러오기 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
+  4. `404`: 존재하지 않은 댓글의 답글들 요청
+
+## 6.4 GET /comment/comment/:CommentId?lastId=❓&limit=❓
++ 역할: 특정 댓글의 답글들 불러오기
++ 전송 데이터: params로 `CommentId`, query로 `lastId`, `limit` 전송
++ 응답 데이터
+```javascript
+{
+  message,
+  targetCommentId,
+  Recomments: {
+    _id,
+    content,
+    createdAt,
+    UserId,
+    RecommentId,
+    // 답글의 작성자
+    User: {
+      _id,
+      name,
+      // 답글의 작성자의 프로필 이미지
+      Images: [{ _id, name }],
+    },
+    // 답글의 좋아요를 누른 유저
+    CommentLikers: [{
+      _id,
+      name,
+      CommentLikes: [{ createdAt }],
+    }],
   }
 }
 ```
@@ -619,8 +631,8 @@
   3. `401`: 비로그인 접근
   4. `404`: 존재하지 않은 댓글의 답글들 요청
 
-# 6. follow
-## 6.1 GET /follow/followers/:UserId
+# 7. follow
+## 7.1 GET /follow/followers/:UserId
 + 역할: 특정 유저의 팔로워들 요청
 + 전송 데이터: params로 `UserId` 전송
 + 응답 데이터
@@ -646,7 +658,7 @@
   3. `401`: 비로그인 접근
   4. `404`: 존재하지 않는 유저의 팔로워 요청
 
-## 6.2 GET /follow/followings/:UserId
+## 7.2 GET /follow/followings/:UserId
 + 역할: 특정 유저의 팔로잉들 요청
 + 전송 데이터: params로 `UserId` 전송
 + 응답 데이터
@@ -672,57 +684,53 @@
   3. `401`: 비로그인 접근
   4. `404`: 존재하지 않는 유저의 팔로잉 요청
 
-## 6.3 Post /follow/:UserId
+## 7.3 Post /follow/:UserId
 + 역할: 로그인한 유저가 팔로우 요청
 + 전송 데이터: params로 `UserId` 전송
 + 응답 데이터
 ```javascript
 {
   message,
-  // 추가된 팔로우 정보
-  Follow
+  followingId,
+  followerId,
 }
 ```
 + 응답 코드
   1. `200`: 팔로잉 추가하기 성공
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
-  4. `409`: 이미 팔로우한 유저에게 팔로우 요청을 보낸 경우
+  4. `409`: 이미 팔로우한 유저에게 팔로우 요청을 보낸 경우 or 본인에게 팔로우 요청을 보낸 경우
   5. `404`: 존재하지 않은 유저 팔로우 요청
   
 
-## 6.4 DELETE /follow/:UserId
+## 7.4 DELETE /follow/:UserId
 + 역할: 로그인한 유저가 언팔로우 요청
 + 전송 데이터: params로 `UserId` 전송
 + 응답 데이터
 ```javascript
 {
   message,
-  // 언팔로우된 유저의 아이디
-  unfollowerId
+  followingId,
+  followerId,
 }
 ```
 + 응답 코드
   1. `200`: 팔로잉 추가하기 성공
   2. `500`: 서버측 에러 ( 원인불명 )
   3. `401`: 비로그인 접근
-  4. `409`: 이미 언팔로우한 유저에게 언팔로우 요청을 보낸 경우
+  4. `409`: 이미 언팔로우한 유저에게 언팔로우 요청을 보낸 경우 or 본인에게 언팔로우 요청을 보낸 경우
   5. `404`: 존재하지 않은 유저 언팔로우 요청
 
-# 7. like
-## 7.1 POST /like/post/:PostId
+# 8. like
+## 8.1 POST /like/post/:PostId
 + 역할: 게시글에 좋아요 추가
 + 전송 데이터: params로 `PostId` 전송
 + 응답 데이터
 ```javascript
 {
   message,
-  result: {
-    PostId,
-    UserId,
-    createdAt,
-    UpdatedAt
-  }
+  likedPostId,
+  UserId,
 }
 ```
 + 응답 코드
@@ -732,17 +740,15 @@
   4. `404`: 존재하지 않은 게시글에 좋아요 추가 요청
   5. `409`: 이미 좋아요 누른 상태에서 추가 요청
 
-## 7.2 DELETE /like/post/:PostId
+## 8.2 DELETE /like/post/:PostId
 + 역할: 게시글에 좋아요 삭제
 + 전송 데이터: params로 `PostId` 전송
 + 응답 데이터
 ```
 {
   message,
-  result: {
-    removedPostId,
-    UserId
-  }
+  unlikedPostId,
+  UserId,
 }
 ```
 + 응답 코드
@@ -752,13 +758,17 @@
   4. `404`: 존재하지 않은 게시글에 좋아요 삭제 요청
   5. `409`: 좋아요를 누르지 않은 상태에서 삭제 요청
 
-## 7.3 POST /like/comment/:CommentId
+## 8.3 POST /like/comment/:CommentId
 + 역할: 댓글/답글에 좋아요 추가
 + 전송 데이터: params로 `CommentId` 전송
 + 응답 데이터
 ```javascript
 {
   message,
+  PostId,
+  CommentId,
+  // 해당 댓글이 답글인지 댓글인지 판단하기 위함
+  RecommentId
   // 댓글에 좋아요 누른 유저 데이터
   commentLikerWithData: {
     _id,
@@ -773,8 +783,6 @@
       updatedAt,
     },
   },
-  // 해당 댓글이 답글인지 댓글인지 판단하기 위함
-  RecommentId
 }
 ```
 + 응답 코드
@@ -784,18 +792,17 @@
   4. `404`: 존재하지 않은 댓글에 좋아요 추가 요청
   5. `409`: 이미 좋아요 누른 상태에서 추가 요청
 
-## 7.4 DELETE /like/comment/:CommentId
+## 8.4 DELETE /like/comment/:CommentId
 + 역할: 댓글/답글에 좋아요 삭제
 + 전송 데이터: params로 `CommentId` 전송
 + 응답 데이터
 ```javascript
 {
   message,
-  result: {
-    CommentId,
-    removedUserId,
-    RecommentId
-  }
+  PostId,
+  CommentId,
+  RecommentId,
+  UserId,
 }
 ```
 + 응답 코드
@@ -804,3 +811,72 @@
   3. `401`: 비로그인 접근
   4. `404`: 존재하지 않은 댓글에 좋아요 삭제 요청
   5. `409`: 좋아요를 누르지 않은 상태에서 삭제 요청
+
+# 9. bookmark
+## 9.1 POST /bookmark/:PostId
++ 역할: 나의 북마크 추가
++ 전송 데이터: params로 `PostId` 전송
++ 응답 데이터
+```javascript
+{
+  message,
+}
+```
++ 응답 코드
+  1. `201`: 북마크 추가 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
+  4. `404`: 존재하지 않은 게시글에 북마크 추가 요청
+  5. `409`: 이미 북마크인 게시글에 북마크 추가 요청
+
+## 9.2 DELETE /bookmark/:PostId
++ 역할: 나의 북마크 제거
++ 전송 데이터: params로 `PostId` 전송
++ 응답 데이터
+```javascript
+{
+  message,
+}
+```
++ 응답 코드
+  1. `200`: 북마크 제거 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
+  4. `404`: 존재하지 않은 게시글에 북마크 제거 요청
+  5. `409`: 북마크가 아닌 게시글에 북마크 제거 요청
+
+## 9.3 GET /bookmark?lastId=❓limit=❓
++ 역할: 나의 북마크 게시글 가져오기
++ 전송 데이터: query로 `lastId`, `limit` 전송
++ 응답 데이터
+```javascript
+{
+  message,
+  posts: {
+    _id,
+    content,
+    createdAt,
+    // 게시글의 작성자
+    User: {
+      _id,
+      name,
+      // 게시글 작성자의 프로필 이미지
+      Images: [{ _id, name, url }]
+    },
+    // 게시글의 댓글들 ( 개수를 위해서 )
+    Comments: [{ _id }],
+    // 게시글의 좋아요 ( 개수를 위해서 )
+    PostLikers: [
+      {
+        _id,
+        PostLikes: { createdAt },
+      },
+    ],
+  },
+  limit,
+}
+```
++ 응답 코드
+  1. `200`: 북마크 게시글들 가져오기 성공
+  2. `500`: 서버측 에러 ( 원인불명 )
+  3. `401`: 비로그인 접근
