@@ -1,12 +1,25 @@
+/**
+ * 생성일: 2022/01/13
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 유저 아바타 이미지
+ */
+
 import React from "react";
 import Proptypes from "prop-types";
 
 // components
 import { Wrapper } from "./style";
 
-const Avatar = props => {
+const Avatar = ({ image, width, height, ...restProps }) => {
   return (
-    <Wrapper {...props} src={props.image?.name ? process.env.IMAGE_URL + "/" + props.image.name : props.image?.url} />
+    <Wrapper
+      width={width}
+      height={height}
+      src={image?.name ? process.env.NEXT_PUBLIC_IMAGE_URL + "/" + image.name : image?.url}
+      {...restProps}
+    />
   );
 };
 
@@ -18,8 +31,8 @@ Avatar.propTypes = {
     name: Proptypes.string,
     url: Proptypes.string,
   }),
-
   alt: Proptypes.string,
+  $cursor: Proptypes.bool,
 };
 
 Avatar.defaultProps = {

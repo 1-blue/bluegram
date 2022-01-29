@@ -57,7 +57,7 @@ router.get(
     failureRedirect: "/",
   }),
   (req, res) => {
-    res.redirect(process.env.NODE_ENV === "production" ? "http://www.bluegram.cf" : "http://localhost:8080");
+    res.redirect("https://blegram.com");
   },
 );
 
@@ -76,7 +76,7 @@ router.delete("/", isLoggedIn, async (req, res, next) => {
   }
   req.logout();
   req.session.destroy();
-  res.status(200).clearCookie("auth-bluegram").json({ message: "로그아웃에 성공했습니다." });
+  res.status(200).clearCookie("auth-blegram").json({ message: "로그아웃에 성공했습니다." });
 });
 
 export default router;

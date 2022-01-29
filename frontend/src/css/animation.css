@@ -1,75 +1,111 @@
-@keyframes appear-scale {
-  from {
-    transform: scale(0, 0);
+/* 네비게이션 버튼 클릭 시 ball 애니메이션 */
+@-webkit-keyframes animation-ball {
+  0% {
+    opacity: 0.5;
+    -webkit-transform: scale(1) translateX(-50%);
+            transform: scale(1) translateX(-50%);
   }
-
-  80% {
-    transform: scale(1.2, 1.2);
-  }
-
-  to {
-    transform: scale(1, 1);
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(2) translateX(-50%);
+            transform: scale(2) translateX(-25%);
   }
 }
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
+@keyframes animation-ball {
+  0% {
+    opacity: 0.5;
+    -webkit-transform: scale(1) translateX(-50%);
+            transform: scale(1) translateX(-50%);
   }
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(2) translateX(-50%);
+            transform: scale(2) translateX(-25%);
+  }
+}
+.animation-ball {
+  position: absolute;
+  top: -0.5em;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1;
+  content: "";
+  border-radius: 100%;
+  width: 100px;
+  height: 100px;
+  display: none;
+  background-color: black;
+}
 
+/* 네비게이션 프로필 메뉴 애니메이션 */
+@keyframes slide-fade-in {
+  from {
+    opacity: 0.01;
+    transform: translateY(-20%);
+  }
   to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes back-in-down {
+/* 게시글 생성 모달 애니메이션 */
+@keyframes slide-scale {
   from {
-    transform: translateY(-100vh) scale(0.8, 0.8);
+    transform: translateY(-100%) scale(0.8);
   }
-
   80% {
-    transform: translateY(0) scale(0.8, 0.8);
+    transform: translateY(0) scale(0.8);
   }
-
   to {
-    transform: translateY(0) scale(1, 1);
+    transform: translateY(0) scale(1);
   }
 }
 
-@keyframes bounce-in {
-  0% { transform: scale(1.2, 1.2) }
-  20% { transform: scale(1, 1) }
-  30% { transform: scale(0.8, 0.8) }
-  40% { transform: scale(1, 1) }
-  50% { transform: scale(1.2, 1.2) }
-  60% { transform: scale(1, 1) }
-  70% { transform: scale(0.8, 0.8) }
-  80% { transform: scale(1, 1) }
-  90% { transform: scale(1.2, 1.2) }
-  100% { transform: scale(1, 1) }
+/* 좋아요 아이콘 애니메이션 */
+@keyframes heart-scale {
+  from {
+    transform: scale(0.1)
+  }
+  25% {
+    transform: scale(1) translateX(0px);
+  }
+  30% {
+    transform: scale(1.1) translateX(-1px);
+  }
+  35% {
+    transform: scale(1.2) translateX(1px);
+  }
+  40% {
+    transform: scale(1.3) translateX(-1px);
+  }
+  45% {
+    transform: scale(1.4) translateX(1px);
+  }
+  50% {
+    transform: scale(1.4) translateX(-1px);
+  }
+  55% {
+    transform: scale(1.4) translateX(1px);
+  }
+  60% {
+    transform: scale(1.4) translateX(-1px);
+  }
+  65% {
+    transform: scale(1.4) translateX(1px);
+  }
+  70% {
+    transform: scale(1.4) translateX(0px);
+  }
+  75% {
+    transform: scale(1.4) translate(0px);
+  }
+  to {
+    transform: scale(1)
+  }
 }
 
-@keyframes rubber-band {
-  0% { transform: scaleX(1) }
-  30% { transform: scaleX(1.4) }
-  50% { transform: scaleX(0.7) }
-  70% { transform: scaleX(1.2) }
-  80% { transform: scaleX(0.8) }
-  90% { transform: scaleX(1.1) }
-  100% { transform: scaleX(1) }
-}
-
-@keyframes bounce {
-  0% { transform: translateY(0px) }
-  20% { transform: translateY(-5px) }
-  40% { transform: translateY(-5px) }
-  60% { transform: translateY(0px) }
-  70% { transform: translateY(-2px) }
-  80% { transform: translateY(4px) }
-  90% { transform: translateY(-1px) }
-  100% { transform: translateY(0px) }
-}
-
+/* 토스트 메시지 */
 @keyframes toast {
   from {
     transform: translate(50%, -10vh);
@@ -226,25 +262,5 @@
   40% {
     box-shadow: 0 -2em;
     height: 5em;
-  }
-}
-@-webkit-keyframes spinner-comment {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes spinner-comment {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
   }
 }

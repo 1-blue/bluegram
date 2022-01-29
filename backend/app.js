@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import path from "path";
-import fs from "fs";
 import express from "express";
 import cookieParser from "cookie-parser";
 import expressSession from "express-session";
@@ -17,22 +16,9 @@ import db from "./models/index.js";
 import passportConfig from "./passport/index.js";
 
 const __dirname = path.resolve();
-const dist = path.join(__dirname, "..", "frontend", "dist");
 const FileStore = fileStore(expressSession);
 const app = express();
-app.set("PORT", 3000);
-
-try {
-  fs.accessSync(path.join(__dirname, "public"));
-} catch (error) {
-  fs.mkdirSync(path.join(__dirname, "public"));
-}
-
-try {
-  fs.accessSync(path.join(__dirname, "public", "images"));
-} catch (error) {
-  fs.mkdirSync(path.join(__dirname, "public", "images"));
-}
+app.set("PORT", 8080);
 
 // sequelize
 db.sequelize
@@ -45,26 +31,9 @@ passportConfig();
 
 // middleware
 app.use("/", express.static(path.join(__dirname, "public")));
-app.use("/", express.static(dist));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(
-  expressSession({
-    resave: false,
-    saveUninitialized: false,
-    name: "auth-bluegram",
-    secret: process.env.COOKIE_SECRET,
-    cookie: {
-      httpOnly: true,
-      secure: false,
-    },
-    store: new FileStore(),
-  }),
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
 if (process.env.NODE_ENV === "production") {
   app.use(morgan("combined"));
   app.use(hpp());
@@ -72,7 +41,21 @@ if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
       credentials: true,
-      origin: "https://bluegram.cf",
+      origin: "https://blegram.com",
+    }),
+  );
+  app.use(
+    expressSession({
+      resave: false,
+      saveUninitialized: false,
+      name: "auth-blegram",
+      secret: process.env.COOKIE_SECRET,
+      cookie: {
+        httpOnly: true,
+        secure: false,
+        domain: "blegram.com",
+      },
+      store: new FileStore(),
     }),
   );
 } else {
@@ -80,45 +63,58 @@ if (process.env.NODE_ENV === "production") {
   app.use(
     cors({
       credentials: true,
-      origin: "http://localhost:8080",
+      origin: "http://localhost:3000",
+    }),
+  );
+  app.use(
+    expressSession({
+      resave: false,
+      saveUninitialized: false,
+      name: "auth-blegram",
+      secret: process.env.COOKIE_SECRET,
+      cookie: {
+        httpOnly: true,
+        secure: false,
+      },
+      store: new FileStore(),
     }),
   );
 }
+app.use(passport.initialize());
+app.use(passport.session());
 
 // routes
 import authRouter from "./routes/auth.js";
 import imageRouter from "./routes/image.js";
 import userRouter from "./routes/user.js";
 import postRouter from "./routes/post.js";
+import postsRouter from "./routes/posts.js";
 import likeRouter from "./routes/like.js";
 import commentRouter from "./routes/comment.js";
 import followRouter from "./routes/follow.js";
+import bookmarkRouter from "./routes/bookmark.js";
 
 // router 등록
 app.use("/auth", authRouter);
 app.use("/image", imageRouter);
 app.use("/user", userRouter);
 app.use("/post", postRouter);
+app.use("/posts", postsRouter);
 app.use("/like", likeRouter);
 app.use("/comment", commentRouter);
 app.use("/follow", followRouter);
+app.use("/bookmark", bookmarkRouter);
 
-if (process.env.NODE_ENV === "production") {
-  app.get("*", (req, res) => {
-    res.sendFile("index.html", { root: dist });
-  });
-} else {
-  // 404 에러처리 미들웨어
-  app.use((req, res, next) => {
-    console.log("404 에러처리 미들웨어");
-    res.status(404).send("404");
-  });
-}
+// 404 에러처리 미들웨어
+app.use((req, res, next) => {
+  console.log("404 에러처리 미들웨어");
+  res.status(404).send("404 에러처리 미들웨어");
+});
 
 // 에러처리 미들웨어
 app.use((error, req, res, next) => {
   console.error("에러처리 미들웨어 >>", error);
-  res.status(500).json({ error: "Error" });
+  res.status(500).json({ error: "500 Error처리 미들웨어" });
 });
 
 app.listen(app.get("PORT"), console.log(`${app.get("PORT")}번 대기중`));

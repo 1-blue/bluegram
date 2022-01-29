@@ -1,7 +1,7 @@
 import axios from "axios";
 
-const authInstance = axios.create({
-  baseURL: process.env.SERVER_URL + "/auth",
+export const authInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_SERVER_URL + "/auth",
   withCredentials: true,
   timeout: 10000,
 });
@@ -17,11 +17,7 @@ const authInstance = axios.create({
 // );
 
 // 2021/12/20 - 로컬 로그인 - by 1-blue
-export function apiLocalLogin(body) {
-  return authInstance.post("/", body);
-}
+export const apiLocalLogin = body => authInstance.post("/", body);
 
 // 2021/12/20 - 로컬 로그아웃 - by 1-blue
-export function apiLocalLogout() {
-  return authInstance.delete("/");
-}
+export const apiLocalLogout = () => authInstance.delete("/");

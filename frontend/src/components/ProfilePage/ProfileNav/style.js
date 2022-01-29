@@ -1,22 +1,39 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const Wrapper = styled.ul`
+export const Wrapper = styled.section`
   display: flex;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid #ccccdd;
   margin-bottom: 1em;
 
-  & > li {
-    flex: 1 0 auto;
+  & .nav-list {
+    flex: 1;
     text-align: center;
-    padding: 1em;
-    cursor: pointer;
-
-    & > span:first-child {
-      color: gray;
-    }
-
-    & > span:last-child {
-      font-weight: bold;
-    }
+    padding: 0.4em 0;
   }
+
+  ${({ kinds }) => {
+    switch (kinds) {
+      case "post":
+        return css`
+          & .nav-list:nth-child(1) {
+            border-bottom: 2px solid black;
+          }
+        `;
+      case "detailPost":
+        return css`
+          & .nav-list:nth-child(2) {
+            border-bottom: 2px solid black;
+          }
+        `;
+      case "bookmark":
+        return css`
+          & .nav-list:nth-child(3) {
+            border-bottom: 2px solid black;
+          }
+        `;
+
+      default:
+        break;
+    }
+  }}
 `;

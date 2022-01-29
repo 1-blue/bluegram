@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<svg
+	version="1.1"
+	id="layer"
+	xmlns="http://www.w3.org/2000/svg"
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	x="0px"
+	y="0px"
+	viewBox="0 0 40 40"
+	style="enable-background:new 0 0 40 40;"
+	xml:space="preserve"
+>
+	<style type="text/css">
+		.st1{fill:none;stroke:#040000;stroke-width:4;stroke-miterlimit:10;}
+	</style>
+	<g>
+		<g>
+			<path d="M34,12v16H6V12H34 M38,8H2v24h36V8L38,8z"/>
+		</g>
+		<g>
+			<line class="st1" x1="2" y1="4" x2="38" y2="4"/>
+		</g>
+		<line class="st1" x1="2" y1="36" x2="38" y2="36"/>
+	</g>
+</svg>

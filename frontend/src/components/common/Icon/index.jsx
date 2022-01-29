@@ -1,5 +1,13 @@
 /* eslint-disable prettier/prettier */
 
+/**
+ * 생성일: 2022/01/13
+ * 수정일: -
+ * 작성자: 1-blue
+ *
+ * 사용하는 모든 아이콘 ( props를 이용해서 종류, 크기, 색상 지정함 )
+ */
+
 import React from "react";
 import Proptypes from "prop-types";
 
@@ -19,12 +27,17 @@ import {
   Option,
   Post,
   Tag,
+  Login,FillLogin,
+  Signup,FillSignup,
+  Search,
+  ArrowTop,
+  PostDetail,
 } from "@assets/icon";
 
 // styled-component
 import { Wrapper } from "./style";
 
-const Icon = ({$fill, ...props}) => {
+const Icon = React.forwardRef(({$fill, ...props}, iconRef) => {
   switch (props.shape) {
     case "logo":
       return (
@@ -110,6 +123,48 @@ const Icon = ({$fill, ...props}) => {
           <Tag {...props} />
         </Wrapper>
       );
+    case "login":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Login {...props} />
+        </Wrapper>
+      );
+    case "fillLogin":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <FillLogin {...props} />
+        </Wrapper>
+      );
+    case "signup":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Signup {...props} />
+        </Wrapper>
+      );
+    case "fillSignup":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <FillSignup {...props} />
+        </Wrapper>
+      );
+    case "search":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <Search {...props} />
+        </Wrapper>
+      );
+    case "arrowTop":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <ArrowTop {...props} />
+        </Wrapper>
+      );
+    case "postDetail":
+      return (
+        <Wrapper hoverfill={props.hoverfill} animation={props.animation}>
+          <PostDetail {...props} />
+        </Wrapper>
+      );
 
     default:
       return (
@@ -118,7 +173,7 @@ const Icon = ({$fill, ...props}) => {
         </Wrapper>
       );
   }
-};
+});
 
 Icon.propTypes = {
   shape: Proptypes.string,

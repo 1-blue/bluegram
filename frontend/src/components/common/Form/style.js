@@ -5,11 +5,13 @@ export const Wrapper = styled.form`
   flex-flow: column nowrap;
   align-items: center;
   padding: 1em 0;
-  border: 2px solid var(--main-color);
   background: white;
-  box-shadow: 5px 5px 15px rgba(150, 150, 150);
+  box-shadow: 0 0 3px black, 0 0 10px var(--main-color);
 
   & > .form-title {
+    font-size: 2rem;
+    color: white;
+    text-shadow: 0 0 5px black, 0 0 10px var(--main-color), 0 0 20px var(--main-color);
     text-align: center;
     margin-bottom: 0.5em;
   }

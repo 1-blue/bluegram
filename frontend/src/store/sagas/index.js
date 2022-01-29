@@ -5,7 +5,8 @@ import authSaga from "./authSaga";
 import userSaga from "./userSaga";
 import imageSaga from "./imageSaga";
 import postSaga from "./postSaga";
+import postsSaga from "./postsSaga";
 
 export default function* rootSaga() {
-  yield all([fork(authSaga), fork(userSaga), fork(imageSaga), fork(postSaga)]);
+  yield all([fork(authSaga), fork(userSaga), fork(imageSaga), fork(postSaga), fork(postsSaga)]);
 }

@@ -6,20 +6,20 @@ export const Wrapper = styled.button`
     $signup &&
     css`
       position: relative;
-      margin: 1rem 0;
-      padding: 1rem 2rem;
-      border: 3px solid purple;
-      border-radius: 10px;
-      font-size: 1.5rem;
+      margin: 0.8em 0;
+      padding: 0.8em 1.6em;
+      border: 2px solid purple;
+      border-radius: 8px;
+      font-size: 1.2rem;
       font-weight: bold;
 
       &::after {
         content: "";
         position: absolute;
-        top: 0;
+        top: 0px;
         left: 0;
         width: 100%;
-        height: 100%;
+        height: 101%;
         background: purple;
         transform: scale(0, 1);
         transition: all 0.35s;
@@ -39,15 +39,15 @@ export const Wrapper = styled.button`
       }
 
       @media (max-width: 480px) {
-        margin: 0.6rem 0;
-        padding: 0.6rem 1.4rem;
+        margin: 0.6em 0;
+        padding: 0.6em 1.4em;
         border: 1px solid purple;
         border-radius: 6px;
         font-size: 1rem;
       }
       @media (min-width: 480px) and (max-width: 768px) {
-        margin: 0.8rem 0;
-        padding: 0.8rem 1.6rem;
+        margin: 0.8em 0;
+        padding: 0.8em 1.6em;
         border: 2px solid purple;
         border-radius: 8px;
         font-size: 1.2rem;
@@ -60,10 +60,10 @@ export const Wrapper = styled.button`
     css`
       position: relative;
       width: 60%;
-      padding: 0.5rem;
+      padding: 0.5em;
       background: var(--main-color);
       color: white;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.3em;
       opacity: 0.9;
 
       &:hover {
@@ -77,10 +77,10 @@ export const Wrapper = styled.button`
     css`
       position: relative;
       width: 60%;
-      padding: 0.5rem;
+      padding: 0.5em;
       background: var(--facebook-color);
       color: white;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.3em;
       opacity: 0.9;
 
       &:hover {
@@ -94,10 +94,10 @@ export const Wrapper = styled.button`
     css`
       position: relative;
       width: 60%;
-      padding: 0.5rem;
+      padding: 0.5em;
       background: var(--naver-color);
       color: white;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.3em;
       opacity: 0.9;
 
       &:hover {
@@ -111,10 +111,10 @@ export const Wrapper = styled.button`
     css`
       position: relative;
       width: 60%;
-      padding: 0.5rem;
+      padding: 0.5em;
       background-color: var(--kakao-color);
       color: white;
-      margin-bottom: 1rem;
+      margin-bottom: 1em;
       opacity: 0.9;
 
       &:hover {
@@ -127,35 +127,35 @@ export const Wrapper = styled.button`
     $upload &&
     css`
       position: relative;
-      padding: 0.5rem 1rem;
+      padding: 0.5em 1em;
       background: #0095f6;
       color: white;
       border-radius: 5px;
       font-weight: 700;
     `}
 
-    /* 폼 제출 버튼 */
-    ${({ $submit }) =>
-    $submit &&
+  /* 팔로우 버튼 */
+  ${({ $follow }) =>
+    $follow &&
     css`
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 80px;
-      height: 51px;
-      padding: 0.5em;
-      color: var(--light-blue);
-      border-radius: 0 1rem 0 0;
       font-weight: bold;
+      color: var(--light-blue);
+    `}
 
-      @media (max-width: 480px) {
-        height: 43px;
-      }
-      @media (min-width: 480px) and (max-width: 768px) {
-        height: 45px;
-      }
-      @media (min-width: 768px) and (max-width: 1024px) {
-        height: 48px;
-      }
+  /* 댓글 제출 버튼 */
+  ${({ $comment }) =>
+    $comment &&
+    css`
+      font-weight: bold;
+      color: var(--light-blue);
+    `}
+
+  /* 댓글 제출 버튼 */
+  ${({ $search }) =>
+    $search &&
+    css`
+      font-weight: bold;
+      background: var(--light-blue);
+      padding: 0.4em;
     `}
 `;

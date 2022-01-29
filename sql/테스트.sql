@@ -1,4 +1,4 @@
-use bluegramDB;
+use blegramDB;
 
 desc users;
 desc posts;

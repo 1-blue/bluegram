@@ -1,9 +1,7 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.ul`
   position: absolute;
-  top: 60px;
-  right: 0;
   max-width: 250px;
   min-width: 150px;
   width: 20vw;
@@ -13,33 +11,57 @@ export const Wrapper = styled.div`
   box-shadow: 2px 2px 10px gray;
   z-index: 1;
 
-  & > li {
+  & .menu-list {
     padding: 1em 1em;
     font-size: 0.8rem;
     cursor: pointer;
-
-    &:hover {
-      background-color: rgba(128, 128, 128, 0.05);
-    }
-
-    & > a {
-      display: flex;
-      align-items: center;
-
-      & > span {
-        margin-left: 1em;
-      }
-    }
-  }
-  & > li:last-child {
+    transition: all 0.2s;
     border-top: 1px solid rgba(128, 128, 128, 0.2);
 
-    & > a > span {
-      margin-left: 0;
+    &:hover {
+      background-color: rgba(128, 128, 128, 0.1);
+      transition: all 0s;
+    }
+
+    &:first-child {
+      border-top: 0px;
+    }
+
+    & .nav-menu-link {
+      display: flex;
+      align-items: center;
+    }
+
+    & .menu-text {
+      margin-left: 1em;
     }
   }
 
-  animation-name: appear-scale;
+  /* 프로필 메뉴일 경우 */
+  ${({ $profile }) =>
+    $profile &&
+    css`
+      top: 80px;
+      right: 20px;
+    `}
+
+  /* 게시글 메뉴일 경우 */
+  ${({ $post }) =>
+    $post &&
+    css`
+      top: 64px;
+      right: 10px;
+    `}
+
+  /* 댓글 메뉴일 경우 */
+  ${({ $comment }) =>
+    $comment &&
+    css`
+      top: 26px;
+      right: 10px;
+    `}
+
+  animation-name: slide-fade-in;
   animation-direction: normal;
   animation-iteration-count: 1;
   animation-timing-function: ease;

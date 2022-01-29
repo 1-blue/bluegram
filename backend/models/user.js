@@ -23,7 +23,12 @@ const User = (sequelize, DataTypes) => {
       name: {
         type: DataTypes.STRING(20),
         allowNull: false,
-        comment: "유저 성명",
+        comment: "유저 성명 ( 중복 가능 )",
+      },
+      email: {
+        type: DataTypes.STRING(40),
+        allowNull: false,
+        comment: "유저 이메일",
       },
       phone: {
         type: DataTypes.STRING(11),
@@ -34,6 +39,11 @@ const User = (sequelize, DataTypes) => {
         type: DataTypes.STRING(8),
         allowNull: true,
         comment: "유저 생년월일",
+      },
+      about: {
+        type: DataTypes.STRING(200),
+        allowNull: true,
+        comment: "유저의 간단 자기소개 ( 200자 이내 )",
       },
       snsId: {
         type: DataTypes.INTEGER,
@@ -53,8 +63,8 @@ const User = (sequelize, DataTypes) => {
       underscored: false,
       modelName: "User",
       tableName: "users",
-      charset: "utf8",
-      collate: "utf8_general_ci",
+      charset: "utf8mb4",
+      collate: "utf8mb4_general_ci",
     },
   );
 
@@ -97,6 +107,14 @@ const User = (sequelize, DataTypes) => {
 
     // 유저와 이미지 ( 1 : N )
     db.User.hasMany(db.Image, { onDelete: "cascade" });
+
+    // 유저와 게시글 ( N : M ) ( 북마크 )
+    db.User.belongsToMany(db.Post, {
+      through: "Bookmarks",
+      as: "UserBookmarks",
+      foreignKey: "UserId",
+      onDelete: "cascade",
+    });
   };
 
   return User;

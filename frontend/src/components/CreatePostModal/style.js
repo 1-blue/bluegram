@@ -4,184 +4,181 @@ export const Wrapper = styled.section`
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1;
-  cursor: auto;
+  background: rgba(0, 0, 0, 0.6);
 
-  .close-modal-button {
+  /* 모달 */
+  & .modal {
+    position: relative;
+    width: 80vw;
+    height: 80vh;
+    max-width: 1200px;
+    min-height: 320px;
+    display: flex;
+    flex-flow: column nowrap;
+    background: white;
+    border-radius: 0.2em;
+    box-shadow: 4px 4px 10px black;
+
+    animation-name: slide-scale;
+    animation-delay: 0;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: forwards;
+    animation-timing-function: ease-in-out;
+    animation-duration: 1s;
+  }
+
+  /* 모달 닫기 버튼 */
+  & .modal-close-button {
     position: fixed;
-    top: 1%;
-    right: 1%;
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: white;
+    top: 1.5vh;
+    right: 1.5vw;
+    font-size: 2rem;
+    text-shadow: 4px 4px 5px black;
   }
-`;
 
-export const Modal = styled.div`
-  position: relative;
-  max-width: 60vw;
-  min-width: 350px;
-  background: white;
-  border-radius: 1em;
+  /* 다음으로 넘어가는 버튼 ( 이미지 입력받기 -> 이미지 수정 -> 게시글 컨텐츠 입력 ) */
+  & .modal-next-button,
+  .modal-create-button {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+    color: var(--light-blue);
+  }
 
-  & > .modal-title {
+  /* 이전으로 넘어가는 버튼 */
+  & .modal-previous-button {
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    color: var(--light-blue);
+  }
+
+  /* 모달 헤드 */
+  & .modal-head {
     text-align: center;
-    padding: 0.8em 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.4em;
+    border-bottom: 1px solid gray;
+    font-size: 1.5rem;
   }
 
-  ${({ length }) =>
-    length
-      ? css`
-          display: flex;
-          flex-flow: column nowrap;
-          min-height: 400px;
-          width: 80vw;
-          height: 80vh;
+  /* 모달 바디 */
+  & .modal-body {
+    flex: 1 0 auto;
+    font-size: 1rem;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    align-items: center;
+  }
 
-          & > .modal-flex-container {
-            flex: 1 1 auto;
+  /* 모달 바디에 텍스트 */
+  & .modal-body-title {
+    margin-bottom: 1em;
+  }
 
-            display: flex;
-            flex-flow: column nowrap;
+  /* 프리뷰 캐루셀에서 프리뷰 제거버튼위치를 지정하기 위한 wrapper */
+  & .modal-preview-carousel-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
 
-            & > .modal-form {
-              flex: 1 1 150px;
+  /* 프리뷰 캐루셀에 정해진 프리뷰 제거 */
+  & .modal-preview-remove-button,
+  .modal-preview-remove-spinner {
+    position: absolute;
+    top: 2%;
+    right: 2%;
+  }
 
-              display: flex;
-              width: 100%;
+  /* 프리뷰 케루셀에 프리뷰 추가 */
+  & .modal-preview-append-button {
+    position: absolute;
+    bottom: 2%;
+    right: 2%;
+  }
 
-              & > .modal-form-info {
-                flex: 0 1 150px;
+  & .modal-form {
+    width: 100%;
+    height: 100%;
 
-                display: flex;
-                flex-flow: column nowrap;
-                justify-content: center;
-                align-items: center;
-                padding: 0.5em 1em;
-                border-right: 1px solid rgba(100, 100, 100, 0.2);
-              }
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
 
-              & > .modal-form-textarea {
-                flex: 1 1 auto;
-
-                width: 100%;
-                padding: 0 0.5em;
-                border: 0;
-                border-radius: 0 0 1em 0;
-                font-size: 1rem;
-                font-weight: 500;
-                resize: none;
-              }
-
-              & > .modal-form-text-length {
-                position: absolute;
-                bottom: 0;
-                right: 16px;
-                font-size: 0.8rem;
-                color: gray;
-              }
-            }
-          }
-
-          @media (min-width: 1024px) {
-            max-width: 80vw;
-            max-height: 90vh;
-
-            & > .modal-flex-container {
-              flex-flow: row nowrap;
-
-              & > .modal-form {
-                flex: 1 1 40%;
-
-                flex-flow: column nowrap;
-
-                & > .modal-form-info {
-                  flex: 0 1 100px;
-
-                  flex-flow: row nowrap;
-                  justify-content: stretch;
-                  border-right: 0;
-                  border-bottom: 1px solid rgba(100, 100, 100, 0.2);
-                }
-              }
-              & > section > ul > li > img {
-                border-radius: 0 0 0 1em;
-              }
-            }
-          }
-        `
-      : css`
-          width: 80vw;
-          height: 60vw;
-          min-width: 300px;
-          min-height: 300px;
-          max-height: 80vh;
-
-          & > .modal-flex-container {
-            height: 60%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 0 2em;
-
-            & > .modal-sub-title {
-              font-weight: 300;
-              color: gray;
-              margin-bottom: 1rem;
-            }
-          }
-
-          @media (max-width: 480px) {
-            & > .modal-flex-container > .modal-sub-title {
-              font-size: 0.8rem;
-            }
-          }
-          @media (min-width: 480px) and (max-width: 768px) {
-            & > .modal-flex-container > .modal-sub-title {
-              font-size: 1rem;
-            }
-          }
-          @media (min-width: 768px) and (max-width: 1024px) {
-            & > .modal-flex-container > .modal-sub-title {
-              font-size: 1.2rem;
-            }
-          }
-        `}
-
-  @media (max-width: 480px) {
-    & > .modal-title {
-      font-size: 0.8rem;
+    & .modal-form-info {
+      display: flex;
+      align-items: center;
+      margin: 0.5em 0;
     }
   }
-  @media (min-width: 480px) and (max-width: 768px) {
-    & > .modal-title {
-      font-size: 0.9rem;
+
+  & .modal-form-textarea {
+    flex: 1 0 auto;
+    width: 100%;
+    resize: none;
+    border-radius: 0 0 0.2em 0.2em;
+
+    &::placeholder {
+      text-align: center;
     }
   }
-  @media (min-width: 768px) and (max-width: 1024px) {
-    & > .modal-title {
+
+  & .modal-form-text-length {
+    position: absolute;
+    right: 2%;
+    bottom: 2%;
+  }
+
+  @media (max-width: 1024px) {
+    & .modal {
+      height: 60vh;
+    }
+    & .modal-head {
       font-size: 1rem;
     }
-  }
-  /* @media (min-width: 1024px) {
-    height: 60vh;
-  } */
-  /* @media (min-width: 1600px) {
-    height: 90vh;
-  } */
+    & .modal-body {
+      font-size: 0.8rem;
+    }
 
-  animation-name: back-in-down;
-  animation-duration: 1s;
-  animation-timing-function: ease;
-  animation-iteration-count: 1;
-  animation-direction: normal;
-  animation-fill-mode: forwards;
+    /* 프리뷰 캐루셀에 정해진 프리뷰 제거 */
+    /* 다음으로 넘어가는 버튼 ( 이미지 입력받기 -> 이미지 수정 -> 게시글 컨텐츠 입력 ) */
+    & .modal-preview-remove-button,
+    .modal-preview-remove-spinner,
+    .modal-next-button,
+    .modal-create-button {
+      top: 1.4%;
+      right: 1.4%;
+    }
+    /* 이전으로 넘어가는 버튼 */
+    & .modal-previous-button {
+      top: 1.4%;
+      left: 1.4%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    & .modal {
+      ${({ step }) =>
+        step === 1 &&
+        css`
+          height: 70vw;
+        `}
+    }
+
+    & .modal-body-title {
+      font-size: 0.9rem;
+    }
+
+    & .modal-preview-append-button {
+      font-size: 0.6rem;
+    }
+  }
 `;

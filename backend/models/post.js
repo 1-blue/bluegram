@@ -10,9 +10,9 @@ const Post = (sequelize, DataTypes) => {
         comment: "게시글의 아이디 ( 게시글을 식별할 값 )",
       },
       content: {
-        type: DataTypes.STRING(500),
+        type: DataTypes.STRING(2200),
         alllowNull: true,
-        comment: "게시글의 내용 ( 최대 500자, , 특수문자 가능 )",
+        comment: "게시글의 내용 ( 최대 2200자, , 특수문자 가능 )",
       },
     },
     {
@@ -52,6 +52,14 @@ const Post = (sequelize, DataTypes) => {
 
     // 게시글과 이미지 ( 1 : N )
     db.Post.hasMany(db.Image, { onDelete: "cascade" });
+
+    // 유저와 게시글 ( N : M ) ( 북마크 )
+    db.Post.belongsToMany(db.User, {
+      through: "Bookmarks",
+      as: "PostBookmarks",
+      foreignKey: "PostId",
+      onDelete: "cascade",
+    });
   };
 
   return Post;
