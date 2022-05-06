@@ -1,39 +1,17 @@
 const path = require("path");
 
+/** @type {import('next').NextConfig} */
 module.exports = {
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  images: {
-    domains: ["localhost", "api.blegram.com"],
-  },
-  webpack(config, options) {
+  reactStrictMode: true,
+  webpack(config) {
     return {
       ...config,
-      // 절대경로 설정
       resolve: {
         ...config.resolve,
         alias: {
           ...config.resolve.alias,
-          "@assets": path.resolve(__dirname, "src/assets"),
-          "@components": path.resolve(__dirname, "src/components"),
-          "@css": path.resolve(__dirname, "src/css"),
-          "@hooks": path.resolve(__dirname, "src/hooks"),
-          "@pages": path.resolve(__dirname, "src/pages"),
-          "@store": path.resolve(__dirname, "src/store"),
-          "@utils": path.resolve(__dirname, "src/utils"),
+          "@src": path.resolve(__dirname, "src"),
         },
-      },
-      // SVG 파일 로더
-      module: {
-        ...config.module,
-        rules: [
-          ...config.module.rules,
-          {
-            test: /\.svg$/,
-            use: ["@svgr/webpack"],
-          },
-        ],
       },
     };
   },
