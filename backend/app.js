@@ -48,7 +48,7 @@ if (process.env.NODE_ENV === "production") {
     expressSession({
       resave: false,
       saveUninitialized: false,
-      name: "auth-blegram",
+      name: "blegram",
       secret: process.env.COOKIE_SECRET,
       cookie: {
         httpOnly: true,
@@ -70,7 +70,7 @@ if (process.env.NODE_ENV === "production") {
     expressSession({
       resave: false,
       saveUninitialized: false,
-      name: "auth-blegram",
+      name: "blegram",
       secret: process.env.COOKIE_SECRET,
       cookie: {
         httpOnly: true,
@@ -85,7 +85,7 @@ app.use(passport.session());
 
 // routes
 import authRouter from "./routes/auth.js";
-import imageRouter from "./routes/image.js";
+import photoRouter from "./routes/photo.js";
 import userRouter from "./routes/user.js";
 import postRouter from "./routes/post.js";
 import postsRouter from "./routes/posts.js";
@@ -95,15 +95,15 @@ import followRouter from "./routes/follow.js";
 import bookmarkRouter from "./routes/bookmark.js";
 
 // router 등록
-app.use("/auth", authRouter);
-app.use("/image", imageRouter);
-app.use("/user", userRouter);
-app.use("/post", postRouter);
-app.use("/posts", postsRouter);
-app.use("/like", likeRouter);
-app.use("/comment", commentRouter);
-app.use("/follow", followRouter);
-app.use("/bookmark", bookmarkRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/photo", photoRouter);
+app.use("/api/user", userRouter);
+app.use("/api/post", postRouter);
+app.use("/api/posts", postsRouter);
+app.use("/api/like", likeRouter);
+app.use("/api/comment", commentRouter);
+app.use("/api/follow", followRouter);
+app.use("/api/bookmark", bookmarkRouter);
 
 // 404 에러처리 미들웨어
 app.use((req, res, next) => {

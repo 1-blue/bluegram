@@ -40,7 +40,7 @@ const User = (sequelize, DataTypes) => {
         allowNull: true,
         comment: "유저 생년월일",
       },
-      about: {
+      introduction: {
         type: DataTypes.STRING(200),
         allowNull: true,
         comment: "유저의 간단 자기소개 ( 200자 이내 )",
@@ -106,7 +106,7 @@ const User = (sequelize, DataTypes) => {
     });
 
     // 유저와 이미지 ( 1 : N )
-    db.User.hasMany(db.Image, { onDelete: "cascade" });
+    db.User.hasMany(db.Photo, { onDelete: "cascade" });
 
     // 유저와 게시글 ( N : M ) ( 북마크 )
     db.User.belongsToMany(db.Post, {
