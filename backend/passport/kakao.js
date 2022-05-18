@@ -2,7 +2,7 @@ import passport from "passport";
 import { Strategy as KakaoStrategy } from "passport-kakao";
 import db from "../models/index.js";
 
-const { User, Image } = db;
+const { User, Photo } = db;
 
 const passportKakaoConfig = () =>
   passport.use(
@@ -26,7 +26,7 @@ const passportKakaoConfig = () =>
 
           if (exUser) {
             // 프로필 이미지가 변경될 가능성이 높으니 로그인할 때마다 새로 업데이트
-            await Image.update(
+            await Photo.update(
               { url },
               {
                 where: {
@@ -43,7 +43,7 @@ const passportKakaoConfig = () =>
               name,
             });
 
-            await Image.create({
+            await Photo.create({
               url,
               UserId: createdUser._id,
             });

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // type
-import type { LogInBody, LogInResponse } from "../types";
+import type { LogInBody, LogInResponse, SignUpBody } from "../types";
 
 export const authInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URL + "/api/auth",
@@ -25,3 +25,7 @@ export const apiLocalLogin = (body: LogInBody) =>
 
 // 2022/05/06 - 로컬 로그아웃 - by 1-blue
 export const apiLocalLogout = () => authInstance.delete("/");
+
+// 2022/05/13 - 회원가입 요청 - by 1-blue
+export const apiSignup = (body: SignUpBody) =>
+  authInstance.post("/signup", body);

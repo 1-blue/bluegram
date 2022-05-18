@@ -15,4 +15,7 @@ module.exports = {
       },
     };
   },
+  images: {
+    domains: ["localhost", "blegram.s3.ap-northeast-2.amazonaws.com"],
+  },
 };

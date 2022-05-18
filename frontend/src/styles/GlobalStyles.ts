@@ -9,6 +9,7 @@ const GlobalStyles = createGlobalStyle`
   }
   body {
     font-family: "Jua", sans-serif;
+    background-color: #fafafa;
   }
   a {
     text-decoration: none;

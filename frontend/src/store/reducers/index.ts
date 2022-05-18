@@ -3,6 +3,8 @@ import { combineReducers } from "redux";
 
 // reducers
 import authReducer from "./authReducer";
+import userReducer, { UserStateType } from "./userReducer";
+import postReducer from "./postReducer";
 
 const rootReducer = (state: any, action: any) => {
   switch (action.type) {
@@ -12,6 +14,8 @@ const rootReducer = (state: any, action: any) => {
     default:
       const combinedReducer = combineReducers({
         auth: authReducer,
+        user: userReducer,
+        post: postReducer,
       });
       return combinedReducer(state, action);
   }
@@ -19,5 +23,6 @@ const rootReducer = (state: any, action: any) => {
 
 export default rootReducer;
 
-export type RootState = ReturnType<typeof rootReducer>;
 export type AuthState = ReturnType<typeof authReducer>;
+export type UserState = UserStateType;
+export type PostState = ReturnType<typeof postReducer>;

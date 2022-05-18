@@ -1,6 +1,6 @@
-const Image = (sequelize, DataTypes) => {
-  const Image = sequelize.define(
-    "Image",
+const Photo = (sequelize, DataTypes) => {
+  const Photo = sequelize.define(
+    "Photo",
     {
       _id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -25,22 +25,22 @@ const Image = (sequelize, DataTypes) => {
       timestamps: true,
       paranoid: false,
       underscored: false,
-      modelName: "Image",
-      tableName: "images",
+      modelName: "Photo",
+      tableName: "photos",
       charset: "utf8",
       collate: "utf8_general_ci",
     },
   );
 
-  Image.associate = db => {
+  Photo.associate = db => {
     // 유저와 이미지 ( 1 : N )
-    db.Image.belongsTo(db.User, { foreignKey: "UserId", onDelete: "cascade" });
+    db.Photo.belongsTo(db.User, { foreignKey: "UserId", onDelete: "cascade" });
 
     // 게시글와 이미지 ( 1 : N )
-    db.Image.belongsTo(db.Post, { foreignKey: "PostId", onDelete: "cascade" });
+    db.Photo.belongsTo(db.Post, { foreignKey: "PostId", onDelete: "cascade" });
   };
 
-  return Image;
+  return Photo;
 };
 
-export default Image;
+export default Photo;
