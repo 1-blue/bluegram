@@ -5,10 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Wrapper } from "./style";
 
 // components
-// import CreatePostModal from "@components/CreatePostModal";
+import WritePostModal from "@src/components/Post/WriteModal";
 
 // actions
-// import { closeCreatePostModalAction } from "@store/actions";
+import { closeWriteModalRequest } from "@src/store/actions";
+
+// type
+import type { PostState } from "@src/store/reducers";
 
 type Props = {
   children: React.ReactNode;
@@ -16,25 +19,26 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const dispatch = useDispatch();
-  // const { showCreatePostModal } = useSelector((state) => state.post);
+  const { isShowWritePostModal } = useSelector(
+    ({ post }: { post: PostState }) => post
+  );
 
-  // 2022/01/14 - 게시글 생성 모달 닫기 - by 1-blue
-  // const onCloseModal = useCallback(
-  //   () => dispatch(closeCreatePostModalAction()),
-  //   []
-  // );
+  // 2022/05/19 - 게시글 생성 모달 닫기 - by 1-blue
+  const onCloseModal = useCallback(() => {
+    dispatch(closeWriteModalRequest());
+  }, [dispatch]);
 
   return (
     <>
       <Wrapper>{children}</Wrapper>
 
       {/* 게시글 생성 모달 */}
-      {/* {showCreatePostModal && (
-        <CreatePostModal
-          showModal={showCreatePostModal}
+      {isShowWritePostModal && (
+        <WritePostModal
+          showModal={isShowWritePostModal}
           onCloseModal={onCloseModal}
         />
-      )} */}
+      )}
     </>
   );
 };

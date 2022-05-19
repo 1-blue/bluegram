@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 // styled-components
 import { Wrapper } from "./style";
@@ -10,17 +9,25 @@ import { Wrapper } from "./style";
 import Icon from "@src/components/common/Icon";
 import Avatar from "@src/components/common/Avatar";
 
-// actions
-// import { openCreatePostModalAction } from "@store/actions";
+// action
+import { openWriteModalRequest } from "@src/store/actions";
 
 // type
 import { ICON } from "@src/type";
 import type { UserState } from "@src/store/reducers";
 
 const BottomNavigationBar = () => {
-  const router = useRouter();
   const dispatch = useDispatch();
   const { me } = useSelector(({ user }: { user: UserState }) => user);
+
+  // 2022/01/14 - 게시글 생성 모달 클릭 - by 1-blue
+  const onClickWritePostModal = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      dispatch(openWriteModalRequest());
+    },
+    [dispatch]
+  );
 
   return (
     <>
@@ -39,9 +46,13 @@ const BottomNavigationBar = () => {
                 <Icon icon={ICON.AIRPLANE} width={30} height={30} />
               </a>
             </Link>
-            <div className="nav-link">
+            <button
+              type="button"
+              className="nav-link"
+              onClick={onClickWritePostModal}
+            >
               <Icon icon={ICON.CIRCLE_ADD} width={30} height={30} />
-            </div>
+            </button>
             <Link href="/notice">
               <a className="nav-link">
                 <Icon icon={ICON.HEART} width={30} height={30} />

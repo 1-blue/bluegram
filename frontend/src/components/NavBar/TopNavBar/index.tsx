@@ -13,10 +13,7 @@ import Center from "./Center";
 import Right from "./Right";
 
 // action
-import {
-  localLogoutRequest,
-  // openCreatePostModalAction,
-} from "@src/store/actions";
+import { localLogoutRequest, openWriteModalRequest } from "@src/store/actions";
 
 // hook
 import useToastMessage from "@src/hooks/useToastMessage";
@@ -29,7 +26,7 @@ const Wrapper = styled.nav`
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 99;
+  z-index: 9;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -63,11 +60,14 @@ const TopNavigationBar = () => {
   const [isOpenMenu, setIsOpenMenu] = useState(false);
   const onCloseMenu = useCallback(() => setIsOpenMenu(false), [setIsOpenMenu]);
 
-  // 2022/01/14 - 게시글 생성 모달 클릭 - by 1-blue
-  // const onClickCreatePostModal = useCallback(
-  //   () => dispatch(openCreatePostModalAction()),
-  //   []
-  // );
+  // 2022/05/19 - 게시글 생성 모달 클릭 - by 1-blue
+  const onClickWritePostModal = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+      dispatch(openWriteModalRequest());
+    },
+    [dispatch]
+  );
 
   return (
     <Wrapper>
@@ -75,7 +75,7 @@ const TopNavigationBar = () => {
       <Center />
       <Right
         setIsOpenMenu={setIsOpenMenu}
-        // onClickCreatePostModal={onClickCreatePostModal}
+        onClickWritePostModal={onClickWritePostModal}
       />
 
       {/* 프로필 메뉴 */}

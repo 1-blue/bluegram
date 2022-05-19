@@ -7,8 +7,10 @@ import styled from "styled-components";
 // common-components
 import Icon from "@src/components/common/Icon";
 import Avatar from "@src/components/common/Avatar";
+
+// type
 import { ICON } from "@src/type";
-import { PostState, UserState } from "@src/store/reducers";
+import type { PostState, UserState } from "@src/store/reducers";
 
 const Wrapper = styled.section`
   position: relative;
@@ -27,16 +29,17 @@ const Wrapper = styled.section`
   }
 `;
 
-// { onClickProfileMenu, onClickCreatePostModal }
-
 type Props = {
   setIsOpenMenu: Dispatch<SetStateAction<boolean>>;
+  onClickWritePostModal: (e: React.MouseEvent<HTMLButtonElement>) => void;
 };
 
-const RightMenu = ({ setIsOpenMenu }: Props) => {
+const RightMenu = ({ setIsOpenMenu, onClickWritePostModal }: Props) => {
   const router = useRouter();
   const { me } = useSelector(({ user }: { user: UserState }) => user);
-  // const { showCreatePostModal } = useSelector((state: PostState) => state)
+  const { isShowWritePostModal } = useSelector(
+    ({ post }: { post: PostState }) => post
+  );
 
   return (
     <Wrapper>
@@ -49,8 +52,7 @@ const RightMenu = ({ setIsOpenMenu }: Props) => {
                 icon={ICON.HOME}
                 width={24}
                 height={24}
-                // $fill={!showCreatePostModal && router.pathname === "/"}
-                $fill={router.pathname === "/"}
+                $fill={!isShowWritePostModal && router.pathname === "/"}
               />
             </a>
           </Link>
@@ -60,32 +62,36 @@ const RightMenu = ({ setIsOpenMenu }: Props) => {
                 icon={ICON.AIRPLANE}
                 width={24}
                 height={24}
-                // $fill={
-                //   !showCreatePostModal && router.pathname.startsWith("/dm")
-                // }
+                $fill={
+                  !isShowWritePostModal && router.pathname.startsWith("/dm")
+                }
               />
             </a>
           </Link>
-          <i
+          <button
+            type="button"
             className="nav-link"
-            // onClick={onClickCreatePostModal}
+            onClick={(e) => {
+              e.stopPropagation();
+              onClickWritePostModal(e);
+            }}
           >
             <Icon
               icon={ICON.CIRCLE_ADD}
               width={24}
               height={24}
-              // $fill={showCreatePostModal}
+              $fill={isShowWritePostModal}
             />
-          </i>
+          </button>
           <Link href="/notice">
             <a className="nav-link">
               <Icon
                 icon={ICON.HEART}
                 width={24}
                 height={24}
-                // $fill={
-                //   !showCreatePostModal && router.pathname.startsWith("/notice")
-                // }
+                $fill={
+                  !isShowWritePostModal && router.pathname.startsWith("/notice")
+                }
               />
             </a>
           </Link>
