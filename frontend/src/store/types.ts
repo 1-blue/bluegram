@@ -1,4 +1,7 @@
-import { IPostWithPhotoAndCommentAndCount, SimpleUser } from "@src/type";
+import {
+  IPostWithPhotoAndCommentAndLikerAndCount,
+  SimpleUser,
+} from "@src/type";
 
 // 2022/05/13 - 리셋 메시지 - by 1-blue
 export const RESET_MESSAGE = "RESET_MESSAGE" as const;
@@ -69,7 +72,7 @@ export type LoadPostsBody = {
 };
 export type LoadPostsResponse = {
   limit: number;
-  posts: IPostWithPhotoAndCommentAndCount[];
+  posts: IPostWithPhotoAndCommentAndLikerAndCount[];
 };
 
 // 2022/05/07 - 모든 게시글들 로드 요청 관련 타입 - by 1-blue
@@ -83,5 +86,5 @@ export type UploadPostBody = {
 export type UploadPostResponse = {
   ok: boolean;
   message: string;
-  createdPost: IPostWithPhotoAndCommentAndCount;
+  createdPost: IPostWithPhotoAndCommentAndLikerAndCount;
 };

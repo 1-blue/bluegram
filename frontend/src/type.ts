@@ -12,6 +12,7 @@ export type User = {
 export type Post = {
   _id: number;
   content: string;
+  createdAt: Date;
 };
 export type Comment = {
   _id: number;
@@ -32,9 +33,10 @@ export type SimpleUser = {
   name: string;
   Photos?: Photo[];
 };
-export interface IPostWithPhotoAndCommentAndCount extends Post {
+export interface IPostWithPhotoAndCommentAndLikerAndCount extends Post {
   Photos?: Photo[];
   Comments?: Comment[];
+  PostLikers?: SimpleUser[];
 }
 
 export enum ICON {
@@ -49,4 +51,5 @@ export enum ICON {
   PHOTO = "PHOTO",
   AVATAR = "AVATAR",
   BOOKMARK = "BOOKMARK",
+  DOCUMENT_DUPLICATE = "DOCUMENT_DUPLICATE",
 }

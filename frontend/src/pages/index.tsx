@@ -1,4 +1,8 @@
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -6,25 +10,27 @@ import styled from "styled-components";
 // redux + server-side-rendering
 import wrapper from "@src/store/configureStore";
 import { END } from "redux-saga";
-// import { userInstance } from "@store/api/user";
+import { userInstance } from "@src/store/api/user";
 
 // actions
 import { loadToMeRequest, loadPostsRequest } from "@src/store/actions";
-import { PostState } from "@src/store/reducers";
 
-// common-components
-// import HeadInfo from "@components/common/HeadInfo";
+// type
+import type { PostState } from "@src/store/reducers";
 
 // components
 import PhotoCard from "@src/components/PhotoCard";
-import { userInstance } from "@src/store/api/user";
-// import { AxiosInstance } from "axios";
+
+// common-components
+// import HeadInfo from "@components/common/HeadInfo";
 
 // styled-components
 const Wrapper = styled.ul`
   display: grid;
   grid-template-columns: repeat(3, auto);
   gap: 12px;
+  margin: 10px 4px 0;
+
   @media (max-width: 480px) {
     gap: 2px;
   }
@@ -39,36 +45,36 @@ const Wrapper = styled.ul`
   }
 `;
 
-const Home = () => {
+const Home: NextPage = () => {
   const dispatch = useDispatch();
-  // const { posts, hasMorePosts, loadPostsLoading } = useSelector(
-  //   ({ post }: { post: PostState }) => post
-  // );
+  const { posts, hasMorePosts, loadPostsLoading } = useSelector(
+    ({ post }: { post: PostState }) => post
+  );
 
-  // // 2022/05/07 - 무한 스크롤링 이벤트 함수 - by 1-blue
-  // const infiniteScrollEvent = useCallback(() => {
-  //   if (
-  //     window.scrollY + document.documentElement.clientHeight >=
-  //       document.documentElement.scrollHeight - 400 &&
-  //     hasMorePosts &&
-  //     !loadPostsLoading
-  //   ) {
-  //     if (!posts) {
-  //       dispatch(loadPostsRequest({ lastId: 0, limit: 15 }));
-  //     } else {
-  //       dispatch(
-  //         loadPostsRequest({ lastId: posts[posts.length - 1]._id, limit: 15 })
-  //       );
-  //     }
-  //   }
-  // }, [dispatch, posts, hasMorePosts, loadPostsLoading]);
+  // 2022/05/07 - 무한 스크롤링 이벤트 함수 - by 1-blue
+  const infiniteScrollEvent = useCallback(() => {
+    if (
+      window.scrollY + document.documentElement.clientHeight >=
+        document.documentElement.scrollHeight - 400 &&
+      hasMorePosts &&
+      !loadPostsLoading
+    ) {
+      if (!posts) {
+        dispatch(loadPostsRequest({ lastId: 0, limit: 15 }));
+      } else {
+        dispatch(
+          loadPostsRequest({ lastId: posts[posts.length - 1]._id, limit: 15 })
+        );
+      }
+    }
+  }, [dispatch, posts, hasMorePosts, loadPostsLoading]);
 
-  // // 2022/01/15 - 무한 스크롤링 이벤트 등록/해제 - by 1-blue
-  // useEffect(() => {
-  //   window.addEventListener("scroll", infiniteScrollEvent);
+  // 2022/01/15 - 무한 스크롤링 이벤트 등록/해제 - by 1-blue
+  useEffect(() => {
+    window.addEventListener("scroll", infiniteScrollEvent);
 
-  //   return () => window.removeEventListener("scroll", infiniteScrollEvent);
-  // }, [infiniteScrollEvent]);
+    return () => window.removeEventListener("scroll", infiniteScrollEvent);
+  }, [infiniteScrollEvent]);
 
   return (
     <>
@@ -79,25 +85,12 @@ const Home = () => {
           process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name
         }
       /> */}
-      <h1>메인</h1>
 
-      {/* <Wrapper>
-        {posts?.map((post) => (
-          <PhotoCard key={post._id} post={post} />
+      <Wrapper>
+        {posts?.map((post, index) => (
+          <PhotoCard key={post._id} post={post} $priority={index < 10} />
         ))}
-      </Wrapper> */}
-      {/* <section>
-        {posts?.map((post) => (
-          <div
-            key={post._id}
-            style={{
-              margin: "100px",
-            }}
-          >
-            {post.content}
-          </div>
-        ))}
-      </section> */}
+      </Wrapper>
     </>
   );
 };
@@ -118,7 +111,7 @@ export const getServerSideProps: GetServerSideProps =
 
       // 서버 사이드에서 dispatch할 내용을 적어줌
       store.dispatch(loadToMeRequest());
-      // store.dispatch(loadPostsRequest({ lastId: -1, limit: 15 }));
+      store.dispatch(loadPostsRequest({ lastId: -1, limit: 15 }));
 
       // 밑에 두 개는 REQUEST이후 SUCCESS가 될 때까지 기다려주게 해주는 코드
       store.dispatch(END);

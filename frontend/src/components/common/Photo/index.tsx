@@ -13,7 +13,13 @@ type Props = {
   $priview?: boolean;
 };
 
-const Photo = ({ photo, alt = "이미지", $priview, ...props }: Props) => {
+const Photo = ({
+  photo,
+  alt = "이미지",
+  $priority,
+  $priview,
+  ...props
+}: Props) => {
   return (
     <>
       {photo && (
@@ -22,6 +28,7 @@ const Photo = ({ photo, alt = "이미지", $priview, ...props }: Props) => {
             src={combinePhotoUrl(photo)}
             layout="fill"
             alt={alt}
+            priority={$priority}
             {...props}
           />
         </Wrapper>
