@@ -22,6 +22,8 @@ export {
 export type { UserActionRequest } from "./userAction";
 
 export {
+  openWriteModalRequest,
+  closeWriteModalRequest,
   loadPostsRequest,
   loadPostsSuccess,
   loadPostsFailure,

@@ -55,6 +55,10 @@ export type LoadToMeResponse = {
   user: SimpleUser;
 } | null;
 
+// 2022/05/19 - 게시글 생성 모달 열기/닫기 - by 1-blue
+export const OPEN_WRITE_MODAL = "OPEN_WRITE_MODAL" as const;
+export const CLOSE_WRITE_MODAL = "CLOSE_WRITE_MODAL" as const;
+
 // 2022/05/07 - 모든 게시글들 로드 요청 관련 타입 - by 1-blue
 export const LOAD_POSTS_REQUEST = "LOAD_POSTS_REQUEST" as const;
 export const LOAD_POSTS_SUCCESS = "LOAD_POSTS_SUCCESS" as const;
@@ -66,4 +70,18 @@ export type LoadPostsBody = {
 export type LoadPostsResponse = {
   limit: number;
   posts: IPostWithPhotoAndCommentAndCount[];
+};
+
+// 2022/05/07 - 모든 게시글들 로드 요청 관련 타입 - by 1-blue
+export const UPLOAD_POST_REQUEST = "UPLOAD_POST_REQUEST" as const;
+export const UPLOAD_POST_SUCCESS = "UPLOAD_POST_SUCCESS" as const;
+export const UPLOAD_POST_FAILURE = "UPLOAD_POST_FAILURE" as const;
+export type UploadPostBody = {
+  content: string;
+  photos: string[];
+};
+export type UploadPostResponse = {
+  ok: boolean;
+  message: string;
+  createdPost: IPostWithPhotoAndCommentAndCount;
 };

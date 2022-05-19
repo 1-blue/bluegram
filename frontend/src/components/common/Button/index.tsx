@@ -12,9 +12,9 @@ type Props = {
   [index: string]: any;
 };
 
-const Button = ({ type, contents, loading, primary }: Props) => {
+const Button = ({ type, contents, loading, primary, ...props }: Props) => {
   return (
-    <Wrapper type={type} primary={primary}>
+    <Wrapper type={type} primary={primary} {...props}>
       {loading ? <Spinner kinds="button" /> : contents}
     </Wrapper>
   );

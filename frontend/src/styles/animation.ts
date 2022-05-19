@@ -16,3 +16,12 @@ export const SpinY = keyframes`
     transform: rotateY(360deg)
   }
 `;
+export const SlideScale = keyframes`
+  0% {
+    transform: translateY(-100vh) scale(0.1);
+  
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+`;

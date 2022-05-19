@@ -16,5 +16,8 @@ export const Wrapper = styled.button<{ primary?: boolean }>`
       &:hover {
         opacity: 1;
       }
+      @media (max-width: 768px) {
+        font-size: 0.6rem;
+      }
     `}
 `;
