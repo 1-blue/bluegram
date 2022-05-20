@@ -3,18 +3,21 @@ import { useRouter } from "next/router";
 
 // styled-components
 import { Wrapper } from "./style";
-import { ICON, IPostWithPhotoAndCommentAndCount } from "@src/type";
-import Photo from "../common/Photo";
-import Icon from "../common/Icon";
 
 // common-components
-// import Icon from "@components/common/Icon";
+import Icon from "../common/Icon";
+import Photo from "../common/Photo";
+
+// type
+import { ICON } from "@src/type";
+import type { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
 
 type Props = {
-  post: IPostWithPhotoAndCommentAndCount;
+  post: IPostWithPhotoAndCommentAndLikerAndCount;
+  $priority: boolean;
 };
 
-const PhotoCard = ({ post }: Props) => {
+const PhotoCard = ({ post, $priority }: Props) => {
   const router = useRouter();
   const [isMouseHover, setIsMouseHover] = useState(false);
 
@@ -32,16 +35,20 @@ const PhotoCard = ({ post }: Props) => {
     <Wrapper
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      // isMouseHover={isMouseHover}
+      isMouseHover={isMouseHover}
       onClick={goExplorePage}
     >
       {/* 게시글의 대표 이미지 */}
-      <Photo photo={post.Photos?.[0]?.name} alt="게시글 이미지" />
+      <Photo
+        photo={post.Photos?.[0]?.name}
+        alt="게시글 이미지"
+        $priority={$priority}
+      />
 
       {/* 이미지가 2개 이상이라면 이미지 우측 상단에 표시 */}
       {post.Photos && post.Photos.length >= 2 && (
-        <aside className="more-post-icon">
-          <span>아무튼 아이콘</span>
+        <aside className="kinds">
+          <Icon icon={ICON.DOCUMENT_DUPLICATE} width={30} height={30} />
         </aside>
       )}
 
@@ -50,11 +57,11 @@ const PhotoCard = ({ post }: Props) => {
         <div className="post-info">
           <div>
             <Icon icon={ICON.HEART} width={24} height={24} />
-            {/* <span>{post.PostLikers.length}</span> */}
+            <span>{post.PostLikers?.length}</span>
           </div>
           <div>
             <Icon icon={ICON.COMMENT} width={24} height={24} />
-            {/* <span>{post.Comments.length}</span> */}
+            <span>{post.Comments?.length}</span>
           </div>
         </div>
       )}

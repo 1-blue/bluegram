@@ -9,12 +9,12 @@ import {
   UPLOAD_POST_FAILURE,
 } from "@src/store/types";
 import type { PostActionRequest } from "../actions";
-import { IPostWithPhotoAndCommentAndCount } from "@src/type";
+import { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
 
 type StateType = {
   isShowWritePostModal: boolean;
 
-  posts: IPostWithPhotoAndCommentAndCount[] | null;
+  posts: IPostWithPhotoAndCommentAndLikerAndCount[] | null;
   hasMorePosts: boolean;
 
   loadPostsLoading: boolean;

@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
-const { Image, Post, Comment, User, Hashtag } = db;
+const { Photo, Post, Comment, User, Hashtag } = db;
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.get("/", async (req, res, next) => {
       include: [
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들 ( 댓글과 답글 모두 포함 )
@@ -45,7 +45,7 @@ router.get("/", async (req, res, next) => {
       limit,
       order: [
         ["createdAt", "DESC"],
-        [Image, "_id", "ASC"],
+        [Photo, "_id", "ASC"],
       ],
     });
 
