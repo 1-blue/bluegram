@@ -10,7 +10,7 @@ import styled from "styled-components";
 // redux + server-side-rendering
 import wrapper from "@src/store/configureStore";
 import { END } from "redux-saga";
-import { userInstance } from "@src/store/api/user";
+import { axiosInstance } from "@src/store/api";
 
 // actions
 import { loadToMeRequest, loadPostsRequest } from "@src/store/actions";
@@ -19,7 +19,7 @@ import { loadToMeRequest, loadPostsRequest } from "@src/store/actions";
 import type { PostState } from "@src/store/reducers";
 
 // components
-import PhotoCard from "@src/components/PhotoCard";
+import PhotoCard from "@src/components/Post/PhotoCard";
 
 // common-components
 // import HeadInfo from "@components/common/HeadInfo";
@@ -107,7 +107,7 @@ export const getServerSideProps: GetServerSideProps =
 
       let cookie = context.req?.headers?.cookie;
       cookie = cookie ? cookie : "";
-      userInstance.defaults.headers.Cookie = cookie;
+      axiosInstance.defaults.headers.Cookie = cookie;
 
       // 서버 사이드에서 dispatch할 내용을 적어줌
       store.dispatch(loadToMeRequest());
@@ -118,7 +118,7 @@ export const getServerSideProps: GetServerSideProps =
       await store.sagaTask?.toPromise();
 
       // 위에서 말한대로 axios의 쿠키 제거
-      userInstance.defaults.headers.Cookie = "";
+      axiosInstance.defaults.headers.Cookie = "";
 
       return {
         props: {},

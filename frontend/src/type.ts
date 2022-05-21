@@ -13,10 +13,14 @@ export type Post = {
   _id: number;
   content: string;
   createdAt: Date;
+  UserId: number;
 };
 export type Comment = {
   _id: number;
   content: string;
+  RecommentId?: number;
+  UserId: number;
+  PostId: number;
 };
 export type Hashtag = {
   _id: number;
@@ -34,9 +38,42 @@ export type SimpleUser = {
   Photos?: Photo[];
 };
 export interface IPostWithPhotoAndCommentAndLikerAndCount extends Post {
-  Photos?: Photo[];
-  Comments?: Comment[];
-  PostLikers?: SimpleUser[];
+  allCommentCount: number;
+  hasMoreRecomments: boolean;
+  Photos: Photo[];
+  Comments: (ICommentWithUserAndRecommentAndLiker & {
+    allRecommentCount: number;
+  })[];
+  PostLikers: SimpleUser[];
+  PostBookmarks: {
+    _id: number;
+  }[];
+}
+export interface IDetailPost extends Post {
+  User: SimpleUser;
+  Photos: Photo[];
+  Comments: (Comment & { User: SimpleUser })[];
+  PostLikers: {
+    _id: number;
+    createdAt: Date;
+  }[];
+  PostBookmarks: {
+    _id: number;
+  }[];
+}
+export interface ICommentWithUserAndRecommentAndLiker extends Comment {
+  User: SimpleUser;
+  Recomments: {
+    _id: number;
+    CommentLikers: {
+      _id: number;
+      name: string;
+    }[];
+  }[];
+  CommentLikers: {
+    _id: number;
+    name: string;
+  }[];
 }
 
 export enum ICON {

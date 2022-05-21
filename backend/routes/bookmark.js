@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
-const { Image, Post, Comment, User } = db;
+const { Photo, Post, Comment, User } = db;
 
 const router = express.Router();
 
@@ -16,16 +16,21 @@ router.post("/:PostId", isLoggedIn, async (req, res, next) => {
     const targetPost = await Post.findByPk(PostId, { include: [{ model: User, attributes: ["name"] }] });
 
     if (!targetPost)
-      return res
-        .status(404)
-        .json({ message: "존재하지 않는 게시글에 북마크를 요청하셨습니다.\n새로 고침 후 다시 시도해주세요!" });
+      return res.status(404).json({
+        ok: false,
+        message: "존재하지 않는 게시글에 북마크를 요청하셨습니다.\n새로 고침 후 다시 시도해주세요!",
+      });
 
     if (await targetPost.hasPostBookmarks(req.user._id))
-      return res.status(409).json({ message: "이미 북마크를 누른 게시글입니다.\n새로 고침 후 다시 시도해 주세요." });
+      return res.status(409).json({
+        ok: false,
+        message: "이미 북마크를 누른 게시글입니다.\n새로 고침 후 다시 시도해 주세요.",
+      });
 
     await targetPost.addPostBookmarks(req.user._id);
 
     res.json({
+      ok: true,
       message: `${targetPost.User.name}님의 게시글을 북마크에 추가했습니다.`,
       PostId: targetPost._id,
       UserId: req.user._id,
@@ -44,16 +49,21 @@ router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
     const targetPost = await Post.findByPk(PostId, { include: [{ model: User, attributes: ["name"] }] });
 
     if (!targetPost)
-      return res
-        .status(404)
-        .json({ message: "존재하지 않는 게시글에 북마크를 요청하셨습니다.\n새로 고침 후 다시 시도해주세요!" });
+      return res.status(404).json({
+        ok: false,
+        message: "존재하지 않는 게시글에 북마크를 요청하셨습니다.\n새로 고침 후 다시 시도해주세요!",
+      });
 
     if (!(await targetPost.hasPostBookmarks(req.user._id)))
-      return res.status(409).json({ message: "북마크를 누르지 않은 게시글입니다.\n새로 고침 후 다시 시도해 주세요." });
+      return res.status(409).json({
+        ok: false,
+        message: "북마크를 누르지 않은 게시글입니다.\n새로 고침 후 다시 시도해 주세요.",
+      });
 
     await targetPost.removePostBookmarks(req.user._id);
 
     res.json({
+      ok: true,
       message: `${targetPost.User.name}님의 게시글의 북마크를 제거했습니다.`,
       PostId: targetPost._id,
       UserId: req.user._id,
@@ -88,14 +98,14 @@ router.get("/", isLoggedIn, async (req, res, next) => {
           include: [
             // 게시글 작성자의 프로필 이미지
             {
-              model: Image,
+              model: Photo,
               attributes: ["_id", "name", "url"],
             },
           ],
         },
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들

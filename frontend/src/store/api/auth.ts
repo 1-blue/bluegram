@@ -1,31 +1,15 @@
-import axios from "axios";
+import { axiosInstance } from ".";
 
 // type
 import type { LogInBody, LogInResponse, SignUpBody } from "../types";
 
-export const authInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_SERVER_URL + "/api/auth",
-  withCredentials: true,
-  timeout: 10000,
-});
-
-// const myRequestInterceptor = authInstance.interceptors.request.use(
-//   config => {
-//     return config;
-//   },
-//   error => {
-//     console.log("오류 요청을 보내기전 호출됨");
-//     return Promise.reject(error);
-//   },
-// );
-
 // 2022/05/06 - 로컬 로그인 - by 1-blue
 export const apiLocalLogin = (body: LogInBody) =>
-  authInstance.post<LogInResponse>("/", body);
+  axiosInstance.post<LogInResponse>("/auth", body);
 
 // 2022/05/06 - 로컬 로그아웃 - by 1-blue
-export const apiLocalLogout = () => authInstance.delete("/");
+export const apiLocalLogout = () => axiosInstance.delete("/");
 
 // 2022/05/13 - 회원가입 요청 - by 1-blue
 export const apiSignup = (body: SignUpBody) =>
-  authInstance.post("/signup", body);
+  axiosInstance.post("/auth/signup", body);

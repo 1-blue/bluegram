@@ -173,9 +173,10 @@ router.get("/:PostId", isLoggedIn, async (req, res, next) => {
       order: [["createdAt", "DESC"]],
     });
 
-    if (!post) return res.status(404).json({ message: "존재하지 않은 게시글입니다.\n잠시후에 다시 시도해주세요" });
+    if (!post)
+      return res.status(404).json({ od: false, message: "존재하지 않은 게시글입니다.\n잠시후에 다시 시도해주세요" });
 
-    res.json({ message: "특정 게시글을 불러왔습니다.", post });
+    res.json({ ok: true, message: "특정 게시글을 불러왔습니다.", post });
   } catch (error) {
     console.error("GET /post error >> ", error);
     return next(error);
@@ -187,20 +188,14 @@ router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
 
   try {
-    const targetPost = await Post.findByPk(PostId, { include: { model: Image, attributes: ["name"] } });
+    const targetPost = await Post.findByPk(PostId, { include: { model: Photo, attributes: ["name"] } });
 
-    if (!targetPost) return res.status(404).json({ message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
-
-    // 2022/01/18 - 게시글 생성 완료 시 추가한 이미지 위치 이동
-    targetPost.Images.forEach(image => {
-      const oldPath = path.join(__dirname, "public", "images", image.name);
-      const newPath = path.join(__dirname, "public", "images", "deleted", image.name);
-      fs.rename(oldPath, newPath, () => {});
-    });
+    if (!targetPost)
+      return res.status(404).json({ ok: false, message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
 
     await targetPost.destroy();
 
-    res.status(200).json({ message: "게시글을 성공적으로 삭제했습니다.", removedPostId: PostId });
+    res.status(200).json({ ok: true, message: "게시글을 성공적으로 삭제했습니다.", removedPostId: PostId });
   } catch (error) {
     console.error("DELETE /post/:PostId error >> ", error);
     return next(error);
