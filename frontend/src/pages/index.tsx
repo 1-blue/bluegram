@@ -60,7 +60,7 @@ const Home: NextPage = () => {
       !loadPostsLoading
     ) {
       if (!posts) {
-        dispatch(loadPostsRequest({ lastId: 0, limit: 15 }));
+        dispatch(loadPostsRequest({ lastId: -1, limit: 15 }));
       } else {
         dispatch(
           loadPostsRequest({ lastId: posts[posts.length - 1]._id, limit: 15 })

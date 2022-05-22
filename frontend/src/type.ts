@@ -18,6 +18,7 @@ export type Post = {
 export type Comment = {
   _id: number;
   content: string;
+  createdAt: Date;
   RecommentId?: number;
   UserId: number;
   PostId: number;
@@ -39,7 +40,8 @@ export type SimpleUser = {
 };
 export interface IPostWithPhotoAndCommentAndLikerAndCount extends Post {
   allCommentCount: number;
-  hasMoreRecomments: boolean;
+  hasMoreComments: boolean;
+  User: SimpleUser;
   Photos: Photo[];
   Comments: (ICommentWithUserAndRecommentAndLiker & {
     allRecommentCount: number;
@@ -62,9 +64,13 @@ export interface IDetailPost extends Post {
   }[];
 }
 export interface ICommentWithUserAndRecommentAndLiker extends Comment {
+  hasMoreRecomments?: boolean;
   User: SimpleUser;
   Recomments: {
     _id: number;
+    content: string;
+    createdAt: Date;
+    User: SimpleUser;
     CommentLikers: {
       _id: number;
       name: string;
@@ -89,4 +95,6 @@ export enum ICON {
   AVATAR = "AVATAR",
   BOOKMARK = "BOOKMARK",
   DOCUMENT_DUPLICATE = "DOCUMENT_DUPLICATE",
+  V_OPTION = "V_OPTION",
+  H_OPTION = "H_OPTION",
 }

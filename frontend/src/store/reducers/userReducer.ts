@@ -183,6 +183,7 @@ function userReducer(prevState = initState, action: UserActionRequest) {
       return {
         ...prevState,
         followLoading: false,
+        followError: action.data.message,
       };
     // 2022/05/21 - 언팔로우 요청 - by 1-blue
     case UNFOLLOW_REQUEST:
@@ -240,6 +241,7 @@ function userReducer(prevState = initState, action: UserActionRequest) {
       return {
         ...prevState,
         unfollowLoading: false,
+        unfollowError: action.data.message,
       };
 
     default:

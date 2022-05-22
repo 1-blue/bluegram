@@ -76,7 +76,7 @@ function authReducer(prevState = initState, action: AuthActionRequest) {
       return {
         ...prevState,
         loginLoading: false,
-        loginError: action.message,
+        loginError: action.data.message,
       };
 
     // 2022/05/06 - 로그아웃 - by 1-blue

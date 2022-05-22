@@ -15,9 +15,6 @@ import type { AuthState } from "@src/store/reducers";
 // action
 import { localLoginRequest } from "@src/store/actions";
 
-// hook
-import useToastMessage from "@src/hooks/useToastMessage";
-
 // styled-component
 const Wrapper = styled.form`
   max-width: 400px;
@@ -63,9 +60,7 @@ export type LoginForm = {
 
 const LoginPage: NextPage = () => {
   const dispatch = useDispatch();
-  const { loginLoading, loginDone, loginError } = useSelector(
-    ({ auth }: { auth: AuthState }) => auth
-  );
+  const { loginLoading } = useSelector(({ auth }: { auth: AuthState }) => auth);
 
   // 2022/05/13 - 로그인 요청 관련 메서드들 - by 1-blue
   const {
@@ -80,9 +75,6 @@ const LoginPage: NextPage = () => {
       dispatch(localLoginRequest({ id, password })),
     [dispatch]
   );
-
-  // 2022/05/13 - 로그인 성공 / 실패 메시지 - by 1-blue
-  useToastMessage({ done: loginDone, error: loginError, go: "/" });
 
   return (
     <>

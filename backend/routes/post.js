@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import express from "express";
 
 import { isLoggedIn } from "../middleware/index.js";
@@ -8,7 +6,6 @@ import db from "../models/index.js";
 const { Photo, Post, Comment, User, Hashtag } = db;
 
 const router = express.Router();
-const __dirname = path.resolve();
 
 // 2021/12/22 - 게시글 생성하기 - by 1-blue
 router.post("/", isLoggedIn, async (req, res, next) => {

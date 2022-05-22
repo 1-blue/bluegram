@@ -13,6 +13,7 @@ import {
   FollowBody,
   UnfollowBody,
   UnfollowResponse,
+  FailureResponse,
 } from "@src/store/types";
 import { resetMessage } from ".";
 
@@ -33,7 +34,10 @@ export const followSuccess = (data: FollowResponse) => ({
   type: FOLLOW_SUCCESS,
   data,
 });
-export const followFailure = () => ({ type: FOLLOW_FAILURE });
+export const followFailure = (data: FailureResponse) => ({
+  type: FOLLOW_FAILURE,
+  data,
+});
 // 2022/05/21 - 언팔로우 요청 액션 크리에이터 - by 1-blue
 export const unfollowRequest = (data: UnfollowBody) => ({
   type: UNFOLLOW_REQUEST,
@@ -43,7 +47,10 @@ export const unfollowSuccess = (data: UnfollowResponse) => ({
   type: UNFOLLOW_SUCCESS,
   data,
 });
-export const unfollowFailure = () => ({ type: UNFOLLOW_FAILURE });
+export const unfollowFailure = (data: FailureResponse) => ({
+  type: UNFOLLOW_FAILURE,
+  data,
+});
 
 export type UserActionRequest =
   | ReturnType<typeof resetMessage>

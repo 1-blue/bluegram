@@ -14,14 +14,17 @@ const settings = {
 
 type Props = {
   children: React.ReactNode;
-  setPhotoIndex: React.Dispatch<React.SetStateAction<number>>;
+  setPhotoIndex?: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const Carousel = ({ children, setPhotoIndex }: Props) => {
   return (
     <Slider
+      arrows={false}
       {...settings}
-      beforeChange={(currentIndex, newIndex) => setPhotoIndex(newIndex)}
+      beforeChange={(currentIndex, newIndex) => {
+        if (typeof setPhotoIndex === "function") setPhotoIndex(newIndex);
+      }}
     >
       {children}
     </Slider>

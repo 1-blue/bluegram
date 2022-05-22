@@ -14,7 +14,7 @@ type Props = {
 const Menu = ({ onCloseMenu, children, ...restProps }: Props) => {
   // 2022/01/16 - 영역 외 클릭시 메뉴 닫는 이벤트 등록 - by 1-blue
   useEffect(() => {
-    window.addEventListener("click", onCloseMenu);
+    setTimeout(() => window.addEventListener("click", onCloseMenu), 0);
 
     return () => window.removeEventListener("click", onCloseMenu);
   }, [onCloseMenu]);

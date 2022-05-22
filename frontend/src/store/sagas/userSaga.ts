@@ -25,9 +25,15 @@ function* loadToMe() {
     const { data }: AxiosResponse<LoadToMeResponse> = yield call(apiLoadToMe);
 
     yield put({ type: LOAD_TO_ME_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("userSaga loadToMe >> ", error);
-    yield put({ type: LOAD_TO_ME_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_TO_ME_FAILURE, data: { message } });
   }
 }
 function* watchLoadToMe() {
@@ -42,9 +48,15 @@ function* follow(action: any) {
     );
 
     yield put({ type: FOLLOW_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("userSaga follow >> ", error);
-    yield put({ type: FOLLOW_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: FOLLOW_FAILURE, data: { message } });
   }
 }
 function* watchFollow() {
@@ -58,9 +70,15 @@ function* unfollow(action: any) {
     );
 
     yield put({ type: UNFOLLOW_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("userSaga unfollow >> ", error);
-    yield put({ type: UNFOLLOW_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: UNFOLLOW_FAILURE, data: { message } });
   }
 }
 function* watchUnfollow() {

@@ -1,13 +1,18 @@
+// type
+import type { CSSProperties, MouseEvent } from "react";
+
 // util
 import { combinePhotoUrl } from "@src/libs/util";
-import { MouseEvent } from "react";
+
+// style
 import { PhotoTag, Wrapper } from "./style";
 
 type Props = {
   photo?: string | null;
-  alt?: string;
   width: number;
   height: number;
+  style?: CSSProperties;
+  alt?: string;
   $cover?: boolean;
   $contain?: boolean;
   $priority?: boolean;
@@ -17,6 +22,7 @@ type Props = {
 const Avatar = ({
   photo,
   alt = "유저 아바타",
+  style,
   width,
   height,
   onClick,
@@ -25,7 +31,7 @@ const Avatar = ({
   return (
     <>
       {photo && (
-        <Wrapper width={width} height={height} onClick={onClick}>
+        <Wrapper width={width} height={height} onClick={onClick} style={style}>
           <PhotoTag
             src={combinePhotoUrl(photo)}
             layout="fill"

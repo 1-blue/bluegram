@@ -32,10 +32,13 @@ function* localLogin(action: any) {
     yield put({ type: LOAD_TO_ME_SUCCESS, data });
   } catch (error: any) {
     console.error("authSaga localLogin >> ", error);
-    const message = error?.response?.data?.message
-      ? error.response.data.message
-      : "알 수 없는 오류가 발생했습니다.";
-    yield put({ type: LOCAL_LOGIN_FAILURE, message });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOCAL_LOGIN_FAILURE, data: { message } });
   }
 }
 function* watchLocalLogin() {
@@ -48,9 +51,15 @@ function* localLogout() {
 
     yield put({ type: LOCAL_LOGOUT_SUCCESS, data });
     yield put({ type: LOAD_TO_ME_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("authSaga localLogout >> ", error);
-    yield put({ type: LOCAL_LOGOUT_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOCAL_LOGOUT_FAILURE, data: { message } });
   }
 }
 function* watchLocalLogout() {
@@ -67,16 +76,13 @@ function* signup(action: any) {
     yield put({ type: SIGNUP_SUCCESS, data });
   } catch (error: any) {
     console.error("authSaga signup >> ", error);
-    const message = error?.response?.data?.message
-      ? error.response.data.message
-      : "알 수 없는 오류가 발생했습니다.";
-    yield put({
-      type: SIGNUP_FAILURE,
-      data: {
-        ok: false,
-        message,
-      },
-    });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: SIGNUP_FAILURE, data: { message } });
   }
 }
 function* watchSignup() {

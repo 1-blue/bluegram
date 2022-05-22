@@ -1,12 +1,16 @@
 import {
   ICommentWithUserAndRecommentAndLiker,
-  IDetailPost,
   IPostWithPhotoAndCommentAndLikerAndCount,
   SimpleUser,
 } from "@src/type";
 
 // 2022/05/13 - 리셋 메시지 - by 1-blue
 export const RESET_MESSAGE = "RESET_MESSAGE" as const;
+
+// 2022/05/22 - 예측가능한 실패인 경우 응답 타입 ( 403, 409 등 ) - by 1-blue
+export type FailureResponse = {
+  message: string;
+};
 
 // 2022/05/06 - 로그인 관련 타입 - by 1-blue
 export const LOCAL_LOGIN_REQUEST = "LOCAL_LOGIN_REQUEST" as const;
@@ -102,7 +106,7 @@ export type LoadDetailPostsBody = {
 export type LoadDetailPostsResponse = {
   ok: boolean;
   message: string;
-  posts: IDetailPost[];
+  posts: IPostWithPhotoAndCommentAndLikerAndCount[];
   limit: number;
 };
 
@@ -125,7 +129,7 @@ export const LOAD_COMMENTS_SUCCESS = "LOAD_COMMENTS_SUCCESS" as const;
 export const LOAD_COMMENTS_FAILURE = "LOAD_COMMENTS_FAILURE" as const;
 export type LoadCommentsBody = {
   PostId: number;
-  lastId: number;
+  lastId: number | null;
   limit: number;
 };
 export type LoadCommentsResponse = {

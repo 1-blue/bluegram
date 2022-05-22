@@ -1,7 +1,7 @@
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
 // types
-import type { AxiosResponse } from "axios";
+import type { AxiosError, AxiosResponse } from "axios";
 import {
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
@@ -79,8 +79,9 @@ function* loadPosts(action: any) {
     );
 
     yield put({ type: LOAD_POSTS_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga loadPosts >> ", error);
+
     yield put({ type: LOAD_POSTS_FAILURE });
   }
 }
@@ -96,9 +97,15 @@ function* uploadPost(action: any) {
     );
 
     yield put({ type: UPLOAD_POST_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga loadPosts >> ", error);
-    yield put({ type: UPLOAD_POST_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: UPLOAD_POST_FAILURE, data: { message } });
   }
 }
 function* watchUploadPost() {
@@ -113,9 +120,15 @@ function* loadDetailPosts(action: any) {
     );
 
     yield put({ type: LOAD_DETAIL_POSTS_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga loadDetailPosts >> ", error);
-    yield put({ type: LOAD_DETAIL_POSTS_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_DETAIL_POSTS_FAILURE, data: { message } });
   }
 }
 function* watchLoadDetailPosts() {
@@ -130,9 +143,15 @@ function* removePost(action: any) {
     );
 
     yield put({ type: REMOVE_POST_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga RemovePost >> ", error);
-    yield put({ type: REMOVE_POST_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: REMOVE_POST_FAILURE, data: { message } });
   }
 }
 function* watchRemovePost() {
@@ -147,9 +166,15 @@ function* loadComments(action: any) {
     );
 
     yield put({ type: LOAD_COMMENTS_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga LoadComments >> ", error);
-    yield put({ type: LOAD_COMMENTS_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_COMMENTS_FAILURE, data: { message } });
   }
 }
 function* watchLoadComments() {
@@ -164,9 +189,15 @@ function* appendComment(action: any) {
     );
 
     yield put({ type: APPEND_COMMENT_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga appendComment >> ", error);
-    yield put({ type: APPEND_COMMENT_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: APPEND_COMMENT_FAILURE, data: { message } });
   }
 }
 function* watchAppendComment() {
@@ -181,9 +212,15 @@ function* removeComment(action: any) {
     );
 
     yield put({ type: APPEND_COMMENT_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga removeComment >> ", error);
-    yield put({ type: APPEND_COMMENT_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: APPEND_COMMENT_FAILURE, data: { message } });
   }
 }
 function* watchRemoveComment() {
@@ -198,9 +235,13 @@ function* appendLikeToPost(action: any) {
     );
 
     yield put({ type: APPEND_LIKE_TO_POST_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga appendLikeToPost >> ", error);
-    yield put({ type: APPEND_LIKE_TO_POST_FAILURE });
+
+    yield put({
+      type: APPEND_LIKE_TO_POST_FAILURE,
+      data: error?.response?.data,
+    });
   }
 }
 function* watchAppendLikeToPost() {
@@ -214,9 +255,20 @@ function* removeLikeToPost(action: any) {
     );
 
     yield put({ type: REMOVE_LIKE_TO_POST_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga removeLikeToPost >> ", error);
-    yield put({ type: REMOVE_LIKE_TO_POST_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({
+      type: REMOVE_LIKE_TO_POST_FAILURE,
+      data: {
+        message,
+      },
+    });
   }
 }
 function* watchRemoveLikeToPost() {
@@ -231,9 +283,15 @@ function* appendLikeToComment(action: any) {
     );
 
     yield put({ type: APPEND_LIKE_TO_COMMENT_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga appendLikeToComment >> ", error);
-    yield put({ type: APPEND_LIKE_TO_COMMENT_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: APPEND_LIKE_TO_COMMENT_FAILURE, data: { message } });
   }
 }
 function* watchAppendLikeToComment() {
@@ -247,9 +305,15 @@ function* removeLikeToComment(action: any) {
     );
 
     yield put({ type: REMOVE_LIKE_TO_COMMENT_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga removeLikeToComment >> ", error);
-    yield put({ type: REMOVE_LIKE_TO_COMMENT_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: REMOVE_LIKE_TO_COMMENT_FAILURE, data: { message } });
   }
 }
 function* watchRemoveLikeToComment() {
@@ -264,9 +328,15 @@ function* appendBookmark(action: any) {
     );
 
     yield put({ type: APPEND_BOOKMARK_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga appendBookmark >> ", error);
-    yield put({ type: APPEND_BOOKMARK_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: APPEND_BOOKMARK_FAILURE, data: { message } });
   }
 }
 function* watchAppendBookmark() {
@@ -280,9 +350,15 @@ function* removeBookmark(action: any) {
     );
 
     yield put({ type: REMOVE_BOOKMARK_SUCCESS, data });
-  } catch (error) {
+  } catch (error: any) {
     console.error("postSaga removeBookmark >> ", error);
-    yield put({ type: REMOVE_BOOKMARK_FAILURE });
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: REMOVE_BOOKMARK_FAILURE, data: { message } });
   }
 }
 function* watchRemoveBookmark() {

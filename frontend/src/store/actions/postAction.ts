@@ -66,7 +66,9 @@ import {
   REMOVE_BOOKMARK_REQUEST,
   REMOVE_BOOKMARK_SUCCESS,
   REMOVE_BOOKMARK_FAILURE,
+  FailureResponse,
 } from "@src/store/types";
+import { resetMessage } from ".";
 
 // 2022/05/19 - 게시글 생성 모달 열기/닫기 - by 1-blue
 export const openWriteModalRequest = () => ({ type: OPEN_WRITE_MODAL });
@@ -81,7 +83,10 @@ export const loadPostsSuccess = (data: LoadPostsResponse) => ({
   type: LOAD_POSTS_SUCCESS,
   data,
 });
-export const loadPostsFailure = () => ({ type: LOAD_POSTS_FAILURE });
+export const loadPostsFailure = (data: FailureResponse) => ({
+  type: LOAD_POSTS_FAILURE,
+  data,
+});
 
 // 2022/05/19 - 게시글 생성 요청 액션 크리에이터 - by 1-blue
 export const uploadPostRequest = (data: UploadPostBody) => ({
@@ -92,7 +97,10 @@ export const uploadPostSuccess = (data: UploadPostResponse) => ({
   type: UPLOAD_POST_SUCCESS,
   data,
 });
-export const uploadPostFailure = () => ({ type: UPLOAD_POST_FAILURE });
+export const uploadPostFailure = (data: FailureResponse) => ({
+  type: UPLOAD_POST_FAILURE,
+  data,
+});
 
 // 2022/05/21 - 게시글 제거 요청 액션 크리에이터 - by 1-blue
 export const loadDetailPostsRequest = (data: LoadDetailPostsBody) => ({
@@ -103,8 +111,9 @@ export const loadDetailPostsSuccess = (data: LoadDetailPostsResponse) => ({
   type: LOAD_DETAIL_POSTS_SUCCESS,
   data,
 });
-export const loadDetailPostsFailure = () => ({
+export const loadDetailPostsFailure = (data: FailureResponse) => ({
   type: LOAD_DETAIL_POSTS_FAILURE,
+  data,
 });
 
 // 2022/05/21 - 특정 게시글 정보 요청 액션 크리에이터 - by 1-blue
@@ -116,8 +125,9 @@ export const removePostSuccess = (data: RemovePostResponse) => ({
   type: REMOVE_POST_SUCCESS,
   data,
 });
-export const removePostFailure = () => ({
+export const removePostFailure = (data: FailureResponse) => ({
   type: REMOVE_POST_FAILURE,
+  data,
 });
 
 // 2022/05/21 - 게시글의 댓글 요청 액션 크리에이터 - by 1-blue
@@ -129,8 +139,9 @@ export const loadCommentsSuccess = (data: LoadCommentsResponse) => ({
   type: LOAD_COMMENTS_SUCCESS,
   data,
 });
-export const loadCommentsFailure = () => ({
+export const loadCommentsFailure = (data: FailureResponse) => ({
   type: LOAD_COMMENTS_FAILURE,
+  data,
 });
 
 // 2022/05/21 - 게시글의 댓글 추가 요청 액션 크리에이터 - by 1-blue
@@ -142,8 +153,9 @@ export const appendCommentSuccess = (data: AppendCommentResponse) => ({
   type: APPEND_COMMENT_SUCCESS,
   data,
 });
-export const appendCommentFailure = () => ({
+export const appendCommentFailure = (data: FailureResponse) => ({
   type: APPEND_COMMENT_FAILURE,
+  data,
 });
 // 2022/05/21 - 게시글의 댓글 제거 요청 액션 크리에이터 - by 1-blue
 export const removeCommentRequest = (data: RemoveCommentBody) => ({
@@ -154,8 +166,9 @@ export const removeCommentSuccess = (data: RemoveCommentResponse) => ({
   type: REMOVE_COMMENT_SUCCESS,
   data,
 });
-export const removeCommentFailure = () => ({
+export const removeCommentFailure = (data: FailureResponse) => ({
   type: REMOVE_COMMENT_FAILURE,
+  data,
 });
 
 // 2022/05/21 - 게시글에 좋아요 추가 요청 액션 크리에이터 - by 1-blue
@@ -167,8 +180,9 @@ export const appendLikeToPostSuccess = (data: AppendLikeToPostResponse) => ({
   type: APPEND_LIKE_TO_POST_SUCCESS,
   data,
 });
-export const appendLikeToPostFailure = () => ({
+export const appendLikeToPostFailure = (data: FailureResponse) => ({
   type: APPEND_LIKE_TO_POST_FAILURE,
+  data,
 });
 // 2022/05/21 - 게시글에 좋아요 제거 요청 액션 크리에이터 - by 1-blue
 export const removeLikeToPostRequest = (data: RemoveLikeToPostBody) => ({
@@ -179,8 +193,9 @@ export const removeLikeToPostSuccess = (data: RemoveLikeToPostResponse) => ({
   type: REMOVE_LIKE_TO_POST_SUCCESS,
   data,
 });
-export const removeLikeToPostFailure = () => ({
+export const removeLikeToPostFailure = (data: FailureResponse) => ({
   type: REMOVE_LIKE_TO_POST_FAILURE,
+  data,
 });
 
 // 2022/05/21 - 댓글에 좋아요 추가 요청 액션 크리에이터 - by 1-blue
@@ -194,8 +209,9 @@ export const appendLikeToCommentSuccess = (
   type: APPEND_LIKE_TO_COMMENT_SUCCESS,
   data,
 });
-export const appendLikeToCommentFailure = () => ({
+export const appendLikeToCommentFailure = (data: FailureResponse) => ({
   type: APPEND_LIKE_TO_COMMENT_FAILURE,
+  data,
 });
 // 2022/05/21 - 댓글에 좋아요 제거 요청 액션 크리에이터 - by 1-blue
 export const removeLikeToCommentRequest = (data: RemoveLikeToCommentBody) => ({
@@ -208,8 +224,9 @@ export const removeLikeToCommentSuccess = (
   type: REMOVE_LIKE_TO_COMMENT_SUCCESS,
   data,
 });
-export const removeLikeToCommentFailure = () => ({
+export const removeLikeToCommentFailure = (data: FailureResponse) => ({
   type: REMOVE_LIKE_TO_COMMENT_FAILURE,
+  data,
 });
 
 // 2022/05/21 - 북마크 추가 요청 액션 크리에이터 - by 1-blue
@@ -221,8 +238,9 @@ export const appendBookmarkSuccess = (data: AppendBookmarkResponse) => ({
   type: APPEND_BOOKMARK_SUCCESS,
   data,
 });
-export const appendBookmarkFailure = () => ({
+export const appendBookmarkFailure = (data: FailureResponse) => ({
   type: APPEND_BOOKMARK_FAILURE,
+  data,
 });
 // 2022/05/21 - 북마크 제거 요청 액션 크리에이터 - by 1-blue
 export const removeBookmarkRequest = (data: RemoveBookmarkBody) => ({
@@ -233,11 +251,13 @@ export const removeBookmarkSuccess = (data: RemoveBookmarkResponse) => ({
   type: REMOVE_BOOKMARK_SUCCESS,
   data,
 });
-export const removeBookmarkFailure = () => ({
+export const removeBookmarkFailure = (data: FailureResponse) => ({
   type: REMOVE_BOOKMARK_FAILURE,
+  data,
 });
 
 export type PostActionRequest =
+  | ReturnType<typeof resetMessage>
   | ReturnType<typeof openWriteModalRequest>
   | ReturnType<typeof closeWriteModalRequest>
   | ReturnType<typeof loadPostsRequest>

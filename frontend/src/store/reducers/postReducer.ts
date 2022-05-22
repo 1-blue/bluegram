@@ -1,4 +1,5 @@
 import {
+  RESET_MESSAGE,
   LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   LOAD_POSTS_FAILURE,
@@ -55,53 +56,53 @@ type StateType = {
 
   uploadPostLoading: boolean;
   uploadPostDone: null | string;
-  uploadPostError: null;
+  uploadPostError: null | string;
 
   detailPosts: IPostWithPhotoAndCommentAndLikerAndCount[] | null;
   hasMoreDeatailPosts: boolean;
   loadDetailPostsLoading: boolean;
   loadDetailPostsDone: null | string;
-  loadDetailPostsError: null;
+  loadDetailPostsError: null | string;
 
   removePostLoading: boolean;
   removePostDone: null | string;
-  removePostError: null;
+  removePostError: null | string;
 
   loadCommentsLoading: boolean;
   loadCommentsDone: null | string;
-  loadCommentsError: null;
+  loadCommentsError: null | string;
 
   appendCommentLoading: boolean;
   appendCommentDone: null | string;
-  appendCommentError: null;
+  appendCommentError: null | string;
 
   removeCommentLoading: boolean;
   removeCommentDone: null | string;
-  removeCommentError: null;
+  removeCommentError: null | string;
 
   appendLikeToPostLoading: boolean;
   appendLikeToPostDone: null | string;
-  appendLikeToPostError: null;
+  appendLikeToPostError: null | string;
 
   removeLikeToPostLoading: boolean;
   removeLikeToPostDone: null | string;
-  removeLikeToPostError: null;
+  removeLikeToPostError: null | string;
 
   appendLikeToCommentLoading: boolean;
   appendLikeToCommentDone: null | string;
-  appendLikeToCommentError: null;
+  appendLikeToCommentError: null | string;
 
   removeLikeToCommentLoading: boolean;
   removeLikeToCommentDone: null | string;
-  removeLikeToCommentError: null;
+  removeLikeToCommentError: null | string;
 
   appendBookmarkLoading: boolean;
   appendBookmarkDone: null | string;
-  appendBookmarkError: null;
+  appendBookmarkError: null | string;
 
   removeBookmarkLoading: boolean;
   removeBookmarkDone: null | string;
-  removeBookmarkError: null;
+  removeBookmarkError: null | string;
 };
 
 const initState: StateType = {
@@ -182,13 +183,73 @@ const initState: StateType = {
   removeBookmarkError: null,
 };
 
-function postReducer(prevState = initState, action: PostActionRequest) {
+function postReducer(
+  prevState: StateType = initState,
+  action: PostActionRequest
+) {
   let tempDetailPosts:
     | null
     | undefined
     | IPostWithPhotoAndCommentAndLikerAndCount[] = null;
 
   switch (action.type) {
+    // 2022/05/2 - 리셋 메시지 - by 1-blue
+    case RESET_MESSAGE:
+      return {
+        ...prevState,
+        loadPostsLoading: false,
+        loadPostsDone: null,
+        loadPostsError: null,
+
+        uploadPostLoading: false,
+        uploadPostDone: null,
+        uploadPostError: null,
+
+        loadDetailPostsLoading: false,
+        loadDetailPostsDone: null,
+        loadDetailPostsError: null,
+
+        removePostLoading: false,
+        removePostDone: null,
+        removePostError: null,
+
+        loadCommentsLoading: false,
+        loadCommentsDone: null,
+        loadCommentsError: null,
+
+        appendCommentLoading: false,
+        appendCommentDone: null,
+        appendCommentError: null,
+
+        removeCommentLoading: false,
+        removeCommentDone: null,
+        removeCommentError: null,
+
+        appendLikeToPostLoading: false,
+        appendLikeToPostDone: null,
+        appendLikeToPostError: null,
+
+        removeLikeToPostLoading: false,
+        removeLikeToPostDone: null,
+        removeLikeToPostError: null,
+
+        appendLikeToCommentLoading: false,
+        appendLikeToCommentDone: null,
+        appendLikeToCommentError: null,
+
+        removeLikeToCommentLoading: false,
+        removeLikeToCommentDone: null,
+        removeLikeToCommentError: null,
+
+        appendBookmarkLoading: false,
+        appendBookmarkDone: null,
+        appendBookmarkError: null,
+
+        removeBookmarkLoading: false,
+        removeBookmarkDone: null,
+        removeBookmarkError: null,
+      };
+
     // 2022/05/19 - 게시글 생성 모달 토글 - by 1-blue
     case OPEN_WRITE_MODAL:
       return {
@@ -246,31 +307,7 @@ function postReducer(prevState = initState, action: PostActionRequest) {
       return {
         ...prevState,
         uploadPostLoading: false,
-      };
-
-    // 2022/05/21 - 특정 게시글 생성 요청 - by 1-blue
-    case LOAD_DETAIL_POSTS_REQUEST:
-      return {
-        ...prevState,
-        loadDetailPostsLoading: true,
-        loadDetailPostsDone: null,
-        loadDetailPostsError: null,
-      };
-    case LOAD_DETAIL_POSTS_SUCCESS:
-      return {
-        ...prevState,
-        loadDetailPostsLoading: false,
-        loadDetailPostsDone: action.data.message,
-        detailPosts: [
-          ...(prevState.detailPosts ? prevState.detailPosts : []),
-          ...action.data.posts,
-        ],
-        hasMoreDeatailPosts: action.data.posts.length === action.data.limit,
-      };
-    case LOAD_DETAIL_POSTS_FAILURE:
-      return {
-        ...prevState,
-        loadDetailPostsLoading: false,
+        uploadPostError: action.data.message,
       };
 
     // 2022/05/21 - 게시글 제거 요청 관련 변수 - by 1-blue
@@ -294,6 +331,36 @@ function postReducer(prevState = initState, action: PostActionRequest) {
       return {
         ...prevState,
         removePostLoading: false,
+        removePostError: action.data.message,
+      };
+
+    // 2022/05/21 - 특정 게시글 로드 요청 - by 1-blue
+    case LOAD_DETAIL_POSTS_REQUEST:
+      return {
+        ...prevState,
+        loadDetailPostsLoading: true,
+        loadDetailPostsDone: null,
+        loadDetailPostsError: null,
+      };
+    case LOAD_DETAIL_POSTS_SUCCESS:
+      return {
+        ...prevState,
+        loadDetailPostsLoading: false,
+        loadDetailPostsDone: action.data.message,
+        detailPosts: [
+          ...(prevState.detailPosts ? prevState.detailPosts : []),
+          ...action.data.posts.map((post) => ({
+            ...post,
+            hasMoreComments: true,
+            allCommentCount: post.Comments.length,
+          })),
+        ],
+        hasMoreDeatailPosts: action.data.posts.length === action.data.limit,
+      };
+    case LOAD_DETAIL_POSTS_FAILURE:
+      return {
+        ...prevState,
+        loadDetailPostsLoading: false,
       };
 
     // 2022/05/21 - 댓글 로드 요청 관련 변수 - by 1-blue
@@ -349,6 +416,7 @@ function postReducer(prevState = initState, action: PostActionRequest) {
       return {
         ...prevState,
         loadCommentsLoading: false,
+        loadCommentsError: action.data.message,
       };
 
     // 2022/05/21 - 댓글 추가 제거 요청 관련 변수 - by 1-blue
@@ -401,6 +469,7 @@ function postReducer(prevState = initState, action: PostActionRequest) {
       return {
         ...prevState,
         appendCommentLoading: false,
+        appendCommentError: action.data.message,
       };
 
     // 2022/05/21 - 댓글 제거 제거 요청 관련 변수 - by 1-blue
@@ -456,6 +525,7 @@ function postReducer(prevState = initState, action: PostActionRequest) {
       return {
         ...prevState,
         removeCommentLoading: false,
+        removeCommentError: action.data.message,
       };
 
     // 2022/05/21 - 게시글에 좋아요 추가 요청 관련 변수 - by 1-blue
@@ -483,11 +553,13 @@ function postReducer(prevState = initState, action: PostActionRequest) {
         ...prevState,
         appendLikeToPostLoading: false,
         appendLikeToPostDone: action.data.message,
+        detailPosts: tempDetailPosts,
       };
     case APPEND_LIKE_TO_POST_FAILURE:
       return {
         ...prevState,
         appendLikeToPostLoading: false,
+        appendLikeToPostError: action.data.message,
       };
 
     // 2022/05/21 - 게시글에 좋아요 제거 요청 관련 변수 - by 1-blue
@@ -520,6 +592,7 @@ function postReducer(prevState = initState, action: PostActionRequest) {
       return {
         ...prevState,
         removeLikeToPostLoading: false,
+        removeLikeToPostError: action.data.message,
       };
 
     // 2022/05/21 - 댓글에 좋아요 추가 요청 관련 변수 - by 1-blue
@@ -589,6 +662,7 @@ function postReducer(prevState = initState, action: PostActionRequest) {
       return {
         ...prevState,
         appendLikeToCommentLoading: false,
+        appendLikeToCommentError: action.data.message,
       };
 
     // 2022/05/21 - 댓글에 좋아요 제거 요청 관련 변수 - by 1-blue
@@ -652,12 +726,13 @@ function postReducer(prevState = initState, action: PostActionRequest) {
         ...prevState,
         removeLikeToCommentLoading: false,
         removeLikeToCommentDone: action.data.message,
+        detailPosts: tempDetailPosts,
       };
     case REMOVE_LIKE_TO_COMMENT_FAILURE:
       return {
         ...prevState,
         removeLikeToCommentLoading: false,
-        detailPosts: tempDetailPosts,
+        removeLikeToCommentError: action.data.message,
       };
 
     // 2022/05/21 - 북마크 추가 요청 관련 변수 - by 1-blue
@@ -688,6 +763,7 @@ function postReducer(prevState = initState, action: PostActionRequest) {
       return {
         ...prevState,
         appendBookmarkLoading: false,
+        appendBookmarkError: action.data.message,
       };
 
     // 2022/05/21 - 북마크 제거 요청 관련 변수 - by 1-blue
@@ -720,6 +796,7 @@ function postReducer(prevState = initState, action: PostActionRequest) {
       return {
         ...prevState,
         removeBookmarkLoading: false,
+        removeBookmarkError: action.data.message,
       };
 
     default:
