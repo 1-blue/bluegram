@@ -170,11 +170,11 @@ const WritePostModal = ({ showModal, onCloseModal }: Props) => {
   const onSubmit = useCallback(
     ({ text, photos }: WriteForm) => {
       if (text.length > 2200)
-        return alert(
+        return toast.error(
           `게시글 내용은 2200자 이하만 가능합니다.\n( 현재 ${text.length}자 )`
         );
       if (text.trim().length === 0)
-        return alert("게시글의 내용을 채우고 버튼을 눌러주세요!");
+        return toast.error("게시글의 내용을 채우고 버튼을 눌러주세요!");
 
       dispatch(uploadPostRequest({ content: text, photos }));
     },

@@ -1,3 +1,6 @@
+// type
+import { CSSProperties } from "react";
+
 // common-component
 import Spinner from "@src/components/common/Spinner";
 
@@ -9,12 +12,28 @@ type Props = {
   contents: React.ReactNode | string;
   loading?: boolean;
   primary?: boolean;
+  follow?: boolean;
+  style?: CSSProperties;
   [index: string]: any;
 };
 
-const Button = ({ type, contents, loading, primary, ...props }: Props) => {
+const Button = ({
+  type,
+  contents,
+  loading,
+  primary,
+  follow,
+  style,
+  ...props
+}: Props) => {
   return (
-    <Wrapper type={type} primary={primary} {...props}>
+    <Wrapper
+      type={type}
+      primary={primary}
+      follow={follow}
+      {...props}
+      style={style}
+    >
       {loading ? <Spinner kinds="button" /> : contents}
     </Wrapper>
   );

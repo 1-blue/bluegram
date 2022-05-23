@@ -12,9 +12,6 @@ import { signUpRequest } from "@src/store/actions/authAction";
 // type
 import type { AuthState } from "@src/store/reducers";
 
-// hooks
-import useToastMessage from "@src/hooks/useToastMessage";
-
 // common-component
 import Input from "@src/components/common/Input";
 import Textarea from "@src/components/common/Textarea";
@@ -63,7 +60,7 @@ export type ResponseOfPhoto = {
 
 const SignupPage = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError } = useSelector(
+  const { signUpLoading } = useSelector(
     ({ auth }: { auth: AuthState }) => auth
   );
 
@@ -81,13 +78,6 @@ const SignupPage = () => {
     (body: SignUpForm) => dispatch(signUpRequest(body)),
     [dispatch]
   );
-
-  // 2022/05/13 - 회원가입 성공 / 실패 메시지 - by 1-blue
-  useToastMessage({
-    done: signUpDone,
-    error: signUpError,
-    go: "/login",
-  });
 
   // 2022/05/15 - 이미지 드래그중인지 판단할 변수 - by 1-blue
   const [isDragging, setIsDragging] = useState(false);

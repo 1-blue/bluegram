@@ -13,6 +13,7 @@ import {
   SignUpBody,
   SignUpResponse,
   LogOutResponse,
+  FailureResponse,
 } from "@src/store/types";
 import { resetMessage } from ".";
 
@@ -25,9 +26,9 @@ export const localLoginSuccess = (data: LogInResponse) => ({
   type: LOCAL_LOGIN_SUCCESS,
   data,
 });
-export const localLoginFailure = (message: string) => ({
+export const localLoginFailure = (data: FailureResponse) => ({
   type: LOCAL_LOGIN_FAILURE,
-  message,
+  data,
 });
 
 // 2022/05/06 - 로컬 로그아웃 액션 크리에이터 - by 1-blue
@@ -47,7 +48,7 @@ export const signUpSuccess = (data: SignUpResponse) => ({
   type: SIGNUP_SUCCESS,
   data,
 });
-export const signUpFailure = (data: SignUpResponse) => ({
+export const signUpFailure = (data: FailureResponse) => ({
   type: SIGNUP_FAILURE,
   data,
 });

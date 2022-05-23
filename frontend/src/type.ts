@@ -1,44 +1,3 @@
-export type User = {
-  _id: number;
-  id?: string;
-  password?: string;
-  name: string;
-  email?: string;
-  birthday?: string;
-  introduction?: string;
-  snsId?: number;
-  provider?: string;
-};
-export type Post = {
-  _id: number;
-  content: string;
-  createdAt: Date;
-};
-export type Comment = {
-  _id: number;
-  content: string;
-};
-export type Hashtag = {
-  _id: number;
-  content: string;
-};
-export type Photo = {
-  _id: number;
-  name?: string;
-  url?: string;
-};
-
-export type SimpleUser = {
-  _id: number;
-  name: string;
-  Photos?: Photo[];
-};
-export interface IPostWithPhotoAndCommentAndLikerAndCount extends Post {
-  Photos?: Photo[];
-  Comments?: Comment[];
-  PostLikers?: SimpleUser[];
-}
-
 export enum ICON {
   HEART = "HEART",
   COMMENT = "COMMENT",
@@ -52,4 +11,70 @@ export enum ICON {
   AVATAR = "AVATAR",
   BOOKMARK = "BOOKMARK",
   DOCUMENT_DUPLICATE = "DOCUMENT_DUPLICATE",
+  V_OPTION = "V_OPTION",
+  H_OPTION = "H_OPTION",
+}
+
+export type User = {
+  _id: number;
+  id?: string;
+  password?: string;
+  name: string;
+  email?: string;
+  birthday?: string;
+  introduction?: string;
+  snsId?: number;
+  provider?: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+export type Post = {
+  _id: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  UserId: number;
+};
+export type Comment = {
+  _id: number;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  UserId: number;
+  PostId: number;
+  RecommentId?: number;
+};
+export type Photo = {
+  _id: number;
+  name?: string;
+  url?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  UserId: number;
+  PostId: number;
+};
+
+export type SimpleUser = {
+  _id: number;
+  name: string;
+  Photos?: Photo[];
+};
+export interface IPostWithPhotoAndCommentAndLikerAndCount extends Post {
+  allCommentCount: number;
+  hasMoreComments: boolean;
+  User: SimpleUser;
+  Photos: Photo[];
+  Comments: ICommentWithUserAndLikerAndCountAndRecomments[];
+  PostLikers: SimpleUser[];
+  PostBookmarks: SimpleUser[];
+}
+export interface ICommentWithUserAndLikerAndCount extends Comment {
+  allCommentCount: number;
+  hasMoreComments: boolean;
+  User: SimpleUser;
+  CommentLikers: SimpleUser[];
+}
+export interface ICommentWithUserAndLikerAndCountAndRecomments
+  extends ICommentWithUserAndLikerAndCount {
+  Recomments: ICommentWithUserAndLikerAndCount[];
 }

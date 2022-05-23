@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import Layout from "@src/components/Layout";
 import BottomNavigationBar from "@src/components/NavBar/BottomNavBar";
 import TopNavigationBar from "@src/components/NavBar/TopNavBar";
+import ToastMessage from "@src/components/ToastMessage";
 
 function MyApp({ Component, pageProps }: AppProps) {
   // 2022/05/18 - 창 넓이 구하는 변수/메서드들 - by 1-blue
@@ -44,6 +45,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           theme="dark"
           closeOnClick
         />
+
+        <ToastMessage />
       </ThemeProvider>
     </>
   );

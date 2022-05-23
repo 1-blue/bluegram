@@ -4,7 +4,6 @@ import Image from "next/image";
 export const Wrapper = styled.figure<{ $priview?: boolean }>`
   position: relative;
   background-color: black;
-  border-radius: 4px;
   width: 100%;
   padding-top: 100%;
 
@@ -23,7 +22,6 @@ export const Wrapper = styled.figure<{ $priview?: boolean }>`
 `;
 
 export const PhotoTag = styled(Image)<{ $cover?: boolean; $contain?: boolean }>`
-  border-radius: 4px;
   ${({ $cover }) =>
     $cover &&
     css`

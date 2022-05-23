@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 
-export const Wrapper = styled.button<{ primary?: boolean }>`
+export const Wrapper = styled.button<{ primary?: boolean; follow?: boolean }>`
   ${({ primary }) =>
     primary &&
     css`
@@ -19,5 +19,12 @@ export const Wrapper = styled.button<{ primary?: boolean }>`
       @media (max-width: 768px) {
         font-size: 0.6rem;
       }
+    `}
+
+  ${({ follow }) =>
+    follow &&
+    css`
+      color: blue;
+      font-weight: bold;
     `}
 `;
