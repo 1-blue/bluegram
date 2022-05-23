@@ -17,24 +17,13 @@ type Props = {
   onChangeText: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   textareaResize: () => void;
   onSubmitComment: (e: React.FormEvent<HTMLFormElement>) => void;
-  recommentMetadata: {
-    RecommentId: number | null;
-    username: string;
-  };
   setIsFocus: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 // eslint-disable-next-line react/display-name
 const PostCardCommentForm = forwardRef<HTMLTextAreaElement, Props>(
   (
-    {
-      text,
-      onChangeText,
-      textareaResize,
-      onSubmitComment,
-      recommentMetadata,
-      setIsFocus,
-    },
+    { text, onChangeText, textareaResize, onSubmitComment, setIsFocus },
     textareaRef
   ) => {
     const { me } = useSelector(({ user }: { user: UserState }) => user);
@@ -50,7 +39,7 @@ const PostCardCommentForm = forwardRef<HTMLTextAreaElement, Props>(
               width={28}
               height={28}
               photo={me?.Photos?.[0].name}
-              // className="post-card-comment-form-avatar"
+              style={{ marginRight: "10px" }}
             />
 
             <textarea
@@ -67,7 +56,7 @@ const PostCardCommentForm = forwardRef<HTMLTextAreaElement, Props>(
 
             <Button
               type="submit"
-              // className="post-card-comment-form-button"
+              className="post-card-comment-form-button"
               loading={appendCommentLoading}
               contents="제출"
             />

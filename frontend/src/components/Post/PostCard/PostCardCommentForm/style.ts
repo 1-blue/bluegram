@@ -2,16 +2,11 @@ import styled from "styled-components";
 
 export const Wrapper = styled.form`
   position: relative;
-  padding: 0.8em;
+  padding: 1em;
   margin-bottom: 2em;
   display: flex;
   align-items: center;
   background: rgba(0, 0, 0, 0.08);
-
-  /* 댓글 생성 폼의 유저 프로필 이미지 */
-  & .post-card-comment-form-avatar {
-    margin-right: 0.8em;
-  }
 
   /* 댓글 생성 폼의 textarea */
   & .post-card-form-text-area {

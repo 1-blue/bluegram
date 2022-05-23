@@ -14,9 +14,7 @@ import type { UserState } from "@src/store/reducers";
 
 type Props = {
   likers: SimpleUser[];
-  bookmarkers: {
-    _id: number;
-  }[];
+  bookmarkers: SimpleUser[];
   onClickPostLikeButton: (isLikedPost: boolean) => () => void;
   isFocus: boolean;
   onClickCommentIconButton: () => void;

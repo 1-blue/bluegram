@@ -69,5 +69,8 @@ export {
   uploadPostFailure,
   uploadPostRequest,
   uploadPostSuccess,
+  loadRecommentsRequest,
+  loadRecommentsSuccess,
+  loadRecommentsFailure,
 } from "./postAction";
 export type { PostActionRequest } from "./postAction";

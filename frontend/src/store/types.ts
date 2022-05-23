@@ -1,6 +1,7 @@
 import {
-  ICommentWithUserAndRecommentAndLiker,
+  ICommentWithUserAndLikerAndCountAndRecomments,
   IPostWithPhotoAndCommentAndLikerAndCount,
+  ICommentWithUserAndLikerAndCount,
   SimpleUser,
 } from "@src/type";
 
@@ -135,7 +136,7 @@ export type LoadCommentsBody = {
 export type LoadCommentsResponse = {
   ok: boolean;
   message: string;
-  Comments: ICommentWithUserAndRecommentAndLiker[];
+  Comments: ICommentWithUserAndLikerAndCountAndRecomments[];
   PostId: number;
   limit: number;
 };
@@ -152,9 +153,7 @@ export type AppendCommentBody = {
 export type AppendCommentResponse = {
   ok: boolean;
   message: string;
-  createdComment: ICommentWithUserAndRecommentAndLiker & {
-    allRecommentCount: number;
-  };
+  createdComment: ICommentWithUserAndLikerAndCountAndRecomments;
   RecommentId: number;
 };
 // 2022/05/21 - 게시글의 댓글 제거 요청 관련 타입 - by 1-blue
@@ -297,4 +296,22 @@ export type RemoveBookmarkResponse = {
   message: string;
   PostId: number;
   UserId: number;
+};
+
+// 2022/05/23 - 특정 댓글의 답글 요청 관련 타입 - by 1-blue
+export const LOAD_RECOMMENTS_REQUEST = "LOAD_RECOMMENTS_REQUEST" as const;
+export const LOAD_RECOMMENTS_SUCCESS = "LOAD_RECOMMENTS_SUCCESS" as const;
+export const LOAD_RECOMMENTS_FAILURE = "LOAD_RECOMMENTS_FAILURE" as const;
+export type LoadRecommentsBody = {
+  CommentId: number;
+  lastId: number | null;
+  limit: number;
+};
+export type LoadRecommentsResponse = {
+  ok: boolean;
+  message: string;
+  Recomments: ICommentWithUserAndLikerAndCount[];
+  targetPostId: number;
+  targetCommentId: number;
+  limit: number;
 };

@@ -6,6 +6,8 @@ import type {
   AppendCommentResponse,
   LoadCommentsBody,
   LoadCommentsResponse,
+  LoadRecommentsBody,
+  LoadRecommentsResponse,
   RemoveCommentBody,
   RemoveCommentResponse,
 } from "../types";
@@ -23,3 +25,13 @@ export const apiAppendComment = (body: AppendCommentBody) =>
 // 2022/05/21 - 게시글의 댓글 제거 요청 - by 1-blue
 export const apiRemoveComment = ({ CommentId }: RemoveCommentBody) =>
   axiosInstance.delete<RemoveCommentResponse>(`/comment/post/${CommentId}`);
+
+// 2022/05/23 - 특정 댓글의 답글들 가져오기 - by 1-blue
+export const apiLoadRecomments = ({
+  CommentId,
+  lastId,
+  limit,
+}: LoadRecommentsBody) =>
+  axiosInstance.get<LoadRecommentsResponse>(
+    `/comment/recomment/${CommentId}?lastId=${lastId}&limit=${limit}`
+  );

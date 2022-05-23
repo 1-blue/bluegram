@@ -52,6 +52,13 @@ import {
   REMOVE_BOOKMARK_SUCCESS,
   REMOVE_BOOKMARK_FAILURE,
   REMOVE_BOOKMARK_REQUEST,
+  LoadRecommentsResponse,
+  LOAD_RECOMMENTS_SUCCESS,
+  LOAD_RECOMMENTS_FAILURE,
+  LOAD_RECOMMENTS_REQUEST,
+  REMOVE_COMMENT_SUCCESS,
+  REMOVE_COMMENT_FAILURE,
+  REMOVE_COMMENT_REQUEST,
 } from "@src/store/types";
 
 // api
@@ -70,6 +77,7 @@ import {
   apiAppendBookmark,
   apiRemoveBookmark,
 } from "@src/store/api";
+import { apiLoadRecomments } from "../api/comment";
 
 function* loadPosts(action: any) {
   try {
@@ -211,7 +219,7 @@ function* removeComment(action: any) {
       action.data
     );
 
-    yield put({ type: APPEND_COMMENT_SUCCESS, data });
+    yield put({ type: REMOVE_COMMENT_SUCCESS, data });
   } catch (error: any) {
     console.error("postSaga removeComment >> ", error);
 
@@ -220,11 +228,11 @@ function* removeComment(action: any) {
         ? error.response.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: APPEND_COMMENT_FAILURE, data: { message } });
+    yield put({ type: REMOVE_COMMENT_FAILURE, data: { message } });
   }
 }
 function* watchRemoveComment() {
-  yield takeLatest(APPEND_COMMENT_REQUEST, removeComment);
+  yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
 }
 
 function* appendLikeToPost(action: any) {
@@ -365,6 +373,29 @@ function* watchRemoveBookmark() {
   yield takeLatest(REMOVE_BOOKMARK_REQUEST, removeBookmark);
 }
 
+function* loadRecomments(action: any) {
+  try {
+    const { data }: AxiosResponse<LoadRecommentsResponse> = yield call(
+      apiLoadRecomments,
+      action.data
+    );
+
+    yield put({ type: LOAD_RECOMMENTS_SUCCESS, data });
+  } catch (error: any) {
+    console.error("postSaga loadRecomments >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_RECOMMENTS_FAILURE, data: { message } });
+  }
+}
+function* watchLoadRecomments() {
+  yield takeLatest(LOAD_RECOMMENTS_REQUEST, loadRecomments);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
@@ -380,5 +411,6 @@ export default function* postSaga() {
     fork(watchRemoveLikeToComment),
     fork(watchAppendBookmark),
     fork(watchRemoveBookmark),
+    fork(watchLoadRecomments),
   ]);
 }

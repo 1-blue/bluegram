@@ -67,6 +67,11 @@ import {
   REMOVE_BOOKMARK_SUCCESS,
   REMOVE_BOOKMARK_FAILURE,
   FailureResponse,
+  LoadRecommentsBody,
+  LoadRecommentsResponse,
+  LOAD_RECOMMENTS_REQUEST,
+  LOAD_RECOMMENTS_SUCCESS,
+  LOAD_RECOMMENTS_FAILURE,
 } from "@src/store/types";
 import { resetMessage } from ".";
 
@@ -256,6 +261,20 @@ export const removeBookmarkFailure = (data: FailureResponse) => ({
   data,
 });
 
+// 2022/05/23 - 특정 댓글의 답글 로드 액션 크리에이터 - by 1-blue
+export const loadRecommentsRequest = (data: LoadRecommentsBody) => ({
+  type: LOAD_RECOMMENTS_REQUEST,
+  data,
+});
+export const loadRecommentsSuccess = (data: LoadRecommentsResponse) => ({
+  type: LOAD_RECOMMENTS_SUCCESS,
+  data,
+});
+export const loadRecommentsFailure = (data: FailureResponse) => ({
+  type: LOAD_RECOMMENTS_FAILURE,
+  data,
+});
+
 export type PostActionRequest =
   | ReturnType<typeof resetMessage>
   | ReturnType<typeof openWriteModalRequest>
@@ -298,4 +317,7 @@ export type PostActionRequest =
   | ReturnType<typeof appendBookmarkFailure>
   | ReturnType<typeof removeBookmarkRequest>
   | ReturnType<typeof removeBookmarkSuccess>
-  | ReturnType<typeof removeBookmarkFailure>;
+  | ReturnType<typeof removeBookmarkFailure>
+  | ReturnType<typeof loadRecommentsRequest>
+  | ReturnType<typeof loadRecommentsSuccess>
+  | ReturnType<typeof loadRecommentsFailure>;

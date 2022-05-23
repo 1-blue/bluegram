@@ -41,6 +41,9 @@ import {
   REMOVE_BOOKMARK_REQUEST,
   REMOVE_BOOKMARK_SUCCESS,
   REMOVE_BOOKMARK_FAILURE,
+  LOAD_RECOMMENTS_REQUEST,
+  LOAD_RECOMMENTS_SUCCESS,
+  LOAD_RECOMMENTS_FAILURE,
 } from "@src/store/types";
 import type { PostActionRequest } from "../actions";
 import { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
@@ -103,6 +106,10 @@ type StateType = {
   removeBookmarkLoading: boolean;
   removeBookmarkDone: null | string;
   removeBookmarkError: null | string;
+
+  loadRecommentsLoading: boolean;
+  loadRecommentsDone: null | string;
+  loadRecommentsError: null | string;
 };
 
 const initState: StateType = {
@@ -181,6 +188,11 @@ const initState: StateType = {
   removeBookmarkLoading: false,
   removeBookmarkDone: null,
   removeBookmarkError: null,
+
+  // 2022/05/23 - 특정 댓글의 답글 요청 관련 변수 - by 1-blue
+  loadRecommentsLoading: false,
+  loadRecommentsDone: null,
+  loadRecommentsError: null,
 };
 
 function postReducer(
@@ -248,6 +260,10 @@ function postReducer(
         removeBookmarkLoading: false,
         removeBookmarkDone: null,
         removeBookmarkError: null,
+
+        loadRecommentsLoading: false,
+        loadRecommentsDone: null,
+        loadRecommentsError: null,
       };
 
     // 2022/05/19 - 게시글 생성 모달 토글 - by 1-blue
@@ -383,8 +399,8 @@ function postReducer(
               ...post.Comments,
               ...action.data.Comments.map((comment) => ({
                 ...comment,
-                allRecommentCount: comment?.Recomments?.length,
-                hasMoreRecomments: true,
+                allCommentCount: comment?.Recomments?.length,
+                hasMoreComments: true,
               })),
             ],
             hasMoreComments: action.data.limit === action.data.Comments.length,
@@ -397,8 +413,8 @@ function postReducer(
             Comments: [
               ...action.data.Comments.map((comment) => ({
                 ...comment,
-                allRecommentCount: comment.Recomments.length,
-                hasMoreRecomments: true,
+                allCommentCount: comment.Recomments.length,
+                hasMoreComments: true,
               })),
             ],
             hasMoreComments: action.data.limit === action.data.Comments.length,
@@ -452,7 +468,7 @@ function postReducer(
               return {
                 ...comment,
                 Recomments: [...comment.Recomments, action.data.createdComment],
-                allRecommentCount: comment.allRecommentCount + 1,
+                allCommentCount: comment.allCommentCount + 1,
               };
             }),
           };
@@ -797,6 +813,91 @@ function postReducer(
         ...prevState,
         removeBookmarkLoading: false,
         removeBookmarkError: action.data.message,
+      };
+
+    // 2022/05/21 - 북마크 제거 요청 관련 변수 - by 1-blue
+    case REMOVE_BOOKMARK_REQUEST:
+      return {
+        ...prevState,
+        removeBookmarkLoading: true,
+        removeBookmarkDone: null,
+        removeBookmarkError: null,
+      };
+    case REMOVE_BOOKMARK_SUCCESS:
+      tempDetailPosts = prevState.detailPosts?.map((post) => {
+        if (post._id !== action.data.PostId) return post;
+
+        return {
+          ...post,
+          PostBookmarks: post.PostBookmarks.filter(
+            (bookmark) => bookmark._id !== action.data.UserId
+          ),
+        };
+      });
+
+      return {
+        ...prevState,
+        removeBookmarkLoading: false,
+        removeBookmarkDone: action.data.message,
+        detailPosts: tempDetailPosts,
+      };
+    case REMOVE_BOOKMARK_FAILURE:
+      return {
+        ...prevState,
+        removeBookmarkLoading: false,
+        removeBookmarkError: action.data.message,
+      };
+
+    // 2022/05/23 - 답글 패치 요청 관련 변수 - by 1-blue
+    case LOAD_RECOMMENTS_REQUEST:
+      return {
+        ...prevState,
+        loadRecommentsLoading: false,
+        loadRecommentsDone: null,
+        loadRecommentsError: null,
+      };
+    case LOAD_RECOMMENTS_SUCCESS:
+      tempDetailPosts = prevState.detailPosts?.map((post) => {
+        if (post._id !== action.data.targetPostId) return post;
+
+        return {
+          ...post,
+          Comments: post.Comments.map((comment) => {
+            if (comment._id !== action.data.targetCommentId) return comment;
+
+            // 이전에 답글을 불러온적이 있다면
+            if (comment.Recomments[0]?.content) {
+              return {
+                ...comment,
+                Recomments: [...comment.Recomments, ...action.data.Recomments],
+                hasMoreComments:
+                  action.data.Recomments.length === action.data.limit,
+              };
+            }
+            // 처음 답글을 불러온다면
+            else {
+              return {
+                ...comment,
+                Recomments: [...action.data.Recomments],
+                hasMoreComments:
+                  action.data.Recomments.length === action.data.limit,
+              };
+            }
+          }),
+        };
+      });
+
+      return {
+        ...prevState,
+        loadRecommentsLoading: false,
+        loadRecommentsDone: action.data.message,
+        detailPosts: tempDetailPosts,
+      };
+    case LOAD_RECOMMENTS_FAILURE:
+      return {
+        ...prevState,
+        loadRecommentsLoading: false,
+        loadRecommentsError: action.data.message,
       };
 
     default:

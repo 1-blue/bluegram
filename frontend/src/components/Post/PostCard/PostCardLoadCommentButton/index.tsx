@@ -8,13 +8,11 @@ import { Wrapper } from "./style";
 import Spinner from "@src/components/common/Spinner";
 
 // type
+import type { ICommentWithUserAndLikerAndCountAndRecomments } from "@src/type";
 import type { PostState } from "@src/store/reducers";
-import type { ICommentWithUserAndRecommentAndLiker } from "@src/type";
 
 type Props = {
-  Comments: (ICommentWithUserAndRecommentAndLiker & {
-    allRecommentCount: number;
-  })[];
+  Comments: ICommentWithUserAndLikerAndCountAndRecomments[];
   allCommentCount: number;
   onClickloadMoreComment: (lastId: number) => () => void;
 };

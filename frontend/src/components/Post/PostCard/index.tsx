@@ -18,15 +18,14 @@ import PostCardCommentForm from "./PostCardCommentForm";
 
 // type
 import type { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
+import type { PostState, UserState } from "@src/store/reducers";
 
 // actions
 import {
-  // resetMessageAction,
   removePostRequest,
   appendCommentRequest,
   removeCommentRequest,
   loadCommentsRequest,
-  // loadRecomments,
   appendLikeToPostRequest,
   removeLikeToPostRequest,
   appendLikeToCommentRequest,
@@ -35,11 +34,11 @@ import {
   unfollowRequest,
   removeBookmarkRequest,
   appendBookmarkRequest,
+  loadRecommentsRequest,
 } from "@src/store/actions";
 
 // hooks
 import useTextarea from "@src/hooks/useTextarea";
-import type { PostState, UserState } from "@src/store/reducers";
 
 type Props = {
   post: IPostWithPhotoAndCommentAndLikerAndCount;
@@ -90,7 +89,7 @@ const PostCard = ({ post }: Props) => {
 
   // 2022/01/19 - 버튼 아이콘 클릭 시 포커스 부여 - by 1-blue
   const onClickCommentIconButton = useCallback(() => {
-    if (!me?._id) return alert("로그인후에 접근해주세요");
+    if (!me?._id) return toast.error("로그인후에 접근해주세요!");
 
     textareaRef.current?.focus();
   }, [me, textareaRef]);
@@ -98,7 +97,7 @@ const PostCard = ({ post }: Props) => {
   // 2022/01/19 - 답글 달기 버튼 클릭 시 포커스 부여 + 답글에 대한 정보 기록 - by 1-blue
   const onClickRecommentButton = useCallback(
     (RecommentId: number, username: string) => () => {
-      if (!me?._id) return alert("로그인인후에 접근해주세요");
+      if (!me?._id) return toast.error("로그인인후에 접근해주세요");
 
       setRecommentMetadata({ RecommentId, username });
       textareaRef.current?.focus();
@@ -128,9 +127,9 @@ const PostCard = ({ post }: Props) => {
 
       const length = processingContent.trim().length;
 
-      if (length === 0) return alert("댓글을 입력하고 제출해주세요!");
+      if (length === 0) return toast.error("댓글을 입력하고 제출해주세요!");
       if (length > 200)
-        return alert(
+        return toast.error(
           `댓글의 최대 길이는 200자입니다.\n( 현재 길이 ${length} )`
         );
 
@@ -144,7 +143,6 @@ const PostCard = ({ post }: Props) => {
 
       // textarea 초기화
       setText("");
-      // dispatch(resetMessageAction());
       textareaResize();
     },
     [dispatch, text, setText, post, recommentMetadata, textareaResize]
@@ -175,7 +173,7 @@ const PostCard = ({ post }: Props) => {
   // 2022/01/17 - 현재 게시글의 특정 댓글의 답글 불러오기 - by 1-blue
   const onClickloadMoreRecomment = useCallback(
     (lastId: number | null, CommentId: number) => () => {
-      // dispatch(loadRecomments({ CommentId, lastId, limit: 5 }));
+      dispatch(loadRecommentsRequest({ CommentId, lastId, limit: 5 }));
     },
     [dispatch]
   );
@@ -184,7 +182,7 @@ const PostCard = ({ post }: Props) => {
   const onClickPostLikeButton = useCallback(
     (isLikedPost: boolean) => () => {
       // 비로그인 접근
-      if (!me?._id) return alert("로그인후에 접근해주세요!");
+      if (!me?._id) return toast.error("로그인후에 접근해주세요!");
 
       // 이미 좋아요 처리중이라면 요청 중지
       if (appendLikeToPostLoading || removeLikeToPostLoading)
@@ -203,11 +201,11 @@ const PostCard = ({ post }: Props) => {
   const onClickCommentLikeButton = useCallback(
     (isLikedComment: boolean, CommentId: number) => () => {
       // 비로그인 접근
-      if (!me?._id) return alert("로그인후에 접근해주세요!");
+      if (!me?._id) return toast.error("로그인후에 접근해주세요!");
 
       // 이미 좋아요 처리중이라면 요청 중지
       if (appendLikeToCommentLoading || removeLikeToCommentLoading)
-        return alert(
+        return toast.error(
           "이미 댓글에 좋아요 요청 처리중입니다.\n잠시후에 다시 시도해주세요"
         );
 
@@ -224,10 +222,10 @@ const PostCard = ({ post }: Props) => {
   const onClickFollowButton = useCallback(
     (UserId: number, isFollow: boolean) => () => {
       // 비로그인 접근
-      if (!me?._id) return alert("로그인후에 접근해주세요!");
+      if (!me?._id) return toast.error("로그인후에 접근해주세요!");
 
       if (followLoading || unfollowLoading)
-        return alert(
+        return toast.error(
           "이미 팔로우/언팔로우 처리 중입니다.\n잠시후에 다시 시도해주세요!"
         );
 
@@ -244,10 +242,12 @@ const PostCard = ({ post }: Props) => {
   const onClickBookmarkButton = useCallback(
     (isBookmark: boolean) => () => {
       // 비로그인 접근
-      if (!me?._id) return alert("로그인후에 접근해주세요!");
+      if (!me?._id) return toast.error("로그인후에 접근해주세요!");
 
       if (appendBookmarkLoading || removeBookmarkLoading)
-        return alert("이미 북마크 처리중입니다.\n잠시후에 다시 시도해주세요!");
+        return toast.error(
+          "이미 북마크 처리중입니다.\n잠시후에 다시 시도해주세요!"
+        );
 
       if (isBookmark) {
         dispatch(removeBookmarkRequest({ PostId: post._id }));
@@ -327,7 +327,6 @@ const PostCard = ({ post }: Props) => {
         onChangeText={onChangeText}
         textareaResize={textareaResize}
         onSubmitComment={onSubmitComment}
-        recommentMetadata={recommentMetadata}
         setIsFocus={setIsFocus}
       />
     </Wrapper>

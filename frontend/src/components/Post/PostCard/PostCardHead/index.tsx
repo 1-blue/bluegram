@@ -30,7 +30,7 @@ const PostCardHead = ({ user, onRemovePost, onClickFollowButton }: Props) => {
   const [isFollow, setIsFollow] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
 
-  // onOpenMenu, onCloseMenu
+  // 2022/05/21 - 메뉴 토글 - by 1-blue
   const onOpenMenu = useCallback(() => setIsShowMenu(true), []);
   const onCloseMenu = useCallback(() => setIsShowMenu(false), []);
 

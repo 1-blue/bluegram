@@ -1,28 +1,14 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
 // styled-components
 import { Wrapper } from "./style";
 
-// common-components
-import Spinner from "@src/components/common/Spinner";
-
 // type
-import type { SimpleUser } from "@src/type";
-import type { PostState } from "@src/store/reducers";
+import type { ICommentWithUserAndLikerAndCount } from "@src/type";
 
 type Props = {
-  allRecommentCount: number;
-  Recomments: {
-    _id: number;
-    content: string;
-    createdAt: Date;
-    User: SimpleUser;
-    CommentLikers: {
-      _id: number;
-      name: string;
-    }[];
-  }[];
+  allCommentCount: number;
+  Recomments: ICommentWithUserAndLikerAndCount[];
   onClickloadMoreRecomment: (
     lastId: number | null,
     CommentId: number
@@ -31,15 +17,11 @@ type Props = {
 };
 
 const PostCardLoadRecommentButton = ({
-  allRecommentCount,
+  allCommentCount,
   Recomments,
   onClickloadMoreRecomment,
   CommentId,
 }: Props) => {
-  // const { loadRecommentsLoading, loadCommentId } = useSelector(
-  //   ({ post }: { post: PostState }) => post
-  // );
-
   return (
     <Wrapper>
       <button
@@ -53,15 +35,11 @@ const PostCardLoadRecommentButton = ({
         className="post-card-load-more-recomment-button"
       >
         ㅡㅡㅡ 답글
-        {allRecommentCount === Recomments.length
-          ? allRecommentCount
-          : allRecommentCount - Recomments.length}
+        {allCommentCount === Recomments.length
+          ? allCommentCount
+          : allCommentCount - Recomments.length}
         개 더 불러오기
       </button>
-
-      {/* {loadRecommentsLoading && loadCommentId === CommentId && (
-        <Spinner kinds="page" />
-      )} */}
     </Wrapper>
   );
 };

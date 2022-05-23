@@ -15,21 +15,12 @@ import { timeFormat } from "@src/libs/dateFormat";
 
 // type
 import { ICON } from "@src/type";
-import type { SimpleUser } from "@src/type";
+import type { ICommentWithUserAndLikerAndCount } from "@src/type";
 import type { UserState } from "@src/store/reducers";
 import type { RemoveCommentBody } from "@src/store/types";
 
 type Props = {
-  recomment: {
-    _id: number;
-    content: string;
-    createdAt: Date;
-    User: SimpleUser;
-    CommentLikers: {
-      _id: number;
-      name: string;
-    }[];
-  };
+  recomment: ICommentWithUserAndLikerAndCount;
   onRemoveComment: (CommentId: number) => () => {
     type: "REMOVE_COMMENT_REQUEST";
     data: RemoveCommentBody;
@@ -46,6 +37,7 @@ const PostCardRecomment = ({
   onClickCommentLikeButton,
 }: Props) => {
   const { me } = useSelector(({ user }: { user: UserState }) => user);
+  // 2022/05/21 - 메뉴 토글 - by 1-blue
   const [isShowMenu, setIsShowMenu] = useState(false);
   const onOpenMenu = useCallback(() => setIsShowMenu(true), [setIsShowMenu]);
   const onCloseMenu = useCallback(() => setIsShowMenu(false), [setIsShowMenu]);
@@ -75,7 +67,7 @@ const PostCardRecomment = ({
               height={30}
               photo={recomment.User.Photos?.[0].name}
               alt="답글 유저의 프로필 이미지"
-              // className="post-card-recomment-avatar"
+              style={{ marginRight: "10px" }}
             />
           </a>
         </Link>
@@ -119,8 +111,8 @@ const PostCardRecomment = ({
           </button>
           <button
             type="button"
-            className="post-card-recomment-heart-button"
             onClick={onClickCommentLikeButton(isLikedRecomment, recomment._id)}
+            style={{ color: "red" }}
           >
             <Icon
               width={16}

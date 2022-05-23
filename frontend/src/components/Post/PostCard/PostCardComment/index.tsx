@@ -20,14 +20,12 @@ import { timeFormat } from "@src/libs/dateFormat";
 
 // type
 import { ICON } from "@src/type";
-import type { ICommentWithUserAndRecommentAndLiker } from "@src/type";
+import type { ICommentWithUserAndLikerAndCountAndRecomments } from "@src/type";
 import type { RemoveCommentBody } from "@src/store/types";
 import type { UserState } from "@src/store/reducers";
 
 type Props = {
-  comment: ICommentWithUserAndRecommentAndLiker & {
-    allRecommentCount: number;
-  };
+  comment: ICommentWithUserAndLikerAndCountAndRecomments;
   onRemoveComment: (CommentId: number) => () => {
     type: "REMOVE_COMMENT_REQUEST";
     data: RemoveCommentBody;
@@ -51,9 +49,11 @@ const PostCardComment = ({
   onClickRecommentButton,
 }: Props) => {
   const { me } = useSelector(({ user }: { user: UserState }) => user);
+  // 2022/05/21 - 메뉴 토글 - by 1-blue
   const [isShowMenu, setIsShowMenu] = useState(false);
   const onOpenMenu = useCallback(() => setIsShowMenu(true), [setIsShowMenu]);
   const onCloseMenu = useCallback(() => setIsShowMenu(false), [setIsShowMenu]);
+  // 2022/05/21 - 답글 토글 - by 1-blue
   const [isShowRecomment, setIsShowRecomment] = useState(true);
   const onToggleComment = useCallback(
     () => setIsShowRecomment((prev) => !prev),
@@ -88,7 +88,7 @@ const PostCardComment = ({
               height={30}
               photo={comment.User.Photos?.[0].name}
               alt="댓글 유저의 프로필 이미지"
-              // className="post-card-comment-avatar"
+              style={{ marginRight: "10px" }}
             />
           </a>
         </Link>
@@ -138,8 +138,8 @@ const PostCardComment = ({
           </button>
           <button
             type="button"
-            className="post-card-comment-heart-button"
             onClick={onClickCommentLikeButton(isLikedComment, comment._id)}
+            style={{ color: "red" }}
           >
             <Icon
               width={16}
@@ -165,7 +165,7 @@ const PostCardComment = ({
       </li>
 
       {/* 답글 토글 버튼 */}
-      {comment.Recomments.length > 0 && !comment.hasMoreRecomments && (
+      {comment.Recomments.length > 0 && !comment.hasMoreComments && (
         <PostCardCommentToggleButton
           isShowComment={isShowRecomment}
           onToggleComment={onToggleComment}
@@ -174,9 +174,9 @@ const PostCardComment = ({
       )}
 
       {/* 답글 더 보기 버튼 */}
-      {comment.Recomments.length > 0 && comment.hasMoreRecomments && (
+      {comment.Recomments.length > 0 && comment.hasMoreComments && (
         <PostCardLoadRecommentButton
-          allRecommentCount={comment.allRecommentCount}
+          allCommentCount={comment.allCommentCount}
           Recomments={comment.Recomments}
           CommentId={comment._id}
           onClickloadMoreRecomment={onClickloadMoreRecomment}

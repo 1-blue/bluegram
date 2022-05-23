@@ -9,11 +9,6 @@ export const Wrapper = styled.ul`
     padding: 0 0.8em 0.8em 0.8em;
   }
 
-  /* 댓글 작성자 프사 */
-  & .post-card-comment-avatar {
-    margin-right: 0.8em;
-  }
-
   /* 배치를 위해 댓글 컨텐츠를 감싼 태그 */
   & .post-card-comment-content-wrapper {
     width: 80%;
