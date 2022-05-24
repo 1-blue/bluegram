@@ -23,6 +23,7 @@ export {
   apiUploadPost,
   apiLoadDetailPosts,
   apiRemovePost,
+  apiLoadPostsOfHashtag,
 } from "./post";
 export { apiLoadComments, apiAppendComment, apiRemoveComment } from "./comment";
 export {

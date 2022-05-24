@@ -10,6 +10,8 @@ import type {
   LoadDetailPostsResponse,
   RemovePostBody,
   RemovePostResponse,
+  LoadPostsOfHashtagBody,
+  LoadPostsOfHashtagResponse,
 } from "../types";
 
 // 2022/05/07 - 모든 게시글들 요청 - by 1-blue
@@ -31,3 +33,13 @@ export const apiLoadDetailPosts = ({ lastId, limit }: LoadDetailPostsBody) =>
 // 2022/05/21 - 특정 게시글 제거 요청 - by 1-blue
 export const apiRemovePost = ({ PostId }: RemovePostBody) =>
   axiosInstance.delete<RemovePostResponse>(`/post/${PostId}`);
+
+// 2022/05/25 - 특정 해시태그를 포함하는 게시글들 로드 요청 - by 1-blue
+export const apiLoadPostsOfHashtag = ({
+  hashtag,
+  lastId,
+  limit,
+}: LoadPostsOfHashtagBody) =>
+  axiosInstance.get<LoadPostsOfHashtagResponse>(
+    `/posts/hashtag/${hashtag}?lastId=${lastId}&limit=${limit}`
+  );

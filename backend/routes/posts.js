@@ -300,11 +300,12 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
 
     if (!hashtag)
       return res.status(200).json({
+        ok: true,
         message: "해시태그가 존재하지 않습니다.",
-        postsOfHashtag: [],
         limit,
-        postsOfHashtagCount: 0,
-        hashtagText,
+        posts: [],
+        postCount: 0,
+        hashtag: hashtagText,
       });
 
     const postsOfHashtag = await hashtag.getPostHashtaged({
@@ -319,14 +320,14 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
           include: [
             // 게시글 작성자의 프로필 이미지
             {
-              model: Image,
+              model: Photo,
               attributes: ["_id", "name", "url"],
             },
           ],
         },
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들
@@ -368,12 +369,12 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
         : `#${hashtagText}인 게시글을 추가로 ${postsOfHashtag.length}개를 불러왔습니다.`;
 
     res.status(200).json({
+      ok: true,
       message,
-      postsOfHashtag,
-
       limit,
-      postsOfHashtagCount,
-      hashtagText,
+      posts: postsOfHashtag,
+      postCount: postsOfHashtagCount,
+      hashtag: hashtagText,
     });
   } catch (error) {
     console.error("GET /post/hashtag/:hashtag error >> ", error);
