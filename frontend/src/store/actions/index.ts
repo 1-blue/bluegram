@@ -72,5 +72,8 @@ export {
   loadRecommentsRequest,
   loadRecommentsSuccess,
   loadRecommentsFailure,
+  loadPostsOfHashtagRequest,
+  loadPostsOfHashtagSuccess,
+  loadPostsOfHashtagFailure,
 } from "./postAction";
 export type { PostActionRequest } from "./postAction";

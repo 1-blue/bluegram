@@ -44,6 +44,9 @@ import {
   LOAD_RECOMMENTS_REQUEST,
   LOAD_RECOMMENTS_SUCCESS,
   LOAD_RECOMMENTS_FAILURE,
+  LOAD_POSTS_OF_HASHTAG_REQUEST,
+  LOAD_POSTS_OF_HASHTAG_SUCCESS,
+  LOAD_POSTS_OF_HASHTAG_FAILURE,
 } from "@src/store/types";
 import type { PostActionRequest } from "../actions";
 import { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
@@ -110,6 +113,16 @@ type StateType = {
   loadRecommentsLoading: boolean;
   loadRecommentsDone: null | string;
   loadRecommentsError: null | string;
+
+  loadPostsOfHashtagLoading: boolean;
+  loadPostsOfHashtagDone: null | string;
+  loadPostsOfHashtagError: null | string;
+
+  hashtagData: {
+    hasMoreHashtagPosts: boolean;
+    postsOfHashtagCount: number;
+    hashtag: string;
+  };
 };
 
 const initState: StateType = {
@@ -193,6 +206,17 @@ const initState: StateType = {
   loadRecommentsLoading: false,
   loadRecommentsDone: null,
   loadRecommentsError: null,
+
+  // 2022/05/25 - 특정 해시태그를 포함하는 게시글들 요청 관련 변수 - by 1-blue
+  loadPostsOfHashtagLoading: false,
+  loadPostsOfHashtagDone: null,
+  loadPostsOfHashtagError: null,
+  // 2022/05/25 - 해시태그 처리에 필요한 데이터들 - by 1-blue
+  hashtagData: {
+    hasMoreHashtagPosts: true,
+    postsOfHashtagCount: 0,
+    hashtag: "",
+  },
 };
 
 function postReducer(
@@ -765,7 +789,10 @@ function postReducer(
 
         return {
           ...post,
-          PostBookmarks: [...post.PostBookmarks, { _id: action.data.UserId }],
+          PostBookmarks: [
+            ...post.PostBookmarks,
+            { _id: action.data.UserId, name: "임시", Photos: [] },
+          ],
         };
       });
 
@@ -898,6 +925,52 @@ function postReducer(
         ...prevState,
         loadRecommentsLoading: false,
         loadRecommentsError: action.data.message,
+      };
+
+    // 2022/05/25 - 답글 패치 요청 관련 변수 - by 1-blue
+    case LOAD_POSTS_OF_HASHTAG_REQUEST:
+      return {
+        ...prevState,
+        loadPostsOfHashtagLoading: false,
+        loadPostsOfHashtagDone: null,
+        loadPostsOfHashtagError: null,
+      };
+    case LOAD_POSTS_OF_HASHTAG_SUCCESS:
+      if (prevState.hashtagData.hashtag === action.data.hashtag) {
+        tempDetailPosts = [
+          ...prevState.detailPosts!,
+          ...action.data.posts.map((post) => ({
+            ...post,
+            hasMoreComments: true,
+            allCommentCount: post.Comments.length,
+          })),
+        ];
+      } else {
+        tempDetailPosts = [
+          ...action.data.posts.map((post) => ({
+            ...post,
+            hasMoreComments: true,
+            allCommentCount: post.Comments.length,
+          })),
+        ];
+      }
+
+      return {
+        ...prevState,
+        loadPostsOfHashtagLoading: false,
+        loadPostsOfHashtagDone: action.data.message,
+        detailPosts: tempDetailPosts,
+        hashtagData: {
+          hasMoreHashtagPosts: action.data.posts.length === action.data.limit,
+          postsOfHashtagCount: action.data.postCount,
+          hashtag: action.data.hashtag,
+        },
+      };
+    case LOAD_POSTS_OF_HASHTAG_FAILURE:
+      return {
+        ...prevState,
+        loadPostsOfHashtagLoading: false,
+        loadPostsOfHashtagError: action.data.message,
       };
 
     default:

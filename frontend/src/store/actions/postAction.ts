@@ -72,6 +72,11 @@ import {
   LOAD_RECOMMENTS_REQUEST,
   LOAD_RECOMMENTS_SUCCESS,
   LOAD_RECOMMENTS_FAILURE,
+  LoadPostsOfHashtagBody,
+  LoadPostsOfHashtagResponse,
+  LOAD_POSTS_OF_HASHTAG_REQUEST,
+  LOAD_POSTS_OF_HASHTAG_SUCCESS,
+  LOAD_POSTS_OF_HASHTAG_FAILURE,
 } from "@src/store/types";
 import { resetMessage } from ".";
 
@@ -275,6 +280,22 @@ export const loadRecommentsFailure = (data: FailureResponse) => ({
   data,
 });
 
+// 2022/05/25 - 특정 해시태그를 포함하는 게시글들 로드 액션 크리에이터 - by 1-blue
+export const loadPostsOfHashtagRequest = (data: LoadPostsOfHashtagBody) => ({
+  type: LOAD_POSTS_OF_HASHTAG_REQUEST,
+  data,
+});
+export const loadPostsOfHashtagSuccess = (
+  data: LoadPostsOfHashtagResponse
+) => ({
+  type: LOAD_POSTS_OF_HASHTAG_SUCCESS,
+  data,
+});
+export const loadPostsOfHashtagFailure = (data: FailureResponse) => ({
+  type: LOAD_POSTS_OF_HASHTAG_FAILURE,
+  data,
+});
+
 export type PostActionRequest =
   | ReturnType<typeof resetMessage>
   | ReturnType<typeof openWriteModalRequest>
@@ -320,4 +341,7 @@ export type PostActionRequest =
   | ReturnType<typeof removeBookmarkFailure>
   | ReturnType<typeof loadRecommentsRequest>
   | ReturnType<typeof loadRecommentsSuccess>
-  | ReturnType<typeof loadRecommentsFailure>;
+  | ReturnType<typeof loadRecommentsFailure>
+  | ReturnType<typeof loadPostsOfHashtagRequest>
+  | ReturnType<typeof loadPostsOfHashtagSuccess>
+  | ReturnType<typeof loadPostsOfHashtagFailure>;

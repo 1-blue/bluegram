@@ -315,3 +315,24 @@ export type LoadRecommentsResponse = {
   targetCommentId: number;
   limit: number;
 };
+
+// 2022/05/25 - 특정 해시태그를 가지는 게시글들 요청 타입 - by 1-blue
+export const LOAD_POSTS_OF_HASHTAG_REQUEST =
+  "LOAD_POSTS_OF_HASHTAG_REQUEST" as const;
+export const LOAD_POSTS_OF_HASHTAG_SUCCESS =
+  "LOAD_POSTS_OF_HASHTAG_SUCCESS" as const;
+export const LOAD_POSTS_OF_HASHTAG_FAILURE =
+  "LOAD_POSTS_OF_HASHTAG_FAILURE" as const;
+export type LoadPostsOfHashtagBody = {
+  hashtag: string;
+  lastId: number | null;
+  limit: number;
+};
+export type LoadPostsOfHashtagResponse = {
+  ok: boolean;
+  message: string;
+  limit: number;
+  posts: IPostWithPhotoAndCommentAndLikerAndCount[];
+  postCount: number;
+  hashtag: string;
+};

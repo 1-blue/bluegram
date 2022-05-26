@@ -59,6 +59,10 @@ import {
   REMOVE_COMMENT_SUCCESS,
   REMOVE_COMMENT_FAILURE,
   REMOVE_COMMENT_REQUEST,
+  LoadPostsOfHashtagResponse,
+  LOAD_POSTS_OF_HASHTAG_SUCCESS,
+  LOAD_POSTS_OF_HASHTAG_FAILURE,
+  LOAD_POSTS_OF_HASHTAG_REQUEST,
 } from "@src/store/types";
 
 // api
@@ -76,6 +80,7 @@ import {
   apiRemoveLikeToComment,
   apiAppendBookmark,
   apiRemoveBookmark,
+  apiLoadPostsOfHashtag,
 } from "@src/store/api";
 import { apiLoadRecomments } from "../api/comment";
 
@@ -396,6 +401,29 @@ function* watchLoadRecomments() {
   yield takeLatest(LOAD_RECOMMENTS_REQUEST, loadRecomments);
 }
 
+function* loadPostsOfHashtag(action: any) {
+  try {
+    const { data }: AxiosResponse<LoadPostsOfHashtagResponse> = yield call(
+      apiLoadPostsOfHashtag,
+      action.data
+    );
+
+    yield put({ type: LOAD_POSTS_OF_HASHTAG_SUCCESS, data });
+  } catch (error: any) {
+    console.error("postSaga loadPostsOfHashtag >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_POSTS_OF_HASHTAG_FAILURE, data: { message } });
+  }
+}
+function* watchloadPostsOfHashtag() {
+  yield takeLatest(LOAD_POSTS_OF_HASHTAG_REQUEST, loadPostsOfHashtag);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
@@ -412,5 +440,6 @@ export default function* postSaga() {
     fork(watchAppendBookmark),
     fork(watchRemoveBookmark),
     fork(watchLoadRecomments),
+    fork(watchloadPostsOfHashtag),
   ]);
 }
