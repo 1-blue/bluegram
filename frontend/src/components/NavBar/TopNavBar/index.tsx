@@ -40,7 +40,7 @@ const TopNavigationBar = () => {
   const { logoutDone, logoutError } = useSelector(
     ({ auth }: { auth: AuthState }) => auth
   );
-  const { me } = useSelector((state: UserState) => state);
+  const { me } = useSelector(({ user }: { user: UserState }) => user);
   const profileRef = useRef<HTMLAnchorElement | null>(null);
   const bookmarkRef = useRef<HTMLAnchorElement | null>(null);
 
@@ -91,7 +91,7 @@ const TopNavigationBar = () => {
               </Link>
             </li>
             <li onClick={() => bookmarkRef.current?.click()}>
-              <Link href={`/profile/${me?._id}/bookmark`}>
+              <Link href={`/profile/${me?._id}?kinds=bookmark`}>
                 <a ref={bookmarkRef}>
                   <Icon icon={ICON.BOOKMARK} width={20} height={20} />
                   <span>저장됨</span>

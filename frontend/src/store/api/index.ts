@@ -17,13 +17,15 @@ export const axiosInstance = axios.create({
 // );
 
 export { apiLocalLogin, apiLocalLogout, apiSignup } from "./auth";
-export { apiLoadToMe } from "./user";
+export { apiLoadToMe, apiLoadToUser } from "./user";
 export {
   apiLoadPosts,
   apiUploadPost,
   apiLoadDetailPosts,
   apiRemovePost,
   apiLoadPostsOfHashtag,
+  apiLoadPostsOfUser,
+  apiLoadPostsDetailOfUser,
 } from "./post";
 export { apiLoadComments, apiAppendComment, apiRemoveComment } from "./comment";
 export {
@@ -32,5 +34,14 @@ export {
   apiRemoveLikeToComment,
   apiRemoveLikeToPost,
 } from "./like";
-export { apiFollow, apiUnfollow } from "./follow";
-export { apiAppendBookmark, apiRemoveBookmark } from "./bookmark";
+export {
+  apiFollow,
+  apiUnfollow,
+  apiLoadFollowers,
+  apiLoadFollowings,
+} from "./follow";
+export {
+  apiAppendBookmark,
+  apiRemoveBookmark,
+  apiLoadPostsOfBookmark,
+} from "./bookmark";

@@ -15,10 +15,29 @@ import {
   UNFOLLOW_SUCCESS,
   UNFOLLOW_FAILURE,
   UNFOLLOW_REQUEST,
+  LoadToUserResponse,
+  LOAD_TO_USER_SUCCESS,
+  LOAD_TO_USER_FAILURE,
+  LOAD_TO_USER_REQUEST,
+  LoadFollowersResponse,
+  LOAD_FOLLOWERS_SUCCESS,
+  LOAD_FOLLOWERS_FAILURE,
+  LOAD_FOLLOWERS_REQUEST,
+  LoadFollowingsResponse,
+  LOAD_FOLLOWINGS_SUCCESS,
+  LOAD_FOLLOWINGS_FAILURE,
+  LOAD_FOLLOWINGS_REQUEST,
 } from "@src/store/types";
 
 // api
-import { apiLoadToMe, apiFollow, apiUnfollow } from "@src/store/api";
+import {
+  apiLoadToMe,
+  apiFollow,
+  apiUnfollow,
+  apiLoadToUser,
+  apiLoadFollowers,
+  apiLoadFollowings,
+} from "@src/store/api";
 
 function* loadToMe() {
   try {
@@ -85,6 +104,81 @@ function* watchUnfollow() {
   yield takeLatest(UNFOLLOW_REQUEST, unfollow);
 }
 
+function* loadToUser(action: any) {
+  try {
+    const { data }: AxiosResponse<LoadToUserResponse> = yield call(
+      apiLoadToUser,
+      action.data
+    );
+
+    yield put({ type: LOAD_TO_USER_SUCCESS, data });
+  } catch (error: any) {
+    console.error("userSaga loadToUser >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_TO_USER_FAILURE, data: { message } });
+  }
+}
+function* watchLoadToUser() {
+  yield takeLatest(LOAD_TO_USER_REQUEST, loadToUser);
+}
+
+function* loadFollowers(action: any) {
+  try {
+    const { data }: AxiosResponse<LoadFollowersResponse> = yield call(
+      apiLoadFollowers,
+      action.data
+    );
+
+    yield put({ type: LOAD_FOLLOWERS_SUCCESS, data });
+  } catch (error: any) {
+    console.error("userSaga loadFollowers >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_FOLLOWERS_FAILURE, data: { message } });
+  }
+}
+function* watchLoadFollowers() {
+  yield takeLatest(LOAD_FOLLOWERS_REQUEST, loadFollowers);
+}
+function* loadFollowings(action: any) {
+  try {
+    const { data }: AxiosResponse<LoadFollowingsResponse> = yield call(
+      apiLoadFollowings,
+      action.data
+    );
+
+    yield put({ type: LOAD_FOLLOWINGS_SUCCESS, data });
+  } catch (error: any) {
+    console.error("userSaga loadFollowings >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_FOLLOWINGS_FAILURE, data: { message } });
+  }
+}
+function* watchLoadFollowings() {
+  yield takeLatest(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
+}
+
 export default function* userSaga() {
-  yield all([fork(watchLoadToMe), fork(watchFollow), fork(watchUnfollow)]);
+  yield all([
+    fork(watchLoadToMe),
+    fork(watchFollow),
+    fork(watchUnfollow),
+    fork(watchLoadToUser),
+    fork(watchLoadFollowers),
+    fork(watchLoadFollowings),
+  ]);
 }

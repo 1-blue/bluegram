@@ -12,6 +12,10 @@ import type {
   RemovePostResponse,
   LoadPostsOfHashtagBody,
   LoadPostsOfHashtagResponse,
+  LoadPostsOfUserBody,
+  LoadPostsOfUserResponse,
+  LoadPostsDetailOfUserResponse,
+  LoadPostsDetailOfUserBody,
 } from "../types";
 
 // 2022/05/07 - 모든 게시글들 요청 - by 1-blue
@@ -42,4 +46,24 @@ export const apiLoadPostsOfHashtag = ({
 }: LoadPostsOfHashtagBody) =>
   axiosInstance.get<LoadPostsOfHashtagResponse>(
     `/posts/hashtag/${hashtag}?lastId=${lastId}&limit=${limit}`
+  );
+
+// 2022/05/26 - 특정 유저의 게시글들 정보 요청 - by 1-blue
+export const apiLoadPostsOfUser = ({
+  UserId,
+  lastId,
+  limit,
+}: LoadPostsOfUserBody) =>
+  axiosInstance.get<LoadPostsOfUserResponse>(
+    `/posts/user/${UserId}?lastId=${lastId}&limit=${limit}`
+  );
+
+// 2022/05/26 - 특정 유저의 게시글들 상세 정보 요청 - by 1-blue
+export const apiLoadPostsDetailOfUser = ({
+  UserId,
+  lastId,
+  limit,
+}: LoadPostsDetailOfUserBody) =>
+  axiosInstance.get<LoadPostsDetailOfUserResponse>(
+    `/posts/user/detail/${UserId}?lastId=${lastId}&limit=${limit}`
   );

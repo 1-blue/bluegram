@@ -47,6 +47,15 @@ import {
   LOAD_POSTS_OF_HASHTAG_REQUEST,
   LOAD_POSTS_OF_HASHTAG_SUCCESS,
   LOAD_POSTS_OF_HASHTAG_FAILURE,
+  LOAD_POSTS_OF_USER_REQUEST,
+  LOAD_POSTS_OF_USER_SUCCESS,
+  LOAD_POSTS_OF_USER_FAILURE,
+  LOAD_POSTS_OF_BOOKMARK_REQUEST,
+  LOAD_POSTS_OF_BOOKMARK_SUCCESS,
+  LOAD_POSTS_OF_BOOKMARK_FAILURE,
+  LOAD_POSTS_DETAIL_OF_USER_REQUEST,
+  LOAD_POSTS_DETAIL_OF_USER_SUCCESS,
+  LOAD_POSTS_DETAIL_OF_USER_FAILURE,
 } from "@src/store/types";
 import type { PostActionRequest } from "../actions";
 import { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
@@ -123,6 +132,18 @@ type StateType = {
     postsOfHashtagCount: number;
     hashtag: string;
   };
+
+  loadPostsOfUserLoading: boolean;
+  loadPostsOfUserDone: null | string;
+  loadPostsOfUserError: null | string;
+
+  loadPostsDetailOfUserLoading: boolean;
+  loadPostsDetailOfUserDone: null | string;
+  loadPostsDetailOfUserError: null | string;
+
+  loadPostsOfBookmarkLoading: boolean;
+  loadPostsOfBookmarkDone: null | string;
+  loadPostsOfBookmarkError: null | string;
 };
 
 const initState: StateType = {
@@ -217,6 +238,21 @@ const initState: StateType = {
     postsOfHashtagCount: 0,
     hashtag: "",
   },
+
+  // 2022/05/26 - 특정 유저의 게시글들 요청 관련 변수 - by 1-blue
+  loadPostsOfUserLoading: false,
+  loadPostsOfUserDone: null,
+  loadPostsOfUserError: null,
+
+  // 2022/05/26 - 특정 유저의 상세 게시글들 요청 관련 변수 - by 1-blue
+  loadPostsDetailOfUserLoading: false,
+  loadPostsDetailOfUserDone: null,
+  loadPostsDetailOfUserError: null,
+
+  // 2022/05/26 - 로그인한 유저의 북마크된 게시글들 요청 관련 변수 - by 1-blue
+  loadPostsOfBookmarkLoading: false,
+  loadPostsOfBookmarkDone: null,
+  loadPostsOfBookmarkError: null,
 };
 
 function postReducer(
@@ -288,6 +324,22 @@ function postReducer(
         loadRecommentsLoading: false,
         loadRecommentsDone: null,
         loadRecommentsError: null,
+
+        loadPostsOfHashtagLoading: false,
+        loadPostsOfHashtagDone: null,
+        loadPostsOfHashtagError: null,
+
+        loadPostsOfUserLoading: false,
+        loadPostsOfUserDone: null,
+        loadPostsOfUserError: null,
+
+        loadPostsDetailOfUserLoading: false,
+        loadPostsDetailOfUserDone: null,
+        loadPostsDetailOfUserError: null,
+
+        loadPostsOfBookmarkLoading: false,
+        loadPostsOfBookmarkDone: null,
+        loadPostsOfBookmarkError: null,
       };
 
     // 2022/05/19 - 게시글 생성 모달 토글 - by 1-blue
@@ -971,6 +1023,107 @@ function postReducer(
         ...prevState,
         loadPostsOfHashtagLoading: false,
         loadPostsOfHashtagError: action.data.message,
+      };
+
+    // 2022/05/26 - 특정 유저의 게시글들 - by 1-blue
+    case LOAD_POSTS_OF_USER_REQUEST:
+      return {
+        ...prevState,
+        loadPostsOfUserLoading: true,
+        loadPostsOfUserDone: null,
+        loadPostsOfUserError: null,
+      };
+    case LOAD_POSTS_OF_USER_SUCCESS:
+      return {
+        ...prevState,
+        loadPostsOfUserLoading: false,
+        loadPostsOfUserDone: action.data.message,
+        posts: prevState.posts
+          ? [...prevState.posts, ...action.data.posts]
+          : [...action.data.posts],
+        hasMorePosts: action.data.posts.length === action.data.limit,
+      };
+    case LOAD_POSTS_OF_USER_FAILURE:
+      return {
+        ...prevState,
+        loadPostsOfUserLoading: false,
+        loadPostsOfUserError: action.data.message,
+      };
+
+    // 2022/05/26 - 특정 유저의 상세 게시글들 - by 1-blue
+    case LOAD_POSTS_DETAIL_OF_USER_REQUEST:
+      return {
+        ...prevState,
+        loadPostsDetailOfUserLoading: true,
+        loadPostsDetailOfUserDone: null,
+        loadPostsDetailOfUserError: null,
+      };
+    case LOAD_POSTS_DETAIL_OF_USER_SUCCESS:
+      return {
+        ...prevState,
+        loadPostsDetailOfUserLoading: false,
+        loadPostsDetailOfUserDone: action.data.message,
+        detailPosts: prevState.detailPosts
+          ? [
+              ...prevState.detailPosts,
+              ...action.data.posts.map((post) => ({
+                ...post,
+                hasMoreComments: true,
+                allCommentCount: post.Comments.length,
+              })),
+            ]
+          : [
+              ...action.data.posts.map((post) => ({
+                ...post,
+                hasMoreComments: true,
+                allCommentCount: post.Comments.length,
+              })),
+            ],
+        hasMoreDeatailPosts: action.data.posts.length === action.data.limit,
+      };
+    case LOAD_POSTS_DETAIL_OF_USER_FAILURE:
+      return {
+        ...prevState,
+        loadPostsDetailOfUserLoading: false,
+        loadPostsDetailOfUserError: action.data.message,
+      };
+
+    // 2022/05/26 - 로그인한 유저의 북마크된 게시글들 - by 1-blue
+    case LOAD_POSTS_OF_BOOKMARK_REQUEST:
+      return {
+        ...prevState,
+        loadPostsOfBookmarkLoading: true,
+        loadPostsOfBookmarkDone: null,
+        loadPostsOfBookmarkError: null,
+      };
+    case LOAD_POSTS_OF_BOOKMARK_SUCCESS:
+      return {
+        ...prevState,
+        loadPostsOfBookmarkLoading: false,
+        loadPostsOfBookmarkDone: action.data.message,
+        detailPosts: prevState.detailPosts
+          ? [
+              ...prevState.detailPosts,
+              ...action.data.posts.map((post) => ({
+                ...post,
+                hasMoreComments: true,
+                allCommentCount: post.Comments.length,
+              })),
+            ]
+          : [
+              ...action.data.posts.map((post) => ({
+                ...post,
+                hasMoreComments: true,
+                allCommentCount: post.Comments.length,
+              })),
+            ],
+        hasMoreDeatailPosts: action.data.posts.length === action.data.limit,
+      };
+    case LOAD_POSTS_OF_BOOKMARK_FAILURE:
+      return {
+        ...prevState,
+        loadPostsOfBookmarkLoading: false,
+        loadPostsOfBookmarkError: action.data.message,
       };
 
     default:

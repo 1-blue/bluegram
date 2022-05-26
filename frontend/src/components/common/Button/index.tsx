@@ -14,6 +14,7 @@ type Props = {
   primary?: boolean;
   follow?: boolean;
   style?: CSSProperties;
+  spinnerColor?: string;
   [index: string]: any;
 };
 
@@ -24,6 +25,7 @@ const Button = ({
   primary,
   follow,
   style,
+  spinnerColor,
   ...props
 }: Props) => {
   return (
@@ -34,7 +36,7 @@ const Button = ({
       {...props}
       style={style}
     >
-      {loading ? <Spinner kinds="button" /> : contents}
+      {loading ? <Spinner kinds="button" color={spinnerColor} /> : contents}
     </Wrapper>
   );
 };

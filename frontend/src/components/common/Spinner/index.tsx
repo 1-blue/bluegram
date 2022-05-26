@@ -1,17 +1,18 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { ButtonSpinner, PageSpinner } from "./style";
 
 type sinnerType = "button" | "page";
 
 type Props = {
   kinds: sinnerType;
+  color?: string;
 };
 
-const Spinner = ({ kinds }: Props) => {
+const Spinner = ({ kinds, color }: Props) => {
   const getSpinner = useCallback((kinds: sinnerType) => {
     switch (kinds) {
       case "button":
-        return <ButtonSpinner />;
+        return <ButtonSpinner color={color} />;
       case "page":
         return (
           <PageSpinner>

@@ -74,7 +74,7 @@ router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2022/01/23 - 북마크한 게시글 가져오기 - by 1-blue
+// 2022/05/26 - 북마크한 게시글 가져오기 - by 1-blue
 router.get("/", isLoggedIn, async (req, res, next) => {
   const lastId = +req.query.lastId || -1;
   const limit = +req.query.limit || 15;
@@ -144,7 +144,7 @@ router.get("/", isLoggedIn, async (req, res, next) => {
         ? `${me.name}님이 북마크한 게시글을 ${bookmarkPosts.length}개 가져왔습니다.`
         : `${me.name}님이 북마크한 게시글을 추가로 ${bookmarkPosts.length}개 가져왔습니다.`;
 
-    res.json({ message, posts: bookmarkPosts, limit });
+    res.json({ ok: true, message, posts: bookmarkPosts, limit });
   } catch (error) {
     console.error("DELETE /bookmark error >> ", error);
     return next(error);

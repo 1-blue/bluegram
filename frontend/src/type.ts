@@ -54,11 +54,21 @@ export type Photo = {
   PostId: number;
 };
 
+export type SimpleType = {
+  _id: number;
+};
 export type SimpleUser = {
   _id: number;
   name: string;
+  introduction?: string;
   Photos?: Photo[];
 };
+export interface UserWithPostAndFollowerAndFollowing extends SimpleUser {
+  introduction?: string;
+  Posts: SimpleType[];
+  Followers: SimpleType[];
+  Followings: SimpleType[];
+}
 export interface IPostWithPhotoAndCommentAndLikerAndCount extends Post {
   allCommentCount: number;
   hasMoreComments: boolean;

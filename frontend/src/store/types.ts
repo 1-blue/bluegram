@@ -3,6 +3,7 @@ import {
   IPostWithPhotoAndCommentAndLikerAndCount,
   ICommentWithUserAndLikerAndCount,
   SimpleUser,
+  UserWithPostAndFollowerAndFollowing,
 } from "@src/type";
 
 // 2022/05/13 - 리셋 메시지 - by 1-blue
@@ -335,4 +336,93 @@ export type LoadPostsOfHashtagResponse = {
   posts: IPostWithPhotoAndCommentAndLikerAndCount[];
   postCount: number;
   hashtag: string;
+};
+
+// 2022/05/26 - 특정 유저 정보 요청 타입 - by 1-blue
+export const LOAD_TO_USER_REQUEST = "LOAD_TO_USER_REQUEST" as const;
+export const LOAD_TO_USER_SUCCESS = "LOAD_TO_USER_SUCCESS" as const;
+export const LOAD_TO_USER_FAILURE = "LOAD_TO_USER_FAILURE" as const;
+export type LoadToUserBody = {
+  UserId: number;
+};
+export type LoadToUserResponse = {
+  ok: boolean;
+  message: string;
+  user: UserWithPostAndFollowerAndFollowing;
+};
+
+// 2022/05/26 - 특정 유저의 게시글들 요청 타입 - by 1-blue
+export const LOAD_POSTS_OF_USER_REQUEST = "LOAD_POSTS_OF_USER_REQUEST" as const;
+export const LOAD_POSTS_OF_USER_SUCCESS = "LOAD_POSTS_OF_USER_SUCCESS" as const;
+export const LOAD_POSTS_OF_USER_FAILURE = "LOAD_POSTS_OF_USER_FAILURE" as const;
+export type LoadPostsOfUserBody = {
+  UserId: number;
+  lastId: number;
+  limit: number;
+};
+export type LoadPostsOfUserResponse = {
+  ok: boolean;
+  message: string;
+  posts: IPostWithPhotoAndCommentAndLikerAndCount[];
+  limit: number;
+};
+
+// 2022/05/26 - 특정 유저의 상세 게시글들 요청 타입 - by 1-blue
+export const LOAD_POSTS_DETAIL_OF_USER_REQUEST =
+  "LOAD_POSTS_DETAIL_OF_USER_REQUEST" as const;
+export const LOAD_POSTS_DETAIL_OF_USER_SUCCESS =
+  "LOAD_POSTS_DETAIL_OF_USER_SUCCESS" as const;
+export const LOAD_POSTS_DETAIL_OF_USER_FAILURE =
+  "LOAD_POSTS_DETAIL_OF_USER_FAILURE" as const;
+export type LoadPostsDetailOfUserBody = {
+  UserId: number;
+  lastId: number;
+  limit: number;
+};
+export type LoadPostsDetailOfUserResponse = {
+  ok: boolean;
+  message: string;
+  posts: IPostWithPhotoAndCommentAndLikerAndCount[];
+  limit: number;
+};
+
+// 2022/05/26 - 특정 유저의 팔로워들 요청 타입 - by 1-blue
+export const LOAD_FOLLOWERS_REQUEST = "LOAD_FOLLOWERS_REQUEST" as const;
+export const LOAD_FOLLOWERS_SUCCESS = "LOAD_FOLLOWERS_SUCCESS" as const;
+export const LOAD_FOLLOWERS_FAILURE = "LOAD_FOLLOWERS_FAILURE" as const;
+export type LoadFollowersBody = {
+  UserId: number;
+};
+export type LoadFollowersResponse = {
+  ok: boolean;
+  message: string;
+  followers: SimpleUser[];
+};
+
+// 2022/05/26 - 특정 유저의 팔로잉들 요청 타입 - by 1-blue
+export const LOAD_FOLLOWINGS_REQUEST = "LOAD_FOLLOWINGS_REQUEST" as const;
+export const LOAD_FOLLOWINGS_SUCCESS = "LOAD_FOLLOWINGS_SUCCESS" as const;
+export const LOAD_FOLLOWINGS_FAILURE = "LOAD_FOLLOWINGS_FAILURE" as const;
+export type LoadFollowingsBody = {
+  UserId: number;
+};
+export type LoadFollowingsResponse = {
+  ok: boolean;
+  message: string;
+  followings: SimpleUser[];
+};
+
+// 2022/05/26 - 로그인한 유저의 북마크된 게시글들 요청 타입 - by 1-blue
+export const LOAD_POSTS_OF_BOOKMARK_REQUEST =
+  "LOAD_POSTS_OF_BOOKMARK_REQUEST" as const;
+export const LOAD_POSTS_OF_BOOKMARK_SUCCESS =
+  "LOAD_POSTS_OF_BOOKMARK_SUCCESS" as const;
+export const LOAD_POSTS_OF_BOOKMARK_FAILURE =
+  "LOAD_POSTS_OF_BOOKMARK_FAILURE" as const;
+export type LoadPostsOfBookmarkBody = {};
+export type LoadPostsOfBookmarkResponse = {
+  ok: boolean;
+  message: string;
+  posts: IPostWithPhotoAndCommentAndLikerAndCount[];
+  limit: number;
 };

@@ -63,6 +63,18 @@ import {
   LOAD_POSTS_OF_HASHTAG_SUCCESS,
   LOAD_POSTS_OF_HASHTAG_FAILURE,
   LOAD_POSTS_OF_HASHTAG_REQUEST,
+  LoadPostsOfUserResponse,
+  LOAD_POSTS_OF_USER_SUCCESS,
+  LOAD_POSTS_OF_USER_FAILURE,
+  LOAD_POSTS_OF_USER_REQUEST,
+  LoadPostsDetailOfUserResponse,
+  LOAD_POSTS_DETAIL_OF_USER_SUCCESS,
+  LOAD_POSTS_DETAIL_OF_USER_FAILURE,
+  LOAD_POSTS_DETAIL_OF_USER_REQUEST,
+  LoadPostsOfBookmarkResponse,
+  LOAD_POSTS_OF_BOOKMARK_SUCCESS,
+  LOAD_POSTS_OF_BOOKMARK_FAILURE,
+  LOAD_POSTS_OF_BOOKMARK_REQUEST,
 } from "@src/store/types";
 
 // api
@@ -81,6 +93,9 @@ import {
   apiAppendBookmark,
   apiRemoveBookmark,
   apiLoadPostsOfHashtag,
+  apiLoadPostsOfUser,
+  apiLoadPostsDetailOfUser,
+  apiLoadPostsOfBookmark,
 } from "@src/store/api";
 import { apiLoadRecomments } from "../api/comment";
 
@@ -424,6 +439,74 @@ function* watchloadPostsOfHashtag() {
   yield takeLatest(LOAD_POSTS_OF_HASHTAG_REQUEST, loadPostsOfHashtag);
 }
 
+function* loadPostsOfUser(action: any) {
+  try {
+    const { data }: AxiosResponse<LoadPostsOfUserResponse> = yield call(
+      apiLoadPostsOfUser,
+      action.data
+    );
+
+    yield put({ type: LOAD_POSTS_OF_USER_SUCCESS, data });
+  } catch (error: any) {
+    console.error("postSaga loadPostsOfUser >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_POSTS_OF_USER_FAILURE, data: { message } });
+  }
+}
+function* watchloadPostsOfUser() {
+  yield takeLatest(LOAD_POSTS_OF_USER_REQUEST, loadPostsOfUser);
+}
+
+function* loadPostsDetailOfUser(action: any) {
+  try {
+    const { data }: AxiosResponse<LoadPostsDetailOfUserResponse> = yield call(
+      apiLoadPostsDetailOfUser,
+      action.data
+    );
+
+    yield put({ type: LOAD_POSTS_DETAIL_OF_USER_SUCCESS, data });
+  } catch (error: any) {
+    console.error("postSaga loadPostsDetailOfUser >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_POSTS_DETAIL_OF_USER_FAILURE, data: { message } });
+  }
+}
+function* watchloadPostsDetailOfUser() {
+  yield takeLatest(LOAD_POSTS_DETAIL_OF_USER_REQUEST, loadPostsDetailOfUser);
+}
+
+function* loadPostsOfBookmark(action: any) {
+  try {
+    const { data }: AxiosResponse<LoadPostsOfBookmarkResponse> = yield call(
+      apiLoadPostsOfBookmark
+    );
+
+    yield put({ type: LOAD_POSTS_OF_BOOKMARK_SUCCESS, data });
+  } catch (error: any) {
+    console.error("postSaga loadPostsOfBookmark >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: LOAD_POSTS_OF_BOOKMARK_FAILURE, data: { message } });
+  }
+}
+function* watchloadPostsOfBookmark() {
+  yield takeLatest(LOAD_POSTS_OF_BOOKMARK_REQUEST, loadPostsOfBookmark);
+}
+
 export default function* postSaga() {
   yield all([
     fork(watchLoadPosts),
@@ -441,5 +524,8 @@ export default function* postSaga() {
     fork(watchRemoveBookmark),
     fork(watchLoadRecomments),
     fork(watchloadPostsOfHashtag),
+    fork(watchloadPostsOfUser),
+    fork(watchloadPostsDetailOfUser),
+    fork(watchloadPostsOfBookmark),
   ]);
 }
