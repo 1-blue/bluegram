@@ -8,10 +8,12 @@ import { Wrapper } from "./style";
 // common-components
 import Avatar from "@src/components/common/Avatar";
 import Button from "@src/components/common/Button";
-import { UserState } from "@src/store/reducers";
+
+// type
+import type { UserState } from "@src/store/reducers";
 
 type Props = {
-  onClickFollowButton: (UserId: number, isFollow: boolean) => void;
+  onClickFollowButton: (UserId?: number, isFollow?: boolean) => void;
   onClickLogOut: () => void;
 };
 
@@ -30,7 +32,9 @@ const ProfileHead = ({ onClickFollowButton, onClickLogOut }: Props) => {
         width={60}
         height={60}
         photo={user?.Photos?.[0].name}
-        // className="user-profile-image"
+        style={{
+          marginRight: "10px",
+        }}
       />
       <div className="profile-head-right-container">
         <div className="profile-head-right-top-container">
@@ -52,11 +56,8 @@ const ProfileHead = ({ onClickFollowButton, onClickLogOut }: Props) => {
         ) : (
           <Button
             type="button"
-            // className="profile-follow-button"
-            onClick={onClickFollowButton(
-              user?._id || -1,
-              isMyFollower || false
-            )}
+            className="profile-follow-button"
+            onClick={onClickFollowButton(user?._id, isMyFollower)}
             loading={followLoading || unfollowLoading}
             contents={isMyFollower ? "언팔로우" : "팔로우"}
           />

@@ -2,6 +2,7 @@ const color = {
   white: "#F8F9FA",
   dark: "#121212",
   main: "#6069F1",
+  blue: "#0E8EF1",
 };
 
 // styled-components.d.ts에서 등록할 타입

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 // styled-components
 import { Wrapper } from "./style";
@@ -13,8 +14,9 @@ import Spinner from "@src/components/common/Spinner";
 
 // components
 import PostCard from "@src/components/Post/PostCard";
-import { PostState, UserState } from "@src/store/reducers";
-import { toast } from "react-toastify";
+
+// type
+import type { PostState, UserState } from "@src/store/reducers";
 
 type Props = {
   id: number;
@@ -64,6 +66,8 @@ const ProfilePostBookmarkCard = ({ id }: Props) => {
 
   if (me?._id !== +id) return <h2>접근 권한이 없습니다.</h2>;
 
+  console.log("bookmark >> ", posts);
+
   return (
     <Wrapper>
       {posts?.map((post) => (
@@ -74,7 +78,16 @@ const ProfilePostBookmarkCard = ({ id }: Props) => {
       {loadPostsOfBookmarkLoading && <Spinner kinds="page" />}
 
       {!hasMoreDeatailPosts && (
-        <span>더 이상 불러올 게시글이 존재하지 않습니다...</span>
+        <span
+          style={{
+            display: "block",
+            textAlign: "center",
+            margin: "40px 10px 80px",
+            fontSize: "16px",
+          }}
+        >
+          더 이상 불러올 게시글이 존재하지 않습니다...
+        </span>
       )}
     </Wrapper>
   );

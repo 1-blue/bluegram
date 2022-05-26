@@ -1102,8 +1102,21 @@ function postReducer(
         loadPostsOfBookmarkLoading: false,
         loadPostsOfBookmarkDone: action.data.message,
         detailPosts: prevState.detailPosts
-          ? [...prevState.detailPosts, ...action.data.posts]
-          : [...action.data.posts],
+          ? [
+              ...prevState.detailPosts,
+              ...action.data.posts.map((post) => ({
+                ...post,
+                hasMoreComments: true,
+                allCommentCount: post.Comments.length,
+              })),
+            ]
+          : [
+              ...action.data.posts.map((post) => ({
+                ...post,
+                hasMoreComments: true,
+                allCommentCount: post.Comments.length,
+              })),
+            ],
         hasMoreDeatailPosts: action.data.posts.length === action.data.limit,
       };
     case LOAD_POSTS_OF_BOOKMARK_FAILURE:

@@ -12,7 +12,9 @@ import PhotoCard from "@src/components/Post/PhotoCard";
 
 // actions
 import { loadPostsOfUserRequest } from "@src/store/actions";
-import { PostState } from "@src/store/reducers";
+
+// type
+import type { PostState } from "@src/store/reducers";
 
 type Props = {
   id: number;
@@ -49,8 +51,6 @@ const ProfilePostImageCard = ({ id }: Props) => {
     return () => window.removeEventListener("scroll", infiniteScrollEvent);
   }, [infiniteScrollEvent]);
 
-  // console.log("posts >> ", posts);
-
   return (
     <>
       <Wrapper>
@@ -59,10 +59,19 @@ const ProfilePostImageCard = ({ id }: Props) => {
         ))}
       </Wrapper>
 
-      {/* {loadPostsOfUserLoading && <Spinner kinds="page" />} */}
+      {loadPostsOfUserLoading && <Spinner kinds="page" />}
 
       {!hasMorePosts && (
-        <span>더 이상 불러올 게시글이 존재하지 않습니다...</span>
+        <span
+          style={{
+            display: "block",
+            textAlign: "center",
+            margin: "40px 10px 80px",
+            fontSize: "16px",
+          }}
+        >
+          더 이상 불러올 게시글이 존재하지 않습니다...
+        </span>
       )}
     </>
   );

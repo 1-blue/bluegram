@@ -2,13 +2,15 @@ import styled, { css } from "styled-components";
 
 export const Wrapper = styled.section<{ kinds: string }>`
   display: flex;
+  justify-content: center;
+  align-items: center;
   border-bottom: 1px solid #ccccdd;
   margin-bottom: 1em;
 
   & .nav-list {
     flex: 1;
     text-align: center;
-    padding: 0.4em 0;
+    padding: 0.5em 0;
   }
 
   ${({ kinds }) => {

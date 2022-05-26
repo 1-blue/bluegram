@@ -7,9 +7,7 @@ import Link from "next/link";
 import { Wrapper } from "./style";
 
 // common-components
-import Icon from "@src/components/common/Icon";
-import { UserState } from "@src/store/reducers";
-import { ICON } from "@src/type";
+import type { UserState } from "@src/store/reducers";
 
 const ProfileNav = () => {
   const {
@@ -21,20 +19,18 @@ const ProfileNav = () => {
     <Wrapper kinds={(kinds as string) || "post"}>
       <Link href={`/profile/${id}?kinds=post`}>
         <a className="nav-list">
-          {/* <Icon width={24} height={24} shape="post" /> */}
-          <span>post</span>
+          <span>게시글</span>
         </a>
       </Link>
       <Link href={`/profile/${id}?kinds=detailPost`}>
         <a className="nav-list">
-          {/* <Icon width={24} height={24} shape="postDetail" /> */}
-          <span>postDetail</span>
+          <span>상세 게시글</span>
         </a>
       </Link>
       {me?._id === +(id as string) && (
         <Link href={`/profile/${id}?kinds=bookmark`}>
           <a className="nav-list">
-            <Icon width={24} height={24} icon={ICON.BOOKMARK} />
+            <span>북마크</span>
           </a>
         </Link>
       )}

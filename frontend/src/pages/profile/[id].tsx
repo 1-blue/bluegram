@@ -75,6 +75,8 @@ const Wrapper = styled.article`
   & .follow-modal-follow-button {
     text-align: end;
     font-size: 0.8em;
+    font-weight: bold;
+    color: ${({ theme }) => theme.color.blue};
   }
   /* 팔로워/팔로잉이 없을 경우 */
   & .follow-modal-no-follow-icon,
@@ -95,7 +97,7 @@ const Wrapper = styled.article`
 const Profile = () => {
   const dispatch = useDispatch();
   const { push } = useRouter();
-  const { me, user, followLoading, unfollowLoading } = useSelector(
+  const { me, followLoading, unfollowLoading } = useSelector(
     ({ user }: { user: UserState }) => user
   );
 
@@ -113,12 +115,17 @@ const Profile = () => {
 
   // 2022/05/26 - 팔로우/언팔로우 - by 1-blue
   const onClickFollowButton = useCallback(
-    (UserId: number, isFollow: boolean) => () => {
+    (UserId?: number, isFollow?: boolean) => () => {
       if (!me?._id) return toast.error("로그인후에 접근해주세요");
 
       if (followLoading || unfollowLoading)
-        return alert(
+        return toast.error(
           "이미 팔로우/언팔로우 처리중입니다.\n잠시후에 다시 시도해주세요"
+        );
+
+      if (isFollow === undefined || !UserId)
+        return toast.error(
+          "문제가 발생해서 실행할 수 없습니다.\n새로고침후에 다시 시도해주세요!"
         );
 
       if (isFollow) {
@@ -130,18 +137,28 @@ const Profile = () => {
     [dispatch, me, followLoading, unfollowLoading]
   );
 
-  // 2022/05/26 - 현재 프로필 페이지의 유저의 팔로워들 정보 요청 + 팔로워 모달 열기 - by 1-blue
+  // 2022/05/27 - 현재 프로필 페이지의 유저의 팔로워들 정보 요청 + 팔로워 모달 열기 - by 1-blue
   const onClickFollowerButton = useCallback(
-    (UserId: number) => () => {
+    (UserId?: number) => () => {
+      if (!UserId)
+        return toast.error(
+          "문제가 발생해서 실행할 수 없습니다.\n새로고침후에 다시 시도해주세요!"
+        );
+
       dispatch(loadFollowersRequest({ UserId }));
       onToggleFollowerModal();
     },
     [dispatch, onToggleFollowerModal]
   );
 
-  // 2022/05/26 - 현재 프로필 페이지의 유저의 팔로잉들 정보 요청 + 팔로잉 모달 열기 - by 1-blue
+  // 2022/05/27 - 현재 프로필 페이지의 유저의 팔로잉들 정보 요청 + 팔로잉 모달 열기 - by 1-blue
   const onClickFollowingButton = useCallback(
-    (UserId: number) => () => {
+    (UserId?: number) => () => {
+      if (!UserId)
+        return toast.error(
+          "문제가 발생해서 실행할 수 없습니다.\n새로고침후에 다시 시도해주세요!"
+        );
+
       dispatch(loadFollowingsRequest({ UserId }));
       onToggleFollowingModal();
     },

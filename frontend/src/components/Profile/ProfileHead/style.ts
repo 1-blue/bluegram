@@ -45,6 +45,7 @@ export const Wrapper = styled.section<{ followLoading: boolean }>`
     font-size: 0.8rem;
     font-weight: bold;
     margin-bottom: 0.8em;
+    padding: 2px 0;
   }
 
   /* 타인 프로필 페이지일 경우 팔로우/언팔로우 버튼 */
@@ -55,9 +56,10 @@ export const Wrapper = styled.section<{ followLoading: boolean }>`
     line-height: 26px;
     font-size: 0.8rem;
     font-weight: bold;
-    background: blue;
+    background: ${({ theme }) => theme.color.blue};
     color: white;
     margin-bottom: 0.8em;
+    padding: 4px 0;
   }
 
   /* 유저의 자기소개 */

@@ -1,13 +1,15 @@
-import { UserState } from "@src/store/reducers";
 import React from "react";
 import { useSelector } from "react-redux";
 
 // styled-components
 import { Wrapper } from "./style";
 
+// style
+import { UserState } from "@src/store/reducers";
+
 type Props = {
-  onClickFollowerButton: (UserId: number) => () => void;
-  onClickFollowingButton: (UserId: number) => () => void;
+  onClickFollowerButton: (UserId?: number) => () => void;
+  onClickFollowingButton: (UserId?: number) => () => void;
 };
 
 const ProfileButtons = ({
@@ -26,7 +28,7 @@ const ProfileButtons = ({
       <button
         type="button"
         className="button-list"
-        onClick={onClickFollowerButton(user?._id || -1)}
+        onClick={onClickFollowerButton(user?._id)}
       >
         <span className="button-name">팔로워</span>
         <br />
@@ -35,7 +37,7 @@ const ProfileButtons = ({
       <button
         type="button"
         className="button-list"
-        onClick={onClickFollowingButton(user?._id || -1)}
+        onClick={onClickFollowingButton(user?._id)}
       >
         <span className="button-name">팔로잉</span>
         <br />
