@@ -9,9 +9,18 @@ import {
   UNFOLLOW_REQUEST,
   UNFOLLOW_SUCCESS,
   UNFOLLOW_FAILURE,
+  LOAD_TO_USER_REQUEST,
+  LOAD_TO_USER_SUCCESS,
+  LOAD_TO_USER_FAILURE,
+  LOAD_FOLLOWERS_REQUEST,
+  LOAD_FOLLOWERS_SUCCESS,
+  LOAD_FOLLOWERS_FAILURE,
+  LOAD_FOLLOWINGS_REQUEST,
+  LOAD_FOLLOWINGS_SUCCESS,
+  LOAD_FOLLOWINGS_FAILURE,
 } from "@src/store/types";
 import type { UserActionRequest } from "../actions";
-import type { SimpleUser } from "@src/type";
+import type { SimpleType, SimpleUser } from "@src/type";
 
 type Me = SimpleUser & {
   Followings: {
@@ -23,7 +32,16 @@ type Me = SimpleUser & {
 };
 
 export type UserStateType = {
-  user: Me | null;
+  user:
+    | (Me & {
+        Posts: SimpleType[];
+        Followers: SimpleType[];
+        Followings: SimpleType[];
+      })
+    | null;
+
+  Followers: SimpleUser[] | null;
+  Followings: SimpleUser[] | null;
 
   me: Me | null;
   loadToMeLoading: boolean;
@@ -44,11 +62,27 @@ export type UserStateType = {
   unfollowLoading: boolean;
   unfollowDone: null | string;
   unfollowError: null;
+
+  loadToUserLoading: boolean;
+  loadToUserDone: null | string;
+  loadToUserError: null;
+
+  loadFollowersLoading: boolean;
+  loadFollowersDone: null | string;
+  loadFollowersError: null;
+
+  loadFollowingsLoading: boolean;
+  loadFollowingsDone: null | string;
+  loadFollowingsError: null;
 };
 
 const initState: UserStateType = {
   // 2022/05/21 - 특정 유저 정보를 저장할 변수 - by 1-blue
   user: null,
+
+  // 2022/05/26 - 특정 유저의 팔로워/팔로잉 정보 - by 1-blue
+  Followers: null,
+  Followings: null,
 
   // 2022/05/07 - 본인 정보 저장할 변수 - by 1-blue
   me: null,
@@ -74,6 +108,21 @@ const initState: UserStateType = {
   unfollowLoading: false,
   unfollowDone: null,
   unfollowError: null,
+
+  // 2022/05/26 - 특정 유저 정보 변수 - by 1-blue
+  loadToUserLoading: false,
+  loadToUserDone: null,
+  loadToUserError: null,
+
+  // 2022/05/26 - 특정 유저의 팔로워들 변수 - by 1-blue
+  loadFollowersLoading: false,
+  loadFollowersDone: null,
+  loadFollowersError: null,
+
+  // 2022/05/26 - 특정 유저의 팔로잉들 변수 - by 1-blue
+  loadFollowingsLoading: false,
+  loadFollowingsDone: null,
+  loadFollowingsError: null,
 };
 
 function userReducer(prevState = initState, action: UserActionRequest) {
@@ -102,6 +151,18 @@ function userReducer(prevState = initState, action: UserActionRequest) {
         unfollowLoading: false,
         unfollowDone: null,
         unfollowError: null,
+
+        loadToUserLoading: false,
+        loadToUserDone: null,
+        loadToUserError: null,
+
+        loadFollowersLoading: false,
+        loadFollowersDone: null,
+        loadFollowersError: null,
+
+        loadFollowingsLoading: false,
+        loadFollowingsDone: null,
+        loadFollowingsError: null,
       };
 
     // 2022/05/07 - 본인 정보 요청 - by 1-blue
@@ -242,6 +303,72 @@ function userReducer(prevState = initState, action: UserActionRequest) {
         ...prevState,
         unfollowLoading: false,
         unfollowError: action.data.message,
+      };
+
+    // 2022/05/26 - 특정 유저의 정보 요청 - by 1-blue
+    case LOAD_TO_USER_REQUEST:
+      return {
+        ...prevState,
+        loadToUserLoading: true,
+        loadToUserDone: null,
+        loadToUserError: null,
+      };
+    case LOAD_TO_USER_SUCCESS:
+      return {
+        ...prevState,
+        loadToUserLoading: false,
+        loadToUserDone: action.data?.message,
+        user: action.data.user,
+      };
+    case LOAD_TO_USER_FAILURE:
+      return {
+        ...prevState,
+        loadToUserLoading: false,
+        loadToUserError: action.data.message,
+      };
+
+    // 2022/05/26 - 특정 유저의 팔로워들 요청 - by 1-blue
+    case LOAD_FOLLOWERS_REQUEST:
+      return {
+        ...prevState,
+        loadFollowersLoading: true,
+        loadFollowersDone: null,
+        loadFollowersError: null,
+      };
+    case LOAD_FOLLOWERS_SUCCESS:
+      return {
+        ...prevState,
+        loadFollowersLoading: false,
+        loadFollowersDone: action.data?.message,
+        Followers: action.data.followers,
+      };
+    case LOAD_FOLLOWERS_FAILURE:
+      return {
+        ...prevState,
+        loadFollowersLoading: false,
+        loadFollowersError: action.data.message,
+      };
+
+    // 2022/05/26 - 특정 유저의 팔로워들 요청 - by 1-blue
+    case LOAD_FOLLOWINGS_REQUEST:
+      return {
+        ...prevState,
+        loadFollowingsLoading: true,
+        loadFollowingsDone: null,
+        loadFollowingsError: null,
+      };
+    case LOAD_FOLLOWINGS_SUCCESS:
+      return {
+        ...prevState,
+        loadFollowingsLoading: false,
+        loadFollowingsDone: action.data?.message,
+        Followings: action.data.followings,
+      };
+    case LOAD_FOLLOWINGS_FAILURE:
+      return {
+        ...prevState,
+        loadFollowingsLoading: false,
+        loadFollowingsError: action.data.message,
       };
 
     default:

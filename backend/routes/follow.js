@@ -34,7 +34,11 @@ router.get("/followers/:UserId", async (req, res, next) => {
 
     if (!followers) res.status(404).json({ ok: false, message: "존재하지 않는 유저의 팔로워들을 요청하셨습니다." });
 
-    res.status(200).json({ ok: true, message: `${followers.name}님의 팔로워들을 성공적으로 가져왔습니다.`, followers });
+    res.status(200).json({
+      ok: true,
+      message: `${followers.name}님의 팔로워들을 성공적으로 가져왔습니다.`,
+      followers: followers.Followers,
+    });
   } catch (error) {
     console.error("GET /follow/followers/:UserId >> ", error);
     next(error);
@@ -73,7 +77,10 @@ router.get("/followings/:UserId", async (req, res, next) => {
 
     if (!followings) res.status(404).json({ message: "존재하지 않는 유저의 팔로잉들을 요청하셨습니다." });
 
-    res.status(200).json({ message: `${followings.name}님의 팔로잉들을 성공적으로 가져왔습니다.`, followings });
+    res.status(200).json({
+      message: `${followings.name}님의 팔로잉들을 성공적으로 가져왔습니다.`,
+      followings: followings.Followings,
+    });
   } catch (error) {
     console.error("GET /followings/:UserId >> ", error);
     next(error);

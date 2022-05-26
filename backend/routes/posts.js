@@ -139,7 +139,7 @@ router.get("/detail", async (req, res, next) => {
   }
 });
 
-// 2022/01/04 - 특정 유저의 게시글들 불러오기 - by 1-blue
+// 2022/05/26 - 특정 유저의 게시글들 불러오기 - by 1-blue
 router.get("/user/:UserId", async (req, res, next) => {
   const UserId = +req.params.UserId;
   const lastId = +req.query.lastId || -1;
@@ -165,14 +165,14 @@ router.get("/user/:UserId", async (req, res, next) => {
           include: [
             // 게시글 작성자의 프로필 이미지
             {
-              model: Image,
+              model: Photo,
               attributes: ["_id", "name", "url"],
             },
           ],
         },
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들 ( 댓글과 답글 모두 포함 )
@@ -230,14 +230,14 @@ router.get("/user/detail/:UserId", async (req, res, next) => {
           include: [
             // 게시글 작성자의 프로필 이미지
             {
-              model: Image,
+              model: Photo,
               attributes: ["_id", "name", "url"],
             },
           ],
         },
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들
@@ -275,7 +275,7 @@ router.get("/user/detail/:UserId", async (req, res, next) => {
         ? `${user.name}님의 게시글 ${posts.length}개를 불러왔습니다.`
         : `${user.name}님의 게시글을 추가로 ${posts.length}개를 불러왔습니다.`;
 
-    res.json({ message, posts, limit });
+    res.json({ ok: true, message, posts, limit });
   } catch (error) {
     console.error("GET /post/user/detail/:UserId error >> ", error);
     return next(error);

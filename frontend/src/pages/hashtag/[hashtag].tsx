@@ -16,8 +16,10 @@ import Spinner from "@src/components/common/Spinner";
 
 // components
 import PostCard from "@src/components/Post/PostCard";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { PostState } from "@src/store/reducers";
+
+// type
+import type { GetServerSideProps, GetServerSidePropsContext } from "next";
+import type { PostState } from "@src/store/reducers";
 
 const HashtagPage = () => {
   const dispatch = useDispatch();

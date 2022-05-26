@@ -14,7 +14,7 @@ import type { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
 
 type Props = {
   post: IPostWithPhotoAndCommentAndLikerAndCount;
-  $priority: boolean;
+  $priority?: boolean;
 };
 
 const PhotoCard = ({ post, $priority }: Props) => {

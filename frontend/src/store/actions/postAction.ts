@@ -77,6 +77,21 @@ import {
   LOAD_POSTS_OF_HASHTAG_REQUEST,
   LOAD_POSTS_OF_HASHTAG_SUCCESS,
   LOAD_POSTS_OF_HASHTAG_FAILURE,
+  LoadPostsOfUserBody,
+  LoadPostsOfUserResponse,
+  LOAD_POSTS_OF_USER_REQUEST,
+  LOAD_POSTS_OF_USER_SUCCESS,
+  LOAD_POSTS_OF_USER_FAILURE,
+  LOAD_POSTS_DETAIL_OF_USER_REQUEST,
+  LOAD_POSTS_DETAIL_OF_USER_SUCCESS,
+  LOAD_POSTS_DETAIL_OF_USER_FAILURE,
+  LoadPostsDetailOfUserBody,
+  LoadPostsDetailOfUserResponse,
+  LoadPostsOfBookmarkBody,
+  LoadPostsOfBookmarkResponse,
+  LOAD_POSTS_OF_BOOKMARK_REQUEST,
+  LOAD_POSTS_OF_BOOKMARK_SUCCESS,
+  LOAD_POSTS_OF_BOOKMARK_FAILURE,
 } from "@src/store/types";
 import { resetMessage } from ".";
 
@@ -296,6 +311,54 @@ export const loadPostsOfHashtagFailure = (data: FailureResponse) => ({
   data,
 });
 
+// 2022/05/26 - 특정 유저의 게시글들 요청 액션 크리에이터 - by 1-blue
+export const loadPostsOfUserRequest = (data: LoadPostsOfUserBody) => ({
+  type: LOAD_POSTS_OF_USER_REQUEST,
+  data,
+});
+export const loadPostsOfUserSuccess = (data: LoadPostsOfUserResponse) => ({
+  type: LOAD_POSTS_OF_USER_SUCCESS,
+  data,
+});
+export const loadPostsOfUserFailure = (data: FailureResponse) => ({
+  type: LOAD_POSTS_OF_USER_FAILURE,
+  data,
+});
+
+// 2022/05/26 - 특정 유저의 상세 게시글들 요청 액션 크리에이터 - by 1-blue
+export const loadPostsDetailOfUserRequest = (
+  data: LoadPostsDetailOfUserBody
+) => ({
+  type: LOAD_POSTS_DETAIL_OF_USER_REQUEST,
+  data,
+});
+export const loadPostsDetailOfUserSuccess = (
+  data: LoadPostsDetailOfUserResponse
+) => ({
+  type: LOAD_POSTS_DETAIL_OF_USER_SUCCESS,
+  data,
+});
+export const loadPostsDetailOfUserFailure = (data: FailureResponse) => ({
+  type: LOAD_POSTS_DETAIL_OF_USER_FAILURE,
+  data,
+});
+
+// 2022/05/26 - 로그인한 유저의 북마크 게시글들 요청 액션 크리에이터 - by 1-blue
+export const loadPostsOfBookmarkRequest = (data: LoadPostsOfBookmarkBody) => ({
+  type: LOAD_POSTS_OF_BOOKMARK_REQUEST,
+  data,
+});
+export const loadPostsOfBookmarkSuccess = (
+  data: LoadPostsOfBookmarkResponse
+) => ({
+  type: LOAD_POSTS_OF_BOOKMARK_SUCCESS,
+  data,
+});
+export const loadPostsOfBookmarkFailure = (data: FailureResponse) => ({
+  type: LOAD_POSTS_OF_BOOKMARK_FAILURE,
+  data,
+});
+
 export type PostActionRequest =
   | ReturnType<typeof resetMessage>
   | ReturnType<typeof openWriteModalRequest>
@@ -344,4 +407,13 @@ export type PostActionRequest =
   | ReturnType<typeof loadRecommentsFailure>
   | ReturnType<typeof loadPostsOfHashtagRequest>
   | ReturnType<typeof loadPostsOfHashtagSuccess>
-  | ReturnType<typeof loadPostsOfHashtagFailure>;
+  | ReturnType<typeof loadPostsOfHashtagFailure>
+  | ReturnType<typeof loadPostsOfUserRequest>
+  | ReturnType<typeof loadPostsOfUserSuccess>
+  | ReturnType<typeof loadPostsOfUserFailure>
+  | ReturnType<typeof loadPostsDetailOfUserRequest>
+  | ReturnType<typeof loadPostsDetailOfUserSuccess>
+  | ReturnType<typeof loadPostsDetailOfUserFailure>
+  | ReturnType<typeof loadPostsOfBookmarkRequest>
+  | ReturnType<typeof loadPostsOfBookmarkSuccess>
+  | ReturnType<typeof loadPostsOfBookmarkFailure>;
