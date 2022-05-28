@@ -25,3 +25,20 @@ export const SlideScale = keyframes`
     transform: translateY(0) scale(1);
   }
 `;
+
+export const SideScroll = keyframes`
+  0% {
+    transform: translate(20px, 80px) scale(0.1);
+  }
+  100% {
+    transform: translateY(0px, 0px) scale(1);
+  }
+`;
+export const SideSearch = keyframes`
+  0% {
+    transform: translate(80px, 20px) scale(0.1);
+  }
+  100% {
+    transform: translateY(0px, 0px) scale(1);
+  }
+`;

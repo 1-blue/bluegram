@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.nav`
+export const Wrapper = styled.nav<{ hide: boolean }>`
   position: fixed;
   bottom: 0;
   left: 0;
@@ -12,6 +12,8 @@ export const Wrapper = styled.nav`
   align-items: center;
   border-top: 2px solid gray;
   height: 7vh;
+  transform: translateY(${({ hide }) => (hide ? "100px" : "0px")});
+  transition: all 0.4s;
 
   & .nav-link {
     height: 100%;

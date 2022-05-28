@@ -13,6 +13,9 @@ export enum ICON {
   DOCUMENT_DUPLICATE = "DOCUMENT_DUPLICATE",
   V_OPTION = "V_OPTION",
   H_OPTION = "H_OPTION",
+  SEARCH = "SEARCH",
+  UP = "UP",
+  COG = "COG",
 }
 
 export type User = {

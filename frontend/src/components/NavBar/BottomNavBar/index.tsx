@@ -16,6 +16,9 @@ import { openWriteModalRequest } from "@src/store/actions";
 import { ICON } from "@src/type";
 import type { UserState } from "@src/store/reducers";
 
+// hook
+import useScrollUpDown from "@src/hooks/useScrollUpDown";
+
 const BottomNavigationBar = () => {
   const dispatch = useDispatch();
   const { me } = useSelector(({ user }: { user: UserState }) => user);
@@ -29,9 +32,12 @@ const BottomNavigationBar = () => {
     [dispatch]
   );
 
+  // 2022/05/27 - 스크롤 방향 얻기 - by 1-blue
+  const [hide] = useScrollUpDown();
+
   return (
     <>
-      <Wrapper>
+      <Wrapper hide={hide}>
         <Link href="/">
           <a className="nav-link">
             <Icon icon={ICON.HOME} width={30} height={30} />

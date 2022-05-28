@@ -17,12 +17,13 @@ import { localLogoutRequest, openWriteModalRequest } from "@src/store/actions";
 
 // hook
 import useToastMessage from "@src/hooks/useToastMessage";
+import useScrollUpDown from "@src/hooks/useScrollUpDown";
 
 // type
 import { ICON } from "@src/type";
 import type { AuthState, UserState } from "@src/store/reducers";
 
-const Wrapper = styled.nav`
+const Wrapper = styled.nav<{ hide: boolean }>`
   position: sticky;
   top: 0;
   left: 0;
@@ -33,6 +34,8 @@ const Wrapper = styled.nav`
   padding: 1.5rem;
   box-shadow: 0 0 10px gray;
   background: white;
+  transform: translateY(${({ hide }) => (hide ? "-100px" : "0px")});
+  transition: all 0.4s;
 `;
 
 const TopNavigationBar = () => {
@@ -69,8 +72,11 @@ const TopNavigationBar = () => {
     [dispatch]
   );
 
+  // 2022/05/27 - 스크롤 방향 얻기 - by 1-blue
+  const [hide] = useScrollUpDown();
+
   return (
-    <Wrapper>
+    <Wrapper hide={hide}>
       <Left />
       <Center />
       <Right

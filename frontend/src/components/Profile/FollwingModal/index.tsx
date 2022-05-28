@@ -7,7 +7,7 @@ import Avatar from "@src/components/common/Avatar";
 import Button from "@src/components/common/Button";
 import Spinner from "@src/components/common/Spinner";
 import Icon from "@src/components/common/Icon";
-import Rename from "@src/components/common/Rename";
+import Modal from "@src/components/common/Modal";
 
 // type
 import { ICON } from "@src/type";
@@ -35,7 +35,7 @@ const FollowingModal = ({
   return (
     <>
       {isOpenFollowingModal && Followings && (
-        <Rename
+        <Modal
           isOpen={isOpenFollowingModal}
           onCloseModal={onToggleFollowingModal}
         >
@@ -103,7 +103,7 @@ const FollowingModal = ({
               </>
             )}
           </ul>
-        </Rename>
+        </Modal>
       )}
 
       {loadFollowingsLoading && <Spinner kinds="page" />}

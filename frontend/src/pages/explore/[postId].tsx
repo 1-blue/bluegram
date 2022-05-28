@@ -77,7 +77,18 @@ const Explore = () => {
       {/* 게시글 추가 로드 */}
       {loadDetailPostsLoading && <Spinner kinds="page" />}
 
-      {!hasMoreDeatailPosts && <span>더 이상 불러올 게시글이 없습니다.</span>}
+      {!hasMoreDeatailPosts && (
+        <span
+          style={{
+            display: "block",
+            textAlign: "center",
+            margin: "40px 10px 80px",
+            fontSize: "16px",
+          }}
+        >
+          더 이상 불러올 게시글이 없습니다.
+        </span>
+      )}
     </>
   );
 };

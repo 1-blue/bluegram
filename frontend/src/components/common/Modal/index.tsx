@@ -1,31 +1,37 @@
-import { forwardRef, useEffect } from "react";
+import React, { useEffect, useCallback, useRef } from "react";
+
+// styled-component
 import { Wrapper } from "./style";
 
 type Props = {
-  children: React.ReactChild;
-  noScroll?: boolean;
-  primary?: boolean;
+  isOpen: boolean;
+  onCloseModal: () => void;
+  children: React.ReactNode;
+  [index: string]: any;
 };
 
-// eslint-disable-next-line react/display-name
-const Modal = forwardRef<HTMLElement, Props>(
-  ({ children, noScroll, primary }, ref) => {
-    // 2022/05/01 - 모달창 open 시 스크롤 금지 - by 1-blue
-    useEffect(() => {
-      if (!noScroll) return;
-      document.body.style.overflow = "hidden";
+const Rename = ({ isOpen, onCloseModal, children, ...restProps }: Props) => {
+  const modalRef = useRef<null | HTMLDivElement>(null);
 
-      return () => {
-        document.body.style.overflow = "auto";
-      };
-    }, [noScroll]);
+  const closeModal = useCallback(
+    (e: any) => {
+      if (isOpen && modalRef.current === e.target) onCloseModal();
+    },
+    [modalRef, isOpen, onCloseModal]
+  );
 
-    return (
-      <Wrapper primary={primary} ref={ref}>
-        {children}
-      </Wrapper>
-    );
-  }
-);
+  // 2022/01/16 - 영역 외 클릭시 메뉴 닫는 이벤트 등록 - by 1-blue
+  useEffect(() => {
+    window.addEventListener("click", closeModal);
 
-export default Modal;
+    return () => window.removeEventListener("click", closeModal);
+  }, [closeModal]);
+
+  return (
+    <Wrapper {...restProps} ref={modalRef}>
+      {children}
+    </Wrapper>
+  );
+};
+
+export default Rename;

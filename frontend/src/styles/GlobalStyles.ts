@@ -7,10 +7,20 @@ const GlobalStyles = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
+  html {
+    scroll-behavior: smooth;
+  }
   body {
     font-family: "Jua", sans-serif;
     background-color: #fafafa;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
+  body::-webkit-scrollbar {
+    display: none;
+  }
+  
   a {
     text-decoration: none;
     color: inherit;

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Link from "next/link";
 
 // common-component
-import Rename from "@src/components/common/Rename";
+import Modal from "@src/components/common/Modal";
 import Avatar from "@src/components/common/Avatar";
 import Button from "@src/components/common/Button";
 import Spinner from "@src/components/common/Spinner";
@@ -35,7 +35,7 @@ const FollowerModal = ({
   return (
     <>
       {isOpenFollowingModal && Followers && (
-        <Rename
+        <Modal
           isOpen={isOpenFollowingModal}
           onCloseModal={onToggleFollowerModal}
         >
@@ -102,7 +102,7 @@ const FollowerModal = ({
               </>
             )}
           </ul>
-        </Rename>
+        </Modal>
       )}
 
       {loadFollowersLoading && <Spinner kinds="page" />}
