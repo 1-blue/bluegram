@@ -19,6 +19,7 @@ type Props = {
   isFocus: boolean;
   onClickCommentIconButton: () => void;
   onClickBookmarkButton: (isBookmark: boolean) => () => void;
+  onClickDM: () => void;
 };
 
 const PostCardButtons = ({
@@ -28,6 +29,7 @@ const PostCardButtons = ({
   isFocus,
   onClickCommentIconButton,
   onClickBookmarkButton,
+  onClickDM,
 }: Props) => {
   const { me } = useSelector(({ user }: { user: UserState }) => user);
   const [isLikedPost, setIsLikedPost] = useState(false);
@@ -69,7 +71,11 @@ const PostCardButtons = ({
       </button>
 
       {/* DM */}
-      <button type="button" className="post-card-buttons-airplane">
+      <button
+        type="button"
+        className="post-card-buttons-airplane"
+        onClick={onClickDM}
+      >
         <Icon width={24} height={24} icon={ICON.AIRPLANE} />
       </button>
 

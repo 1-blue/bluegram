@@ -56,6 +56,26 @@ export type Photo = {
   UserId: number;
   PostId: number;
 };
+export type Room = {
+  _id: number;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  RoomUsers: {
+    createdAt: Date;
+    updatedAt: Date;
+    UserId: number;
+    RoomId: number;
+  };
+};
+export type Chat = {
+  _id: number;
+  contents: string;
+  createdAt: Date;
+  updatedAt: Date;
+  UserId: number;
+  RoomId: number;
+};
 
 export type SimpleType = {
   _id: number;
@@ -90,4 +110,15 @@ export interface ICommentWithUserAndLikerAndCount extends Comment {
 export interface ICommentWithUserAndLikerAndCountAndRecomments
   extends ICommentWithUserAndLikerAndCount {
   Recomments: ICommentWithUserAndLikerAndCount[];
+}
+export interface IRoomWithUserAndLastChat extends Room {
+  RoomUser: SimpleUser[];
+  Chats: Chat[];
+}
+export interface IChatWithUser extends Chat {
+  User: SimpleUser;
+}
+export interface IRoomInformation {
+  name: string;
+  users: { _id: number; name: string }[];
 }

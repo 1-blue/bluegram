@@ -115,6 +115,17 @@ const User = (sequelize, DataTypes) => {
       foreignKey: "UserId",
       onDelete: "cascade",
     });
+
+    // 유저와 채팅방 ( N : M )
+    db.User.belongsToMany(db.Room, {
+      through: "RoomUsers",
+      as: "UserRoom",
+      foreignKey: "UserId",
+      onDelete: "cascade",
+    });
+
+    // 유저와 채팅 ( 1 : N )
+    db.Chat.belongsTo(db.User, { onDelete: "cascade" });
   };
 
   return User;

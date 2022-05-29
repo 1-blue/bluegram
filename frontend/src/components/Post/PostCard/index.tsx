@@ -18,7 +18,7 @@ import PostCardCommentForm from "./PostCardCommentForm";
 
 // type
 import type { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
-import type { PostState, UserState } from "@src/store/reducers";
+import type { ChatState, PostState, UserState } from "@src/store/reducers";
 
 // actions
 import {
@@ -35,10 +35,12 @@ import {
   removeBookmarkRequest,
   appendBookmarkRequest,
   loadRecommentsRequest,
+  addRoomRequest,
 } from "@src/store/actions";
 
 // hooks
 import useTextarea from "@src/hooks/useTextarea";
+import { useRouter } from "next/router";
 
 type Props = {
   post: IPostWithPhotoAndCommentAndLikerAndCount;
@@ -46,6 +48,7 @@ type Props = {
 
 const PostCard = ({ post }: Props) => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const {
     appendLikeToPostLoading,
     removeLikeToPostLoading,
@@ -57,6 +60,7 @@ const PostCard = ({ post }: Props) => {
   const { me, followLoading, unfollowLoading } = useSelector(
     ({ user }: { user: UserState }) => user
   );
+  const { addRoomDone } = useSelector(({ chat }: { chat: ChatState }) => chat);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [text, onChangeText, setText, resize] = useTextarea("");
   const [isShowComment, setIsShowComment] = useState(true);
@@ -93,6 +97,23 @@ const PostCard = ({ post }: Props) => {
 
     textareaRef.current?.focus();
   }, [me, textareaRef]);
+
+  // 2022/05/29 - DM 클릭 시 채팅방 생성 - by 1-blue
+  const onClickDM = useCallback(() => {
+    if (!me?._id) return toast.error("로그인후에 접근해주세요!");
+    if (me._id === post.UserId)
+      return toast.error("본인과 DM을 할 수 없습니다!");
+
+    dispatch(
+      addRoomRequest({ UserId: post.UserId, roomName: "새로운 채팅방" })
+    );
+  }, [me, dispatch, post]);
+  //
+  useEffect(() => {
+    if (!addRoomDone) return;
+
+    router.push(`/dm/${addRoomDone}`);
+  }, [router, addRoomDone]);
 
   // 2022/01/19 - 답글 달기 버튼 클릭 시 포커스 부여 + 답글에 대한 정보 기록 - by 1-blue
   const onClickRecommentButton = useCallback(
@@ -278,6 +299,7 @@ const PostCard = ({ post }: Props) => {
         isFocus={isFocus}
         onClickCommentIconButton={onClickCommentIconButton}
         onClickBookmarkButton={onClickBookmarkButton}
+        onClickDM={onClickDM}
       />
 
       {/* 게시글 정보 ( 좋아요 개수, 작성 시간 ) */}
