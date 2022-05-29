@@ -45,3 +45,4 @@ export {
   apiRemoveBookmark,
   apiLoadPostsOfBookmark,
 } from "./bookmark";
+export { apiAddRoom, apiLoadRooms, apiLoadChats } from "./room";

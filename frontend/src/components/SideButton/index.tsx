@@ -67,6 +67,8 @@ const SideButton = ({ width }: Props) => {
     [router, reset, setIsOpen]
   );
 
+  if (router.asPath.includes("/dm")) return null;
+
   return (
     <>
       <Wrapper

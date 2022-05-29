@@ -4,6 +4,9 @@ import {
   ICommentWithUserAndLikerAndCount,
   SimpleUser,
   UserWithPostAndFollowerAndFollowing,
+  IRoomWithUserAndLastChat,
+  IChatWithUser,
+  IRoomInformation,
 } from "@src/type";
 
 // 2022/05/13 - 리셋 메시지 - by 1-blue
@@ -425,4 +428,43 @@ export type LoadPostsOfBookmarkResponse = {
   message: string;
   posts: IPostWithPhotoAndCommentAndLikerAndCount[];
   limit: number;
+};
+
+// 2022/05/28 - 로그인한 유저의 채팅방들 요청 타입 - by 1-blue
+export const LOAD_ROOMS_REQUEST = "LOAD_ROOMS_REQUEST" as const;
+export const LOAD_ROOMS_SUCCESS = "LOAD_ROOMS_SUCCESS" as const;
+export const LOAD_ROOMS_FAILURE = "LOAD_ROOMS_FAILURE" as const;
+export type LoadRoomsBody = {};
+export type LoadRoomsResponse = {
+  ok: boolean;
+  message: string;
+  rooms: IRoomWithUserAndLastChat[];
+};
+
+// 2022/05/28 - 로그인한 유저의 채팅방 생성 요청 타입 - by 1-blue
+export const ADD_ROOM_REQUEST = "ADD_ROOM_REQUEST" as const;
+export const ADD_ROOM_SUCCESS = "ADD_ROOM_SUCCESS" as const;
+export const ADD_ROOM_FAILURE = "ADD_ROOM_FAILURE" as const;
+export type AddRoomBody = {
+  roomName: string;
+  UserId: number;
+};
+export type AddRoomResponse = {
+  ok: boolean;
+  message: string;
+  RoomId: number;
+};
+
+// 2022/05/28 - 특정 채팅방의 채팅기록 요청 타입 - by 1-blue
+export const LOAD_CHATS_REQUEST = " LOAD_CHATS_REQUEST" as const;
+export const LOAD_CHATS_SUCCESS = " LOAD_CHATS_SUCCESS" as const;
+export const LOAD_CHATS_FAILURE = " LOAD_CHATS_FAILURE" as const;
+export type LoadChatsBody = {
+  RoomId: string;
+};
+export type LoadChatsResponse = {
+  ok: boolean;
+  message: string;
+  chats: IChatWithUser[];
+  roomInformation: IRoomInformation;
 };
