@@ -15,14 +15,18 @@ import User from "./user.js";
 import Post from "./post.js";
 import Comment from "./comment.js";
 import Hashtag from "./hashtag.js";
-import Image from "./image.js";
+import Photo from "./photo.js";
+import Room from "./room.js";
+import Chat from "./chat.js";
 
 // db에 테이블 등록
 db.User = User(sequelize, Sequelize);
 db.Post = Post(sequelize, Sequelize);
 db.Comment = Comment(sequelize, Sequelize);
 db.Hashtag = Hashtag(sequelize, Sequelize);
-db.Image = Image(sequelize, Sequelize);
+db.Photo = Photo(sequelize, Sequelize);
+db.Room = Room(sequelize, Sequelize);
+db.Chat = Chat(sequelize, Sequelize);
 
 // associate
 Object.keys(db).forEach(modelName => {
