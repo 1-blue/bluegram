@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { useSelector } from "react-redux";
+import styled, { css } from "styled-components";
+import { toast } from "react-toastify";
 
 // redux
 import { END } from "redux-saga";
@@ -20,11 +22,10 @@ import type { IChatWithUser } from "@src/type";
 
 // common-component
 import Avatar from "@src/components/common/Avatar";
+import HeadInfo from "@src/components/common/HeadInfo";
 
 // util
 import { dateOrTimeFormat } from "@src/libs/dateFormat";
-import styled, { css } from "styled-components";
-import { toast } from "react-toastify";
 
 const Chat = styled.li<{ isMine: boolean; length: number }>`
   display: flex;
@@ -117,17 +118,16 @@ const Room = () => {
     setSocket(
       io(process.env.NEXT_PUBLIC_SERVER_URL!, {
         withCredentials: true,
+        transports: ["websocket"],
       })
     );
-  }, []);
+  }, [socket]);
 
   // 2022/05/28 - 채팅방 입장 및 채팅 받기 이벤트 등록 - by 1-blue
   useEffect(() => {
     if (!me) return;
 
     socket?.on("connect", () => {
-      console.log("소켓 연결 완료");
-
       socket.emit("onJoinRoom", router.query.id as string);
 
       socket.on("onReceive", ({ user, chat }) => {
@@ -198,14 +198,21 @@ const Room = () => {
   }, [chatRef]);
 
   // 2022/05/29 - 허용하지 않는 접근 - by 1-blue
+  useEffect(() => {
+    if (!roomInformation) return;
+    if (!roomInformation.users.some((user) => user._id === me?._id)) {
+      toast.error("접근 권한이 없습니다.");
+      router.push("/");
+    }
+  }, [roomInformation, router, me]);
   if (!roomInformation?.users.some((user) => user._id === me?._id)) {
-    toast.error("접근 권한이 없습니다.");
-    router.push("/");
-    return null;
+    return <h1 className="info">현재 채팅방에 접근 권한이 없습니다.</h1>;
   }
 
   return (
     <>
+      <HeadInfo title="blegram - 채팅" description="blegram의 채팅 페이지" />
+
       <h1
         style={{
           textAlign: "center",

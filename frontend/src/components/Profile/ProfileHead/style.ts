@@ -61,6 +61,18 @@ export const Wrapper = styled.section<{ followLoading: boolean }>`
     margin-bottom: 0.8em;
     padding: 4px 0;
   }
+  & .profile-dm-button {
+    flex: 1;
+    text-align: center;
+    border-radius: 0.2em;
+    line-height: 26px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    background: ${({ theme }) => theme.color.main};
+    color: white;
+    margin-bottom: 0.8em;
+    padding: 4px 0;
+  }
 
   /* 유저의 자기소개 */
   & .profile-user-introduction {

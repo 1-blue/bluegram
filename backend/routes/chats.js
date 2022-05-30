@@ -11,12 +11,12 @@ router.get("/:RoomId", isLoggedIn, async (req, res, next) => {
   const RoomId = +req.params.RoomId;
 
   try {
-    // >>> Promise 최적화
-    const targetRoom = await Room.findByPk(RoomId);
-    const me = await User.findByPk(req.user._id);
+    const targetRoomPromise = await Room.findByPk(RoomId);
+    const mePromise = await User.findByPk(req.user._id);
 
-    // >>> 채팅방 주인들 가져오기
-    const rooms = await me.getUserRoom({
+    const [{ value: targetRoom }, { value: me }] = await Promise.allSettled([targetRoomPromise, mePromise]);
+
+    const roomsPromise = me.getUserRoom({
       attributes: ["name"],
       include: [
         {
@@ -32,9 +32,7 @@ router.get("/:RoomId", isLoggedIn, async (req, res, next) => {
         attributes: [],
       },
     });
-
-    // >>> 상대방의 정보와 마지막 채팅을 넣어서 가져오기
-    const chats = await targetRoom.getChats({
+    const chatsPromise = targetRoom.getChats({
       include: [
         {
           model: User,
@@ -46,6 +44,8 @@ router.get("/:RoomId", isLoggedIn, async (req, res, next) => {
         },
       ],
     });
+
+    const [{ value: rooms }, { value: chats }] = await Promise.allSettled([roomsPromise, chatsPromise]);
 
     res.status(200).json({
       ok: true,

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import styled from "styled-components";
@@ -21,10 +21,11 @@ import {
   loadFollowingsRequest,
   loadPostsOfBookmarkRequest,
   localLogoutRequest,
+  addRoomRequest,
 } from "@src/store/actions";
 
 // common-components
-// import HeadInfo from "@src/components/common/HeadInfo";
+import HeadInfo from "@src/components/common/HeadInfo";
 
 // components
 import ProfileHead from "@src/components/Profile/ProfileHead";
@@ -36,7 +37,7 @@ import FollowingModal from "@src/components/Profile/FollwingModal";
 
 // type
 import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-import type { UserState } from "@src/store/reducers";
+import type { ChatState, UserState } from "@src/store/reducers";
 
 // styled-components
 const Wrapper = styled.article`
@@ -96,10 +97,11 @@ const Wrapper = styled.article`
 
 const Profile = () => {
   const dispatch = useDispatch();
-  const { push } = useRouter();
-  const { me, followLoading, unfollowLoading } = useSelector(
+  const { push, query } = useRouter();
+  const { user, me, followLoading, unfollowLoading } = useSelector(
     ({ user }: { user: UserState }) => user
   );
+  const { addRoomDone } = useSelector(({ chat }: { chat: ChatState }) => chat);
 
   const [isOpenFollowerModal, setIsOpenFollowerModal] = useState(false);
   const onToggleFollowerModal = useCallback(
@@ -176,18 +178,43 @@ const Profile = () => {
     push("/");
   }, [dispatch, me, push]);
 
+  // 2022/05/29 - DM 클릭 시 채팅방 생성 - by 1-blue
+  const onClickDM = useCallback(() => {
+    if (!user?._id)
+      return toast.error(
+        "서버측 문제입니다.\n새로고침 후에 다시 시도해주세요!"
+      );
+    if (!me?._id) return toast.error("로그인후에 접근해주세요!");
+    if (me._id === +user._id) return toast.error("본인과 DM을 할 수 없습니다!");
+
+    dispatch(
+      addRoomRequest({
+        UserId: +user._id,
+        roomName: "새로운 채팅방",
+      })
+    );
+  }, [me, dispatch, user]);
+
+  // 2022/05/30 - 생성된 or 존재하는 DM 페이지로 이동 - by 1-blue
+  useEffect(() => {
+    if (!addRoomDone) return;
+
+    push(`/dm/${addRoomDone}`);
+  }, [push, addRoomDone]);
+
   return (
     <>
-      {/* <HeadInfo
-        title="bluegram - profile"
-        description={`${user.name}님의 프로필\n( 게시글: ${user.Posts.length}, 팔로워: ${user.Followers.length}, 팔로잉: ${user.Followings.length})\n\n${user.introduction}`}
-        image={process.env.NEXT_PUBLIC_IMAGE_URL + "/" + user.Images[0].name}
-      /> */}
+      <HeadInfo
+        title={`blegram - ${user?.name}님의 프로필`}
+        description={`${user?.name}님의 프로필\n( 게시글: ${user?.Posts.length}, 팔로워: ${user?.Followers.length}, 팔로잉: ${user?.Followings.length})\n\n${user?.introduction}`}
+        photo={user?.Photos?.[0].name}
+      />
 
       <Wrapper>
         <ProfileHead
           onClickFollowButton={onClickFollowButton}
           onClickLogOut={onClickLogOut}
+          onClickDM={onClickDM}
         />
         <ProfileButtons
           onClickFollowerButton={onClickFollowerButton}

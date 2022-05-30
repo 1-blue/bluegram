@@ -10,17 +10,25 @@ import Avatar from "@src/components/common/Avatar";
 import Button from "@src/components/common/Button";
 
 // type
-import type { UserState } from "@src/store/reducers";
+import type { ChatState, UserState } from "@src/store/reducers";
 
 type Props = {
   onClickFollowButton: (UserId?: number, isFollow?: boolean) => void;
   onClickLogOut: () => void;
+  onClickDM: () => void;
 };
 
-const ProfileHead = ({ onClickFollowButton, onClickLogOut }: Props) => {
+const ProfileHead = ({
+  onClickFollowButton,
+  onClickLogOut,
+  onClickDM,
+}: Props) => {
   const { me, user } = useSelector(({ user }: { user: UserState }) => user);
   const { followLoading, unfollowLoading } = useSelector(
     ({ user }: { user: UserState }) => user
+  );
+  const { addRoomLoading } = useSelector(
+    ({ chat }: { chat: ChatState }) => chat
   );
   const isMyFollower = me?.Followings?.some(
     (following) => following._id === user?._id
@@ -50,17 +58,28 @@ const ProfileHead = ({ onClickFollowButton, onClickLogOut }: Props) => {
           )}
         </div>
         {me?._id === user?._id ? (
-          <Link href={`/account/edit/${me?._id}?kinds=nomal`}>
-            <a className="profile-edit-link">프로필 편집</a>
-          </Link>
+          <>
+            <Link href={`/account/edit/${me?._id}?kinds=nomal`}>
+              <a className="profile-edit-link">프로필 편집</a>
+            </Link>
+          </>
         ) : (
-          <Button
-            type="button"
-            className="profile-follow-button"
-            onClick={onClickFollowButton(user?._id, isMyFollower)}
-            loading={followLoading || unfollowLoading}
-            contents={isMyFollower ? "언팔로우" : "팔로우"}
-          />
+          <>
+            <Button
+              type="button"
+              className="profile-follow-button"
+              onClick={onClickFollowButton(user?._id, isMyFollower)}
+              loading={followLoading || unfollowLoading}
+              contents={isMyFollower ? "언팔로우" : "팔로우"}
+            />
+            <Button
+              type="button"
+              className="profile-dm-button"
+              onClick={onClickDM}
+              loading={addRoomLoading}
+              contents="DM 보내기"
+            />
+          </>
         )}
         <p className="profile-user-introduction">{user?.introduction}</p>
       </div>

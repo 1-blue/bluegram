@@ -11,7 +11,7 @@ import { axiosInstance } from "@src/store/api";
 import { loadToMeRequest, loadPostsOfHashtagRequest } from "@src/store/actions";
 
 // common-components
-// import HeadInfo from "@src/components/common/HeadInfo";
+import HeadInfo from "@src/components/common/HeadInfo";
 import Spinner from "@src/components/common/Spinner";
 
 // components
@@ -57,13 +57,11 @@ const HashtagPage = () => {
 
   return (
     <>
-      {/* <HeadInfo
-        title={`bluegram - #${hashtagText}`}
-        description={`해시태그 ( #${hashtagText} )`}
-        image={
-          process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name
-        }
-      /> */}
+      <HeadInfo
+        title={`blegram - #${query.hashtag}`}
+        description={`해시태그를 가진 게시글 검색 페이지 ( #${query.hashtag} )`}
+        photo={posts?.[0].Photos?.[0].name}
+      />
 
       {/* 해시태그 검색결과 총 개수 */}
       <span

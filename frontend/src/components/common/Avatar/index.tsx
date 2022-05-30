@@ -30,7 +30,7 @@ const Avatar = ({
 }: Props) => {
   return (
     <>
-      {photo && (
+      {photo ? (
         <Wrapper width={width} height={height} onClick={onClick} style={style}>
           <PhotoTag
             src={combinePhotoUrl(photo)}
@@ -38,6 +38,10 @@ const Avatar = ({
             alt={alt}
             {...props}
           />
+        </Wrapper>
+      ) : (
+        <Wrapper width={width} height={height} onClick={onClick} style={style}>
+          <PhotoTag src={`/avatar.png`} layout="fill" alt={alt} {...props} />
         </Wrapper>
       )}
     </>

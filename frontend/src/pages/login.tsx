@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 // common-components
 import Button from "@src/components/common/Button";
 import Input from "@src/components/common/Input";
+import HeadInfo from "@src/components/common/HeadInfo";
 
 // type
 import type { AuthState } from "@src/store/reducers";
@@ -78,6 +79,11 @@ const LoginPage: NextPage = () => {
 
   return (
     <>
+      <HeadInfo
+        title="blegram - 로그인"
+        description="blegram의 로그인 페이지"
+      />
+
       <Title>blegram - 로그인</Title>
 
       <Wrapper onSubmit={handleSubmit(onLocalLogIn)} autoComplete="on">

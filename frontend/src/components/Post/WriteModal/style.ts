@@ -135,7 +135,7 @@ export const Wrapper = styled.section<{ step: number }>`
   }
   @media (max-width: 1024px) {
     & .modal {
-      height: 60vh;
+      height: 70vh;
     }
     & .modal-head {
       font-size: 1rem;

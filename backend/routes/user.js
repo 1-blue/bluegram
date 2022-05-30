@@ -1,15 +1,12 @@
-import path from "path";
-import fs from "fs";
 import express from "express";
 import bcrypt from "bcrypt";
 
-import { isNotLoggedIn, isLoggedIn } from "../middleware/index.js";
+import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
 const { User, Photo, Post } = db;
 
 const router = express.Router();
-const __dirname = path.resolve();
 
 // 로그인한 유저 정보 가져오기
 router.get("/me", isLoggedIn, async (req, res, next) => {
@@ -39,7 +36,9 @@ router.get("/me", isLoggedIn, async (req, res, next) => {
       ],
     });
 
-    return res.status(200).json({ message: "로그인한 유저의 정보를 가져오는데 성공했습니다.", user: fullUser });
+    return res
+      .status(200)
+      .json({ ok: true, message: "로그인한 유저의 정보를 가져오는데 성공했습니다.", user: fullUser });
   } catch (error) {
     console.error("GET /user/me error >> ", error);
     return next(error);
@@ -56,7 +55,7 @@ router.get("/me/detail", isLoggedIn, async (req, res, next) => {
       include: [{ model: Photo, attributes: ["_id", "name"] }],
     });
 
-    return res.status(200).json({ message: "로그인한 유저의 상세정보를 가져오는데 성공했습니다.", me });
+    return res.status(200).json({ ok: true, message: "로그인한 유저의 상세정보를 가져오는데 성공했습니다.", me });
   } catch (error) {
     console.error("GET /user/me/detail error >> ", error);
     return next(error);
@@ -137,11 +136,6 @@ router.put("/", isLoggedIn, async (req, res, next) => {
         },
         { where: { UserId: req.user._id } },
       );
-
-      // 2022/01/23 - 게시글 생성 완료 시 추가한 이미지 위치 이동 - by 1-blue
-      const oldPath = path.join(__dirname, "public", "images", "preview", profileImage);
-      const newPath = path.join(__dirname, "public", "images", profileImage);
-      fs.rename(oldPath, newPath, () => {});
     }
 
     res.status(200).json({
@@ -198,7 +192,7 @@ router.delete("/:password", isLoggedIn, async (req, res, next) => {
 
   try {
     if (!(await bcrypt.compare(password, req.user.password))) {
-      return res.status(202).json({ message: "기존 비밀번호와 불일치합니다." });
+      return res.status(202).json({ ok: false, message: "기존 비밀번호와 불일치합니다." });
     }
 
     await User.destroy({ where: { _id: req.user._id } });
@@ -208,7 +202,7 @@ router.delete("/:password", isLoggedIn, async (req, res, next) => {
     res
       .status(200)
       .clearCookie("blegram")
-      .json({ message: "회원탈퇴에 성공하셨습니다.\n강제로 로그아웃되며 회원가입페이지로 이동합니다." });
+      .json({ ok: false, message: "회원탈퇴에 성공하셨습니다.\n강제로 로그아웃되며 회원가입페이지로 이동합니다." });
   } catch (error) {
     console.error("DELETE /user/:password error >> ", error);
     return next(error);

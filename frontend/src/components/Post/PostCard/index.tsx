@@ -108,7 +108,7 @@ const PostCard = ({ post }: Props) => {
       addRoomRequest({ UserId: post.UserId, roomName: "새로운 채팅방" })
     );
   }, [me, dispatch, post]);
-  //
+  // 2022/05/30 - 생성된 or 존재하는 DM 페이지로 이동 - by 1-blue
   useEffect(() => {
     if (!addRoomDone) return;
 

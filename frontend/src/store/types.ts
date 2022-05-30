@@ -66,7 +66,7 @@ export const LOAD_TO_ME_FAILURE = "LOAD_TO_ME_FAILURE" as const;
 export type LoadToMeResponse = {
   ok: boolean;
   message: string;
-  user: SimpleUser;
+  user: UserWithPostAndFollowerAndFollowing;
 } | null;
 
 // 2022/05/19 - 게시글 생성 모달 열기/닫기 - by 1-blue

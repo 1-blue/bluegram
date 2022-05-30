@@ -12,7 +12,6 @@ router.get("/", isLoggedIn, async (req, res, next) => {
   try {
     const me = await User.findByPk(req.user._id);
 
-    // >>> 상대방의 정보와 마지막 채팅을 넣어서 가져오기
     const rooms = await me.getUserRoom({
       include: [
         {
@@ -83,9 +82,10 @@ router.post("/", isLoggedIn, async (req, res, next) => {
     } else {
       const createdRoom = await Room.create({ name: roomName });
 
-      // >>> promise 최적화 하기
-      await createdRoom.addRoomUser(+UserId);
-      await createdRoom.addRoomUser(+req.user._id);
+      const addRoomPromise = createdRoom.addRoomUser(+UserId);
+      const addRoomUserPromise = createdRoom.addRoomUser(+req.user._id);
+
+      await Promise.allSettled([addRoomPromise, addRoomUserPromise]);
 
       RoomId = createdRoom._id;
     }

@@ -16,6 +16,7 @@ import type { AuthState } from "@src/store/reducers";
 import Input from "@src/components/common/Input";
 import Textarea from "@src/components/common/Textarea";
 import PhotoInput from "@src/components/common/PhotoInput";
+import HeadInfo from "@src/components/common/HeadInfo";
 
 // styled-components
 const Wrapper = styled.form`
@@ -84,6 +85,11 @@ const SignupPage = () => {
 
   return (
     <>
+      <HeadInfo
+        title="blegram - 회원가입"
+        description="blegram의 회원가입 페이지"
+      />
+
       <Title>blegram - 회원가입</Title>
 
       <Wrapper
