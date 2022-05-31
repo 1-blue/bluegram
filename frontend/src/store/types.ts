@@ -456,15 +456,30 @@ export type AddRoomResponse = {
 };
 
 // 2022/05/28 - 특정 채팅방의 채팅기록 요청 타입 - by 1-blue
-export const LOAD_CHATS_REQUEST = " LOAD_CHATS_REQUEST" as const;
-export const LOAD_CHATS_SUCCESS = " LOAD_CHATS_SUCCESS" as const;
-export const LOAD_CHATS_FAILURE = " LOAD_CHATS_FAILURE" as const;
+export const LOAD_CHATS_REQUEST = "LOAD_CHATS_REQUEST" as const;
+export const LOAD_CHATS_SUCCESS = "LOAD_CHATS_SUCCESS" as const;
+export const LOAD_CHATS_FAILURE = "LOAD_CHATS_FAILURE" as const;
 export type LoadChatsBody = {
   RoomId: string;
+  lastId: number;
+  limit: number;
 };
 export type LoadChatsResponse = {
   ok: boolean;
   message: string;
   chats: IChatWithUser[];
   roomInformation: IRoomInformation;
+  limit: number;
+};
+
+// 2022/05/31 - 채팅 추가 - by 1-blue
+export const ADD_CHAT = "ADD_CHAT" as const;
+export type AddChatBody = {
+  _id: number;
+  RoomId: number;
+  UserId: number;
+  contents: string;
+  createdAt: Date;
+  updatedAt: Date;
+  User: SimpleUser;
 };

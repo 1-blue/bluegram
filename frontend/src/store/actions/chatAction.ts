@@ -15,6 +15,8 @@ import {
   LOAD_CHATS_REQUEST,
   LOAD_CHATS_SUCCESS,
   LOAD_CHATS_FAILURE,
+  AddChatBody,
+  ADD_CHAT,
 } from "@src/store/types";
 import { resetMessage } from ".";
 
@@ -60,6 +62,12 @@ export const loadChatsFailure = (data: FailureResponse) => ({
   data,
 });
 
+// 2022/05/31 - 채팅 추가하기 - by 1-blue
+export const addChatRequest = (data: AddChatBody) => ({
+  type: ADD_CHAT,
+  data,
+});
+
 export type ChatActionRequest =
   | ReturnType<typeof resetMessage>
   | ReturnType<typeof addRoomRequest>
@@ -70,4 +78,5 @@ export type ChatActionRequest =
   | ReturnType<typeof loadRoomsFailure>
   | ReturnType<typeof loadChatsRequest>
   | ReturnType<typeof loadChatsSuccess>
-  | ReturnType<typeof loadChatsFailure>;
+  | ReturnType<typeof loadChatsFailure>
+  | ReturnType<typeof addChatRequest>;

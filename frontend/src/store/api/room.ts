@@ -16,5 +16,7 @@ export const apiAddRoom = (body: AddRoomBody) =>
   axiosInstance.post<AddRoomResponse>(`/room`, body);
 
 // 2022/05/28 - 특정 채팅방의 채팅들 요청 - by 1-blue
-export const apiLoadChats = ({ RoomId }: LoadChatsBody) =>
-  axiosInstance.get<LoadChatsResponse>(`/chats/${RoomId}`);
+export const apiLoadChats = ({ RoomId, lastId, limit }: LoadChatsBody) =>
+  axiosInstance.get<LoadChatsResponse>(
+    `/chats/${RoomId}?lastId=${lastId}&limit=${limit}`
+  );

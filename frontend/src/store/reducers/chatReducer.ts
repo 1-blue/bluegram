@@ -9,6 +9,7 @@ import {
   LOAD_CHATS_REQUEST,
   LOAD_CHATS_SUCCESS,
   LOAD_CHATS_FAILURE,
+  ADD_CHAT,
 } from "@src/store/types";
 import {
   IChatWithUser,
@@ -21,6 +22,7 @@ type StateType = {
   rooms: IRoomWithUserAndLastChat[];
   chats: IChatWithUser[];
   roomInformation?: IRoomInformation | null;
+  hasMoreChat: boolean;
 
   addRoomLoading: boolean;
   addRoomDone: null | string;
@@ -41,6 +43,9 @@ const initState: StateType = {
 
   // 2022/05/28 - 특정 채팅방의 채팅들 - by 1-blue
   chats: [],
+
+  // 2022/05/31 - 채팅 추가 로드 가능 여부 - by 1-blue
+  hasMoreChat: true,
 
   // 2022/05/28 - 특정 채팅방의 정보 - by 1-blue
   roomInformation: null,
@@ -138,7 +143,7 @@ function chatReducer(prevState = initState, action: ChatActionRequest) {
     case LOAD_CHATS_REQUEST:
       return {
         ...prevState,
-        loadChatsLoading: false,
+        loadChatsLoading: true,
         loadChatsDone: null,
         loadChatsError: null,
       };
@@ -147,14 +152,22 @@ function chatReducer(prevState = initState, action: ChatActionRequest) {
         ...prevState,
         loadChatsLoading: false,
         loadChatsDone: action.data.message,
-        chats: action.data.chats,
+        chats: [...action.data.chats, ...prevState.chats],
         roomInformation: action.data.roomInformation,
+        hasMoreChat: action.data.chats.length === action.data.limit,
       };
     case LOAD_CHATS_FAILURE:
       return {
         ...prevState,
         loadChatsLoading: false,
         loadChatsError: action.data.message,
+      };
+
+    // 2022/05/31 - 채팅 추가 - by 1-blue
+    case ADD_CHAT:
+      return {
+        ...prevState,
+        chats: [...prevState.chats, action.data],
       };
 
     default:
