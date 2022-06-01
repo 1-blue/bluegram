@@ -62,8 +62,7 @@ export type Room = {
   createdAt: Date;
   updatedAt: Date;
   RoomUsers: {
-    createdAt: Date;
-    updatedAt: Date;
+    selfGranted?: number | null;
     UserId: number;
     RoomId: number;
   };
@@ -119,6 +118,7 @@ export interface IChatWithUser extends Chat {
   User: SimpleUser;
 }
 export interface IRoomInformation {
+  _id: number;
   name: string;
   users: { _id: number; name: string }[];
 }

@@ -5,7 +5,7 @@ const router = express.Router();
 import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
-const { User, Room, Photo, Chat } = db;
+const { User, Room, Photo, Chat, RoomUsers } = db;
 
 // 2022/05/29 - 로그인한 유저의 채팅방들 가져오기 - by 1-blue
 router.get("/", isLoggedIn, async (req, res, next) => {
@@ -79,6 +79,17 @@ router.post("/", isLoggedIn, async (req, res, next) => {
 
     if (exRoom.length >= 1) {
       RoomId = exRoom[0]._id;
+
+      await RoomUsers.update(
+        {
+          selfGranted: 0,
+        },
+        {
+          where: {
+            RoomId,
+          },
+        },
+      );
     } else {
       const createdRoom = await Room.create({ name: roomName });
 
@@ -97,6 +108,45 @@ router.post("/", isLoggedIn, async (req, res, next) => {
     });
   } catch (error) {
     console.error("POST api/room >> ", error);
+    next(error);
+  }
+});
+
+// 2022/06/01 - 로그인한 유저 채팅방 나가기 - by 1-blue
+router.delete("/", isLoggedIn, async (req, res, next) => {
+  const { RoomId } = req.query;
+
+  try {
+    const exRoomUsers = await RoomUsers.findOne({ where: { RoomId } });
+
+    // 특정 유저만 채팅방 나가기
+    if (!exRoomUsers.selfGranted) {
+      await RoomUsers.update(
+        {
+          selfGranted: req.user._id,
+        },
+        {
+          where: {
+            RoomId,
+          },
+        },
+      );
+    }
+    // 둘 다 채팅방 나가서 채팅방 제거
+    else {
+      await Room.destroy({
+        where: {
+          _id: RoomId,
+        },
+      });
+    }
+
+    res.status(201).json({
+      ok: true,
+      message: `채팅방을 나갔습니다.`,
+    });
+  } catch (error) {
+    console.error("DELETE api/room >> ", error);
     next(error);
   }
 });

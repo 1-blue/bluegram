@@ -74,14 +74,20 @@ const DM = () => {
     return null;
   }
 
+  const filteredRooms = rooms
+    .filter((room) => room.Chats.length > 0)
+    .filter((room) => (room.RoomUsers.selfGranted === me._id ? false : true));
+
   return (
     <>
       <HeadInfo title="blegram - DM" description="blegram의 채팅방 페이지" />
 
-      {rooms.length === 0 && <h1 className="info">채팅방이 없습니다!</h1>}
+      {filteredRooms.length === 0 && (
+        <h1 className="info">채팅방이 없습니다!</h1>
+      )}
 
       <Wrapper>
-        {rooms.map((room) => (
+        {filteredRooms.map((room) => (
           <li key={room._id}>
             <Link href={`/dm/${room._id}`}>
               <a>

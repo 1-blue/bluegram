@@ -10,6 +10,9 @@ import {
   LOAD_CHATS_SUCCESS,
   LOAD_CHATS_FAILURE,
   ADD_CHAT,
+  EXIT_ROOM_REQUEST,
+  EXIT_ROOM_SUCCESS,
+  EXIT_ROOM_FAILURE,
 } from "@src/store/types";
 import {
   IChatWithUser,
@@ -35,6 +38,10 @@ type StateType = {
   loadChatsLoading: boolean;
   loadChatsDone: null | string;
   loadChatsError: null | string;
+
+  exitRoomLoading: boolean;
+  exitRoomDone: null | string;
+  exitRoomError: null | string;
 };
 
 const initState: StateType = {
@@ -64,6 +71,11 @@ const initState: StateType = {
   loadChatsLoading: false,
   loadChatsDone: null,
   loadChatsError: null,
+
+  // 2022/06/01 - 채팅방 나가기 관련 변수 - by 1-blue
+  exitRoomLoading: false,
+  exitRoomDone: null,
+  exitRoomError: null,
 };
 
 function chatReducer(prevState = initState, action: ChatActionRequest) {
@@ -168,6 +180,27 @@ function chatReducer(prevState = initState, action: ChatActionRequest) {
       return {
         ...prevState,
         chats: [...prevState.chats, action.data],
+      };
+
+    // 2022/06/01 - 채팅방 나가기 로드 생성 - by 1-blue
+    case EXIT_ROOM_REQUEST:
+      return {
+        ...prevState,
+        exitRoomLoading: true,
+        exitRoomDone: null,
+        exitRoomError: null,
+      };
+    case EXIT_ROOM_SUCCESS:
+      return {
+        ...prevState,
+        exitRoomLoading: false,
+        exitRoomDone: action.data.message,
+      };
+    case EXIT_ROOM_FAILURE:
+      return {
+        ...prevState,
+        exitRoomLoading: false,
+        exitRoomError: action.data.message,
       };
 
     default:

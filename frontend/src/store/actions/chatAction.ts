@@ -17,6 +17,11 @@ import {
   LOAD_CHATS_FAILURE,
   AddChatBody,
   ADD_CHAT,
+  ExitRoomBody,
+  ExitRoomResponse,
+  EXIT_ROOM_REQUEST,
+  EXIT_ROOM_SUCCESS,
+  EXIT_ROOM_FAILURE,
 } from "@src/store/types";
 import { resetMessage } from ".";
 
@@ -68,6 +73,20 @@ export const addChatRequest = (data: AddChatBody) => ({
   data,
 });
 
+// 2022/06/01 - 채팅방 나가기 액션 크리에이터 - by 1-blue
+export const exitRoomRequest = (data: ExitRoomBody) => ({
+  type: EXIT_ROOM_REQUEST,
+  data,
+});
+export const exitRoomSuccess = (data: ExitRoomResponse) => ({
+  type: EXIT_ROOM_SUCCESS,
+  data,
+});
+export const exitRoomFailure = (data: FailureResponse) => ({
+  type: EXIT_ROOM_FAILURE,
+  data,
+});
+
 export type ChatActionRequest =
   | ReturnType<typeof resetMessage>
   | ReturnType<typeof addRoomRequest>
@@ -79,4 +98,7 @@ export type ChatActionRequest =
   | ReturnType<typeof loadChatsRequest>
   | ReturnType<typeof loadChatsSuccess>
   | ReturnType<typeof loadChatsFailure>
-  | ReturnType<typeof addChatRequest>;
+  | ReturnType<typeof addChatRequest>
+  | ReturnType<typeof exitRoomRequest>
+  | ReturnType<typeof exitRoomSuccess>
+  | ReturnType<typeof exitRoomFailure>;

@@ -15,10 +15,15 @@ import {
   LOAD_CHATS_FAILURE,
   LOAD_CHATS_REQUEST,
   LoadChatsResponse,
+  ExitRoomResponse,
+  EXIT_ROOM_SUCCESS,
+  EXIT_ROOM_FAILURE,
+  EXIT_ROOM_REQUEST,
 } from "@src/store/types";
 
 // api
 import { apiAddRoom, apiLoadRooms, apiLoadChats } from "@src/store/api";
+import { apiExitRoom } from "../api/room";
 
 function* addRoom(action: any) {
   try {
@@ -86,6 +91,34 @@ function* watchLoadChats() {
   yield takeLatest(LOAD_CHATS_REQUEST, loadChats);
 }
 
+function* exitRoom(action: any) {
+  try {
+    const { data }: AxiosResponse<ExitRoomResponse> = yield call(
+      apiExitRoom,
+      action.data
+    );
+
+    yield put({ type: EXIT_ROOM_SUCCESS, data });
+  } catch (error: any) {
+    console.error("authSaga exitRoom >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put({ type: EXIT_ROOM_FAILURE, data: { message } });
+  }
+}
+function* watchExitRoom() {
+  yield takeLatest(EXIT_ROOM_REQUEST, exitRoom);
+}
+
 export default function* chatSaga() {
-  yield all([fork(watchAddRoom), fork(watchLoadRooms), fork(watchLoadChats)]);
+  yield all([
+    fork(watchAddRoom),
+    fork(watchLoadRooms),
+    fork(watchLoadChats),
+    fork(watchExitRoom),
+  ]);
 }

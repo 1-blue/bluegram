@@ -10,7 +10,7 @@ import { END } from "redux-saga";
 import wrapper from "@src/store/configureStore";
 import { axiosInstance } from "@src/store/api";
 import { loadToMeRequest, loadChatsRequest } from "@src/store/actions";
-import { addChatRequest } from "@src/store/actions/chatAction";
+import { addChatRequest, exitRoomRequest } from "@src/store/actions/chatAction";
 
 // type
 import type { GetServerSideProps, GetServerSidePropsContext } from "next";
@@ -90,14 +90,31 @@ const Form = styled.form`
     border-bottom-right-radius: 6px;
   }
 `;
+const AbsoluteButton = styled.button`
+  position: absolute;
+  top: 0;
+  background-color: ${({ theme }) => theme.color.blue};
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
+`;
 
 const Room = () => {
   const router = useRouter();
   const dispatch = useDispatch();
   const { me } = useSelector(({ user }: { user: UserState }) => user);
-  const { chats, roomInformation, hasMoreChat, loadChatsLoading } = useSelector(
-    ({ chat }: { chat: ChatState }) => chat
-  );
+  const {
+    chats,
+    roomInformation,
+    hasMoreChat,
+    loadChatsLoading,
+    exitRoomDone,
+  } = useSelector(({ chat }: { chat: ChatState }) => chat);
 
   // 2022/05/28 - 연결한 소켓 - by 1-blue
   const [socket, setSocket] = useState<null | Socket<
@@ -109,15 +126,15 @@ const Room = () => {
 
   // 2022/05/28 - 서버와 소켓 연결 - by 1-blue
   useEffect(() => {
-    if (socket) return;
-
     setSocket(
-      io(process.env.NEXT_PUBLIC_SERVER_URL!, {
-        withCredentials: true,
-        transports: ["websocket"],
-      })
+      (prev) =>
+        prev ||
+        io(process.env.NEXT_PUBLIC_SERVER_URL!, {
+          withCredentials: true,
+          transports: ["websocket"],
+        })
     );
-  }, [socket]);
+  }, []);
 
   // 2022/05/28 - 채팅방 입장 및 채팅 받기 이벤트 등록 - by 1-blue
   useEffect(() => {
@@ -208,7 +225,7 @@ const Room = () => {
       hasMoreChat &&
       !loadChatsLoading
     ) {
-      if (!chats) {
+      if (chats.length === 0) {
         dispatch(
           loadChatsRequest({
             RoomId: router.query.id as string,
@@ -239,20 +256,52 @@ const Room = () => {
       );
   }, [infiniteScrollEvent, chatWrapperRef]);
 
+  // 2022/06/01 - 채팅방 나가기 - by 1-blue
+  const onExitRoom = useCallback(() => {
+    if (!confirm("채팅방을 나가면 되돌릴 수 없습니다.\n정말 실행하시겠습니까?"))
+      return;
+
+    dispatch(exitRoomRequest({ RoomId: roomInformation?._id! }));
+  }, [dispatch, roomInformation]);
+  // 2022/06/01 - 채팅방 나가기 성공 시 실행 - by 1-blue
+  useEffect(() => {
+    if (!exitRoomDone) return;
+
+    toast.success(exitRoomDone);
+    router.back();
+  }, [exitRoomDone, router]);
+
   return (
     <>
       <HeadInfo title="blegram - 채팅" description="blegram의 채팅 페이지" />
 
-      <h1
-        style={{
-          textAlign: "center",
-          fontSize: "1.4rem",
-          fontWeight: "bold",
-          marginTop: "20px",
-        }}
-      >
-        {roomInformation?.name}
-      </h1>
+      <section style={{ position: "relative" }}>
+        <h1
+          style={{
+            textAlign: "center",
+            fontSize: "1.8rem",
+            fontWeight: "bold",
+            margin: "20px 0",
+          }}
+        >
+          {roomInformation?.name}
+        </h1>
+
+        <AbsoluteButton
+          type="button"
+          style={{ left: 10 }}
+          onClick={() => router.back()}
+        >
+          뒤로 가기
+        </AbsoluteButton>
+        <AbsoluteButton
+          type="button"
+          style={{ right: 10 }}
+          onClick={onExitRoom}
+        >
+          채팅방 나가기
+        </AbsoluteButton>
+      </section>
 
       <section
         ref={chatWrapperRef}
@@ -266,7 +315,9 @@ const Room = () => {
         }}
       >
         {!hasMoreChat && (
-          <h3 className="info">더 이상 불러올 채팅이 없습니다.</h3>
+          <h3 className="info" style={{ marginTop: "1rem" }}>
+            더 이상 불러올 채팅이 없습니다.
+          </h3>
         )}
         <ul>
           {chats.map((chat) => (

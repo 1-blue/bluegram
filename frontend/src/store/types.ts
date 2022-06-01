@@ -483,3 +483,15 @@ export type AddChatBody = {
   updatedAt: Date;
   User: SimpleUser;
 };
+
+// 2022/06/01 - 채팅방 나가기 - by 1-blue
+export const EXIT_ROOM_REQUEST = "EXIT_ROOM_REQUEST" as const;
+export const EXIT_ROOM_SUCCESS = "EXIT_ROOM_SUCCESS" as const;
+export const EXIT_ROOM_FAILURE = "EXIT_ROOM_FAILURE" as const;
+export type ExitRoomBody = {
+  RoomId: number;
+};
+export type ExitRoomResponse = {
+  ok: boolean;
+  message: string;
+};

@@ -3,6 +3,7 @@ import { axiosInstance } from ".";
 import type {
   AddRoomBody,
   AddRoomResponse,
+  ExitRoomBody,
   LoadChatsBody,
   LoadChatsResponse,
   LoadRoomsResponse,
@@ -20,3 +21,7 @@ export const apiLoadChats = ({ RoomId, lastId, limit }: LoadChatsBody) =>
   axiosInstance.get<LoadChatsResponse>(
     `/chats/${RoomId}?lastId=${lastId}&limit=${limit}`
   );
+
+// 2022/06/01 - 채팅방 나가기 요청 - by 1-blue
+export const apiExitRoom = ({ RoomId }: ExitRoomBody) =>
+  axiosInstance.delete<LoadChatsResponse>(`/room?RoomId=${RoomId}`);

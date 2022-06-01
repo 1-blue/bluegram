@@ -62,6 +62,7 @@ router.get("/:RoomId", isLoggedIn, async (req, res, next) => {
       message: `"${targetRoom.name}" 채팅방의 채팅들을 가져왔습니다.`,
       chats: chats.reverse(),
       roomInformation: {
+        _id: RoomId,
         name: rooms[0].name,
         users: rooms[0].RoomUser.map(user => user),
       },
