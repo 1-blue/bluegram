@@ -9,6 +9,10 @@ import {
   LOAD_CHATS_REQUEST,
   LOAD_CHATS_SUCCESS,
   LOAD_CHATS_FAILURE,
+  ADD_CHAT,
+  EXIT_ROOM_REQUEST,
+  EXIT_ROOM_SUCCESS,
+  EXIT_ROOM_FAILURE,
 } from "@src/store/types";
 import {
   IChatWithUser,
@@ -21,6 +25,7 @@ type StateType = {
   rooms: IRoomWithUserAndLastChat[];
   chats: IChatWithUser[];
   roomInformation?: IRoomInformation | null;
+  hasMoreChat: boolean;
 
   addRoomLoading: boolean;
   addRoomDone: null | string;
@@ -33,6 +38,10 @@ type StateType = {
   loadChatsLoading: boolean;
   loadChatsDone: null | string;
   loadChatsError: null | string;
+
+  exitRoomLoading: boolean;
+  exitRoomDone: null | string;
+  exitRoomError: null | string;
 };
 
 const initState: StateType = {
@@ -41,6 +50,9 @@ const initState: StateType = {
 
   // 2022/05/28 - 특정 채팅방의 채팅들 - by 1-blue
   chats: [],
+
+  // 2022/05/31 - 채팅 추가 로드 가능 여부 - by 1-blue
+  hasMoreChat: true,
 
   // 2022/05/28 - 특정 채팅방의 정보 - by 1-blue
   roomInformation: null,
@@ -59,6 +71,11 @@ const initState: StateType = {
   loadChatsLoading: false,
   loadChatsDone: null,
   loadChatsError: null,
+
+  // 2022/06/01 - 채팅방 나가기 관련 변수 - by 1-blue
+  exitRoomLoading: false,
+  exitRoomDone: null,
+  exitRoomError: null,
 };
 
 function chatReducer(prevState = initState, action: ChatActionRequest) {
@@ -138,7 +155,7 @@ function chatReducer(prevState = initState, action: ChatActionRequest) {
     case LOAD_CHATS_REQUEST:
       return {
         ...prevState,
-        loadChatsLoading: false,
+        loadChatsLoading: true,
         loadChatsDone: null,
         loadChatsError: null,
       };
@@ -147,14 +164,43 @@ function chatReducer(prevState = initState, action: ChatActionRequest) {
         ...prevState,
         loadChatsLoading: false,
         loadChatsDone: action.data.message,
-        chats: action.data.chats,
+        chats: [...action.data.chats, ...prevState.chats],
         roomInformation: action.data.roomInformation,
+        hasMoreChat: action.data.chats.length === action.data.limit,
       };
     case LOAD_CHATS_FAILURE:
       return {
         ...prevState,
         loadChatsLoading: false,
         loadChatsError: action.data.message,
+      };
+
+    // 2022/05/31 - 채팅 추가 - by 1-blue
+    case ADD_CHAT:
+      return {
+        ...prevState,
+        chats: [...prevState.chats, action.data],
+      };
+
+    // 2022/06/01 - 채팅방 나가기 로드 생성 - by 1-blue
+    case EXIT_ROOM_REQUEST:
+      return {
+        ...prevState,
+        exitRoomLoading: true,
+        exitRoomDone: null,
+        exitRoomError: null,
+      };
+    case EXIT_ROOM_SUCCESS:
+      return {
+        ...prevState,
+        exitRoomLoading: false,
+        exitRoomDone: action.data.message,
+      };
+    case EXIT_ROOM_FAILURE:
+      return {
+        ...prevState,
+        exitRoomLoading: false,
+        exitRoomError: action.data.message,
       };
 
     default:

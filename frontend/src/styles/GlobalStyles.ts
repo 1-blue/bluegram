@@ -40,6 +40,13 @@ const GlobalStyles = createGlobalStyle`
     padding: 0;
     cursor: pointer;
   }
+
+  .info {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 10vh 0;
+  }
 `;
 
 export default GlobalStyles;

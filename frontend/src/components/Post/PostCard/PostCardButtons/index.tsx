@@ -10,7 +10,8 @@ import Icon from "@src/components/common/Icon";
 // type
 import { ICON } from "@src/type";
 import type { SimpleUser } from "@src/type";
-import type { UserState } from "@src/store/reducers";
+import type { ChatState, UserState } from "@src/store/reducers";
+import Spinner from "@src/components/common/Spinner";
 
 type Props = {
   likers: SimpleUser[];
@@ -32,6 +33,9 @@ const PostCardButtons = ({
   onClickDM,
 }: Props) => {
   const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { addRoomLoading } = useSelector(
+    ({ chat }: { chat: ChatState }) => chat
+  );
   const [isLikedPost, setIsLikedPost] = useState(false);
   const [isBookmarkedPost, setIsBookmarkedPost] = useState(false);
 
@@ -51,51 +55,55 @@ const PostCardButtons = ({
   );
 
   return (
-    <Wrapper>
-      {/* 좋아요 */}
-      <button
-        type="button"
-        onClick={onClickPostLikeButton(isLikedPost)}
-        className="post-card-buttons-heart"
-      >
-        <Icon width={24} height={24} icon={ICON.HEART} $fill={isLikedPost} />
-      </button>
+    <>
+      <Wrapper>
+        {/* 좋아요 */}
+        <button
+          type="button"
+          onClick={onClickPostLikeButton(isLikedPost)}
+          className="post-card-buttons-heart"
+        >
+          <Icon width={24} height={24} icon={ICON.HEART} $fill={isLikedPost} />
+        </button>
 
-      {/* 댓글 */}
-      <button
-        type="button"
-        onClick={onClickCommentIconButton}
-        className="post-card-buttons-comment"
-      >
-        <Icon width={24} height={24} icon={ICON.COMMENT} $fill={isFocus} />
-      </button>
+        {/* 댓글 */}
+        <button
+          type="button"
+          onClick={onClickCommentIconButton}
+          className="post-card-buttons-comment"
+        >
+          <Icon width={24} height={24} icon={ICON.COMMENT} $fill={isFocus} />
+        </button>
 
-      {/* DM */}
-      <button
-        type="button"
-        className="post-card-buttons-airplane"
-        onClick={onClickDM}
-      >
-        <Icon width={24} height={24} icon={ICON.AIRPLANE} />
-      </button>
+        {/* DM */}
+        <button
+          type="button"
+          className="post-card-buttons-airplane"
+          onClick={onClickDM}
+        >
+          <Icon width={24} height={24} icon={ICON.AIRPLANE} />
+        </button>
 
-      {/* 빈 공간 차지 */}
-      <div className="post-card-buttons-empty-place" />
+        {/* 빈 공간 차지 */}
+        <div className="post-card-buttons-empty-place" />
 
-      {/* 북마크 */}
-      <button
-        type="button"
-        onClick={onClickBookmarkButton(isBookmarkedPost)}
-        className="post-card-buttons-bookmark"
-      >
-        <Icon
-          width={24}
-          height={24}
-          icon={ICON.BOOKMARK}
-          $fill={isBookmarkedPost}
-        />
-      </button>
-    </Wrapper>
+        {/* 북마크 */}
+        <button
+          type="button"
+          onClick={onClickBookmarkButton(isBookmarkedPost)}
+          className="post-card-buttons-bookmark"
+        >
+          <Icon
+            width={24}
+            height={24}
+            icon={ICON.BOOKMARK}
+            $fill={isBookmarkedPost}
+          />
+        </button>
+      </Wrapper>
+
+      {addRoomLoading && <Spinner kinds="page" />}
+    </>
   );
 };
 

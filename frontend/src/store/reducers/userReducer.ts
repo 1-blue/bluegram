@@ -20,30 +20,19 @@ import {
   LOAD_FOLLOWINGS_FAILURE,
 } from "@src/store/types";
 import type { UserActionRequest } from "../actions";
-import type { SimpleType, SimpleUser } from "@src/type";
-
-type Me = SimpleUser & {
-  Followings: {
-    _id: number;
-  }[];
-  Followers: {
-    _id: number;
-  }[];
-};
+import type {
+  SimpleType,
+  SimpleUser,
+  UserWithPostAndFollowerAndFollowing,
+} from "@src/type";
 
 export type UserStateType = {
-  user:
-    | (Me & {
-        Posts: SimpleType[];
-        Followers: SimpleType[];
-        Followings: SimpleType[];
-      })
-    | null;
+  user: UserWithPostAndFollowerAndFollowing | null;
 
   Followers: SimpleUser[] | null;
   Followings: SimpleUser[] | null;
 
-  me: Me | null;
+  me: UserWithPostAndFollowerAndFollowing | null;
   loadToMeLoading: boolean;
   loadToMeDone: null;
   loadToMeError: null;
@@ -126,8 +115,8 @@ const initState: UserStateType = {
 };
 
 function userReducer(prevState = initState, action: UserActionRequest) {
-  let tempMe: null | Me = null;
-  let tempUser: null | Me = null;
+  let tempMe: null | UserWithPostAndFollowerAndFollowing = null;
+  let tempUser: null | UserWithPostAndFollowerAndFollowing = null;
   let tempFollowers: null | { _id: number }[] = null;
   let tempFollowings: null | { _id: number }[] = null;
 

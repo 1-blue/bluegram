@@ -32,13 +32,6 @@ const ProfilePostBookmarkCard = ({ id }: Props) => {
     loadPostsOfBookmarkLoading,
   } = useSelector(({ post }: { post: PostState }) => post);
 
-  useEffect(() => {
-    if (me?._id !== +id) {
-      toast.error("접근권한이 없습니다.\n프로필 페이지로 이동합니다.");
-      router.push(`/profile/${id}`);
-    }
-  }, [id, me, router]);
-
   // 2022/01/17 - 인피니티 스크롤링 함수 - by 1-blue
   const infiniteScrollEvent = useCallback(() => {
     if (
@@ -64,9 +57,15 @@ const ProfilePostBookmarkCard = ({ id }: Props) => {
     return () => window.removeEventListener("scroll", infiniteScrollEvent);
   }, [infiniteScrollEvent]);
 
-  if (me?._id !== +id) return <h2>접근 권한이 없습니다.</h2>;
+  useEffect(() => {
+    if (me?._id === undefined) return;
+    if (me?._id !== +id) {
+      toast.error("접근권한이 없습니다.\n프로필 페이지로 이동합니다.");
+      router.push(`/profile/${id}`);
+    }
+  }, [id, me, router]);
 
-  console.log("bookmark >> ", posts);
+  if (me?._id !== +id) return <h2>접근 권한이 없습니다.</h2>;
 
   return (
     <Wrapper>

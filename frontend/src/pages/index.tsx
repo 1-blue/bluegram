@@ -22,7 +22,7 @@ import type { PostState } from "@src/store/reducers";
 import PhotoCard from "@src/components/Post/PhotoCard";
 
 // common-components
-// import HeadInfo from "@components/common/HeadInfo";
+import HeadInfo from "@src/components/common/HeadInfo";
 
 // styled-components
 const Wrapper = styled.ul`
@@ -78,13 +78,13 @@ const Home: NextPage = () => {
 
   return (
     <>
-      {/* <HeadInfo
-        title="bluegram - home"
-        description="메인 페이지"
-        image={
-          process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name
-        }
-      /> */}
+      <HeadInfo
+        title="blegram - 홈"
+        description={"홈 페이지\n모든 게시글들 이미지만 최신순으로 배치"}
+        photo={posts?.[0].Photos?.[0].name}
+      />
+
+      {posts?.length === 0 && <h1 className="info">게시글이 없습니다.</h1>}
 
       <Wrapper>
         {posts?.map((post, index) => (

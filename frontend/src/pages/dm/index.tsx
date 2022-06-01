@@ -9,9 +9,14 @@ import { axiosInstance } from "@src/store/api";
 import { loadRoomsRequest, loadToMeRequest } from "@src/store/actions";
 
 import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-import type { ChatState } from "@src/store/reducers";
+import type { ChatState, UserState } from "@src/store/reducers";
 import { dateOrTimeFormat } from "@src/libs/dateFormat";
 import Avatar from "@src/components/common/Avatar";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+
+// common-components
+import HeadInfo from "@src/components/common/HeadInfo";
 
 const Wrapper = styled.ul`
   display: flex;
@@ -59,12 +64,30 @@ const Wrapper = styled.ul`
 `;
 
 const DM = () => {
+  const router = useRouter();
+  const { me } = useSelector(({ user }: { user: UserState }) => user);
   const { rooms } = useSelector(({ chat }: { chat: ChatState }) => chat);
+
+  if (!me?._id) {
+    toast.error("로그인후에 접근해주세요!");
+    router.push("/");
+    return null;
+  }
+
+  const filteredRooms = rooms
+    .filter((room) => room.Chats.length > 0)
+    .filter((room) => (room.RoomUsers.selfGranted === me._id ? false : true));
 
   return (
     <>
+      <HeadInfo title="blegram - DM" description="blegram의 채팅방 페이지" />
+
+      {filteredRooms.length === 0 && (
+        <h1 className="info">채팅방이 없습니다!</h1>
+      )}
+
       <Wrapper>
-        {rooms.map((room) => (
+        {filteredRooms.map((room) => (
           <li key={room._id}>
             <Link href={`/dm/${room._id}`}>
               <a>

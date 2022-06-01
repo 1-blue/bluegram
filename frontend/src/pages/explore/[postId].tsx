@@ -10,7 +10,7 @@ import { axiosInstance } from "@src/store/api";
 import { loadToMeRequest, loadDetailPostsRequest } from "@src/store/actions";
 
 // common-components
-// import HeadInfo from "@src/components/common/HeadInfo";
+import HeadInfo from "@src/components/common/HeadInfo";
 import Spinner from "@src/components/common/Spinner";
 
 // components
@@ -61,13 +61,11 @@ const Explore = () => {
 
   return (
     <>
-      {/* <HeadInfo
-        title="bluegram - explore"
-        description={`${posts[0].User.name}님의 게시글\n( 좋아요: ${posts[0].PostLikers.length}, 댓글: ${posts[0].Comments.length})\n\n${posts[0].content}`}
-        image={
-          process.env.NEXT_PUBLIC_IMAGE_URL + "/" + posts[0].Images[0].name
-        }
-      /> */}
+      <HeadInfo
+        title="blegram - 상세 게시글"
+        description={`${posts?.[0].User.name}님의 게시글\n( 좋아요: ${posts?.[0].PostLikers.length}, 댓글: ${posts?.[0].Comments.length})\n\n${posts?.[0].content}`}
+        photo={posts?.[0].Photos?.[0].name}
+      />
 
       {/* 게시글들 ( 현재 기준은 페이지의 게시글 이후에 업로드된 게시글을 최신순으로 보여줌 ) */}
       {posts?.map((post) => (

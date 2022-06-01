@@ -14,14 +14,19 @@ import { openWriteModalRequest } from "@src/store/actions";
 
 // type
 import { ICON } from "@src/type";
-import type { UserState } from "@src/store/reducers";
+import type { PostState, UserState } from "@src/store/reducers";
 
 // hook
 import useScrollUpDown from "@src/hooks/useScrollUpDown";
+import { useRouter } from "next/router";
 
 const BottomNavigationBar = () => {
   const dispatch = useDispatch();
+  const router = useRouter();
   const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { isShowWritePostModal } = useSelector(
+    ({ post }: { post: PostState }) => post
+  );
 
   // 2022/01/14 - 게시글 생성 모달 클릭 - by 1-blue
   const onClickWritePostModal = useCallback(
@@ -40,7 +45,12 @@ const BottomNavigationBar = () => {
       <Wrapper hide={hide}>
         <Link href="/">
           <a className="nav-link">
-            <Icon icon={ICON.HOME} width={30} height={30} />
+            <Icon
+              icon={ICON.HOME}
+              width={30}
+              height={30}
+              $fill={!isShowWritePostModal && router.pathname === "/"}
+            />
           </a>
         </Link>
 
@@ -49,15 +59,30 @@ const BottomNavigationBar = () => {
           <>
             <Link href="/dm">
               <a className="nav-link">
-                <Icon icon={ICON.AIRPLANE} width={30} height={30} />
+                <Icon
+                  icon={ICON.AIRPLANE}
+                  width={30}
+                  height={30}
+                  $fill={
+                    !isShowWritePostModal && router.pathname.startsWith("/dm")
+                  }
+                />
               </a>
             </Link>
             <button
               type="button"
               className="nav-link"
-              onClick={onClickWritePostModal}
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickWritePostModal(e);
+              }}
             >
-              <Icon icon={ICON.CIRCLE_ADD} width={30} height={30} />
+              <Icon
+                icon={ICON.CIRCLE_ADD}
+                width={30}
+                height={30}
+                $fill={isShowWritePostModal}
+              />
             </button>
             <Link href="/notice">
               <a className="nav-link">
@@ -80,12 +105,22 @@ const BottomNavigationBar = () => {
           <>
             <Link href="/login">
               <a className="nav-link">
-                <Icon icon={ICON.LOGIN} width={24} height={24} />
+                <Icon
+                  icon={ICON.LOGIN}
+                  width={24}
+                  height={24}
+                  $fill={router.pathname.startsWith("/login")}
+                />
               </a>
             </Link>
             <Link href="/signup">
               <a className="nav-link">
-                <Icon icon={ICON.SIGNUP} width={24} height={24} />
+                <Icon
+                  icon={ICON.SIGNUP}
+                  width={24}
+                  height={24}
+                  $fill={router.pathname.startsWith("/signup")}
+                />
               </a>
             </Link>
           </>
