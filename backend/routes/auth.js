@@ -89,10 +89,18 @@ router.post("/signup", isNotLoggedIn, async (req, res, next) => {
   const { id, password, name, email, phone, birthday, introduction, avatar } = req.body;
 
   try {
-    const exUser = await User.findOne({ where: { id } });
+    const exUserByIdPromise = User.findOne({ where: { id } });
+    const exUserByNamePromise = User.findOne({ where: { name } });
 
-    if (exUser)
+    const [{ value: exUserById }, { value: exUserByName }] = await Promise.allSettled([
+      exUserByIdPromise,
+      exUserByNamePromise,
+    ]);
+
+    if (exUserById)
       return res.status(409).json({ ok: false, message: "이미 가입된 아이디입니다.\n다른 아이디로 다시 시도해주세요" });
+    if (exUserByName)
+      return res.status(409).json({ ok: false, message: "이미 사용중인 이름입니다.\n다른 이름으로 다시 시도해주세요" });
 
     const hashedPassword = await bcrypt.hash(password, 6);
 

@@ -18,11 +18,24 @@ import {
   LOAD_FOLLOWINGS_REQUEST,
   LOAD_FOLLOWINGS_SUCCESS,
   LOAD_FOLLOWINGS_FAILURE,
+  LOAD_ME_DETAIL_REQUEST,
+  LOAD_ME_DETAIL_SUCCESS,
+  LOAD_ME_DETAIL_FAILURE,
+  EDIT_ACCOUNT_REQUEST,
+  EDIT_ACCOUNT_SUCCESS,
+  EDIT_ACCOUNT_FAILURE,
+  EDIT_PASSWORD_REQUEST,
+  EDIT_PASSWORD_SUCCESS,
+  EDIT_PASSWORD_FAILURE,
+  SIGN_OUT_REQUEST,
+  SIGN_OUT_SUCCESS,
+  SIGN_OUT_FAILURE,
 } from "@src/store/types";
 import type { UserActionRequest } from "../actions";
 import type {
-  SimpleType,
+  Photo,
   SimpleUser,
+  User,
   UserWithPostAndFollowerAndFollowing,
 } from "@src/type";
 
@@ -63,6 +76,23 @@ export type UserStateType = {
   loadFollowingsLoading: boolean;
   loadFollowingsDone: null | string;
   loadFollowingsError: null;
+
+  detailMe: (User & { Photos?: Photo[] }) | null;
+  loadMeDetailLoading: boolean;
+  loadMeDetailDone: null | string;
+  loadMeDetailError: null;
+
+  editAccountLoading: boolean;
+  editAccountDone: null | string;
+  editAccountError: null;
+
+  editPasswordLoading: boolean;
+  editPasswordDone: null | string;
+  editPasswordError: null;
+
+  signOutLoading: boolean;
+  signOutDone: null | string;
+  signOutError: null;
 };
 
 const initState: UserStateType = {
@@ -112,6 +142,27 @@ const initState: UserStateType = {
   loadFollowingsLoading: false,
   loadFollowingsDone: null,
   loadFollowingsError: null,
+
+  // 2022/06/02 - 로그인한 유저 상세 정보 변수 - by 1-blue
+  detailMe: null,
+  loadMeDetailLoading: false,
+  loadMeDetailDone: null,
+  loadMeDetailError: null,
+
+  // 2022/06/02 - 로그인한 유저 기본 정보 변경 변수 - by 1-blue
+  editAccountLoading: false,
+  editAccountDone: null,
+  editAccountError: null,
+
+  // 2022/06/02 - 로그인한 유저 비밀번호 변경 변수 - by 1-blue
+  editPasswordLoading: false,
+  editPasswordDone: null,
+  editPasswordError: null,
+
+  // 2022/06/02 - 로그인한 유저 회원 탈퇴 변수 - by 1-blue
+  signOutLoading: false,
+  signOutDone: null,
+  signOutError: null,
 };
 
 function userReducer(prevState = initState, action: UserActionRequest) {
@@ -152,6 +203,22 @@ function userReducer(prevState = initState, action: UserActionRequest) {
         loadFollowingsLoading: false,
         loadFollowingsDone: null,
         loadFollowingsError: null,
+
+        loadMeDetailLoading: false,
+        loadMeDetailDone: null,
+        loadMeDetailError: null,
+
+        editAccountLoading: false,
+        editAccountDone: null,
+        editAccountError: null,
+
+        editPasswordLoading: false,
+        editPasswordDone: null,
+        editPasswordError: null,
+
+        signOutLoading: false,
+        signOutDone: null,
+        signOutError: null,
       };
 
     // 2022/05/07 - 본인 정보 요청 - by 1-blue
@@ -358,6 +425,91 @@ function userReducer(prevState = initState, action: UserActionRequest) {
         ...prevState,
         loadFollowingsLoading: false,
         loadFollowingsError: action.data.message,
+      };
+
+    // 2022/06/02 - 유저 상세 정보 요청 - by 1-blue
+    case LOAD_ME_DETAIL_REQUEST:
+      return {
+        ...prevState,
+        loadMeDetailLoading: true,
+        loadMeDetailDone: null,
+        loadMeDetailError: null,
+      };
+    case LOAD_ME_DETAIL_SUCCESS:
+      return {
+        ...prevState,
+        loadMeDetailLoading: false,
+        loadMeDetailDone: action.data?.message,
+        detailMe: action.data.me,
+      };
+    case LOAD_ME_DETAIL_FAILURE:
+      return {
+        ...prevState,
+        loadMeDetailLoading: false,
+        loadMeDetailError: action.data.message,
+      };
+
+    // 2022/06/02 - 유저 기본 정보 변경 요청 - by 1-blue
+    case EDIT_ACCOUNT_REQUEST:
+      return {
+        ...prevState,
+        editAccountLoading: true,
+        editAccountDone: null,
+        editAccountError: null,
+      };
+    case EDIT_ACCOUNT_SUCCESS:
+      return {
+        ...prevState,
+        editAccountLoading: false,
+        editAccountDone: action.data?.message,
+      };
+    case EDIT_ACCOUNT_FAILURE:
+      return {
+        ...prevState,
+        editAccountLoading: false,
+        editAccountError: action.data.message,
+      };
+
+    // 2022/06/02 - 유저 비밀번호 변경 요청 - by 1-blue
+    case EDIT_PASSWORD_REQUEST:
+      return {
+        ...prevState,
+        editPasswordLoading: true,
+        editPasswordDone: null,
+        editPasswordError: null,
+      };
+    case EDIT_PASSWORD_SUCCESS:
+      return {
+        ...prevState,
+        editPasswordLoading: false,
+        editPasswordDone: action.data?.message,
+      };
+    case EDIT_PASSWORD_FAILURE:
+      return {
+        ...prevState,
+        editPasswordLoading: false,
+        editPasswordError: action.data.message,
+      };
+
+    // 2022/06/02 - 유저 회원 탈퇴 요청 - by 1-blue
+    case SIGN_OUT_REQUEST:
+      return {
+        ...prevState,
+        signOutLoading: true,
+        signOutDone: null,
+        signOutError: null,
+      };
+    case SIGN_OUT_SUCCESS:
+      return {
+        ...prevState,
+        signOutLoading: false,
+        signOutDone: action.data?.message,
+      };
+    case SIGN_OUT_FAILURE:
+      return {
+        ...prevState,
+        signOutLoading: false,
+        signOutError: action.data.message,
       };
 
     default:

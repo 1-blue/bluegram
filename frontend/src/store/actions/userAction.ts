@@ -29,6 +29,26 @@ import {
   LOAD_TO_USER_FAILURE,
   LoadToUserBody,
   LoadToUserResponse,
+  LoadMeDetailBody,
+  LoadMeDetailResponse,
+  LOAD_ME_DETAIL_REQUEST,
+  LOAD_ME_DETAIL_SUCCESS,
+  LOAD_ME_DETAIL_FAILURE,
+  EditAccountBody,
+  EditAccountResponse,
+  EDIT_ACCOUNT_REQUEST,
+  EDIT_ACCOUNT_SUCCESS,
+  EDIT_ACCOUNT_FAILURE,
+  EditPasswordBody,
+  EditPasswordResponse,
+  EDIT_PASSWORD_REQUEST,
+  EDIT_PASSWORD_SUCCESS,
+  EDIT_PASSWORD_FAILURE,
+  SignOutBody,
+  SignOutResponse,
+  SIGN_OUT_REQUEST,
+  SIGN_OUT_SUCCESS,
+  SIGN_OUT_FAILURE,
 } from "@src/store/types";
 import { resetMessage } from ".";
 
@@ -109,6 +129,62 @@ export const loadFollowingsFailure = (data: FailureResponse) => ({
   data,
 });
 
+// 2022/06/02 - 로그인한 유저 상세 정보 요청 액션 크리에이터 - by 1-blue
+export const loadMeDetailRequest = (data: LoadMeDetailBody) => ({
+  type: LOAD_ME_DETAIL_REQUEST,
+  data,
+});
+export const loadMeDetailSuccess = (data: LoadMeDetailResponse) => ({
+  type: LOAD_ME_DETAIL_SUCCESS,
+  data,
+});
+export const loadMeDetailFailure = (data: FailureResponse) => ({
+  type: LOAD_ME_DETAIL_FAILURE,
+  data,
+});
+
+// 2022/06/02 - 로그인한 유저 기본 정보 변경 요청 액션 크리에이터 - by 1-blue
+export const editAccountRequest = (data: EditAccountBody) => ({
+  type: EDIT_ACCOUNT_REQUEST,
+  data,
+});
+export const editAccountSuccess = (data: EditAccountResponse) => ({
+  type: EDIT_ACCOUNT_SUCCESS,
+  data,
+});
+export const editAccountFailure = (data: FailureResponse) => ({
+  type: EDIT_ACCOUNT_FAILURE,
+  data,
+});
+
+// 2022/06/02 - 로그인한 유저 비밀번호 변경 요청 액션 크리에이터 - by 1-blue
+export const editPasswordRequest = (data: EditPasswordBody) => ({
+  type: EDIT_PASSWORD_REQUEST,
+  data,
+});
+export const editPasswordSuccess = (data: EditPasswordResponse) => ({
+  type: EDIT_PASSWORD_SUCCESS,
+  data,
+});
+export const editPasswordFailure = (data: FailureResponse) => ({
+  type: EDIT_PASSWORD_FAILURE,
+  data,
+});
+
+// 2022/06/02 - 로그인한 유저 회원 탈퇴 요청 액션 크리에이터 - by 1-blue
+export const signOutRequest = (data: SignOutBody) => ({
+  type: SIGN_OUT_REQUEST,
+  data,
+});
+export const signOutSuccess = (data: SignOutResponse) => ({
+  type: SIGN_OUT_SUCCESS,
+  data,
+});
+export const signOutFailure = (data: FailureResponse) => ({
+  type: SIGN_OUT_FAILURE,
+  data,
+});
+
 export type UserActionRequest =
   | ReturnType<typeof resetMessage>
   | ReturnType<typeof loadToMeRequest>
@@ -128,4 +204,16 @@ export type UserActionRequest =
   | ReturnType<typeof loadFollowersFailure>
   | ReturnType<typeof loadFollowingsRequest>
   | ReturnType<typeof loadFollowingsSuccess>
-  | ReturnType<typeof loadFollowingsFailure>;
+  | ReturnType<typeof loadFollowingsFailure>
+  | ReturnType<typeof loadMeDetailRequest>
+  | ReturnType<typeof loadMeDetailSuccess>
+  | ReturnType<typeof loadMeDetailFailure>
+  | ReturnType<typeof editAccountRequest>
+  | ReturnType<typeof editAccountSuccess>
+  | ReturnType<typeof editAccountFailure>
+  | ReturnType<typeof editPasswordRequest>
+  | ReturnType<typeof editPasswordSuccess>
+  | ReturnType<typeof editPasswordFailure>
+  | ReturnType<typeof signOutRequest>
+  | ReturnType<typeof signOutSuccess>
+  | ReturnType<typeof signOutFailure>;

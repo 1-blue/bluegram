@@ -7,6 +7,8 @@ import {
   IRoomWithUserAndLastChat,
   IChatWithUser,
   IRoomInformation,
+  User,
+  Photo,
 } from "@src/type";
 
 // 2022/05/13 - 리셋 메시지 - by 1-blue
@@ -492,6 +494,59 @@ export type ExitRoomBody = {
   RoomId: number;
 };
 export type ExitRoomResponse = {
+  ok: boolean;
+  message: string;
+};
+
+// 2022/06/02 - 로그인한 유저 상세 정보 가져오기 - by 1-blue
+export const LOAD_ME_DETAIL_REQUEST = "LOAD_ME_DETAIL_REQUEST" as const;
+export const LOAD_ME_DETAIL_SUCCESS = "LOAD_ME_DETAIL_SUCCESS" as const;
+export const LOAD_ME_DETAIL_FAILURE = "LOAD_ME_DETAIL_FAILURE" as const;
+export type LoadMeDetailBody = {};
+export type LoadMeDetailResponse = {
+  ok: boolean;
+  message: string;
+  me: User & { Photos?: Photo[] };
+};
+
+// 2022/06/02 - 로그인한 유저 정보 변경 요청 - by 1-blue
+export const EDIT_ACCOUNT_REQUEST = "EDIT_ACCOUNT_REQUEST" as const;
+export const EDIT_ACCOUNT_SUCCESS = "EDIT_ACCOUNT_SUCCESS" as const;
+export const EDIT_ACCOUNT_FAILURE = "EDIT_ACCOUNT_FAILURE" as const;
+export type EditAccountBody = {
+  name: string;
+  email: string;
+  phone: string;
+  birthday: string;
+  introduction: string;
+  avatar?: string;
+};
+export type EditAccountResponse = {
+  ok: boolean;
+  message: string;
+};
+
+// 2022/06/02 - 로그인한 유저 비밀번호 변경 요청 - by 1-blue
+export const EDIT_PASSWORD_REQUEST = "EDIT_PASSWORD_REQUEST" as const;
+export const EDIT_PASSWORD_SUCCESS = "EDIT_PASSWORD_SUCCESS" as const;
+export const EDIT_PASSWORD_FAILURE = "EDIT_PASSWORD_FAILURE" as const;
+export type EditPasswordBody = {
+  currentPassword: string;
+  password: string;
+};
+export type EditPasswordResponse = {
+  ok: boolean;
+  message: string;
+};
+
+// 2022/06/02 - 로그인한 유저 회원탈퇴 변경 요청 - by 1-blue
+export const SIGN_OUT_REQUEST = "SIGN_OUT_REQUEST" as const;
+export const SIGN_OUT_SUCCESS = "SIGN_OUT_SUCCESS" as const;
+export const SIGN_OUT_FAILURE = "SIGN_OUT_FAILURE" as const;
+export type SignOutBody = {
+  password: string;
+};
+export type SignOutResponse = {
   ok: boolean;
   message: string;
 };
