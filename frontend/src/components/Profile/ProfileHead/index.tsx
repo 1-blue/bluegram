@@ -59,7 +59,7 @@ const ProfileHead = ({
         </div>
         {me?._id === user?._id ? (
           <>
-            <Link href={`/account/edit/${me?._id}?kinds=nomal`}>
+            <Link href={`/account/edit/${me?._id}?kinds=account`}>
               <a className="profile-edit-link">프로필 편집</a>
             </Link>
           </>

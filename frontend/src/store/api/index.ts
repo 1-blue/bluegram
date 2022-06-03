@@ -17,7 +17,14 @@ export const axiosInstance = axios.create({
 // );
 
 export { apiLocalLogin, apiLocalLogout, apiSignup } from "./auth";
-export { apiLoadToMe, apiLoadToUser } from "./user";
+export {
+  apiLoadToMe,
+  apiLoadToUser,
+  apiEditAccount,
+  apiEditPassword,
+  apiLoadMeDetail,
+  apiSignOut,
+} from "./user";
 export {
   apiLoadPosts,
   apiUploadPost,
