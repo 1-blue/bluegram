@@ -17,6 +17,7 @@ import { loadMeDetailRequest, loadToMeRequest } from "@src/store/actions";
 import AccountEdit from "@src/components/Edit/AccountEdit";
 import PasswordEdit from "@src/components/Edit/PasswordEdit";
 import SignOut from "@src/components/Edit/SignOut";
+import HeadInfo from "@src/components/common/HeadInfo";
 
 const Nav = styled.nav<{ kinds: string }>`
   display: flex;
@@ -61,6 +62,8 @@ const Edit = () => {
 
   return (
     <>
+      <HeadInfo title="blegram - 계정 수정" />
+
       <Nav kinds={router.query.kinds as string}>
         <Link
           href={{
@@ -97,9 +100,16 @@ const Edit = () => {
         </Link>
       </Nav>
 
-      {router.query.kinds === "account" && <AccountEdit />}
-      {router.query.kinds === "password" && <PasswordEdit />}
-      {router.query.kinds === "signout" && <SignOut />}
+      <section
+        style={{
+          maxWidth: "500px",
+          margin: "0 auto",
+        }}
+      >
+        {router.query.kinds === "account" && <AccountEdit />}
+        {router.query.kinds === "password" && <PasswordEdit />}
+        {router.query.kinds === "signout" && <SignOut />}
+      </section>
     </>
   );
 };

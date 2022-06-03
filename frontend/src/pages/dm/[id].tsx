@@ -44,15 +44,26 @@ const Chat = styled.li<{ isMine: boolean; length: number }>`
           `}
   }
 
+  & div {
+    display: flex;
+    flex-flow: column;
+  }
+
+  & span {
+    color: gray;
+    font-size: 0.8rem;
+    align-self: ${({ isMine }) => (isMine ? "flex-end" : "flex-start")};
+    margin-bottom: 4px;
+  }
   & p {
     max-width: ${({ length }) => (length > 20 ? "60%" : "100%")};
-    padding: 12px 16px;
+    padding: 8px 12px;
     background-color: ${({ theme }) => theme.color.main};
     white-space: pre-wrap;
     border-radius: 6px;
     color: white;
+    margin-bottom: 4px;
   }
-
   & time {
     color: gray;
     font-size: 0.75rem;
@@ -332,6 +343,7 @@ const Room = () => {
                 height={40}
               />
               <div>
+                <span>{chat.User.name}</span>
                 <p>{chat.contents}</p>
                 <time>
                   {dateOrTimeFormat(chat.createdAt, "YYYY-MM-DD-HH-MM-SS")}
