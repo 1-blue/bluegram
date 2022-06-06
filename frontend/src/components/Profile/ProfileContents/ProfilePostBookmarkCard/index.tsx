@@ -9,9 +9,6 @@ import { Wrapper } from "./style";
 // actions
 import { loadPostsOfBookmarkRequest } from "@src/store/actions";
 
-// common-components
-import Spinner from "@src/components/common/Spinner";
-
 // components
 import PostCard from "@src/components/Post/PostCard";
 
@@ -72,9 +69,6 @@ const ProfilePostBookmarkCard = ({ id }: Props) => {
       {posts?.map((post) => (
         <PostCard key={post._id} post={post} />
       ))}
-
-      {/* 게시글 추가 로드 */}
-      {loadPostsOfBookmarkLoading && <Spinner kinds="page" />}
 
       {!hasMoreDeatailPosts && (
         <span

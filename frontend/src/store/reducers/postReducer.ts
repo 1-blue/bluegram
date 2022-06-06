@@ -931,7 +931,7 @@ function postReducer(
     case LOAD_RECOMMENTS_REQUEST:
       return {
         ...prevState,
-        loadRecommentsLoading: false,
+        loadRecommentsLoading: true,
         loadRecommentsDone: null,
         loadRecommentsError: null,
       };
@@ -983,7 +983,7 @@ function postReducer(
     case LOAD_POSTS_OF_HASHTAG_REQUEST:
       return {
         ...prevState,
-        loadPostsOfHashtagLoading: false,
+        loadPostsOfHashtagLoading: true,
         loadPostsOfHashtagDone: null,
         loadPostsOfHashtagError: null,
       };

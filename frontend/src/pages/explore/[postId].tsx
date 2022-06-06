@@ -11,7 +11,6 @@ import { loadToMeRequest, loadDetailPostsRequest } from "@src/store/actions";
 
 // common-components
 import HeadInfo from "@src/components/common/HeadInfo";
-import Spinner from "@src/components/common/Spinner";
 
 // components
 import PostCard from "@src/components/Post/PostCard";
@@ -71,9 +70,6 @@ const Explore = () => {
       {posts?.map((post) => (
         <PostCard key={post._id} post={post} />
       ))}
-
-      {/* 게시글 추가 로드 */}
-      {loadDetailPostsLoading && <Spinner kinds="page" />}
 
       {!hasMoreDeatailPosts && (
         <span

@@ -4,9 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 // styled-components
 import { Wrapper } from "./style";
 
-// common-components
-import Spinner from "@src/components/common/Spinner";
-
 // components
 import PhotoCard from "@src/components/Post/PhotoCard";
 
@@ -58,8 +55,6 @@ const ProfilePostImageCard = ({ id }: Props) => {
           <PhotoCard key={post._id} post={post} />
         ))}
       </Wrapper>
-
-      {loadPostsOfUserLoading && <Spinner kinds="page" />}
 
       {!hasMorePosts && (
         <span

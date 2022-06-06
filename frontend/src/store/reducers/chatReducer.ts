@@ -101,7 +101,7 @@ function chatReducer(prevState = initState, action: ChatActionRequest) {
     case ADD_ROOM_REQUEST:
       return {
         ...prevState,
-        addRoomLoading: false,
+        addRoomLoading: true,
         addRoomDone: null,
         addRoomError: null,
       };
@@ -118,11 +118,11 @@ function chatReducer(prevState = initState, action: ChatActionRequest) {
         addRoomError: action.data.message,
       };
 
-    // 2022/05/28 - 채팅방 로드 생성 - by 1-blue
+    // 2022/05/28 - 채팅방 로드 - by 1-blue
     case LOAD_ROOMS_REQUEST:
       return {
         ...prevState,
-        loadRoomsLoading: false,
+        loadRoomsLoading: true,
         loadRoomsDone: null,
         loadRoomsError: null,
       };

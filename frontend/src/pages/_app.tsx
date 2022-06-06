@@ -18,6 +18,7 @@ import TopNavigationBar from "@src/components/NavBar/TopNavBar";
 import ToastMessage from "@src/components/ToastMessage";
 import ScrollProgress from "@src/components/common/ScrollProgress";
 import SideButton from "@src/components/SideButton";
+import GlobalSpinner from "@src/components/GlobalSpinner";
 
 function MyApp({ Component, pageProps }: AppProps) {
   // 2022/05/18 - 창 넓이 구하는 변수/메서드들 - by 1-blue
@@ -52,7 +53,11 @@ function MyApp({ Component, pageProps }: AppProps) {
           closeOnClick
         />
 
+        {/* 특정 처리 완료 후 토스트 메시지 */}
         <ToastMessage />
+
+        {/* 특정 처리 하는중 페이지 스피너 */}
+        <GlobalSpinner />
       </ThemeProvider>
     </>
   );

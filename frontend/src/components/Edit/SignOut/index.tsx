@@ -12,7 +12,6 @@ import { Wrapper } from "../AccountEdit/style";
 // common-component
 import Button from "@src/components/common/Button";
 import Input from "@src/components/common/Input";
-import Spinner from "@src/components/common/Spinner";
 
 type SignOutForm = {
   password: string;
@@ -64,8 +63,6 @@ const SignOut = () => {
           primary
         />
       </Wrapper>
-
-      {signOutLoading && <Spinner kinds="page" />}
     </>
   );
 };

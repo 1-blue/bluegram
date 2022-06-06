@@ -6,7 +6,6 @@ import Link from "next/link";
 import Modal from "@src/components/common/Modal";
 import Avatar from "@src/components/common/Avatar";
 import Button from "@src/components/common/Button";
-import Spinner from "@src/components/common/Spinner";
 import Icon from "@src/components/common/Icon";
 
 // type
@@ -24,13 +23,9 @@ const FollowerModal = ({
   onToggleFollowerModal,
   onClickFollowButton,
 }: Props) => {
-  const {
-    me,
-    Followers,
-    loadFollowersLoading,
-    followLoading,
-    unfollowLoading,
-  } = useSelector(({ user }: { user: UserState }) => user);
+  const { me, Followers, followLoading, unfollowLoading } = useSelector(
+    ({ user }: { user: UserState }) => user
+  );
 
   return (
     <>
@@ -104,8 +99,6 @@ const FollowerModal = ({
           </ul>
         </Modal>
       )}
-
-      {loadFollowersLoading && <Spinner kinds="page" />}
     </>
   );
 };

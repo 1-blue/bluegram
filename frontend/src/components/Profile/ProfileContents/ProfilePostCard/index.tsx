@@ -7,9 +7,6 @@ import { Wrapper } from "./style";
 // actions
 import { loadPostsDetailOfUserRequest } from "@src/store/actions";
 
-// common-components
-import Spinner from "@src/components/common/Spinner";
-
 // components
 import PostCard from "@src/components/Post/PostCard";
 
@@ -60,9 +57,6 @@ const ProfilePostCard = ({ id }: Props) => {
       {posts?.map((post) => (
         <PostCard key={post._id} post={post} />
       ))}
-
-      {/* 게시글 추가 로드 */}
-      {loadPostsDetailOfUserLoading && <Spinner kinds="page" />}
 
       {!hasMoreDeatailPosts && (
         <span

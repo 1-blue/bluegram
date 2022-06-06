@@ -10,8 +10,7 @@ import Icon from "@src/components/common/Icon";
 // type
 import { ICON } from "@src/type";
 import type { SimpleUser } from "@src/type";
-import type { ChatState, UserState } from "@src/store/reducers";
-import Spinner from "@src/components/common/Spinner";
+import type { UserState } from "@src/store/reducers";
 
 type Props = {
   likers: SimpleUser[];
@@ -33,9 +32,7 @@ const PostCardButtons = ({
   onClickDM,
 }: Props) => {
   const { me } = useSelector(({ user }: { user: UserState }) => user);
-  const { addRoomLoading } = useSelector(
-    ({ chat }: { chat: ChatState }) => chat
-  );
+
   const [isLikedPost, setIsLikedPost] = useState(false);
   const [isBookmarkedPost, setIsBookmarkedPost] = useState(false);
 
@@ -101,8 +98,6 @@ const PostCardButtons = ({
           />
         </button>
       </Wrapper>
-
-      {addRoomLoading && <Spinner kinds="page" />}
     </>
   );
 };

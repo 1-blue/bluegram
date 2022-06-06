@@ -13,7 +13,6 @@ import type { SignUpForm } from "@src/pages/signup";
 import Button from "@src/components/common/Button";
 import Input from "@src/components/common/Input";
 import PhotoInput from "@src/components/common/PhotoInput";
-import Spinner from "@src/components/common/Spinner";
 import Textarea from "@src/components/common/Textarea";
 
 import { Wrapper } from "./style";
@@ -126,8 +125,6 @@ const AccountEdit = () => {
           primary
         />
       </Wrapper>
-
-      {editAccountLoading && <Spinner kinds="page" />}
     </>
   );
 };

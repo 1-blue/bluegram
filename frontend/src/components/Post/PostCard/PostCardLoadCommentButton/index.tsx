@@ -1,15 +1,10 @@
 import React from "react";
-import { useSelector } from "react-redux";
 
 // styled-components
 import { Wrapper } from "./style";
 
-// common-components
-import Spinner from "@src/components/common/Spinner";
-
 // type
 import type { ICommentWithUserAndLikerAndCountAndRecomments } from "@src/type";
-import type { PostState } from "@src/store/reducers";
 
 type Props = {
   Comments: ICommentWithUserAndLikerAndCountAndRecomments[];
@@ -22,9 +17,6 @@ const PostCardLoadCommentButton = ({
   allCommentCount,
   onClickloadMoreComment,
 }: Props) => {
-  const { loadCommentsLoading } = useSelector(
-    ({ post }: { post: PostState }) => post
-  );
   return (
     <Wrapper>
       <button
@@ -38,8 +30,6 @@ const PostCardLoadCommentButton = ({
           : allCommentCount - Comments.length}
         개 더 불러오기
       </button>
-
-      {loadCommentsLoading && <Spinner kinds="page" />}
     </Wrapper>
   );
 };
