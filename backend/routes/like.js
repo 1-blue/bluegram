@@ -4,7 +4,7 @@ const router = express.Router();
 import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
-const { Post, Comment, Image, User } = db;
+const { Post, Comment, Photo, User } = db;
 
 // 2022/01/18 - 게시글에 좋아요 추가 - by 1-blue
 router.post("/post/:PostId", isLoggedIn, async (req, res, next) => {
@@ -18,18 +18,21 @@ router.post("/post/:PostId", isLoggedIn, async (req, res, next) => {
     if (!targetPost) {
       return res
         .status(404)
-        .json({ message: "존재하지 않는 게시글에 좋아요를 누르셨습니다.\n새로 고침 후 다시 시도해 주세요" });
+        .json({ ok: false, message: "존재하지 않는 게시글에 좋아요를 누르셨습니다.\n새로 고침 후 다시 시도해 주세요" });
     }
 
     // 2022/01/18 - 좋아요를 누른 게시글에 다시 좋아요 추가 요청인 경우 - by 1-blue
     if (await targetPost.hasPostLikers(UserId)) {
-      return res.status(409).json({ message: "이미 좋아요를 누른 게시글입니다.\n새로 고침 후 다시 시도해 주세요." });
+      return res
+        .status(409)
+        .json({ ok: false, message: "이미 좋아요를 누른 게시글입니다.\n새로 고침 후 다시 시도해 주세요." });
     }
 
     // 2022/01/18 - 정상적으로 좋아요 추가 - by 1-blue
     await targetPost.addPostLikers(UserId);
 
     res.json({
+      ok: true,
       message: `${targetPost.User.name}님의 게시글에 좋아요를 누르셨습니다.`,
       likedPostId: PostId,
       UserId,
@@ -50,20 +53,25 @@ router.delete("/post/:PostId", isLoggedIn, async (req, res, next) => {
 
     // 2022/01/18 - 존재 하지 않는 게시글에 좋아요 누른 경우 - by 1-blue
     if (!targetPost) {
-      return res
-        .status(404)
-        .json({ message: "존재하지 않는 게시글에 좋아요를 누르셨습니다.\n새로 고침 후 다시 시도해 주세요" });
+      return res.status(404).json({
+        ok: false,
+        message: "존재하지 않는 게시글에 좋아요를 누르셨습니다.\n새로 고침 후 다시 시도해 주세요",
+      });
     }
 
     // 2022/01/18 - 좋아요를 제거한 게시글에 다시 좋아요 제거 요청인 경우 - by 1-blue
     if (!(await targetPost.hasPostLikers(UserId))) {
-      return res.status(409).json({ message: "좋아요를 누르지 않은 게시글입니다.\n새로 고침 후 다시 시도해 주세요." });
+      return res.status(409).json({
+        ok: false,
+        message: "좋아요를 누르지 않은 게시글입니다.\n새로 고침 후 다시 시도해 주세요.",
+      });
     }
 
     // 2022/01/18 - 정상적으로 좋아요 제거 - by 1-blue
     await targetPost.removePostLikers(UserId);
 
     res.json({
+      ok: true,
       message: `${targetPost.User.name}님 게시글에 좋아요를 취소하셨습니다.`,
       unlikedPostId: PostId,
       UserId,
@@ -87,14 +95,18 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
 
     // 2022/01/18 - 존재 하지 않는 게시글에 좋아요 누른 경우 - by 1-blue
     if (!targetComment) {
-      return res
-        .status(404)
-        .json({ message: "존재하지 않는 댓글에 좋아요를 누르셨습니다.\n새로 고침 후 다시 시도해 주세요" });
+      return res.status(404).json({
+        ok: false,
+        message: "존재하지 않는 댓글에 좋아요를 누르셨습니다.\n새로 고침 후 다시 시도해 주세요",
+      });
     }
 
     // 2022/01/18 - 좋아요를 누른 게시글에 다시 좋아요 추가 요청인 경우 - by 1-blue
     if (await targetComment.hasCommentLikers(UserId)) {
-      return res.status(409).json({ message: "이미 좋아요를 누른 댓글입니다.\n새로 고침 후 다시 시도해 주세요." });
+      return res.status(409).json({
+        ok: false,
+        message: "이미 좋아요를 누른 댓글입니다.\n새로 고침 후 다시 시도해 주세요.",
+      });
     }
 
     // 2022/01/18 - 정상적으로 좋아요 추가 - by 1-blue
@@ -104,7 +116,7 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
       attributes: ["_id", "name"],
       include: [
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name", "url"],
         },
       ],
@@ -118,11 +130,12 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
     }에 좋아요를 눌렀습니다.`;
 
     res.json({
+      ok: true,
       message,
       PostId: targetComment.PostId,
       CommentId: targetComment._id,
       RecommentId: targetComment.RecommentId,
-      commentLikerWithData,
+      commentLiker: commentLikerWithData,
     });
   } catch (error) {
     console.error("POST /like/comment/:CommentId >> ", error);
@@ -145,12 +158,14 @@ router.delete("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
     if (!targetComment) {
       return res
         .status(404)
-        .json({ message: "존재하지 않는 댓글에 좋아요를 누르셨습니다.\n새로 고침 후 다시 시도해 주세요" });
+        .json({ ok: false, message: "존재하지 않는 댓글에 좋아요를 누르셨습니다.\n새로 고침 후 다시 시도해 주세요" });
     }
 
     // 2021/12/28 - 좋아요를 제거한 게시글에 다시 좋아요 제거 요청인 경우 - by 1-blue
     if (!(await targetComment.hasCommentLikers(UserId))) {
-      return res.status(409).json({ message: "좋아요를 누르지 않은 댓글입니다.\n새로 고침 후 다시 시도해 주세요." });
+      return res
+        .status(409)
+        .json({ ok: false, message: "좋아요를 누르지 않은 댓글입니다.\n새로 고침 후 다시 시도해 주세요." });
     }
 
     // 2021/12/28 - 정상적으로 좋아요 제거 - by 1-blue
@@ -161,6 +176,7 @@ router.delete("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
     }에 좋아요를 취소하셨습니다.`;
 
     res.json({
+      ok: true,
       message,
       PostId: targetComment.PostId,
       CommentId: targetComment._id,

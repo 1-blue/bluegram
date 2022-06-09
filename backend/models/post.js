@@ -51,7 +51,7 @@ const Post = (sequelize, DataTypes) => {
     });
 
     // 게시글과 이미지 ( 1 : N )
-    db.Post.hasMany(db.Image, { onDelete: "cascade" });
+    db.Post.hasMany(db.Photo, { onDelete: "cascade" });
 
     // 유저와 게시글 ( N : M ) ( 북마크 )
     db.Post.belongsToMany(db.User, {

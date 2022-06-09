@@ -4,7 +4,7 @@ import { Op } from "sequelize";
 import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
-const { Image, Post, Comment, User, Hashtag } = db;
+const { Photo, Post, Comment, User, Hashtag } = db;
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.get("/", async (req, res, next) => {
       include: [
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들 ( 댓글과 답글 모두 포함 )
@@ -45,7 +45,7 @@ router.get("/", async (req, res, next) => {
       limit,
       order: [
         ["createdAt", "DESC"],
-        [Image, "_id", "ASC"],
+        [Photo, "_id", "ASC"],
       ],
     });
 
@@ -83,14 +83,14 @@ router.get("/detail", async (req, res, next) => {
           include: [
             // 게시글 작성자의 프로필 이미지
             {
-              model: Image,
+              model: Photo,
               attributes: ["_id", "name", "url"],
             },
           ],
         },
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들
@@ -123,7 +123,7 @@ router.get("/detail", async (req, res, next) => {
       ],
       order: [
         ["createdAt", "DESC"],
-        [Image, "_id", "ASC"],
+        [Photo, "_id", "ASC"],
       ],
     });
 
@@ -132,14 +132,14 @@ router.get("/detail", async (req, res, next) => {
         ? `최신 게시글 ${posts.length}개를 불러왔습니다.`
         : `추가로 게시글 ${posts.length}개를 불러왔습니다.`;
 
-    res.json({ message, posts, limit });
+    res.json({ ok: true, message, posts, limit });
   } catch (error) {
     console.error("GET /post/detail error >> ", error);
     return next(error);
   }
 });
 
-// 2022/01/04 - 특정 유저의 게시글들 불러오기 - by 1-blue
+// 2022/05/26 - 특정 유저의 게시글들 불러오기 - by 1-blue
 router.get("/user/:UserId", async (req, res, next) => {
   const UserId = +req.params.UserId;
   const lastId = +req.query.lastId || -1;
@@ -165,14 +165,14 @@ router.get("/user/:UserId", async (req, res, next) => {
           include: [
             // 게시글 작성자의 프로필 이미지
             {
-              model: Image,
+              model: Photo,
               attributes: ["_id", "name", "url"],
             },
           ],
         },
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들 ( 댓글과 답글 모두 포함 )
@@ -230,14 +230,14 @@ router.get("/user/detail/:UserId", async (req, res, next) => {
           include: [
             // 게시글 작성자의 프로필 이미지
             {
-              model: Image,
+              model: Photo,
               attributes: ["_id", "name", "url"],
             },
           ],
         },
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들
@@ -275,7 +275,7 @@ router.get("/user/detail/:UserId", async (req, res, next) => {
         ? `${user.name}님의 게시글 ${posts.length}개를 불러왔습니다.`
         : `${user.name}님의 게시글을 추가로 ${posts.length}개를 불러왔습니다.`;
 
-    res.json({ message, posts, limit });
+    res.json({ ok: true, message, posts, limit });
   } catch (error) {
     console.error("GET /post/user/detail/:UserId error >> ", error);
     return next(error);
@@ -300,11 +300,12 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
 
     if (!hashtag)
       return res.status(200).json({
+        ok: true,
         message: "해시태그가 존재하지 않습니다.",
-        postsOfHashtag: [],
         limit,
-        postsOfHashtagCount: 0,
-        hashtagText,
+        posts: [],
+        postCount: 0,
+        hashtag: hashtagText,
       });
 
     const postsOfHashtag = await hashtag.getPostHashtaged({
@@ -319,14 +320,14 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
           include: [
             // 게시글 작성자의 프로필 이미지
             {
-              model: Image,
+              model: Photo,
               attributes: ["_id", "name", "url"],
             },
           ],
         },
         // 게시글의 이미지들
         {
-          model: Image,
+          model: Photo,
           attributes: ["_id", "name"],
         },
         // 게시글의 댓글들
@@ -368,12 +369,12 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
         : `#${hashtagText}인 게시글을 추가로 ${postsOfHashtag.length}개를 불러왔습니다.`;
 
     res.status(200).json({
+      ok: true,
       message,
-      postsOfHashtag,
-
       limit,
-      postsOfHashtagCount,
-      hashtagText,
+      posts: postsOfHashtag,
+      postCount: postsOfHashtagCount,
+      hashtag: hashtagText,
     });
   } catch (error) {
     console.error("GET /post/hashtag/:hashtag error >> ", error);

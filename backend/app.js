@@ -11,6 +11,8 @@ import cors from "cors";
 import morgan from "morgan";
 import hpp from "hpp";
 import helmet from "helmet";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 import db from "./models/index.js";
 import passportConfig from "./passport/index.js";
@@ -48,7 +50,7 @@ if (process.env.NODE_ENV === "production") {
     expressSession({
       resave: false,
       saveUninitialized: false,
-      name: "auth-blegram",
+      name: "blegram",
       secret: process.env.COOKIE_SECRET,
       cookie: {
         httpOnly: true,
@@ -70,7 +72,7 @@ if (process.env.NODE_ENV === "production") {
     expressSession({
       resave: false,
       saveUninitialized: false,
-      name: "auth-blegram",
+      name: "blegram",
       secret: process.env.COOKIE_SECRET,
       cookie: {
         httpOnly: true,
@@ -85,7 +87,7 @@ app.use(passport.session());
 
 // routes
 import authRouter from "./routes/auth.js";
-import imageRouter from "./routes/image.js";
+import photoRouter from "./routes/photo.js";
 import userRouter from "./routes/user.js";
 import postRouter from "./routes/post.js";
 import postsRouter from "./routes/posts.js";
@@ -93,17 +95,59 @@ import likeRouter from "./routes/like.js";
 import commentRouter from "./routes/comment.js";
 import followRouter from "./routes/follow.js";
 import bookmarkRouter from "./routes/bookmark.js";
+import roomRouter from "./routes/room.js";
+import chatsRouter from "./routes/chats.js";
 
 // router 등록
-app.use("/auth", authRouter);
-app.use("/image", imageRouter);
-app.use("/user", userRouter);
-app.use("/post", postRouter);
-app.use("/posts", postsRouter);
-app.use("/like", likeRouter);
-app.use("/comment", commentRouter);
-app.use("/follow", followRouter);
-app.use("/bookmark", bookmarkRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/photo", photoRouter);
+app.use("/api/user", userRouter);
+app.use("/api/post", postRouter);
+app.use("/api/posts", postsRouter);
+app.use("/api/like", likeRouter);
+app.use("/api/comment", commentRouter);
+app.use("/api/follow", followRouter);
+app.use("/api/bookmark", bookmarkRouter);
+app.use("/api/room", roomRouter);
+app.use("/api/chats", chatsRouter);
+
+import database from "./models/index.js";
+const { Chat, User, Photo } = database;
+
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: process.env.NODE_ENV === "development" ? "http://localhost:3000" : "https://blegram.com",
+    credentials: true,
+  },
+});
+// 소켓 최초 연결
+io.on("connection", socket => {
+  console.log("소켓 연결 완료 >> ", socket.id);
+
+  // 소켓 연결 후 방에 입장
+  socket.on("onJoinRoom", roomId => {
+    console.log("채팅방 입장 >> ", roomId);
+
+    socket.join(roomId);
+  });
+
+  socket.on("onSend", async ({ userId, roomId, chat }) => {
+    Chat.create({
+      contents: chat,
+      UserId: userId,
+      RoomId: +roomId,
+    });
+
+    const user = await User.findOne({
+      attributes: ["_id", "name", "provider"],
+      where: { _id: +userId },
+      include: [{ model: Photo, attributes: ["_id", "name", "url"] }],
+    });
+
+    socket.broadcast.to(roomId).emit("onReceive", { user, chat });
+  });
+});
 
 // 404 에러처리 미들웨어
 app.use((req, res, next) => {
@@ -117,4 +161,4 @@ app.use((error, req, res, next) => {
   res.status(500).json({ error: "500 Error처리 미들웨어" });
 });
 
-app.listen(app.get("PORT"), console.log(`${app.get("PORT")}번 대기중`));
+httpServer.listen(app.get("PORT"), console.log(`${app.get("PORT")}번 대기중`));
