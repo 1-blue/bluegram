@@ -33,9 +33,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
       const results = await Promise.all(hashtagPromiseList);
 
       // 2022/01/01 - 해시태그 게시글과 연결 - by 1-blue
-      const hashtagPostPromiseList = results.map(hashtag => {
-        return hashtag[0].addPostHashtaged(createdPost._id);
-      });
+      const hashtagPostPromiseList = results.map(hashtag => hashtag[0].addPostHashtaged(createdPost._id));
       await Promise.all(hashtagPostPromiseList);
     }
 

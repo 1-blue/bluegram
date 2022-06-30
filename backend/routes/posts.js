@@ -1,7 +1,6 @@
 import express from "express";
 import { Op } from "sequelize";
 
-import { isLoggedIn } from "../middleware/index.js";
 import db from "../models/index.js";
 
 const { Photo, Post, Comment, User, Hashtag } = db;

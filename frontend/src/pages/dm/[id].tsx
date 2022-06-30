@@ -136,25 +136,20 @@ const Room = () => {
   const [chat, setChat] = useState<string>("");
 
   // 2022/05/28 - 서버와 소켓 연결 - by 1-blue
-  useEffect(() => {
-    setSocket(
-      (prev) =>
-        prev ||
-        io(process.env.NEXT_PUBLIC_SERVER_URL!, {
-          withCredentials: true,
-          transports: ["websocket"],
-        })
-    );
-  }, []);
-
   // 2022/05/28 - 채팅방 입장 및 채팅 받기 이벤트 등록 - by 1-blue
   useEffect(() => {
     if (!me) return;
+    if (socket) return;
 
-    socket?.on("connect", () => {
-      socket.emit("onJoinRoom", router.query.id as string);
+    const mySocket = io(process.env.NEXT_PUBLIC_SERVER_URL!, {
+      withCredentials: true,
+      // transports: ["websocket"],
+    });
 
-      socket.on("onReceive", ({ user, chat }) => {
+    mySocket?.on("connect", () => {
+      mySocket.emit("onJoinRoom", router.query.id as string);
+
+      mySocket.on("onReceive", ({ user, chat }) => {
         dispatch(
           addChatRequest({
             _id: Date.now(),
@@ -168,45 +163,47 @@ const Room = () => {
         );
       });
     });
+
+    setSocket(mySocket);
   }, [me, router, socket, dispatch]);
 
   // 2022/05/28 - 채팅 전송 - by 1-blue
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    // >>> 버그 수정 필요... 수정법을 못찾겠다...
-    if (chat.length === 1) {
+      if (!me) return;
+      if (chat.trim() === "") return toast.error("내용을 채우고 전송해주세요!");
+      if (chat.length > 200)
+        return toast.error(
+          `200자 이내만 입력가능합니다... ( 현재 ${chat.length}자 )`
+        );
+
+      socket?.emit("onSend", {
+        user: {
+          _id: me._id,
+          name: me.name,
+          introduction: me.introduction,
+          Photos: me.Photos,
+        },
+        roomId: router.query.id as string,
+        chat,
+      });
+      dispatch(
+        addChatRequest({
+          _id: Date.now(),
+          RoomId: +(router.query.id as string),
+          UserId: me?._id,
+          contents: chat,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          User: me,
+        })
+      );
       setChat("");
-      return console.log(
-        "버그 때문에 임시 조치 >> 글자 완성중에 전송요청하면 마지막 글자가 또 전송되는 버그"
-      );
-    }
-
-    if (!me) return;
-    if (chat.trim() === "") return toast.error("내용을 채우고 전송해주세요!");
-    if (chat.length > 200)
-      return toast.error(
-        `200자 이내만 입력가능합니다... ( 현재 ${chat.length}자 )`
-      );
-
-    socket?.emit("onSend", {
-      userId: me?._id!,
-      roomId: router.query.id as string,
-      chat,
-    });
-    dispatch(
-      addChatRequest({
-        _id: Date.now(),
-        RoomId: +(router.query.id as string),
-        UserId: me?._id,
-        contents: chat,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        User: me,
-      })
-    );
-    setChat("");
-  };
+    },
+    [me, chat, socket, dispatch, setChat, router]
+  );
 
   // 2022/05/29 - textarea ref - by 1-blue
   const chatRef = useRef<HTMLTextAreaElement | null>(null);
@@ -353,6 +350,7 @@ const Room = () => {
           ))}
         </ul>
       </section>
+
       <Form onSubmit={onSubmit}>
         <textarea
           placeholder="메시지 보내기..."
@@ -361,10 +359,12 @@ const Room = () => {
           ref={chatRef}
           onInput={handleResizeHeight}
           rows={1}
-          onKeyDown={(e) => {
+          onKeyPress={(e) => {
             if (e.code === "Enter" && e.shiftKey) return;
+
             if (e.code === "Enter") {
               e.preventDefault();
+
               return buttonRef.current?.click();
             }
           }}

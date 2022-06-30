@@ -112,7 +112,7 @@ app.use("/api/room", roomRouter);
 app.use("/api/chats", chatsRouter);
 
 import database from "./models/index.js";
-const { Chat, User, Photo } = database;
+const { Chat } = database;
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
@@ -123,26 +123,17 @@ const io = new Server(httpServer, {
 });
 // 소켓 최초 연결
 io.on("connection", socket => {
-  console.log("소켓 연결 완료 >> ", socket.id);
+  // console.log("소켓 연결 완료 >> ", socket.id);
+  console.log("연결된 소켓 >> ", io.engine.clientsCount);
 
   // 소켓 연결 후 방에 입장
-  socket.on("onJoinRoom", roomId => {
-    console.log("채팅방 입장 >> ", roomId);
+  socket.on("onJoinRoom", roomId => socket.join(roomId));
 
-    socket.join(roomId);
-  });
-
-  socket.on("onSend", async ({ userId, roomId, chat }) => {
+  socket.on("onSend", async ({ user, roomId, chat }) => {
     Chat.create({
       contents: chat,
-      UserId: userId,
+      UserId: user._id,
       RoomId: +roomId,
-    });
-
-    const user = await User.findOne({
-      attributes: ["_id", "name", "provider"],
-      where: { _id: +userId },
-      include: [{ model: Photo, attributes: ["_id", "name", "url"] }],
     });
 
     socket.broadcast.to(roomId).emit("onReceive", { user, chat });
