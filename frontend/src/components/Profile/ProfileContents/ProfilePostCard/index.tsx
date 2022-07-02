@@ -50,8 +50,6 @@ const ProfilePostCard = ({ id }: Props) => {
     return () => window.removeEventListener("scroll", infiniteScrollEvent);
   }, [infiniteScrollEvent]);
 
-  console.log("posts >> ", posts);
-
   return (
     <Wrapper>
       {posts?.map((post) => (

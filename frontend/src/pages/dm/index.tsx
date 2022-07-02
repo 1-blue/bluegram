@@ -68,7 +68,7 @@ const DM = () => {
   const { me } = useSelector(({ user }: { user: UserState }) => user);
   const { rooms } = useSelector(({ chat }: { chat: ChatState }) => chat);
 
-  if (!me?._id) {
+  if (me && !me._id) {
     toast.error("로그인후에 접근해주세요!");
     router.push("/");
     return null;
@@ -76,7 +76,7 @@ const DM = () => {
 
   const filteredRooms = rooms
     .filter((room) => room.Chats.length > 0)
-    .filter((room) => (room.RoomUsers.selfGranted === me._id ? false : true));
+    .filter((room) => (room.RoomUsers.selfGranted === me?._id ? false : true));
 
   return (
     <>
