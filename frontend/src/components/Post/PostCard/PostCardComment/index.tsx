@@ -18,17 +18,19 @@ import PostCardCommentToggleButton from "../PostCardCommentToggleButton";
 // utils
 import { timeFormat } from "@src/libs/dateFormat";
 
+// action
+import { RootState } from "@src/store/configureStore";
+
 // type
 import { ICON } from "@src/type";
 import type { ICommentWithUserAndLikerAndCountAndRecomments } from "@src/type";
 import type { RemoveCommentBody } from "@src/store/types";
-import type { UserState } from "@src/store/reducers";
 
 type Props = {
   comment: ICommentWithUserAndLikerAndCountAndRecomments;
   onRemoveComment: (CommentId: number) => () => {
-    type: "REMOVE_COMMENT_REQUEST";
-    data: RemoveCommentBody;
+    payload: RemoveCommentBody;
+    type: string;
   };
   onClickloadMoreRecomment: (
     lastId: number | null,
@@ -48,7 +50,7 @@ const PostCardComment = ({
   onClickCommentLikeButton,
   onClickRecommentButton,
 }: Props) => {
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { me } = useSelector(({ user }: RootState) => user);
   // 2022/05/21 - 메뉴 토글 - by 1-blue
   const [isShowMenu, setIsShowMenu] = useState(false);
   const onOpenMenu = useCallback(() => setIsShowMenu(true), [setIsShowMenu]);

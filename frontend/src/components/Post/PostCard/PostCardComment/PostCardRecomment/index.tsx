@@ -13,17 +13,19 @@ import Menu from "@src/components/common/Menu";
 // utils
 import { timeFormat } from "@src/libs/dateFormat";
 
+// action
+import { RootState } from "@src/store/configureStore";
+
 // type
 import { ICON } from "@src/type";
 import type { ICommentWithUserAndLikerAndCount } from "@src/type";
-import type { UserState } from "@src/store/reducers";
 import type { RemoveCommentBody } from "@src/store/types";
 
 type Props = {
   recomment: ICommentWithUserAndLikerAndCount;
   onRemoveComment: (CommentId: number) => () => {
-    type: "REMOVE_COMMENT_REQUEST";
-    data: RemoveCommentBody;
+    payload: RemoveCommentBody;
+    type: string;
   };
   onClickCommentLikeButton: (
     isLikedComment: boolean,
@@ -36,7 +38,7 @@ const PostCardRecomment = ({
   onRemoveComment,
   onClickCommentLikeButton,
 }: Props) => {
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { me } = useSelector(({ user }: RootState) => user);
   // 2022/05/21 - 메뉴 토글 - by 1-blue
   const [isShowMenu, setIsShowMenu] = useState(false);
   const onOpenMenu = useCallback(() => setIsShowMenu(true), [setIsShowMenu]);

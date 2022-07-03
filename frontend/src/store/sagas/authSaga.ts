@@ -1,94 +1,107 @@
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
+// action
+import { authActions, userActions } from "../reducers";
+
 // types
 import type { AxiosResponse } from "axios";
-import {
-  LOCAL_LOGIN_FAILURE,
-  LOCAL_LOGIN_REQUEST,
-  LOCAL_LOGIN_SUCCESS,
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type {
   LogInResponse,
-  LOCAL_LOGOUT_FAILURE,
-  LOCAL_LOGOUT_REQUEST,
-  LOCAL_LOGOUT_SUCCESS,
-  SIGNUP_REQUEST,
-  SIGNUP_FAILURE,
-  SIGNUP_SUCCESS,
   SignUpResponse,
-  LOAD_TO_ME_SUCCESS,
   LogOutResponse,
+  LogInBody,
+  SignUpBody,
 } from "@src/store/types";
 
 // api
 import { apiLocalLogin, apiLocalLogout, apiSignup } from "@src/store/api";
 
-function* localLogin(action: any) {
+function* localLogIn(action: PayloadAction<LogInBody>) {
   try {
     const { data }: AxiosResponse<LogInResponse> = yield call(
       apiLocalLogin,
-      action.data
+      action.payload
     );
 
-    yield put({ type: LOCAL_LOGIN_SUCCESS, data });
-    yield put({ type: LOAD_TO_ME_SUCCESS, data });
+    yield put(authActions.localLogInSuccess(data));
+    yield put(userActions.loadToMeSuccess(data));
   } catch (error: any) {
-    console.error("authSaga localLogin >> ", error);
+    console.error("authSaga localLogIn >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: LOCAL_LOGIN_FAILURE, data: { message } });
+    yield put(
+      authActions.localLogInFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
   }
 }
-function* watchLocalLogin() {
-  yield takeLatest(LOCAL_LOGIN_REQUEST, localLogin);
+function* watchlocalLogIn() {
+  yield takeLatest(authActions.localLogInRequest, localLogIn);
 }
 
 function* localLogout() {
   try {
     const { data }: AxiosResponse<LogOutResponse> = yield call(apiLocalLogout);
 
-    yield put({ type: LOCAL_LOGOUT_SUCCESS, data });
-    yield put({ type: LOAD_TO_ME_SUCCESS, data });
+    yield put(authActions.localLogOutSuccess(data));
+    yield put(
+      userActions.loadToMeSuccess({
+        ...data,
+        data: { ...data.data, user: null },
+      })
+    );
   } catch (error: any) {
     console.error("authSaga localLogout >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: LOCAL_LOGOUT_FAILURE, data: { message } });
+    yield put(
+      authActions.localLogOutFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
   }
 }
 function* watchLocalLogout() {
-  yield takeLatest(LOCAL_LOGOUT_REQUEST, localLogout);
+  yield takeLatest(authActions.localLogOutRequest, localLogout);
 }
 
-function* signup(action: any) {
+function* signUp(action: PayloadAction<SignUpBody>) {
   try {
     const { data }: AxiosResponse<SignUpResponse> = yield call(
       apiSignup,
-      action.data
+      action.payload
     );
 
-    yield put({ type: SIGNUP_SUCCESS, data });
+    yield put(authActions.signUpSuccess(data));
   } catch (error: any) {
     console.error("authSaga signup >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: SIGNUP_FAILURE, data: { message } });
+    yield put(
+      authActions.signUpFailure({ status: { ok: false }, data: { message } })
+    );
   }
 }
-function* watchSignup() {
-  yield takeLatest(SIGNUP_REQUEST, signup);
+function* watchSignUp() {
+  yield takeLatest(authActions.signUpRequest, signUp);
 }
 
 export default function* authSaga() {
-  yield all([fork(watchLocalLogin), fork(watchLocalLogout), fork(watchSignup)]);
+  yield all([fork(watchlocalLogIn), fork(watchLocalLogout), fork(watchSignUp)]);
 }

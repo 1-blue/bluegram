@@ -1,31 +1,44 @@
 import { HYDRATE } from "next-redux-wrapper";
-import { combineReducers } from "redux";
+import { AnyAction, CombinedState, combineReducers } from "@reduxjs/toolkit";
 
 // reducers
-import authReducer from "./authReducer";
-import userReducer from "./userReducer";
-import postReducer from "./postReducer";
-import chatReducer from "./chatReducer";
+import authReducer, { AuthStateType } from "./authReducer";
+import userReducer, { UserStateType } from "./userReducer";
+import postReducer, { PostStateType } from "./postReducer";
+import chatReducer, { ChatStateType } from "./chatReducer";
 
-const rootReducer = (state: any, action: any) => {
+// actions
+export { authActions } from "./authReducer";
+export { userActions } from "./userReducer";
+export { postActions } from "./postReducer";
+export { chatActions } from "./chatReducer";
+
+type ReducerState = {
+  auth: AuthStateType;
+  post: PostStateType;
+  user: UserStateType;
+  chat: ChatStateType;
+};
+
+const rootReducer = (
+  state: any,
+  action: AnyAction
+): CombinedState<ReducerState> => {
   switch (action.type) {
     case HYDRATE:
-      return action.payload;
+      return {
+        ...state,
+        ...action.payload,
+      };
 
     default:
-      const combinedReducer = combineReducers({
+      return combineReducers({
         auth: authReducer,
         user: userReducer,
         post: postReducer,
         chat: chatReducer,
-      });
-      return combinedReducer(state, action);
+      })(state, action);
   }
 };
 
 export default rootReducer;
-
-export type AuthState = ReturnType<typeof authReducer>;
-export type UserState = ReturnType<typeof userReducer>;
-export type PostState = ReturnType<typeof postReducer>;
-export type ChatState = ReturnType<typeof chatReducer>;

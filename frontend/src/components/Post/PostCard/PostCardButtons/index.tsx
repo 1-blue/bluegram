@@ -7,10 +7,12 @@ import { Wrapper } from "./style";
 // common-components
 import Icon from "@src/components/common/Icon";
 
+// action
+import { RootState } from "@src/store/configureStore";
+
 // type
 import { ICON } from "@src/type";
 import type { SimpleUser } from "@src/type";
-import type { UserState } from "@src/store/reducers";
 
 type Props = {
   likers: SimpleUser[];
@@ -31,16 +33,15 @@ const PostCardButtons = ({
   onClickBookmarkButton,
   onClickDM,
 }: Props) => {
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { me } = useSelector(({ user }: RootState) => user);
 
   const [isLikedPost, setIsLikedPost] = useState(false);
   const [isBookmarkedPost, setIsBookmarkedPost] = useState(false);
 
   // 2022/01/18 - 본인이 게시글에 좋아요 눌렀는지 확인 - by 1-blue
-  useEffect(
-    () => setIsLikedPost(likers.some((liker) => liker._id === me?._id)),
-    [me, likers]
-  );
+  useEffect(() => {
+    setIsLikedPost(likers.some((liker) => liker._id === me?._id));
+  }, [me, likers]);
 
   // 2022/01/18 - 본인이 게시글에 북마크 눌렀는지 확인 - by 1-blue
   useEffect(

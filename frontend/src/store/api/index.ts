@@ -34,7 +34,12 @@ export {
   apiLoadPostsOfUser,
   apiLoadPostsDetailOfUser,
 } from "./post";
-export { apiLoadComments, apiAppendComment, apiRemoveComment } from "./comment";
+export {
+  apiLoadComments,
+  apiAppendComment,
+  apiRemoveComment,
+  apiLoadRecomments,
+} from "./comment";
 export {
   apiAppendLikeToComment,
   apiAppendLikeToPost,
@@ -52,4 +57,4 @@ export {
   apiRemoveBookmark,
   apiLoadPostsOfBookmark,
 } from "./bookmark";
-export { apiAddRoom, apiLoadRooms, apiLoadChats } from "./room";
+export { apiAddRoom, apiLoadRooms, apiLoadChats, apiExitRoom } from "./room";

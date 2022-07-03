@@ -1,80 +1,47 @@
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
+// action
+import { postActions } from "@src/store/reducers";
+
 // types
-import type { AxiosError, AxiosResponse } from "axios";
-import {
-  LOAD_POSTS_REQUEST,
-  LOAD_POSTS_SUCCESS,
-  LOAD_POSTS_FAILURE,
+import type { AxiosResponse } from "axios";
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type {
   LoadPostsResponse,
-  UPLOAD_POST_REQUEST,
-  UPLOAD_POST_SUCCESS,
-  UPLOAD_POST_FAILURE,
   UploadPostResponse,
-  LOAD_DETAIL_POSTS_REQUEST,
-  LOAD_DETAIL_POSTS_SUCCESS,
-  LOAD_DETAIL_POSTS_FAILURE,
   LoadDetailPostsResponse,
   RemovePostResponse,
-  REMOVE_POST_SUCCESS,
-  REMOVE_POST_FAILURE,
-  REMOVE_POST_REQUEST,
   LoadCommentsResponse,
-  LOAD_COMMENTS_SUCCESS,
-  LOAD_COMMENTS_FAILURE,
-  LOAD_COMMENTS_REQUEST,
   AppendCommentResponse,
-  APPEND_COMMENT_SUCCESS,
-  APPEND_COMMENT_FAILURE,
-  APPEND_COMMENT_REQUEST,
   RemoveCommentResponse,
   AppendLikeToPostResponse,
-  APPEND_LIKE_TO_POST_SUCCESS,
-  APPEND_LIKE_TO_POST_FAILURE,
-  APPEND_LIKE_TO_POST_REQUEST,
   RemoveLikeToPostResponse,
-  REMOVE_LIKE_TO_POST_SUCCESS,
-  REMOVE_LIKE_TO_POST_FAILURE,
-  REMOVE_LIKE_TO_POST_REQUEST,
   AppendLikeToCommentResponse,
-  APPEND_LIKE_TO_COMMENT_SUCCESS,
-  APPEND_LIKE_TO_COMMENT_FAILURE,
-  APPEND_LIKE_TO_COMMENT_REQUEST,
-  REMOVE_LIKE_TO_COMMENT_SUCCESS,
-  REMOVE_LIKE_TO_COMMENT_FAILURE,
-  REMOVE_LIKE_TO_COMMENT_REQUEST,
   RemoveLikeToCommentResponse,
   AppendBookmarkResponse,
-  APPEND_BOOKMARK_SUCCESS,
-  APPEND_BOOKMARK_FAILURE,
-  APPEND_BOOKMARK_REQUEST,
   RemoveBookmarkResponse,
-  REMOVE_BOOKMARK_SUCCESS,
-  REMOVE_BOOKMARK_FAILURE,
-  REMOVE_BOOKMARK_REQUEST,
   LoadRecommentsResponse,
-  LOAD_RECOMMENTS_SUCCESS,
-  LOAD_RECOMMENTS_FAILURE,
-  LOAD_RECOMMENTS_REQUEST,
-  REMOVE_COMMENT_SUCCESS,
-  REMOVE_COMMENT_FAILURE,
-  REMOVE_COMMENT_REQUEST,
   LoadPostsOfHashtagResponse,
-  LOAD_POSTS_OF_HASHTAG_SUCCESS,
-  LOAD_POSTS_OF_HASHTAG_FAILURE,
-  LOAD_POSTS_OF_HASHTAG_REQUEST,
   LoadPostsOfUserResponse,
-  LOAD_POSTS_OF_USER_SUCCESS,
-  LOAD_POSTS_OF_USER_FAILURE,
-  LOAD_POSTS_OF_USER_REQUEST,
   LoadPostsDetailOfUserResponse,
-  LOAD_POSTS_DETAIL_OF_USER_SUCCESS,
-  LOAD_POSTS_DETAIL_OF_USER_FAILURE,
-  LOAD_POSTS_DETAIL_OF_USER_REQUEST,
   LoadPostsOfBookmarkResponse,
-  LOAD_POSTS_OF_BOOKMARK_SUCCESS,
-  LOAD_POSTS_OF_BOOKMARK_FAILURE,
-  LOAD_POSTS_OF_BOOKMARK_REQUEST,
+  LoadPostsBody,
+  UploadPostBody,
+  RemovePostBody,
+  LoadDetailPostsBody,
+  LoadPostsOfUserBody,
+  LoadPostsDetailOfUserBody,
+  LoadPostsOfHashtagBody,
+  AppendCommentBody,
+  RemoveCommentBody,
+  LoadCommentsBody,
+  LoadRecommentsBody,
+  AppendLikeToPostBody,
+  RemoveLikeToPostBody,
+  AppendLikeToCommentBody,
+  RemoveLikeToCommentBody,
+  AppendBookmarkBody,
+  RemoveBookmarkBody,
 } from "@src/store/types";
 
 // api
@@ -96,415 +63,514 @@ import {
   apiLoadPostsOfUser,
   apiLoadPostsDetailOfUser,
   apiLoadPostsOfBookmark,
+  apiLoadRecomments,
 } from "@src/store/api";
-import { apiLoadRecomments } from "../api/comment";
+import { LoadPostsOfBookmarkBody } from "../types/bookmark";
 
-function* loadPosts(action: any) {
-  try {
-    const { data }: AxiosResponse<LoadPostsResponse> = yield call(
-      apiLoadPosts,
-      action.data
-    );
-
-    yield put({ type: LOAD_POSTS_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga loadPosts >> ", error);
-
-    yield put({ type: LOAD_POSTS_FAILURE });
-  }
-}
-function* watchLoadPosts() {
-  yield takeLatest(LOAD_POSTS_REQUEST, loadPosts);
-}
-
-function* uploadPost(action: any) {
+function* uploadPost(action: PayloadAction<UploadPostBody>) {
   try {
     const { data }: AxiosResponse<UploadPostResponse> = yield call(
       apiUploadPost,
-      action.data
+      action.payload
     );
 
-    yield put({ type: UPLOAD_POST_SUCCESS, data });
+    yield put(postActions.uploadPostSuccess(data));
   } catch (error: any) {
     console.error("postSaga loadPosts >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: UPLOAD_POST_FAILURE, data: { message } });
+    yield put(
+      postActions.uploadPostFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
   }
 }
 function* watchUploadPost() {
-  yield takeLatest(UPLOAD_POST_REQUEST, uploadPost);
+  yield takeLatest(postActions.uploadPostRequest, uploadPost);
 }
 
-function* loadDetailPosts(action: any) {
-  try {
-    const { data }: AxiosResponse<LoadDetailPostsResponse> = yield call(
-      apiLoadDetailPosts,
-      action.data
-    );
-
-    yield put({ type: LOAD_DETAIL_POSTS_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga loadDetailPosts >> ", error);
-
-    const message =
-      error?.name === "AxiosError"
-        ? error.response.data.message
-        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
-
-    yield put({ type: LOAD_DETAIL_POSTS_FAILURE, data: { message } });
-  }
-}
-function* watchLoadDetailPosts() {
-  yield takeLatest(LOAD_DETAIL_POSTS_REQUEST, loadDetailPosts);
-}
-
-function* removePost(action: any) {
+function* removePost(action: PayloadAction<RemovePostBody>) {
   try {
     const { data }: AxiosResponse<RemovePostResponse> = yield call(
       apiRemovePost,
-      action.data
+      action.payload
     );
 
-    yield put({ type: REMOVE_POST_SUCCESS, data });
+    yield put(postActions.removePostSuccess(data));
   } catch (error: any) {
     console.error("postSaga RemovePost >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: REMOVE_POST_FAILURE, data: { message } });
+    yield put(
+      postActions.removePostFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
   }
 }
 function* watchRemovePost() {
-  yield takeLatest(REMOVE_POST_REQUEST, removePost);
+  yield takeLatest(postActions.removePostRequest, removePost);
 }
 
-function* loadComments(action: any) {
+function* loadPosts(action: PayloadAction<LoadPostsBody>) {
   try {
-    const { data }: AxiosResponse<LoadCommentsResponse> = yield call(
-      apiLoadComments,
-      action.data
+    const { data }: AxiosResponse<LoadPostsResponse> = yield call(
+      apiLoadPosts,
+      action.payload
     );
 
-    yield put({ type: LOAD_COMMENTS_SUCCESS, data });
+    yield put(postActions.loadPostsSuccess(data));
   } catch (error: any) {
-    console.error("postSaga LoadComments >> ", error);
+    console.error("postSaga loadPosts >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: LOAD_COMMENTS_FAILURE, data: { message } });
+    yield put(
+      postActions.loadPostsFailure({ status: { ok: false }, data: { message } })
+    );
   }
 }
-function* watchLoadComments() {
-  yield takeLatest(LOAD_COMMENTS_REQUEST, loadComments);
+function* watchLoadPosts() {
+  yield takeLatest(postActions.loadPostsRequest, loadPosts);
 }
 
-function* appendComment(action: any) {
+function* loadDetailPosts(action: PayloadAction<LoadDetailPostsBody>) {
   try {
-    const { data }: AxiosResponse<AppendCommentResponse> = yield call(
-      apiAppendComment,
-      action.data
+    const { data }: AxiosResponse<LoadDetailPostsResponse> = yield call(
+      apiLoadDetailPosts,
+      action.payload
     );
 
-    yield put({ type: APPEND_COMMENT_SUCCESS, data });
+    yield put(postActions.loadDetailPostsSuccess(data));
   } catch (error: any) {
-    console.error("postSaga appendComment >> ", error);
+    console.error("postSaga loadDetailPosts >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: APPEND_COMMENT_FAILURE, data: { message } });
-  }
-}
-function* watchAppendComment() {
-  yield takeLatest(APPEND_COMMENT_REQUEST, appendComment);
-}
-
-function* removeComment(action: any) {
-  try {
-    const { data }: AxiosResponse<RemoveCommentResponse> = yield call(
-      apiRemoveComment,
-      action.data
+    yield put(
+      postActions.loadDetailPostsFailure({
+        status: { ok: false },
+        data: { message },
+      })
     );
-
-    yield put({ type: REMOVE_COMMENT_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga removeComment >> ", error);
-
-    const message =
-      error?.name === "AxiosError"
-        ? error.response.data.message
-        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
-
-    yield put({ type: REMOVE_COMMENT_FAILURE, data: { message } });
   }
 }
-function* watchRemoveComment() {
-  yield takeLatest(REMOVE_COMMENT_REQUEST, removeComment);
+function* watchLoadDetailPosts() {
+  yield takeLatest(postActions.loadDetailPostsRequest, loadDetailPosts);
 }
 
-function* appendLikeToPost(action: any) {
-  try {
-    const { data }: AxiosResponse<AppendLikeToPostResponse> = yield call(
-      apiAppendLikeToPost,
-      action.data
-    );
-
-    yield put({ type: APPEND_LIKE_TO_POST_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga appendLikeToPost >> ", error);
-
-    yield put({
-      type: APPEND_LIKE_TO_POST_FAILURE,
-      data: error?.response?.data,
-    });
-  }
-}
-function* watchAppendLikeToPost() {
-  yield takeLatest(APPEND_LIKE_TO_POST_REQUEST, appendLikeToPost);
-}
-function* removeLikeToPost(action: any) {
-  try {
-    const { data }: AxiosResponse<RemoveLikeToPostResponse> = yield call(
-      apiRemoveLikeToPost,
-      action.data
-    );
-
-    yield put({ type: REMOVE_LIKE_TO_POST_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga removeLikeToPost >> ", error);
-
-    const message =
-      error?.name === "AxiosError"
-        ? error.response.data.message
-        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
-
-    yield put({
-      type: REMOVE_LIKE_TO_POST_FAILURE,
-      data: {
-        message,
-      },
-    });
-  }
-}
-function* watchRemoveLikeToPost() {
-  yield takeLatest(REMOVE_LIKE_TO_POST_REQUEST, removeLikeToPost);
-}
-
-function* appendLikeToComment(action: any) {
-  try {
-    const { data }: AxiosResponse<AppendLikeToCommentResponse> = yield call(
-      apiAppendLikeToComment,
-      action.data
-    );
-
-    yield put({ type: APPEND_LIKE_TO_COMMENT_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga appendLikeToComment >> ", error);
-
-    const message =
-      error?.name === "AxiosError"
-        ? error.response.data.message
-        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
-
-    yield put({ type: APPEND_LIKE_TO_COMMENT_FAILURE, data: { message } });
-  }
-}
-function* watchAppendLikeToComment() {
-  yield takeLatest(APPEND_LIKE_TO_COMMENT_REQUEST, appendLikeToComment);
-}
-function* removeLikeToComment(action: any) {
-  try {
-    const { data }: AxiosResponse<RemoveLikeToCommentResponse> = yield call(
-      apiRemoveLikeToComment,
-      action.data
-    );
-
-    yield put({ type: REMOVE_LIKE_TO_COMMENT_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga removeLikeToComment >> ", error);
-
-    const message =
-      error?.name === "AxiosError"
-        ? error.response.data.message
-        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
-
-    yield put({ type: REMOVE_LIKE_TO_COMMENT_FAILURE, data: { message } });
-  }
-}
-function* watchRemoveLikeToComment() {
-  yield takeLatest(REMOVE_LIKE_TO_COMMENT_REQUEST, removeLikeToComment);
-}
-
-function* appendBookmark(action: any) {
-  try {
-    const { data }: AxiosResponse<AppendBookmarkResponse> = yield call(
-      apiAppendBookmark,
-      action.data
-    );
-
-    yield put({ type: APPEND_BOOKMARK_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga appendBookmark >> ", error);
-
-    const message =
-      error?.name === "AxiosError"
-        ? error.response.data.message
-        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
-
-    yield put({ type: APPEND_BOOKMARK_FAILURE, data: { message } });
-  }
-}
-function* watchAppendBookmark() {
-  yield takeLatest(APPEND_BOOKMARK_REQUEST, appendBookmark);
-}
-function* removeBookmark(action: any) {
-  try {
-    const { data }: AxiosResponse<RemoveBookmarkResponse> = yield call(
-      apiRemoveBookmark,
-      action.data
-    );
-
-    yield put({ type: REMOVE_BOOKMARK_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga removeBookmark >> ", error);
-
-    const message =
-      error?.name === "AxiosError"
-        ? error.response.data.message
-        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
-
-    yield put({ type: REMOVE_BOOKMARK_FAILURE, data: { message } });
-  }
-}
-function* watchRemoveBookmark() {
-  yield takeLatest(REMOVE_BOOKMARK_REQUEST, removeBookmark);
-}
-
-function* loadRecomments(action: any) {
-  try {
-    const { data }: AxiosResponse<LoadRecommentsResponse> = yield call(
-      apiLoadRecomments,
-      action.data
-    );
-
-    yield put({ type: LOAD_RECOMMENTS_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga loadRecomments >> ", error);
-
-    const message =
-      error?.name === "AxiosError"
-        ? error.response.data.message
-        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
-
-    yield put({ type: LOAD_RECOMMENTS_FAILURE, data: { message } });
-  }
-}
-function* watchLoadRecomments() {
-  yield takeLatest(LOAD_RECOMMENTS_REQUEST, loadRecomments);
-}
-
-function* loadPostsOfHashtag(action: any) {
-  try {
-    const { data }: AxiosResponse<LoadPostsOfHashtagResponse> = yield call(
-      apiLoadPostsOfHashtag,
-      action.data
-    );
-
-    yield put({ type: LOAD_POSTS_OF_HASHTAG_SUCCESS, data });
-  } catch (error: any) {
-    console.error("postSaga loadPostsOfHashtag >> ", error);
-
-    const message =
-      error?.name === "AxiosError"
-        ? error.response.data.message
-        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
-
-    yield put({ type: LOAD_POSTS_OF_HASHTAG_FAILURE, data: { message } });
-  }
-}
-function* watchloadPostsOfHashtag() {
-  yield takeLatest(LOAD_POSTS_OF_HASHTAG_REQUEST, loadPostsOfHashtag);
-}
-
-function* loadPostsOfUser(action: any) {
+function* loadPostsOfUser(action: PayloadAction<LoadPostsOfUserBody>) {
   try {
     const { data }: AxiosResponse<LoadPostsOfUserResponse> = yield call(
       apiLoadPostsOfUser,
-      action.data
+      action.payload
     );
 
-    yield put({ type: LOAD_POSTS_OF_USER_SUCCESS, data });
+    yield put(postActions.loadPostsOfUserSuccess(data));
   } catch (error: any) {
     console.error("postSaga loadPostsOfUser >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: LOAD_POSTS_OF_USER_FAILURE, data: { message } });
+    yield put(
+      postActions.loadPostsOfUserFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
   }
 }
 function* watchloadPostsOfUser() {
-  yield takeLatest(LOAD_POSTS_OF_USER_REQUEST, loadPostsOfUser);
+  yield takeLatest(postActions.loadPostsOfUserRequest, loadPostsOfUser);
 }
 
-function* loadPostsDetailOfUser(action: any) {
+function* loadPostsDetailOfUser(
+  action: PayloadAction<LoadPostsDetailOfUserBody>
+) {
   try {
     const { data }: AxiosResponse<LoadPostsDetailOfUserResponse> = yield call(
       apiLoadPostsDetailOfUser,
-      action.data
+      action.payload
     );
 
-    yield put({ type: LOAD_POSTS_DETAIL_OF_USER_SUCCESS, data });
+    yield put(postActions.loadPostsDetailOfUserSuccess(data));
   } catch (error: any) {
     console.error("postSaga loadPostsDetailOfUser >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: LOAD_POSTS_DETAIL_OF_USER_FAILURE, data: { message } });
+    yield put(
+      postActions.loadPostsDetailOfUserFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
   }
 }
 function* watchloadPostsDetailOfUser() {
-  yield takeLatest(LOAD_POSTS_DETAIL_OF_USER_REQUEST, loadPostsDetailOfUser);
+  yield takeLatest(
+    postActions.loadPostsDetailOfUserRequest,
+    loadPostsDetailOfUser
+  );
 }
 
-function* loadPostsOfBookmark(action: any) {
+function* loadPostsOfHashtag(action: PayloadAction<LoadPostsOfHashtagBody>) {
   try {
-    const { data }: AxiosResponse<LoadPostsOfBookmarkResponse> = yield call(
-      apiLoadPostsOfBookmark
+    const { data }: AxiosResponse<LoadPostsOfHashtagResponse> = yield call(
+      apiLoadPostsOfHashtag,
+      action.payload
     );
 
-    yield put({ type: LOAD_POSTS_OF_BOOKMARK_SUCCESS, data });
+    yield put(postActions.loadPostsOfHashtagSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga loadPostsOfHashtag >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.loadPostsOfHashtagFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchloadPostsOfHashtag() {
+  yield takeLatest(postActions.loadPostsOfHashtagRequest, loadPostsOfHashtag);
+}
+
+function* appendComment(action: PayloadAction<AppendCommentBody>) {
+  try {
+    const { data }: AxiosResponse<AppendCommentResponse> = yield call(
+      apiAppendComment,
+      action.payload
+    );
+
+    yield put(postActions.appendCommentSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga appendComment >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.appendCommentFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchAppendComment() {
+  yield takeLatest(postActions.appendCommentRequest, appendComment);
+}
+
+function* removeComment(action: PayloadAction<RemoveCommentBody>) {
+  try {
+    const { data }: AxiosResponse<RemoveCommentResponse> = yield call(
+      apiRemoveComment,
+      action.payload
+    );
+
+    yield put(postActions.removeCommentSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga removeComment >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.removeCommentFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchRemoveComment() {
+  yield takeLatest(postActions.removeCommentRequest, removeComment);
+}
+
+function* loadComments(action: PayloadAction<LoadCommentsBody>) {
+  try {
+    const { data }: AxiosResponse<LoadCommentsResponse> = yield call(
+      apiLoadComments,
+      action.payload
+    );
+
+    yield put(postActions.loadCommentsSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga LoadComments >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.loadCommentsFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchLoadComments() {
+  yield takeLatest(postActions.loadCommentsRequest, loadComments);
+}
+
+function* loadRecomments(action: PayloadAction<LoadRecommentsBody>) {
+  try {
+    const { data }: AxiosResponse<LoadRecommentsResponse> = yield call(
+      apiLoadRecomments,
+      action.payload
+    );
+
+    yield put(postActions.loadRecommentsSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga loadRecomments >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.loadRecommentsFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchLoadRecomments() {
+  yield takeLatest(postActions.loadRecommentsRequest, loadRecomments);
+}
+
+function* appendLikeToPost(action: PayloadAction<AppendLikeToPostBody>) {
+  try {
+    const { data }: AxiosResponse<AppendLikeToPostResponse> = yield call(
+      apiAppendLikeToPost,
+      action.payload
+    );
+
+    yield put(postActions.appendLikeToPostSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga appendLikeToPost >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.appendLikeToPostFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchAppendLikeToPost() {
+  yield takeLatest(postActions.appendLikeToPostRequest, appendLikeToPost);
+}
+
+function* removeLikeToPost(action: PayloadAction<RemoveLikeToPostBody>) {
+  try {
+    const { data }: AxiosResponse<RemoveLikeToPostResponse> = yield call(
+      apiRemoveLikeToPost,
+      action.payload
+    );
+
+    yield put(postActions.removeLikeToPostSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga removeLikeToPost >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.removeLikeToPostFailure({
+        status: { ok: true },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchRemoveLikeToPost() {
+  yield takeLatest(postActions.removeLikeToPostRequest, removeLikeToPost);
+}
+
+function* appendLikeToComment(action: PayloadAction<AppendLikeToCommentBody>) {
+  try {
+    const { data }: AxiosResponse<AppendLikeToCommentResponse> = yield call(
+      apiAppendLikeToComment,
+      action.payload
+    );
+
+    yield put(postActions.appendLikeToCommentSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga appendLikeToComment >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.appendLikeToCommentFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchAppendLikeToComment() {
+  yield takeLatest(postActions.appendLikeToCommentRequest, appendLikeToComment);
+}
+
+function* removeLikeToComment(action: PayloadAction<RemoveLikeToCommentBody>) {
+  try {
+    const { data }: AxiosResponse<RemoveLikeToCommentResponse> = yield call(
+      apiRemoveLikeToComment,
+      action.payload
+    );
+
+    yield put(postActions.removeLikeToCommentSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga removeLikeToComment >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.removeLikeToCommentFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchRemoveLikeToComment() {
+  yield takeLatest(postActions.removeLikeToCommentRequest, removeLikeToComment);
+}
+
+function* appendBookmark(action: PayloadAction<AppendBookmarkBody>) {
+  try {
+    const { data }: AxiosResponse<AppendBookmarkResponse> = yield call(
+      apiAppendBookmark,
+      action.payload
+    );
+
+    yield put(postActions.appendBookmarkSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga appendBookmark >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.appendBookmarkFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchAppendBookmark() {
+  yield takeLatest(postActions.appendBookmarkRequest, appendBookmark);
+}
+
+function* removeBookmark(action: PayloadAction<RemoveBookmarkBody>) {
+  try {
+    const { data }: AxiosResponse<RemoveBookmarkResponse> = yield call(
+      apiRemoveBookmark,
+      action.payload
+    );
+
+    yield put(postActions.removeBookmarkSuccess(data));
+  } catch (error: any) {
+    console.error("postSaga removeBookmark >> ", error);
+
+    const message =
+      error?.name === "AxiosError"
+        ? error.response.data.data.message
+        : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
+
+    yield put(
+      postActions.removeBookmarkFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
+  }
+}
+function* watchRemoveBookmark() {
+  yield takeLatest(postActions.removeBookmarkRequest, removeBookmark);
+}
+
+function* loadPostsOfBookmark(action: PayloadAction<LoadPostsOfBookmarkBody>) {
+  try {
+    const { data }: AxiosResponse<LoadPostsOfBookmarkResponse> = yield call(
+      apiLoadPostsOfBookmark,
+      action.payload
+    );
+
+    yield put(postActions.loadPostsOfBookmarkSuccess(data));
   } catch (error: any) {
     console.error("postSaga loadPostsOfBookmark >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: LOAD_POSTS_OF_BOOKMARK_FAILURE, data: { message } });
+    yield put(
+      postActions.loadPostsOfBookmarkFailure({
+        status: { ok: false },
+        data: { message },
+      })
+    );
   }
 }
 function* watchloadPostsOfBookmark() {
-  yield takeLatest(LOAD_POSTS_OF_BOOKMARK_REQUEST, loadPostsOfBookmark);
+  yield takeLatest(postActions.loadPostsOfBookmarkRequest, loadPostsOfBookmark);
 }
 
 export default function* postSaga() {

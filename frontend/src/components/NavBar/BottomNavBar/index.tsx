@@ -1,6 +1,7 @@
 import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 // styled-components
 import { Wrapper } from "./style";
@@ -9,30 +10,27 @@ import { Wrapper } from "./style";
 import Icon from "@src/components/common/Icon";
 import Avatar from "@src/components/common/Avatar";
 
+// hook
+import useScrollUpDown from "@src/hooks/useScrollUpDown";
+
 // action
-import { openWriteModalRequest } from "@src/store/actions";
+import { postActions } from "@src/store/reducers";
 
 // type
 import { ICON } from "@src/type";
-import type { PostState, UserState } from "@src/store/reducers";
-
-// hook
-import useScrollUpDown from "@src/hooks/useScrollUpDown";
-import { useRouter } from "next/router";
+import type { RootState } from "@src/store/configureStore";
 
 const BottomNavigationBar = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
-  const { isShowWritePostModal } = useSelector(
-    ({ post }: { post: PostState }) => post
-  );
+  const { me } = useSelector(({ user }: RootState) => user);
+  const { isShowWritePostModal } = useSelector(({ post }: RootState) => post);
 
   // 2022/01/14 - 게시글 생성 모달 클릭 - by 1-blue
   const onClickWritePostModal = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-      dispatch(openWriteModalRequest());
+      dispatch(postActions.openWritePostModal());
     },
     [dispatch]
   );

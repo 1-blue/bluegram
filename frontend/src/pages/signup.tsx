@@ -6,17 +6,18 @@ import { useForm } from "react-hook-form";
 // common-components
 import Button from "@src/components/common/Button";
 
-// action
-import { signUpRequest } from "@src/store/actions/authAction";
-
-// type
-import type { AuthState } from "@src/store/reducers";
-
 // common-component
 import Input from "@src/components/common/Input";
 import Textarea from "@src/components/common/Textarea";
 import PhotoInput from "@src/components/common/PhotoInput";
 import HeadInfo from "@src/components/common/HeadInfo";
+
+// action
+import { authActions } from "@src/store/reducers";
+
+// type
+import type { NextPage } from "next";
+import type { RootState } from "@src/store/configureStore";
 
 // styled-components
 const Wrapper = styled.form`
@@ -54,16 +55,10 @@ export type SignUpForm = {
   introduction: string;
   avatar?: string;
 };
-export type ResponseOfPhoto = {
-  ok: boolean;
-  photos: string[];
-};
 
-const SignupPage = () => {
+const SignupPage: NextPage = () => {
   const dispatch = useDispatch();
-  const { signUpLoading } = useSelector(
-    ({ auth }: { auth: AuthState }) => auth
-  );
+  const { signUpLoading } = useSelector(({ auth }: RootState) => auth);
 
   // 2022/05/13 - 회원가입 관련 메서드들 - by 1-blue
   const {
@@ -76,7 +71,7 @@ const SignupPage = () => {
 
   // 2022/05/13 - 회원가입 요청 - by 1-blue
   const onSignUp = useCallback(
-    (body: SignUpForm) => dispatch(signUpRequest(body)),
+    (body: SignUpForm) => dispatch(authActions.signUpRequest({ ...body })),
     [dispatch]
   );
 

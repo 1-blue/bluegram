@@ -10,7 +10,7 @@ import Icon from "@src/components/common/Icon";
 
 // type
 import { ICON } from "@src/type";
-import type { UserState } from "@src/store/reducers";
+import type { RootState } from "@src/store/configureStore";
 
 type Props = {
   isOpenFollowingModal: boolean;
@@ -24,7 +24,7 @@ const FollowerModal = ({
   onClickFollowButton,
 }: Props) => {
   const { me, Followers, followLoading, unfollowLoading } = useSelector(
-    ({ user }: { user: UserState }) => user
+    ({ user }: RootState) => user
   );
 
   return (

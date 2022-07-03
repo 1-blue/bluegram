@@ -4,7 +4,12 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
 // action
-import { resetMessage } from "@src/store/actions";
+import {
+  authActions,
+  chatActions,
+  postActions,
+  userActions,
+} from "@src/store/reducers";
 
 type Props = {
   done: null | string;
@@ -23,7 +28,10 @@ const useToastMessage = ({ done, error, go, excute }: Props) => {
     if (done) toast.success(done);
     if (error) toast.error(error);
 
-    dispatch(resetMessage());
+    dispatch(userActions.resetMessage());
+    dispatch(postActions.resetMessage());
+    dispatch(chatActions.resetMessage());
+    dispatch(authActions.resetMessage());
 
     if (excute) excute();
 

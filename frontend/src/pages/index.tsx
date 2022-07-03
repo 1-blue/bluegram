@@ -1,8 +1,3 @@
-import type {
-  GetServerSideProps,
-  GetServerSidePropsContext,
-  NextPage,
-} from "next";
 import React, { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
@@ -12,17 +7,22 @@ import wrapper from "@src/store/configureStore";
 import { END } from "redux-saga";
 import { axiosInstance } from "@src/store/api";
 
-// actions
-import { loadToMeRequest, loadPostsRequest } from "@src/store/actions";
-
-// type
-import type { PostState } from "@src/store/reducers";
-
 // components
 import PhotoCard from "@src/components/Post/PhotoCard";
 
 // common-components
 import HeadInfo from "@src/components/common/HeadInfo";
+
+// actions
+import { postActions, userActions } from "@src/store/reducers";
+
+// type
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
+import type { RootState } from "@src/store/configureStore";
 
 // styled-components
 const Wrapper = styled.ul`
@@ -48,7 +48,7 @@ const Wrapper = styled.ul`
 const Home: NextPage = () => {
   const dispatch = useDispatch();
   const { posts, hasMorePosts, loadPostsLoading } = useSelector(
-    ({ post }: { post: PostState }) => post
+    ({ post }: RootState) => post
   );
 
   // 2022/05/07 - 무한 스크롤링 이벤트 함수 - by 1-blue
@@ -59,11 +59,14 @@ const Home: NextPage = () => {
       hasMorePosts &&
       !loadPostsLoading
     ) {
-      if (!posts) {
-        dispatch(loadPostsRequest({ lastId: -1, limit: 15 }));
+      if (posts.length === 0) {
+        dispatch(postActions.loadPostsRequest({ lastId: -1, limit: 15 }));
       } else {
         dispatch(
-          loadPostsRequest({ lastId: posts[posts.length - 1]._id, limit: 15 })
+          postActions.loadPostsRequest({
+            lastId: posts[posts.length - 1]._id,
+            limit: 15,
+          })
         );
       }
     }
@@ -81,13 +84,13 @@ const Home: NextPage = () => {
       <HeadInfo
         title="blegram - 홈"
         description={"홈 페이지\n모든 게시글들 이미지만 최신순으로 배치"}
-        photo={posts?.[0].Photos?.[0].name}
+        photo={posts.length === 0 ? null : posts[0].Photos[0].name}
       />
 
-      {posts?.length === 0 && <h1 className="info">게시글이 없습니다.</h1>}
+      {posts.length === 0 && <h1 className="info">게시글이 없습니다.</h1>}
 
       <Wrapper>
-        {posts?.map((post, index) => (
+        {posts.map((post, index) => (
           <PhotoCard key={post._id} post={post} $priority={index < 10} />
         ))}
       </Wrapper>
@@ -110,8 +113,8 @@ export const getServerSideProps: GetServerSideProps =
       axiosInstance.defaults.headers.Cookie = cookie;
 
       // 서버 사이드에서 dispatch할 내용을 적어줌
-      store.dispatch(loadToMeRequest());
-      store.dispatch(loadPostsRequest({ lastId: -1, limit: 15 }));
+      store.dispatch(userActions.loadToMeRequest());
+      store.dispatch(postActions.loadPostsRequest({ lastId: -1, limit: 15 }));
 
       // 밑에 두 개는 REQUEST이후 SUCCESS가 될 때까지 기다려주게 해주는 코드
       store.dispatch(END);
