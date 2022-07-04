@@ -68,8 +68,8 @@ const Explore: NextPage = () => {
     <>
       <HeadInfo
         title="blegram - 상세 게시글"
-        description={`${posts?.[0].User.name}님의 게시글\n( 좋아요: ${posts?.[0].PostLikers.length}, 댓글: ${posts?.[0].Comments.length})\n\n${posts?.[0].content}`}
-        photo={posts?.[0].Photos?.[0].name}
+        description={`${posts[0].User.name}님의 게시글\n( 좋아요: ${posts[0].PostLikers.length}, 댓글: ${posts[0].Comments.length})\n\n${posts[0].content}`}
+        photo={posts[0].Photos[0].name}
       />
 
       {/* 게시글들 ( 현재 기준은 페이지의 게시글 이후에 업로드된 게시글을 최신순으로 보여줌 ) */}

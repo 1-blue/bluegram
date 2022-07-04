@@ -111,6 +111,7 @@ router.post("/comment/:CommentId", isLoggedIn, async (req, res, next) => {
     await targetComment.addCommentLikers(UserId);
 
     const [commentLikerWithData] = await targetComment.getCommentLikers({
+      where: { _id: UserId },
       attributes: ["_id", "name"],
       include: [
         {

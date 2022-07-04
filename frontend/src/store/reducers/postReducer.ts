@@ -309,7 +309,7 @@ const postSlice = createSlice({
     uploadPostSuccess(state, action: PayloadAction<UploadPostResponse>) {
       state.uploadPostLoading = false;
       state.uploadPostDone = action.payload.data.message;
-      state.posts?.unshift(action.payload.data.createdPost);
+      state.posts.unshift(action.payload.data.createdPost);
     },
     uploadPostFailure(state, action: PayloadAction<ResponseFailure>) {
       state.uploadPostLoading = false;
@@ -324,7 +324,7 @@ const postSlice = createSlice({
     removePostSuccess(state, action: PayloadAction<RemovePostResponse>) {
       state.removePostLoading = false;
       state.removePostDone = action.payload.data.message;
-      state.detailPosts?.filter(
+      state.detailPosts = state.detailPosts.filter(
         (post) => post._id !== action.payload.data.removedPostId
       );
     },
@@ -473,33 +473,27 @@ const postSlice = createSlice({
       state.appendCommentLoading = false;
       state.appendCommentDone = action.payload.data.message;
 
-      let targetIndex = state.detailPosts.findIndex(
+      let targetPost = state.detailPosts.find(
         (post) => post._id === action.payload.data.createdComment.PostId
       );
-      if (targetIndex === -1) return;
+      if (!targetPost)
+        return console.warn("appendCommentSuccess >> 게시글 없음");
 
       // 답글 추가
       if (action.payload.data.RecommentId) {
-        const targetCommentIndex = state.detailPosts[
-          targetIndex
-        ].Comments.findIndex(
+        const targetComment = targetPost.Comments.find(
           (comment) => comment._id === action.payload.data.RecommentId
         );
-        if (targetCommentIndex === -1) return;
+        if (!targetComment)
+          return console.warn("appendCommentSuccess >> 댓글 없음");
 
-        state.detailPosts[targetIndex].Comments[
-          targetCommentIndex
-        ].Recomments.push(action.payload.data.createdComment);
-        state.detailPosts[targetIndex].Comments[
-          targetCommentIndex
-        ].allCommentCount += 1;
+        targetComment.Recomments.push(action.payload.data.createdComment);
+        targetComment.allCommentCount += 1;
       }
       // 댓글 추가
       else {
-        state.detailPosts[targetIndex].Comments.push(
-          action.payload.data.createdComment
-        );
-        state.detailPosts[targetIndex].allCommentCount += 1;
+        targetPost.Comments.push(action.payload.data.createdComment);
+        targetPost.allCommentCount += 1;
       }
     },
     appendCommentFailure(state, action: PayloadAction<ResponseFailure>) {
@@ -516,35 +510,31 @@ const postSlice = createSlice({
       state.removeCommentLoading = false;
       state.removeCommentDone = action.payload.data.message;
 
-      let targetIndex = state.detailPosts?.findIndex(
-        (post) => post._id === action.payload.data.removedCommentId
+      let targetPost = state.detailPosts?.find(
+        (post) => post._id === action.payload.data.removedPostId
       );
-      if (targetIndex === -1) return;
+      if (!targetPost)
+        return console.warn("removeCommentSuccess >> 게시글 없음");
 
       // 답글 제거
       if (action.payload.data.RecommentId) {
-        const targetCommentIndex = state.detailPosts[
-          targetIndex
-        ].Comments.findIndex(
+        const targetComment = targetPost.Comments.find(
           (comment) => comment._id === action.payload.data.RecommentId
         );
-        if (targetCommentIndex === -1) return;
+        if (!targetComment)
+          return console.warn("removeCommentSuccess >> 댓글 없음");
 
-        state.detailPosts[targetIndex].Comments[
-          targetCommentIndex
-        ].Recomments.filter(
+        targetComment.Recomments = targetComment.Recomments.filter(
           (comment) => comment._id !== action.payload.data.removedCommentId
         );
-        state.detailPosts[targetIndex].Comments[
-          targetCommentIndex
-        ].allCommentCount -= 1;
+        targetComment.allCommentCount -= 1;
       }
       // 댓글 제거
       else {
-        state.detailPosts[targetIndex].Comments.filter(
+        targetPost.Comments = targetPost.Comments.filter(
           (comment) => comment._id !== action.payload.data.removedCommentId
         );
-        state.detailPosts[targetIndex].allCommentCount -= 1;
+        targetPost.allCommentCount -= 1;
       }
     },
     removeCommentFailure(state, action: PayloadAction<ResponseFailure>) {
@@ -561,18 +551,19 @@ const postSlice = createSlice({
       state.loadCommentsLoading = false;
       state.loadCommentsDone = action.payload.data.message;
 
-      const targetIndex = state.detailPosts.findIndex(
+      const targetPost = state.detailPosts.find(
         (post) => post._id === action.payload.data.PostId
       );
-      if (targetIndex === -1) return;
+      if (!targetPost)
+        return console.warn("loadCommentsSuccess >> 게시글 없음");
 
-      state.detailPosts[targetIndex].hasMoreComments =
+      targetPost.hasMoreComments =
         action.payload.data.Comments.length === action.payload.data.limit;
 
       // 이미 댓글을 불러왔다면
-      if (state.detailPosts[targetIndex].Comments[0].content) {
-        state.detailPosts[targetIndex].Comments.splice(
-          state.detailPosts[targetIndex].Comments.length,
+      if (targetPost.Comments[0].content) {
+        targetPost.Comments.splice(
+          targetPost.Comments.length,
           0,
           ...action.payload.data.Comments.map((comment) => ({
             ...comment,
@@ -583,12 +574,11 @@ const postSlice = createSlice({
       }
       // 처음 댓글을 불러온다면
       else {
-        state.detailPosts[targetIndex].Comments =
-          action.payload.data.Comments.map((comment) => ({
-            ...comment,
-            allCommentCount: comment.Recomments.length,
-            hasMoreComments: true,
-          }));
+        targetPost.Comments = action.payload.data.Comments.map((comment) => ({
+          ...comment,
+          allCommentCount: comment.Recomments.length,
+          hasMoreComments: true,
+        }));
       }
     },
     loadCommentsFailure(state, action: PayloadAction<ResponseFailure>) {
@@ -608,18 +598,31 @@ const postSlice = createSlice({
       state.loadRecommentsLoading = false;
       state.loadRecommentsDone = action.payload.data.message;
 
-      state.detailPosts[action.payload.data.targetPostId].Comments[
-        action.payload.data.targetCommentId
-      ].Recomments.splice(
-        state.detailPosts[action.payload.data.targetPostId].Comments[
-          action.payload.data.targetCommentId
-        ].Recomments.length,
-        0,
-        ...action.payload.data.Recomments
+      const targetPost = state.detailPosts.find(
+        (post) => post._id === action.payload.data.targetPostId
       );
-      state.detailPosts[action.payload.data.targetPostId].Comments[
-        action.payload.data.targetCommentId
-      ].hasMoreComments =
+      if (!targetPost)
+        return console.warn("loadRecommentsSuccess >> 게시글 없음");
+      const targetComment = targetPost.Comments.find(
+        (comment) => comment._id === action.payload.data.targetCommentId
+      );
+      if (!targetComment)
+        return console.warn("loadRecommentsSuccess >> 댓글 없음");
+
+      // 기존에 답글 불러온 경우
+      if (targetComment.Recomments[0].content) {
+        targetComment.Recomments.splice(
+          targetComment.Recomments.length,
+          0,
+          ...action.payload.data.Recomments
+        );
+      }
+      // 처음 답글 불러오는 경우
+      else {
+        targetComment.Recomments = action.payload.data.Recomments;
+      }
+
+      targetComment.hasMoreComments =
         action.payload.data.Recomments.length === action.payload.data.limit;
     },
     loadRecommentsFailure(state, action: PayloadAction<ResponseFailure>) {
@@ -642,17 +645,14 @@ const postSlice = createSlice({
       state.appendLikeToPostLoading = false;
       state.appendLikeToPostDone = action.payload.data.message;
 
-      const targetIndex = state.detailPosts.findIndex(
-        (post) => post._id === action.payload.data.likedPostId
-      );
-
-      if (targetIndex === -1) return;
-
-      state.detailPosts[targetIndex].PostLikers.push({
-        _id: action.payload.data.UserId,
-        name: "",
-        Photos: [],
-      });
+      // 게시글에 좋아요 추가
+      state.detailPosts
+        .find((post) => post._id === action.payload.data.likedPostId)
+        ?.PostLikers.push({
+          _id: action.payload.data.UserId,
+          name: "",
+          Photos: [],
+        });
     },
     appendLikeToPostFailure(state, action: PayloadAction<ResponseFailure>) {
       state.appendLikeToPostLoading = false;
@@ -674,14 +674,15 @@ const postSlice = createSlice({
       state.removeLikeToPostLoading = false;
       state.removeLikeToPostDone = action.payload.data.message;
 
-      const targetIndex = state.detailPosts?.findIndex(
+      const targetPostIndex = state.detailPosts.findIndex(
         (post) => post._id === action.payload.data.unlikedPostId
       );
 
-      if (targetIndex === -1) return;
+      if (targetPostIndex === -1)
+        return console.warn("removeLikeToPostSuccess >> 게시글 없음");
 
-      state.detailPosts[targetIndex].PostLikers = state.detailPosts[
-        targetIndex
+      state.detailPosts[targetPostIndex].PostLikers = state.detailPosts[
+        targetPostIndex
       ].PostLikers.filter((liker) => liker._id !== action.payload.data.UserId);
     },
     removeLikeToPostFailure(state, action: PayloadAction<ResponseFailure>) {
@@ -704,33 +705,32 @@ const postSlice = createSlice({
       state.appendLikeToCommentLoading = false;
       state.appendLikeToCommentDone = action.payload.data.message;
 
-      const targetIndex = state.detailPosts?.findIndex(
+      const targetPost = state.detailPosts.find(
         (post) => post._id === action.payload.data.PostId
       );
-      if (targetIndex === -1) return;
+      if (!targetPost)
+        return console.warn("appendLikeToCommentSuccess >> 게시글 없음");
 
-      // 답글에 좋아요 추가
+      let targetComment = null;
+
+      // 답글 찾기
       if (action.payload.data.RecommentId) {
-        const targetRecommentIndex = state.detailPosts[targetIndex].Comments[
-          action.payload.data.RecommentId
-        ].Recomments.findIndex(
+        targetComment = targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.RecommentId
+        )?.Recomments.find(
+          (recomment) => recomment._id === action.payload.data.CommentId
+        );
+      }
+      // 댓글 찾기
+      else {
+        targetComment = targetPost.Comments.find(
           (comment) => comment._id === action.payload.data.CommentId
         );
-
-        if (targetRecommentIndex === -1) return;
-
-        state.detailPosts[targetIndex].Comments[
-          action.payload.data.RecommentId
-        ].Recomments[targetRecommentIndex].CommentLikers.push(
-          action.payload.data.commentLiker
-        );
       }
-      // 댓글에 좋아요 추가
-      else {
-        state.detailPosts[targetIndex].Comments[
-          action.payload.data.CommentId
-        ].CommentLikers.push(action.payload.data.commentLiker);
-      }
+      // 좋아요 추가
+      if (!targetComment)
+        return console.warn("appendLikeToCommentSuccess >> 댓글 없음");
+      targetComment.CommentLikers.push(action.payload.data.commentLiker);
     },
     appendLikeToCommentFailure(state, action: PayloadAction<ResponseFailure>) {
       state.appendLikeToCommentLoading = false;
@@ -752,33 +752,43 @@ const postSlice = createSlice({
       state.removeLikeToCommentLoading = false;
       state.removeLikeToCommentDone = action.payload.data.message;
 
-      const targetIndex = state.detailPosts?.findIndex(
+      const targetPost = state.detailPosts.find(
         (post) => post._id === action.payload.data.PostId
       );
-      if (targetIndex === -1) return;
+      if (!targetPost) return;
 
       // 답글에 좋아요 제거
       if (action.payload.data.RecommentId) {
-        const targetRecommentIndex = state.detailPosts[targetIndex].Comments[
-          action.payload.data.RecommentId
-        ].Recomments.findIndex(
-          (comment) => comment._id === action.payload.data.CommentId
+        const targetRecommentIndex = targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.RecommentId
+        )?.Recomments.findIndex(
+          (recomment) => recomment._id === action.payload.data.CommentId
         );
-        if (targetRecommentIndex === -1) return;
 
-        state.detailPosts[targetIndex].Comments[
-          action.payload.data.RecommentId
-        ].Recomments[targetRecommentIndex].CommentLikers.filter(
-          (liker) => liker._id !== action.payload.data.UserId
-        );
+        if (targetRecommentIndex === -1 || targetRecommentIndex === undefined)
+          return console.warn("removeLikeToCommentSuccess >> 답글 좋아요 추가");
+
+        targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.RecommentId
+        )
+          ?.Recomments.find(
+            (recomment) => recomment._id === action.payload.data.CommentId
+          )
+          ?.CommentLikers.splice(targetRecommentIndex, 1);
       }
       // 댓글에 좋아요 제거
       else {
-        state.detailPosts[targetIndex].Comments[
-          action.payload.data.CommentId
-        ].CommentLikers.filter(
-          (liker) => liker._id !== action.payload.data.UserId
+        const targetCommentIndex = targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.CommentId
+        )?.CommentLikers.findIndex(
+          (liker) => liker._id === action.payload.data.UserId
         );
+        if (targetCommentIndex === -1 || targetCommentIndex === undefined)
+          return console.warn("removeLikeToCommentSuccess >> 댓글 좋아요 제거");
+
+        targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.CommentId
+        )?.CommentLikers.splice(targetCommentIndex, 1);
       }
     },
     removeLikeToCommentFailure(state, action: PayloadAction<ResponseFailure>) {
@@ -798,12 +808,14 @@ const postSlice = createSlice({
       state.appendBookmarkLoading = false;
       state.appendBookmarkDone = action.payload.data.message;
 
-      state.detailPosts[action.payload.data.PostId].PostBookmarks.push({
-        _id: action.payload.data.UserId,
-        name: "",
-        Photos: [],
-        introduction: "",
-      });
+      state.detailPosts
+        .find((post) => post._id === action.payload.data.PostId)
+        ?.PostBookmarks.push({
+          _id: action.payload.data.UserId,
+          name: "",
+          Photos: [],
+          introduction: "",
+        });
     },
     appendBookmarkFailure(state, action: PayloadAction<ResponseFailure>) {
       state.appendBookmarkLoading = false;
@@ -822,7 +834,13 @@ const postSlice = createSlice({
       state.removeBookmarkLoading = false;
       state.removeBookmarkDone = action.payload.data.message;
 
-      state.detailPosts[action.payload.data.PostId].PostBookmarks.filter(
+      const targetPost = state.detailPosts.find(
+        (post) => post._id === action.payload.data.PostId
+      );
+      if (!targetPost)
+        return console.warn("removeBookmarkSuccess >> 게시글 없음");
+
+      targetPost.PostBookmarks = targetPost.PostBookmarks.filter(
         (post) => post._id !== action.payload.data.UserId
       );
     },
@@ -848,7 +866,7 @@ const postSlice = createSlice({
 
       state.detailPosts = [
         ...state.detailPosts,
-        ...action.payload.data.posts.map((post: any) => ({
+        ...action.payload.data.posts.map((post) => ({
           ...post,
           hasMoreComments: true,
           allCommentCount: post.Comments.length,

@@ -63,7 +63,7 @@ const HashtagPage: NextPage = () => {
       <HeadInfo
         title={`blegram - #${query.hashtag}`}
         description={`해시태그를 가진 게시글 검색 페이지 ( #${query.hashtag} )`}
-        photo={posts?.[0].Photos?.[0].name}
+        photo={posts.length === 0 ? null : posts[0].Photos[0].name}
       />
 
       {/* 해시태그 검색결과 총 개수 */}

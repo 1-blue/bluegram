@@ -94,7 +94,7 @@ const Wrapper = styled.article`
 
 const Profile: NextPage = () => {
   const dispatch = useDispatch();
-  const { push, query } = useRouter();
+  const { push } = useRouter();
   const { user, me, followLoading, unfollowLoading } = useSelector(
     ({ user }: RootState) => user
   );
@@ -201,11 +201,13 @@ const Profile: NextPage = () => {
 
   return (
     <>
-      <HeadInfo
-        title={`blegram - ${user?.name}님의 프로필`}
-        description={`${user?.name}님의 프로필\n( 게시글: ${user?.Posts.length}, 팔로워: ${user?.Followers.length}, 팔로잉: ${user?.Followings.length})\n\n${user?.introduction}`}
-        photo={user?.Photos?.[0].name}
-      />
+      {user && (
+        <HeadInfo
+          title={`blegram - ${user.name}님의 프로필`}
+          description={`${user.name}님의 프로필\n( 게시글: ${user.Posts.length}, 팔로워: ${user.Followers.length}, 팔로잉: ${user.Followings.length})\n\n${user.introduction}`}
+          photo={user.Photos?.[0].name}
+        />
+      )}
 
       <Wrapper>
         <ProfileHead
@@ -272,10 +274,13 @@ export const getServerSideProps: GetServerSideProps =
           );
           break;
         case "bookmark":
-          store.dispatch(postActions.loadPostsOfBookmarkRequest());
-          // PostId: id,
-          // lastId: -1,
-          // limit: 8,
+          store.dispatch(
+            postActions.loadPostsOfBookmarkRequest({
+              lastId: -1,
+              limit: 8,
+            })
+          );
+
           break;
 
         default:

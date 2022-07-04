@@ -332,12 +332,17 @@ const userSlice = createSlice({
       state.followDone = action.payload.data.message;
 
       if (!state.me) return;
+      // 나의 팔로잉 리스트에 해당 유저 추가
       state.me.Followings.push({ _id: action.payload.data.followingId });
 
+      // 특정 유저의 페이지에 있다면
       if (!state.user) return;
+      // 특정 유저가 본인이라면
       if (state.me._id === state.user._id) {
         state.user.Followings.push({ _id: action.payload.data.followingId });
-      } else {
+      }
+      // 특정 유저가 본인이 아니라면
+      else {
         state.user.Followers.push({ _id: action.payload.data.followerId });
       }
     },
@@ -356,17 +361,22 @@ const userSlice = createSlice({
       state.unfollowDone = action.payload.data.message;
 
       if (!state.me) return;
-      state.me.Followings.filter(
+      // 나의 팔로잉 리스트에 해당 유저 제거
+      state.me.Followings = state.me.Followings.filter(
         (following) => following._id !== action.payload.data.unfollowingId
       );
 
+      // 특정 유저의 페이지에 있다면
       if (!state.user) return;
+      // 특정 유저가 본인이라면
       if (state.me._id === state.user._id) {
-        state.user.Followings.filter(
+        state.user.Followings = state.user.Followings.filter(
           (following) => following._id !== action.payload.data.unfollowingId
         );
-      } else {
-        state.user.Followers.filter(
+      }
+      // 특정 유저가 본인이 아니라면
+      else {
+        state.user.Followers = state.user.Followers.filter(
           (follower) => follower._id !== action.payload.data.unfollowerId
         );
       }
