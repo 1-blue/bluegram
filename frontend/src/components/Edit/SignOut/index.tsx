@@ -2,16 +2,18 @@ import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
-// redux
-import { signOutRequest } from "@src/store/actions/userAction";
-import type { UserState } from "@src/store/reducers";
+// common-component
+import Button from "@src/components/common/Button";
+import Input from "@src/components/common/Input";
 
 // style
 import { Wrapper } from "../AccountEdit/style";
 
-// common-component
-import Button from "@src/components/common/Button";
-import Input from "@src/components/common/Input";
+// action
+import { userActions } from "@src/store/reducers";
+
+// type
+import type { RootState } from "@src/store/configureStore";
 
 type SignOutForm = {
   password: string;
@@ -19,9 +21,7 @@ type SignOutForm = {
 
 const SignOut = () => {
   const dispatch = useDispatch();
-  const { signOutLoading } = useSelector(
-    ({ user }: { user: UserState }) => user
-  );
+  const { signOutLoading } = useSelector(({ user }: RootState) => user);
 
   // 2022/06/02 - 비밀번호 변경 관련 메서드들 - by 1-blue
   const {
@@ -34,7 +34,7 @@ const SignOut = () => {
   const editPassword = useCallback(
     ({ password }: SignOutForm) => {
       dispatch(
-        signOutRequest({
+        userActions.signOutRequest({
           password,
         })
       );

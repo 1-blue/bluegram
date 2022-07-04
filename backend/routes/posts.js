@@ -1,5 +1,5 @@
 import express from "express";
-import { Op } from "sequelize";
+import { Op, Sequelize } from "sequelize";
 
 import db from "../models/index.js";
 
@@ -7,7 +7,7 @@ const { Photo, Post, Comment, User, Hashtag } = db;
 
 const router = express.Router();
 
-// 2021/12/22 - 게시글들 불러오기 - by 1-blue
+// 2022/07/03 - 게시글들 정보 불러오기 - by 1-blue
 router.get("/", async (req, res, next) => {
   const lastId = +req.query.lastId || -1;
   const limit = +req.query.limit || 15;
@@ -53,14 +53,14 @@ router.get("/", async (req, res, next) => {
         ? `최신 게시글 ${posts.length}개를 불러왔습니다.`
         : `추가로 게시글 ${posts.length}개를 불러왔습니다.`;
 
-    res.json({ message, posts, limit });
+    res.json({ status: { status: { ok: true } }, data: { message, posts, limit } });
   } catch (error) {
     console.error("GET /post error >> ", error);
     return next(error);
   }
 });
 
-// 2022/01/15 - 게시글들 상세 내용 불러오기 - by 1-blue
+// 2022/07/03 - 게시글들 상세 정보 불러오기 - by 1-blue
 router.get("/detail", async (req, res, next) => {
   const lastId = +req.query.lastId || -1;
   const limit = +req.query.limit || 15;
@@ -131,14 +131,14 @@ router.get("/detail", async (req, res, next) => {
         ? `최신 게시글 ${posts.length}개를 불러왔습니다.`
         : `추가로 게시글 ${posts.length}개를 불러왔습니다.`;
 
-    res.json({ ok: true, message, posts, limit });
+    res.json({ status: { ok: true }, data: { message, posts, limit } });
   } catch (error) {
     console.error("GET /post/detail error >> ", error);
     return next(error);
   }
 });
 
-// 2022/05/26 - 특정 유저의 게시글들 불러오기 - by 1-blue
+// 2022/07/03 - 특정 유저의 게시글들 정보 불러오기 - by 1-blue
 router.get("/user/:UserId", async (req, res, next) => {
   const UserId = +req.params.UserId;
   const lastId = +req.query.lastId || -1;
@@ -196,14 +196,14 @@ router.get("/user/:UserId", async (req, res, next) => {
         ? `${user.name}님의 게시글 ${posts.length}개를 불러왔습니다.`
         : `${user.name}님의 게시글을 추가로 ${posts.length}개를 불러왔습니다.`;
 
-    res.json({ message, posts, limit });
+    res.json({ status: { ok: true }, data: { message, posts, limit } });
   } catch (error) {
     console.error("GET /post/user/:UserId error >> ", error);
     return next(error);
   }
 });
 
-// 2022/01/21 - 특정 유저의 게시글들 상세 내용 불러오기 - by 1-blue
+// 2022/07/03 - 특정 유저의 게시글들 상세 정보 불러오기 - by 1-blue
 router.get("/user/detail/:UserId", async (req, res, next) => {
   const UserId = +req.params.UserId;
   const lastId = +req.query.lastId || -1;
@@ -274,14 +274,14 @@ router.get("/user/detail/:UserId", async (req, res, next) => {
         ? `${user.name}님의 게시글 ${posts.length}개를 불러왔습니다.`
         : `${user.name}님의 게시글을 추가로 ${posts.length}개를 불러왔습니다.`;
 
-    res.json({ ok: true, message, posts, limit });
+    res.json({ status: { ok: true }, data: { message, posts, limit } });
   } catch (error) {
     console.error("GET /post/user/detail/:UserId error >> ", error);
     return next(error);
   }
 });
 
-// 2022/01/20 - 해시태그의 게시글들 불러오기 - by 1-blue
+// 2022/07/03 - 해시태그의 게시글들 불러오기 - by 1-blue
 router.get("/hashtag/:hashtagText", async (req, res, next) => {
   const hashtagText = decodeURI(req.params.hashtagText);
   const lastId = +req.query.lastId || -1;
@@ -299,7 +299,7 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
 
     if (!hashtag)
       return res.status(200).json({
-        ok: true,
+        status: { ok: true },
         message: "해시태그가 존재하지 않습니다.",
         limit,
         posts: [],
@@ -368,15 +368,16 @@ router.get("/hashtag/:hashtagText", async (req, res, next) => {
         : `#${hashtagText}인 게시글을 추가로 ${postsOfHashtag.length}개를 불러왔습니다.`;
 
     res.status(200).json({
-      ok: true,
-      message,
-      limit,
-      posts: postsOfHashtag,
-      postCount: postsOfHashtagCount,
-      hashtag: hashtagText,
+      status: { ok: true },
+      data: {
+        message,
+        limit,
+        postCount: postsOfHashtagCount,
+        posts: postsOfHashtag,
+      },
     });
   } catch (error) {
-    console.error("GET /post/hashtag/:hashtag error >> ", error);
+    console.error("GET /post/hashtag/:hashtagText error >> ", error);
     return next(error);
   }
 });

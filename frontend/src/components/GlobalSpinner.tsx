@@ -1,17 +1,15 @@
-import {
-  AuthState,
-  ChatState,
-  PostState,
-  UserState,
-} from "@src/store/reducers";
 import { useSelector } from "react-redux";
 
+// common-component
 import Spinner from "@src/components/common/Spinner";
+
+// action
+import { RootState } from "@src/store/configureStore";
 
 // 특정 이벤트 처리중 페이지 스피너 렌더링 컴포넌트
 const GlobalSpinner = () => {
   // 2022/05/22 - 인증관련 각종 이벤트 처리 완료/실패 메시지 - by 1-blue
-  const {} = useSelector(({ auth }: { auth: AuthState }) => auth);
+  const {} = useSelector(({ auth }: RootState) => auth);
 
   // 2022/05/22 - 유저관련 각종 이벤트 처리 완료/실패 메시지 - by 1-blue
   const {
@@ -20,7 +18,7 @@ const GlobalSpinner = () => {
     signOutLoading,
     loadFollowersLoading,
     loadFollowingsLoading,
-  } = useSelector(({ user }: { user: UserState }) => user);
+  } = useSelector(({ user }: RootState) => user);
 
   // 2022/05/22 - 게시글관련 각종 이벤트 처리 완료/실패 메시지 - by 1-blue
   const {
@@ -31,12 +29,10 @@ const GlobalSpinner = () => {
     loadPostsOfUserLoading,
     loadDetailPostsLoading,
     loadPostsOfHashtagLoading,
-  } = useSelector(({ post }: { post: PostState }) => post);
+  } = useSelector(({ post }: RootState) => post);
 
   //
-  const { addRoomLoading } = useSelector(
-    ({ chat }: { chat: ChatState }) => chat
-  );
+  const { addRoomLoading } = useSelector(({ chat }: RootState) => chat);
 
   return (
     <>
@@ -54,7 +50,7 @@ const GlobalSpinner = () => {
 
       {/* 댓글 더 불러오기 */}
       {loadCommentsLoading && <Spinner kinds="page" />}
-      
+
       {/* 특정 댓글의 답글 더 불러오기 */}
       {loadRecommentsLoading && <Spinner kinds="page" />}
 

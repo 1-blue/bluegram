@@ -8,8 +8,9 @@ import Photo from "@src/components/common/Photo";
 import Spinner from "@src/components/common/Spinner";
 
 // type
-import type { ResponseOfPhoto, SignUpForm } from "@src/pages/signup";
 import { ICON } from "@src/type";
+import type { SignUpForm } from "@src/pages/signup";
+import type { ResponseOfPhoto } from "@src/store/types";
 
 // style
 import { Wrapper } from "./style";
@@ -41,7 +42,9 @@ const PhotoInput = ({
       try {
         const formData = new FormData();
         formData.append("photos", e.dataTransfer.files[0]);
-        const { photos }: ResponseOfPhoto = await fetch(
+        const {
+          data: { photos },
+        }: ResponseOfPhoto = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/photo`,
           {
             method: "POST",
@@ -69,7 +72,9 @@ const PhotoInput = ({
       try {
         const formData = new FormData();
         formData.append("photos", e.target.files[0]);
-        const { photos }: ResponseOfPhoto = await fetch(
+        const {
+          data: { photos },
+        }: ResponseOfPhoto = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/photo`,
           {
             method: "POST",

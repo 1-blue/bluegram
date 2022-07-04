@@ -9,16 +9,6 @@ import { toast } from "react-toastify";
 import { END } from "redux-saga";
 import wrapper from "@src/store/configureStore";
 import { axiosInstance } from "@src/store/api";
-import { loadToMeRequest, loadChatsRequest } from "@src/store/actions";
-import { addChatRequest, exitRoomRequest } from "@src/store/actions/chatAction";
-
-// type
-import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-import type {
-  ClientToServerEvents,
-  ServerToClientEvents,
-} from "@src/../../types";
-import type { ChatState, UserState } from "@src/store/reducers";
 
 // common-component
 import Avatar from "@src/components/common/Avatar";
@@ -26,6 +16,21 @@ import HeadInfo from "@src/components/common/HeadInfo";
 
 // util
 import { dateOrTimeFormat } from "@src/libs/dateFormat";
+
+// action
+import { chatActions, userActions } from "@src/store/reducers";
+
+// type
+import type {
+  ClientToServerEvents,
+  ServerToClientEvents,
+} from "@src/../../types";
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
+import type { RootState } from "@src/store/configureStore";
 
 const Chat = styled.li<{ isMine: boolean; length: number }>`
   display: flex;
@@ -115,17 +120,17 @@ const AbsoluteButton = styled.button`
   }
 `;
 
-const Room = () => {
+const Room: NextPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { me } = useSelector(({ user }: RootState) => user);
   const {
     chats,
     roomInformation,
     hasMoreChat,
     loadChatsLoading,
     exitRoomDone,
-  } = useSelector(({ chat }: { chat: ChatState }) => chat);
+  } = useSelector(({ chat }: RootState) => chat);
 
   // 2022/05/28 - 연결한 소켓 - by 1-blue
   const [socket, setSocket] = useState<null | Socket<
@@ -151,7 +156,7 @@ const Room = () => {
 
       mySocket.on("onReceive", ({ user, chat }) => {
         dispatch(
-          addChatRequest({
+          chatActions.addChat({
             _id: Date.now(),
             RoomId: +(router.query.id as string),
             UserId: user?._id,
@@ -190,7 +195,7 @@ const Room = () => {
         chat,
       });
       dispatch(
-        addChatRequest({
+        chatActions.addChat({
           _id: Date.now(),
           RoomId: +(router.query.id as string),
           UserId: me?._id,
@@ -235,7 +240,7 @@ const Room = () => {
     ) {
       if (chats.length === 0) {
         dispatch(
-          loadChatsRequest({
+          chatActions.loadChatsRequest({
             RoomId: router.query.id as string,
             lastId: -1,
             limit: 20,
@@ -243,7 +248,7 @@ const Room = () => {
         );
       } else {
         dispatch(
-          loadChatsRequest({
+          chatActions.loadChatsRequest({
             RoomId: router.query.id as string,
             lastId: chats[0]._id,
             limit: 20,
@@ -269,7 +274,7 @@ const Room = () => {
     if (!confirm("채팅방을 나가면 되돌릴 수 없습니다.\n정말 실행하시겠습니까?"))
       return;
 
-    dispatch(exitRoomRequest({ RoomId: roomInformation?._id! }));
+    dispatch(chatActions.exitRoomRequest({ RoomId: roomInformation?._id! }));
   }, [dispatch, roomInformation]);
   // 2022/06/01 - 채팅방 나가기 성공 시 실행 - by 1-blue
   useEffect(() => {
@@ -384,9 +389,9 @@ export const getServerSideProps: GetServerSideProps =
       cookie = cookie ? cookie : "";
       axiosInstance.defaults.headers.Cookie = cookie;
 
-      store.dispatch(loadToMeRequest());
+      store.dispatch(userActions.loadToMeRequest());
       store.dispatch(
-        loadChatsRequest({
+        chatActions.loadChatsRequest({
           RoomId: context.query.id as string,
           lastId: -1,
           limit: 20,

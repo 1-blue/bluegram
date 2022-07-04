@@ -2,25 +2,26 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 
-// action
-import { editAccountRequest } from "@src/store/actions/userAction";
-
-// type
-import type { UserState } from "@src/store/reducers";
-import type { SignUpForm } from "@src/pages/signup";
-
 // common-component
 import Button from "@src/components/common/Button";
 import Input from "@src/components/common/Input";
 import PhotoInput from "@src/components/common/PhotoInput";
 import Textarea from "@src/components/common/Textarea";
 
+// styled-component
 import { Wrapper } from "./style";
+
+// action
+import { userActions } from "@src/store/reducers";
+
+// type
+import type { RootState } from "@src/store/configureStore";
+import type { SignUpForm } from "@src/pages/signup";
 
 const AccountEdit = () => {
   const dispatch = useDispatch();
   const { detailMe, editAccountLoading } = useSelector(
-    ({ user }: { user: UserState }) => user
+    ({ user }: RootState) => user
   );
   const {
     register,
@@ -45,7 +46,7 @@ const AccountEdit = () => {
 
   // 2022/06/02 - 회원 정보 수정 - by 1-blue
   const editAccount = useCallback(
-    (body: SignUpForm) => dispatch(editAccountRequest({ ...body })),
+    (body: SignUpForm) => dispatch(userActions.editAccountRequest({ ...body })),
     [dispatch]
   );
 

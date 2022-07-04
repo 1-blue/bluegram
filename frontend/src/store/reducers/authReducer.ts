@@ -1,18 +1,14 @@
-import {
-  RESET_MESSAGE,
-  LOCAL_LOGIN_REQUEST,
-  LOCAL_LOGIN_SUCCESS,
-  LOCAL_LOGIN_FAILURE,
-  LOCAL_LOGOUT_REQUEST,
-  LOCAL_LOGOUT_SUCCESS,
-  LOCAL_LOGOUT_FAILURE,
-  SIGNUP_REQUEST,
-  SIGNUP_SUCCESS,
-  SIGNUP_FAILURE,
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import type {
+  LogInBody,
+  LogInResponse,
+  LogOutResponse,
+  ResponseFailure,
+  SignUpBody,
+  SignUpResponse,
 } from "@src/store/types";
-import type { AuthActionRequest } from "../actions";
 
-type StateType = {
+export type AuthStateType = {
   loginLoading: boolean;
   loginDone: null | string;
   loginError: null | string;
@@ -24,7 +20,7 @@ type StateType = {
   signUpError: null | string;
 };
 
-const initState: StateType = {
+const initialState: AuthStateType = {
   // 2022/05/06 - 로그인 관련 변수 - by 1-blue
   loginLoading: false,
   loginDone: null,
@@ -41,88 +37,65 @@ const initState: StateType = {
   signUpError: null,
 };
 
-function authReducer(prevState = initState, action: AuthActionRequest) {
-  switch (action.type) {
-    // 2022/05/13 - 리셋 메시지 - by 1-blue
-    case RESET_MESSAGE:
-      return {
-        ...prevState,
-        loginLoading: false,
-        loginDone: null,
-        loginError: null,
-        logoutLoading: false,
-        logoutDone: null,
-        logoutError: null,
-        signUpLoading: false,
-        signUpDone: null,
-        signUpError: null,
-      };
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    resetMessage(state) {
+      state.loginDone = null;
+      state.loginError = null;
+      state.loginLoading = false;
+      state.logoutLoading = false;
+      state.logoutDone = null;
+      state.logoutError = null;
+      state.signUpLoading = false;
+      state.signUpDone = null;
+      state.signUpError = null;
+    },
+    // 2022/07/02 - 로컬 로그인 - by 1-blue
+    localLogInRequest(state, action: PayloadAction<LogInBody>) {
+      state.loginLoading = true;
+      state.loginDone = null;
+      state.loginError = null;
+    },
+    localLogInSuccess(state, { payload }: PayloadAction<LogInResponse>) {
+      state.loginLoading = false;
+      state.loginDone = payload.data.message;
+    },
+    localLogInFailure(state, { payload }: PayloadAction<ResponseFailure>) {
+      state.loginLoading = false;
+      state.loginError = payload.data.message;
+    },
+    // 2022/07/02 - 로그아웃 - by 1-blue
+    localLogOutRequest(state) {
+      state.logoutLoading = true;
+      state.logoutDone = null;
+      state.logoutError = null;
+    },
+    localLogOutSuccess(state, { payload }: PayloadAction<LogOutResponse>) {
+      state.logoutLoading = false;
+      state.logoutDone = payload.data.message;
+    },
+    localLogOutFailure(state, { payload }: PayloadAction<ResponseFailure>) {
+      state.logoutLoading = false;
+      state.logoutError = payload.data.message;
+    },
+    // 2022/07/02 - 회원가입 - by 1-blue
+    signUpRequest(state, action: PayloadAction<SignUpBody>) {
+      state.signUpLoading = true;
+      state.signUpDone = null;
+      state.signUpError = null;
+    },
+    signUpSuccess(state, { payload }: PayloadAction<SignUpResponse>) {
+      state.signUpLoading = false;
+      state.signUpDone = payload.data.message;
+    },
+    signUpFailure(state, { payload }: PayloadAction<ResponseFailure>) {
+      state.signUpLoading = false;
+      state.signUpError = payload.data.message;
+    },
+  },
+});
 
-    // 2022/05/06 - 로그인 - by 1-blue
-    case LOCAL_LOGIN_REQUEST:
-      return {
-        ...prevState,
-        loginLoading: true,
-        loginDone: null,
-        loginError: null,
-      };
-    case LOCAL_LOGIN_SUCCESS:
-      return {
-        ...prevState,
-        loginLoading: false,
-        loginDone: action.data.message,
-      };
-    case LOCAL_LOGIN_FAILURE:
-      return {
-        ...prevState,
-        loginLoading: false,
-        loginError: action.data.message,
-      };
-
-    // 2022/05/06 - 로그아웃 - by 1-blue
-    case LOCAL_LOGOUT_REQUEST:
-      return {
-        ...prevState,
-        logoutLoading: true,
-        logoutDone: null,
-        logoutError: null,
-      };
-    case LOCAL_LOGOUT_SUCCESS:
-      return {
-        ...prevState,
-        logoutLoading: false,
-        logoutDone: action.data.message,
-      };
-    case LOCAL_LOGOUT_FAILURE:
-      return {
-        ...prevState,
-        logoutLoading: false,
-      };
-
-    // 2022/05/13 - 회원가입 - by 1-blue
-    case SIGNUP_REQUEST:
-      return {
-        ...prevState,
-        signUpLoading: true,
-        signUpDone: null,
-        signUpError: null,
-      };
-    case SIGNUP_SUCCESS:
-      return {
-        ...prevState,
-        signUpLoading: false,
-        signUpDone: action.data.message,
-      };
-    case SIGNUP_FAILURE:
-      return {
-        ...prevState,
-        signUpLoading: false,
-        signUpError: action.data.message,
-      };
-
-    default:
-      return prevState;
-  }
-}
-
-export default authReducer;
+export const authActions = authSlice.actions;
+export default authSlice.reducer;

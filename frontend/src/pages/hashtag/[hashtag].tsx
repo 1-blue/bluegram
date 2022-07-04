@@ -7,27 +7,31 @@ import wrapper from "@src/store/configureStore";
 import { END } from "redux-saga";
 import { axiosInstance } from "@src/store/api";
 
-// actions
-import { loadToMeRequest, loadPostsOfHashtagRequest } from "@src/store/actions";
-
 // common-components
 import HeadInfo from "@src/components/common/HeadInfo";
 
 // components
 import PostCard from "@src/components/Post/PostCard";
 
-// type
-import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-import type { PostState } from "@src/store/reducers";
+// action
+import { postActions, userActions } from "@src/store/reducers";
 
-const HashtagPage = () => {
+// type
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
+import type { RootState } from "@src/store/configureStore";
+
+const HashtagPage: NextPage = () => {
   const dispatch = useDispatch();
   const { query } = useRouter();
   const {
     detailPosts: posts,
     hashtagData: { hasMoreHashtagPosts, postsOfHashtagCount },
     loadPostsOfHashtagLoading,
-  } = useSelector(({ post }: { post: PostState }) => post);
+  } = useSelector(({ post }: RootState) => post);
 
   // 2022/05/25 - 인피니티 스크롤링 함수 - by 1-blue
   const infiniteScrollEvent = useCallback(() => {
@@ -38,7 +42,7 @@ const HashtagPage = () => {
       !loadPostsOfHashtagLoading
     ) {
       dispatch(
-        loadPostsOfHashtagRequest({
+        postActions.loadPostsOfHashtagRequest({
           hashtag: encodeURI((query.hashtag || "blegram") as string),
           lastId: !posts ? -1 : posts[posts.length - 1]._id,
           limit: 8,
@@ -59,7 +63,7 @@ const HashtagPage = () => {
       <HeadInfo
         title={`blegram - #${query.hashtag}`}
         description={`해시태그를 가진 게시글 검색 페이지 ( #${query.hashtag} )`}
-        photo={posts?.[0].Photos?.[0].name}
+        photo={posts.length === 0 ? null : posts[0].Photos[0].name}
       />
 
       {/* 해시태그 검색결과 총 개수 */}
@@ -108,9 +112,9 @@ export const getServerSideProps: GetServerSideProps =
         cookie = cookie ? cookie : "";
         axiosInstance.defaults.headers.Cookie = cookie;
 
-        store.dispatch(loadToMeRequest());
+        store.dispatch(userActions.loadToMeRequest());
         store.dispatch(
-          loadPostsOfHashtagRequest({
+          postActions.loadPostsOfHashtagRequest({
             hashtag: encodeURI(hashtag),
             lastId: -1,
             limit: 8,

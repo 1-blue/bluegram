@@ -7,7 +7,7 @@ const { Photo, Post, Comment, User, Hashtag } = db;
 
 const router = express.Router();
 
-// 2021/12/22 - 게시글 생성하기 - by 1-blue
+// 2022/07/03 - 게시글 생성하기 - by 1-blue
 router.post("/", isLoggedIn, async (req, res, next) => {
   const { content, photos } = req.body;
 
@@ -113,72 +113,17 @@ router.post("/", isLoggedIn, async (req, res, next) => {
       ],
     });
 
-    return res
-      .status(201)
-      .json({ ok: true, message: "게시글을 성공적으로 생성했습니다.", createdPost: createdPostWithData });
+    return res.status(201).json({
+      status: { ok: true },
+      data: { message: "게시글을 성공적으로 생성했습니다.", createdPost: createdPostWithData },
+    });
   } catch (error) {
     console.error("POST /post error >> ", error);
     return next(error);
   }
 });
 
-// 2021/12/22 - 특정 게시글 불러오기 - by 1-blue
-router.get("/:PostId", isLoggedIn, async (req, res, next) => {
-  const PostId = +req.params.PostId;
-
-  try {
-    const post = await Post.findOne({
-      where: {
-        _id: PostId,
-      },
-      attributes: ["_id", "content", "createdAt"],
-      include: [
-        // 게시글 작성자
-        {
-          model: User,
-          attributes: ["_id", "name"],
-          include: [
-            // 게시글 작성자의 프로필 이미지
-            {
-              model: Image,
-              attributes: ["_id", "name", "url"],
-            },
-          ],
-        },
-        // 게시글의 이미지들
-        {
-          model: Image,
-          attributes: ["_id", "name"],
-        },
-        // 게시글의 댓글들
-        {
-          model: Comment,
-          attributes: ["_id"],
-        },
-        // 게시글의 좋아요
-        {
-          model: User,
-          as: "PostLikers",
-          attributes: ["_id"],
-          through: {
-            attributes: ["createdAt"],
-          },
-        },
-      ],
-      order: [["createdAt", "DESC"]],
-    });
-
-    if (!post)
-      return res.status(404).json({ od: false, message: "존재하지 않은 게시글입니다.\n잠시후에 다시 시도해주세요" });
-
-    res.json({ ok: true, message: "특정 게시글을 불러왔습니다.", post });
-  } catch (error) {
-    console.error("GET /post error >> ", error);
-    return next(error);
-  }
-});
-
-// 2022/01/18 - 특정 게시글 삭제하기 - by 1-blue
+// 2022/07/03 - 특정 게시글 삭제하기 - by 1-blue
 router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
   const PostId = +req.params.PostId;
 
@@ -186,11 +131,15 @@ router.delete("/:PostId", isLoggedIn, async (req, res, next) => {
     const targetPost = await Post.findByPk(PostId, { include: { model: Photo, attributes: ["name"] } });
 
     if (!targetPost)
-      return res.status(404).json({ ok: false, message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" });
+      return res
+        .status(404)
+        .json({ status: { ok: false }, data: { message: "존재하지 않은 게시글입니다\n잠시후에 다시 시도해주세요" } });
 
     await targetPost.destroy();
 
-    res.status(200).json({ ok: true, message: "게시글을 성공적으로 삭제했습니다.", removedPostId: PostId });
+    res
+      .status(200)
+      .json({ status: { ok: true }, data: { message: "게시글을 성공적으로 삭제했습니다.", removedPostId: PostId } });
   } catch (error) {
     console.error("DELETE /post/:PostId error >> ", error);
     return next(error);

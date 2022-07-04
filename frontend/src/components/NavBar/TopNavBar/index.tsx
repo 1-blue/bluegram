@@ -12,16 +12,16 @@ import Left from "./Left";
 import Center from "./Center";
 import Right from "./Right";
 
-// action
-import { localLogoutRequest, openWriteModalRequest } from "@src/store/actions";
-
 // hook
 import useToastMessage from "@src/hooks/useToastMessage";
 import useScrollUpDown from "@src/hooks/useScrollUpDown";
 
+// action
+import { authActions, postActions } from "@src/store/reducers";
+
 // type
 import { ICON } from "@src/type";
-import type { AuthState, UserState } from "@src/store/reducers";
+import type { RootState } from "@src/store/configureStore";
 
 const Wrapper = styled.nav<{ hide: boolean }>`
   position: sticky;
@@ -41,15 +41,15 @@ const Wrapper = styled.nav<{ hide: boolean }>`
 const TopNavigationBar = () => {
   const dispatch = useDispatch();
   const { logoutDone, logoutError } = useSelector(
-    ({ auth }: { auth: AuthState }) => auth
+    ({ auth }: RootState) => auth
   );
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { me } = useSelector(({ user }: RootState) => user);
   const profileRef = useRef<HTMLAnchorElement | null>(null);
   const bookmarkRef = useRef<HTMLAnchorElement | null>(null);
 
   // 2022/05/18 - 로그아웃 요청 - by 1-blue
   const onClickLogout = useCallback(
-    () => dispatch(localLogoutRequest()),
+    () => dispatch(authActions.localLogOutRequest()),
     [dispatch]
   );
   // 2022/05/18 - 로그아웃 성공/실패 메시지 및 페이지 이동 - by 1-blue
@@ -67,7 +67,7 @@ const TopNavigationBar = () => {
   const onClickWritePostModal = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
       e.stopPropagation();
-      dispatch(openWriteModalRequest());
+      dispatch(postActions.openWritePostModal());
     },
     [dispatch]
   );

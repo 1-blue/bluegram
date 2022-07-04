@@ -9,8 +9,8 @@ import { Wrapper } from "./style";
 import Avatar from "@src/components/common/Avatar";
 import Button from "@src/components/common/Button";
 
-// type
-import type { PostState, UserState } from "@src/store/reducers";
+// action
+import { RootState } from "@src/store/configureStore";
 
 type Props = {
   text: string;
@@ -26,10 +26,8 @@ const PostCardCommentForm = forwardRef<HTMLTextAreaElement, Props>(
     { text, onChangeText, textareaResize, onSubmitComment, setIsFocus },
     textareaRef
   ) => {
-    const { me } = useSelector(({ user }: { user: UserState }) => user);
-    const { appendCommentLoading } = useSelector(
-      ({ post }: { post: PostState }) => post
-    );
+    const { me } = useSelector(({ user }: RootState) => user);
+    const { appendCommentLoading } = useSelector(({ post }: RootState) => post);
 
     return (
       <>

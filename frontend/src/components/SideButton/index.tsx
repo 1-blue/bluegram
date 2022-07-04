@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
 
 // hook
 import useScrollUpDown from "@src/hooks/useScrollUpDown";
 
-// type
-import { ICON } from "@src/type";
-
 // common-component
 import Icon from "@src/components/common/Icon";
+import Modal from "@src/components/common/Modal";
 
 // style
 import { ScrollUpButton, SearchButton, SearchForm, Wrapper } from "./style";
-import Modal from "../common/Modal";
-import { useRouter } from "next/router";
-import { useForm } from "react-hook-form";
+
+// type
+import { ICON } from "@src/type";
 
 type Props = {
   width: number;

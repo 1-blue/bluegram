@@ -4,8 +4,8 @@ import { useSelector } from "react-redux";
 // styled-components
 import { Wrapper } from "./style";
 
-// style
-import { UserState } from "@src/store/reducers";
+// type
+import type { RootState } from "@src/store/configureStore";
 
 type Props = {
   onClickFollowerButton: (UserId?: number) => () => void;
@@ -16,7 +16,7 @@ const ProfileButtons = ({
   onClickFollowerButton,
   onClickFollowingButton,
 }: Props) => {
-  const { user } = useSelector(({ user }: { user: UserState }) => user);
+  const { user } = useSelector(({ user }: RootState) => user);
 
   return (
     <Wrapper>

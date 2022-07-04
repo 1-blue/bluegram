@@ -6,14 +6,14 @@ import Link from "next/link";
 // styled-components
 import { Wrapper } from "./style";
 
-// common-components
-import type { UserState } from "@src/store/reducers";
+// type
+import type { RootState } from "@src/store/configureStore";
 
 const ProfileNav = () => {
   const {
     query: { id, kinds },
   } = useRouter();
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { me } = useSelector(({ user }: RootState) => user);
 
   return (
     <Wrapper kinds={(kinds as string) || "post"}>

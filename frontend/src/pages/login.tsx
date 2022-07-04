@@ -2,7 +2,6 @@ import React, { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import styled from "styled-components";
-import type { NextPage } from "next";
 import { useForm } from "react-hook-form";
 
 // common-components
@@ -10,11 +9,12 @@ import Button from "@src/components/common/Button";
 import Input from "@src/components/common/Input";
 import HeadInfo from "@src/components/common/HeadInfo";
 
-// type
-import type { AuthState } from "@src/store/reducers";
-
 // action
-import { localLoginRequest } from "@src/store/actions";
+import { authActions } from "@src/store/reducers";
+
+// type
+import type { NextPage } from "next";
+import type { RootState } from "@src/store/configureStore";
 
 // styled-component
 const Wrapper = styled.form`
@@ -61,7 +61,7 @@ export type LoginForm = {
 
 const LoginPage: NextPage = () => {
   const dispatch = useDispatch();
-  const { loginLoading } = useSelector(({ auth }: { auth: AuthState }) => auth);
+  const { loginLoading } = useSelector(({ auth }: RootState) => auth);
 
   // 2022/05/13 - 로그인 요청 관련 메서드들 - by 1-blue
   const {
@@ -73,7 +73,7 @@ const LoginPage: NextPage = () => {
   // 2022/05/13 - 로그인 요청 - by 1-blue
   const onLocalLogIn = useCallback(
     ({ id, password }: LoginForm) =>
-      dispatch(localLoginRequest({ id, password })),
+      dispatch(authActions.localLogInRequest({ id, password })),
     [dispatch]
   );
 

@@ -6,14 +6,14 @@ import { toast } from "react-toastify";
 // styled-components
 import { Wrapper } from "./style";
 
-// actions
-import { loadPostsOfBookmarkRequest } from "@src/store/actions";
-
 // components
 import PostCard from "@src/components/Post/PostCard";
 
+// actions
+import { postActions } from "@src/store/reducers";
+
 // type
-import type { PostState, UserState } from "@src/store/reducers";
+import type { RootState } from "@src/store/configureStore";
 
 type Props = {
   id: number;
@@ -22,12 +22,12 @@ type Props = {
 const ProfilePostBookmarkCard = ({ id }: Props) => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { me } = useSelector(({ user }: RootState) => user);
   const {
     detailPosts: posts,
     hasMoreDeatailPosts,
     loadPostsOfBookmarkLoading,
-  } = useSelector(({ post }: { post: PostState }) => post);
+  } = useSelector(({ post }: RootState) => post);
 
   // 2022/01/17 - 인피니티 스크롤링 함수 - by 1-blue
   const infiniteScrollEvent = useCallback(() => {
@@ -38,14 +38,13 @@ const ProfilePostBookmarkCard = ({ id }: Props) => {
       !loadPostsOfBookmarkLoading
     ) {
       dispatch(
-        loadPostsOfBookmarkRequest({
-          UserId: id,
+        postActions.loadPostsOfBookmarkRequest({
           lastId: posts?.[posts.length - 1]._id,
           limit: 8,
         })
       );
     }
-  }, [dispatch, posts, hasMoreDeatailPosts, loadPostsOfBookmarkLoading, id]);
+  }, [dispatch, posts, hasMoreDeatailPosts, loadPostsOfBookmarkLoading]);
 
   // 2022/01/17 - 무한 스크롤링 이벤트 등록/해제 - by 1-blue
   useEffect(() => {

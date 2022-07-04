@@ -9,21 +9,6 @@ import wrapper from "@src/store/configureStore";
 import { END } from "redux-saga";
 import { axiosInstance } from "@src/store/api";
 
-// Requests
-import {
-  loadToMeRequest,
-  loadToUserRequest,
-  loadPostsOfUserRequest,
-  loadPostsDetailOfUserRequest,
-  followRequest,
-  unfollowRequest,
-  loadFollowersRequest,
-  loadFollowingsRequest,
-  loadPostsOfBookmarkRequest,
-  localLogoutRequest,
-  addRoomRequest,
-} from "@src/store/actions";
-
 // common-components
 import HeadInfo from "@src/components/common/HeadInfo";
 
@@ -35,9 +20,21 @@ import ProfileContents from "@src/components/Profile/ProfileContents";
 import FollowerModal from "@src/components/Profile/FollowerModal";
 import FollowingModal from "@src/components/Profile/FollwingModal";
 
+// action
+import {
+  authActions,
+  chatActions,
+  postActions,
+  userActions,
+} from "@src/store/reducers";
+
 // type
-import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-import type { ChatState, UserState } from "@src/store/reducers";
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
+import type { RootState } from "@src/store/configureStore";
 
 // styled-components
 const Wrapper = styled.article`
@@ -95,13 +92,13 @@ const Wrapper = styled.article`
   }
 `;
 
-const Profile = () => {
+const Profile: NextPage = () => {
   const dispatch = useDispatch();
-  const { push, query } = useRouter();
+  const { push } = useRouter();
   const { user, me, followLoading, unfollowLoading } = useSelector(
-    ({ user }: { user: UserState }) => user
+    ({ user }: RootState) => user
   );
-  const { addRoomDone } = useSelector(({ chat }: { chat: ChatState }) => chat);
+  const { addRoomDone } = useSelector(({ chat }: RootState) => chat);
 
   const [isOpenFollowerModal, setIsOpenFollowerModal] = useState(false);
   const onToggleFollowerModal = useCallback(
@@ -131,9 +128,9 @@ const Profile = () => {
         );
 
       if (isFollow) {
-        dispatch(unfollowRequest({ UserId }));
+        dispatch(userActions.unfollowRequest({ UserId }));
       } else {
-        dispatch(followRequest({ UserId }));
+        dispatch(userActions.followRequest({ UserId }));
       }
     },
     [dispatch, me, followLoading, unfollowLoading]
@@ -147,7 +144,7 @@ const Profile = () => {
           "문제가 발생해서 실행할 수 없습니다.\n새로고침후에 다시 시도해주세요!"
         );
 
-      dispatch(loadFollowersRequest({ UserId }));
+      dispatch(userActions.loadFollowersRequest({ UserId }));
       onToggleFollowerModal();
     },
     [dispatch, onToggleFollowerModal]
@@ -161,7 +158,7 @@ const Profile = () => {
           "문제가 발생해서 실행할 수 없습니다.\n새로고침후에 다시 시도해주세요!"
         );
 
-      dispatch(loadFollowingsRequest({ UserId }));
+      dispatch(userActions.loadFollowingsRequest({ UserId }));
       onToggleFollowingModal();
     },
     [dispatch, onToggleFollowingModal]
@@ -171,7 +168,7 @@ const Profile = () => {
   const onClickLogOut = useCallback(() => {
     if (!me?._id) return toast.error("로그인후에 접근해주세요");
 
-    dispatch(localLogoutRequest());
+    dispatch(authActions.localLogOutRequest());
 
     toast.success("로그아웃으로 인해 메인페이지로 이동됩니다.");
 
@@ -188,7 +185,7 @@ const Profile = () => {
     if (me._id === +user._id) return toast.error("본인과 DM을 할 수 없습니다!");
 
     dispatch(
-      addRoomRequest({
+      chatActions.addRoomRequest({
         UserId: +user._id,
         roomName: "새로운 채팅방",
       })
@@ -204,11 +201,13 @@ const Profile = () => {
 
   return (
     <>
-      <HeadInfo
-        title={`blegram - ${user?.name}님의 프로필`}
-        description={`${user?.name}님의 프로필\n( 게시글: ${user?.Posts.length}, 팔로워: ${user?.Followers.length}, 팔로잉: ${user?.Followings.length})\n\n${user?.introduction}`}
-        photo={user?.Photos?.[0].name}
-      />
+      {user && (
+        <HeadInfo
+          title={`blegram - ${user.name}님의 프로필`}
+          description={`${user.name}님의 프로필\n( 게시글: ${user.Posts.length}, 팔로워: ${user.Followers.length}, 팔로잉: ${user.Followings.length})\n\n${user.introduction}`}
+          photo={user.Photos?.[0].name}
+        />
+      )}
 
       <Wrapper>
         <ProfileHead
@@ -251,14 +250,14 @@ export const getServerSideProps: GetServerSideProps =
 
       const id = +(context.query.id as string);
 
-      store.dispatch(loadToMeRequest());
-      store.dispatch(loadToUserRequest({ UserId: id }));
+      store.dispatch(userActions.loadToMeRequest());
+      store.dispatch(userActions.loadToUserRequest({ UserId: id }));
 
       // 게시글, 상세 게시글, 북마크중에 요청
       switch (context.query.kinds) {
         case "post":
           store.dispatch(
-            loadPostsOfUserRequest({
+            postActions.loadPostsOfUserRequest({
               UserId: id,
               lastId: -1,
               limit: 15,
@@ -267,7 +266,7 @@ export const getServerSideProps: GetServerSideProps =
           break;
         case "detailPost":
           store.dispatch(
-            loadPostsDetailOfUserRequest({
+            postActions.loadPostsDetailOfUserRequest({
               UserId: id,
               lastId: -1,
               limit: 8,
@@ -276,17 +275,17 @@ export const getServerSideProps: GetServerSideProps =
           break;
         case "bookmark":
           store.dispatch(
-            loadPostsOfBookmarkRequest({
-              PostId: id,
+            postActions.loadPostsOfBookmarkRequest({
               lastId: -1,
               limit: 8,
             })
           );
+
           break;
 
         default:
           store.dispatch(
-            loadPostsOfUserRequest({
+            postActions.loadPostsOfUserRequest({
               UserId: id,
               lastId: -1,
               limit: 15,
