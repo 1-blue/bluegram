@@ -42,3 +42,15 @@ export const SideSearch = keyframes`
     transform: translateY(0px, 0px) scale(1);
   }
 `;
+
+export const Bounce = keyframes`
+  0% {
+    transform: translateY(0px)
+  }
+  50% {
+    transform: translateY(40px);
+  }
+  100% {
+    transform: translateY(0px)
+  }
+`;

@@ -28,7 +28,7 @@ const Input = React.forwardRef<
       <label htmlFor={id}>{id}</label>
       <input
         id={id}
-        type="text"
+        type={type}
         placeholder={placeholder}
         {...props}
         ref={ref}

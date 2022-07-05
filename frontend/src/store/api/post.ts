@@ -16,7 +16,7 @@ import type {
   LoadPostsOfUserResponse,
   LoadPostsDetailOfUserResponse,
   LoadPostsDetailOfUserBody,
-} from "../types";
+} from "@src/store/types";
 
 // 2022/05/07 - 모든 게시글들 요청 - by 1-blue
 export const apiLoadPosts = ({ lastId, limit }: LoadPostsBody) =>

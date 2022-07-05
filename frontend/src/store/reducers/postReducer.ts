@@ -1,4 +1,6 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+
+import type { PayloadAction } from "@reduxjs/toolkit";
 import type { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
 import type {
   AppendBookmarkBody,
@@ -37,8 +39,8 @@ import type {
   ResponseFailure,
   UploadPostBody,
   UploadPostResponse,
-} from "../types";
-import { LoadPostsOfBookmarkBody } from "../types/bookmark";
+  LoadPostsOfBookmarkBody,
+} from "@src/store/types";
 
 export type PostStateType = {
   isShowWritePostModal: boolean;

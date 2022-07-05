@@ -42,6 +42,7 @@ import type {
   RemoveLikeToCommentBody,
   AppendBookmarkBody,
   RemoveBookmarkBody,
+  LoadPostsOfBookmarkBody,
 } from "@src/store/types";
 
 // api
@@ -65,7 +66,6 @@ import {
   apiLoadPostsOfBookmark,
   apiLoadRecomments,
 } from "@src/store/api";
-import { LoadPostsOfBookmarkBody } from "../types/bookmark";
 
 function* uploadPost(action: PayloadAction<UploadPostBody>) {
   try {

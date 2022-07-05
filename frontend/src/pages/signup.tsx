@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
@@ -11,6 +11,9 @@ import Input from "@src/components/common/Input";
 import Textarea from "@src/components/common/Textarea";
 import PhotoInput from "@src/components/common/PhotoInput";
 import HeadInfo from "@src/components/common/HeadInfo";
+
+// util
+import { getRegExp } from "@src/libs/util";
 
 // action
 import { authActions } from "@src/store/reducers";
@@ -67,6 +70,7 @@ const SignupPage: NextPage = () => {
     setValue,
     getValues,
     formState: { errors },
+    watch,
   } = useForm<SignUpForm>();
 
   // 2022/05/13 - 회원가입 요청 - by 1-blue
@@ -77,6 +81,10 @@ const SignupPage: NextPage = () => {
 
   // 2022/05/15 - 이미지 드래그중인지 판단할 변수 - by 1-blue
   const [isDragging, setIsDragging] = useState(false);
+
+  //
+  const password = useRef<string | null>(null);
+  password.current = watch("password", "");
 
   return (
     <>
@@ -99,7 +107,14 @@ const SignupPage: NextPage = () => {
           type="text"
           placeholder="아이디를 입력해주세요."
           subText={errors.id?.message}
-          {...register("id", { required: "아이디를 입력해주세요!" })}
+          {...register("id", {
+            required: "아이디를 입력해주세요!",
+            pattern: {
+              value: getRegExp("id"),
+              message:
+                "숫자와 영어가 최소 한 글자 이상 포함되고, 최소 6자리여야 합니다.",
+            },
+          })}
         />
         {/* password */}
         <Input
@@ -107,7 +122,14 @@ const SignupPage: NextPage = () => {
           type="password"
           placeholder="비밀번호를 입력해주세요."
           subText={errors.password?.message}
-          {...register("password", { required: "비밀번호를 입력해주세요!" })}
+          {...register("password", {
+            required: "비밀번호를 입력해주세요!",
+            pattern: {
+              value: getRegExp("password"),
+              message:
+                "숫자와 영어가 최소 한 글자 이상 포함되고, 최소 8자리여야 합니다.",
+            },
+          })}
         />
         {/* passwordCheck */}
         <Input
@@ -116,7 +138,9 @@ const SignupPage: NextPage = () => {
           placeholder="비밀번호를 다시 입력해주세요."
           subText={errors.passwordCheck?.message}
           {...register("passwordCheck", {
-            required: "비밀번호를 다시 입력해주세요!",
+            required: "비밀번호를 다시 입력해주세요.",
+            validate: (value) =>
+              value === password.current || "비밀번호가 일치하지 않습니다.",
           })}
         />
         {/* name */}
@@ -125,7 +149,13 @@ const SignupPage: NextPage = () => {
           type="text"
           placeholder="이름을 입력해주세요."
           subText={errors.name?.message}
-          {...register("name", { required: "이름을 입력해주세요!" })}
+          {...register("name", {
+            required: "이름을 입력해주세요!",
+            maxLength: {
+              value: 20,
+              message: "20자 이내로 입력해주세요.",
+            },
+          })}
         />
         {/* email */}
         <Input
@@ -133,7 +163,13 @@ const SignupPage: NextPage = () => {
           type="text"
           placeholder="이메일을 입력해주세요."
           subText={errors.email?.message}
-          {...register("email", { required: "이메일을 입력해주세요!" })}
+          {...register("email", {
+            required: "이메일을 입력해주세요!",
+            pattern: {
+              value: getRegExp("email"),
+              message: "이메일 형식에 맞게 입력해 주세요.",
+            },
+          })}
         />
         {/* phone */}
         <Input
@@ -141,7 +177,13 @@ const SignupPage: NextPage = () => {
           type="text"
           placeholder="휴대폰 번호를 입력해주세요."
           subText={errors.phone?.message}
-          {...register("phone", { required: "휴대폰 번호를 입력해주세요!" })}
+          {...register("phone", {
+            required: "휴대폰 번호를 입력해주세요!",
+            pattern: {
+              value: getRegExp("phone"),
+              message: "숫자만 11자리 입력해 주세요.",
+            },
+          })}
         />
         {/* birthday */}
         <Input
@@ -149,7 +191,13 @@ const SignupPage: NextPage = () => {
           type="text"
           placeholder="생년월일을 입력해 주세요. ( 19981106 )"
           subText={errors.birthday?.message}
-          {...register("birthday", { required: "생년월일을 입력해주세요!" })}
+          {...register("birthday", {
+            required: "생년월일을 입력해주세요!",
+            pattern: {
+              value: getRegExp("birthday"),
+              message: "숫자만 8자리 입력해 주세요.",
+            },
+          })}
         />
         {/* 간단 자기 소개 */}
         <Textarea
@@ -159,7 +207,7 @@ const SignupPage: NextPage = () => {
           {...register("introduction", {
             maxLength: {
               value: 100,
-              message: "100자 이내로 입력해주세요!",
+              message: "100자 이내로 입력해주세요.",
             },
           })}
         />

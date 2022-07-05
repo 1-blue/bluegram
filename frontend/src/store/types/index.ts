@@ -30,6 +30,7 @@ export type {
 export type {
   AppendBookmarkBody,
   AppendBookmarkResponse,
+  LoadPostsOfBookmarkBody,
   LoadPostsOfBookmarkResponse,
   RemoveBookmarkBody,
   RemoveBookmarkResponse,

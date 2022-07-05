@@ -6,8 +6,8 @@ import type {
   LoadPostsOfBookmarkResponse,
   RemoveBookmarkBody,
   RemoveBookmarkResponse,
-} from "../types";
-import { LoadPostsOfBookmarkBody } from "../types/bookmark";
+  LoadPostsOfBookmarkBody,
+} from "@src/store/types";
 
 // 2022/05/21 - 북마크 추가 요청 - by 1-blue
 export const apiAppendBookmark = ({ PostId }: AppendBookmarkBody) =>

@@ -1,4 +1,5 @@
 import { axiosInstance } from ".";
+
 // type
 import type {
   AddRoomBody,
@@ -7,7 +8,7 @@ import type {
   LoadChatsBody,
   LoadChatsResponse,
   LoadRoomsResponse,
-} from "../types";
+} from "@src/store/types";
 
 // 2022/05/28 - 로그인한 유저의 채팅방들 로드 요청 - by 1-blue
 export const apiLoadRooms = () => axiosInstance.get<LoadRoomsResponse>(`/room`);

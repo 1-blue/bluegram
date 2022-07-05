@@ -11,7 +11,7 @@ import type {
   LoadToUserResponse,
   SignOutBody,
   SignOutResponse,
-} from "../types";
+} from "@src/store/types";
 
 // 2022/05/07 - 본인 정보 요청 - by 1-blue
 export const apiLoadToMe = () =>

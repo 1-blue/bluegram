@@ -96,10 +96,11 @@ export const Wrapper = styled.section<{ step: number }>`
     position: absolute;
     bottom: 30px;
     right: 20px;
-    background-color: gray;
+    background-color: ${({ theme }) => theme.color.main};
     padding: 0.6em;
     border-radius: 4px;
     font-weight: bold;
+    color: white;
   }
   & .modal-form {
     width: 100%;

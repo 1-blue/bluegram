@@ -1,5 +1,6 @@
 import { HYDRATE } from "next-redux-wrapper";
-import { AnyAction, CombinedState, combineReducers } from "@reduxjs/toolkit";
+import { combineReducers } from "@reduxjs/toolkit";
+import type { AnyAction, CombinedState } from "@reduxjs/toolkit";
 
 // reducers
 import authReducer, { AuthStateType } from "./authReducer";
