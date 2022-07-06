@@ -1,6 +1,10 @@
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+
+// hooks
+import useTextarea from "@src/hooks/useTextarea";
 
 // styled-components
 import { Wrapper } from "./style";
@@ -16,31 +20,12 @@ import PostCardComment from "./PostCardComment";
 import PostCardLoadCommentButton from "./PostCardLoadCommentButton";
 import PostCardCommentForm from "./PostCardCommentForm";
 
+// action
+import { chatActions, postActions, userActions } from "@src/store/reducers";
+
 // type
 import type { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
-import type { ChatState, PostState, UserState } from "@src/store/reducers";
-
-// actions
-import {
-  removePostRequest,
-  appendCommentRequest,
-  removeCommentRequest,
-  loadCommentsRequest,
-  appendLikeToPostRequest,
-  removeLikeToPostRequest,
-  appendLikeToCommentRequest,
-  removeLikeToCommentRequest,
-  followRequest,
-  unfollowRequest,
-  removeBookmarkRequest,
-  appendBookmarkRequest,
-  loadRecommentsRequest,
-  addRoomRequest,
-} from "@src/store/actions";
-
-// hooks
-import useTextarea from "@src/hooks/useTextarea";
-import { useRouter } from "next/router";
+import type { RootState } from "@src/store/configureStore";
 
 type Props = {
   post: IPostWithPhotoAndCommentAndLikerAndCount;
@@ -56,11 +41,11 @@ const PostCard = ({ post }: Props) => {
     removeLikeToCommentLoading,
     appendBookmarkLoading,
     removeBookmarkLoading,
-  } = useSelector(({ post }: { post: PostState }) => post);
+  } = useSelector(({ post }: RootState) => post);
   const { me, followLoading, unfollowLoading } = useSelector(
-    ({ user }: { user: UserState }) => user
+    ({ user }: RootState) => user
   );
-  const { addRoomDone } = useSelector(({ chat }: { chat: ChatState }) => chat);
+  const { addedRoomId } = useSelector(({ chat }: RootState) => chat);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [text, onChangeText, setText, resize] = useTextarea("");
   const [isShowComment, setIsShowComment] = useState(true);
@@ -105,15 +90,18 @@ const PostCard = ({ post }: Props) => {
       return toast.error("본인과 DM을 할 수 없습니다!");
 
     dispatch(
-      addRoomRequest({ UserId: post.UserId, roomName: "새로운 채팅방" })
+      chatActions.addRoomRequest({
+        UserId: post.UserId,
+        roomName: "새로운 채팅방",
+      })
     );
   }, [me, dispatch, post]);
   // 2022/05/30 - 생성된 or 존재하는 DM 페이지로 이동 - by 1-blue
   useEffect(() => {
-    if (!addRoomDone) return;
+    if (!addedRoomId) return;
 
-    router.push(`/dm/${addRoomDone}`);
-  }, [router, addRoomDone]);
+    router.push(`/dm/${addedRoomId}`);
+  }, [router, addedRoomId]);
 
   // 2022/01/19 - 답글 달기 버튼 클릭 시 포커스 부여 + 답글에 대한 정보 기록 - by 1-blue
   const onClickRecommentButton = useCallback(
@@ -128,7 +116,7 @@ const PostCard = ({ post }: Props) => {
 
   // 2022/01/17 - 현재 게시글 제거 요청 - by 1-blue
   const onRemovePost = useCallback(
-    () => dispatch(removePostRequest({ PostId: post._id })),
+    () => dispatch(postActions.removePostRequest({ PostId: post._id })),
     [dispatch, post]
   );
 
@@ -155,7 +143,7 @@ const PostCard = ({ post }: Props) => {
         );
 
       dispatch(
-        appendCommentRequest({
+        postActions.appendCommentRequest({
           content: processingContent,
           PostId: post._id,
           RecommentId,
@@ -171,7 +159,8 @@ const PostCard = ({ post }: Props) => {
 
   // 2022/01/16 - 현재 게시글에 댓글/답글 삭제 요청 - by 1-blue
   const onRemoveComment = useCallback(
-    (CommentId: number) => () => dispatch(removeCommentRequest({ CommentId })),
+    (CommentId: number) => () =>
+      dispatch(postActions.removeCommentRequest({ CommentId })),
     [dispatch]
   );
 
@@ -180,11 +169,21 @@ const PostCard = ({ post }: Props) => {
     (lastId: number) => () => {
       if (post.Comments[0]?.content) {
         // 한 번 이상 요청하고 추가로 댓글 요청일 경우
-        dispatch(loadCommentsRequest({ PostId: post._id, lastId, limit: 10 }));
+        dispatch(
+          postActions.loadCommentsRequest({
+            PostId: post._id,
+            lastId,
+            limit: 10,
+          })
+        );
       } else {
         // 최초 요청일 경우
         dispatch(
-          loadCommentsRequest({ PostId: post._id, lastId: null, limit: 10 })
+          postActions.loadCommentsRequest({
+            PostId: post._id,
+            lastId: null,
+            limit: 10,
+          })
         );
       }
     },
@@ -194,7 +193,9 @@ const PostCard = ({ post }: Props) => {
   // 2022/01/17 - 현재 게시글의 특정 댓글의 답글 불러오기 - by 1-blue
   const onClickloadMoreRecomment = useCallback(
     (lastId: number | null, CommentId: number) => () => {
-      dispatch(loadRecommentsRequest({ CommentId, lastId, limit: 5 }));
+      dispatch(
+        postActions.loadRecommentsRequest({ CommentId, lastId, limit: 5 })
+      );
     },
     [dispatch]
   );
@@ -210,9 +211,9 @@ const PostCard = ({ post }: Props) => {
         return toast.warning("이미 게시글에 좋아요 요청 처리중입니다.");
 
       if (isLikedPost) {
-        dispatch(removeLikeToPostRequest({ PostId: post._id }));
+        dispatch(postActions.removeLikeToPostRequest({ PostId: post._id }));
       } else {
-        dispatch(appendLikeToPostRequest({ PostId: post._id }));
+        dispatch(postActions.appendLikeToPostRequest({ PostId: post._id }));
       }
     },
     [dispatch, me, post, appendLikeToPostLoading, removeLikeToPostLoading]
@@ -231,9 +232,9 @@ const PostCard = ({ post }: Props) => {
         );
 
       if (isLikedComment) {
-        dispatch(removeLikeToCommentRequest({ CommentId }));
+        dispatch(postActions.removeLikeToCommentRequest({ CommentId }));
       } else {
-        dispatch(appendLikeToCommentRequest({ CommentId }));
+        dispatch(postActions.appendLikeToCommentRequest({ CommentId }));
       }
     },
     [dispatch, me, appendLikeToCommentLoading, removeLikeToCommentLoading]
@@ -251,9 +252,9 @@ const PostCard = ({ post }: Props) => {
         );
 
       if (isFollow) {
-        dispatch(unfollowRequest({ UserId }));
+        dispatch(userActions.unfollowRequest({ UserId }));
       } else {
-        dispatch(followRequest({ UserId }));
+        dispatch(userActions.followRequest({ UserId }));
       }
     },
     [dispatch, me, followLoading, unfollowLoading]
@@ -271,9 +272,9 @@ const PostCard = ({ post }: Props) => {
         );
 
       if (isBookmark) {
-        dispatch(removeBookmarkRequest({ PostId: post._id }));
+        dispatch(postActions.removeBookmarkRequest({ PostId: post._id }));
       } else {
-        dispatch(appendBookmarkRequest({ PostId: post._id }));
+        dispatch(postActions.appendBookmarkRequest({ PostId: post._id }));
       }
     },
     [dispatch, me, post, appendBookmarkLoading, removeBookmarkLoading]

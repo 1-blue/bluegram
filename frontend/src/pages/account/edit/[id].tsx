@@ -1,23 +1,29 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { END } from "redux-saga";
 import styled from "styled-components";
+
+// SSR
 import wrapper from "@src/store/configureStore";
-
-// instance
+import { END } from "redux-saga";
 import { axiosInstance } from "@src/store/api";
-
-// type
-import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-
-// action
-import { loadMeDetailRequest, loadToMeRequest } from "@src/store/actions";
 
 // component
 import AccountEdit from "@src/components/Edit/AccountEdit";
 import PasswordEdit from "@src/components/Edit/PasswordEdit";
 import SignOut from "@src/components/Edit/SignOut";
+
+// commom-component
 import HeadInfo from "@src/components/common/HeadInfo";
+
+// action
+import { userActions } from "@src/store/reducers";
+
+// type
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
 
 const Nav = styled.nav<{ kinds: string }>`
   display: flex;
@@ -57,7 +63,7 @@ const Nav = styled.nav<{ kinds: string }>`
   }
 `;
 
-const Edit = () => {
+const Edit: NextPage = () => {
   const router = useRouter();
 
   return (
@@ -122,8 +128,8 @@ export const getServerSideProps: GetServerSideProps =
       axiosInstance.defaults.headers.Cookie = cookie;
 
       // 서버 사이드에서 dispatch할 내용을 적어줌
-      store.dispatch(loadToMeRequest());
-      store.dispatch(loadMeDetailRequest({}));
+      store.dispatch(userActions.loadToMeRequest());
+      store.dispatch(userActions.loadToMeDetailRequest());
 
       // 밑에 두 개는 REQUEST이후 SUCCESS가 될 때까지 기다려주게 해주는 코드
       store.dispatch(END);

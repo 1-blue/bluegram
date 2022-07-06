@@ -10,7 +10,7 @@ import Avatar from "@src/components/common/Avatar";
 
 // type
 import { ICON } from "@src/type";
-import type { PostState, UserState } from "@src/store/reducers";
+import type { RootState } from "@src/store/configureStore";
 
 const Wrapper = styled.section`
   position: relative;
@@ -36,10 +36,8 @@ type Props = {
 
 const RightMenu = ({ setIsOpenMenu, onClickWritePostModal }: Props) => {
   const router = useRouter();
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
-  const { isShowWritePostModal } = useSelector(
-    ({ post }: { post: PostState }) => post
-  );
+  const { me } = useSelector(({ user }: RootState) => user);
+  const { isShowWritePostModal } = useSelector(({ post }: RootState) => post);
 
   return (
     <Wrapper>

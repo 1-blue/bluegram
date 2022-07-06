@@ -9,16 +9,6 @@ import { toast } from "react-toastify";
 import { END } from "redux-saga";
 import wrapper from "@src/store/configureStore";
 import { axiosInstance } from "@src/store/api";
-import { loadToMeRequest, loadChatsRequest } from "@src/store/actions";
-import { addChatRequest, exitRoomRequest } from "@src/store/actions/chatAction";
-
-// type
-import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-import type {
-  ClientToServerEvents,
-  ServerToClientEvents,
-} from "@src/../../types";
-import type { ChatState, UserState } from "@src/store/reducers";
 
 // common-component
 import Avatar from "@src/components/common/Avatar";
@@ -26,6 +16,21 @@ import HeadInfo from "@src/components/common/HeadInfo";
 
 // util
 import { dateOrTimeFormat } from "@src/libs/dateFormat";
+
+// action
+import { chatActions, userActions } from "@src/store/reducers";
+
+// type
+import type {
+  ClientToServerEvents,
+  ServerToClientEvents,
+} from "@src/../../types";
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
+import type { RootState } from "@src/store/configureStore";
 
 const Chat = styled.li<{ isMine: boolean; length: number }>`
   display: flex;
@@ -115,17 +120,17 @@ const AbsoluteButton = styled.button`
   }
 `;
 
-const Room = () => {
+const Room: NextPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { me } = useSelector(({ user }: RootState) => user);
   const {
     chats,
     roomInformation,
     hasMoreChat,
     loadChatsLoading,
     exitRoomDone,
-  } = useSelector(({ chat }: { chat: ChatState }) => chat);
+  } = useSelector(({ chat }: RootState) => chat);
 
   // 2022/05/28 - 연결한 소켓 - by 1-blue
   const [socket, setSocket] = useState<null | Socket<
@@ -136,27 +141,22 @@ const Room = () => {
   const [chat, setChat] = useState<string>("");
 
   // 2022/05/28 - 서버와 소켓 연결 - by 1-blue
-  useEffect(() => {
-    setSocket(
-      (prev) =>
-        prev ||
-        io(process.env.NEXT_PUBLIC_SERVER_URL!, {
-          withCredentials: true,
-          transports: ["websocket"],
-        })
-    );
-  }, []);
-
   // 2022/05/28 - 채팅방 입장 및 채팅 받기 이벤트 등록 - by 1-blue
   useEffect(() => {
     if (!me) return;
 
-    socket?.on("connect", () => {
-      socket.emit("onJoinRoom", router.query.id as string);
+    const mySocket = io(process.env.NEXT_PUBLIC_SERVER_URL!, {
+      withCredentials: true,
+      // transports: ["websocket"],
+    });
+    setSocket(mySocket);
 
-      socket.on("onReceive", ({ user, chat }) => {
+    mySocket.on("connect", () => {
+      mySocket.emit("onJoinRoom", router.query.id as string);
+
+      mySocket.on("onReceive", ({ user, chat }) => {
         dispatch(
-          addChatRequest({
+          chatActions.addChat({
             _id: Date.now(),
             RoomId: +(router.query.id as string),
             UserId: user?._id,
@@ -168,45 +168,45 @@ const Room = () => {
         );
       });
     });
-  }, [me, router, socket, dispatch]);
+  }, [me, router, dispatch]);
 
   // 2022/05/28 - 채팅 전송 - by 1-blue
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = useCallback(
+    (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
 
-    // >>> 버그 수정 필요... 수정법을 못찾겠다...
-    if (chat.length === 1) {
+      if (!me) return;
+      if (chat.trim() === "") return toast.error("내용을 채우고 전송해주세요!");
+      if (chat.length > 200)
+        return toast.error(
+          `200자 이내만 입력가능합니다... ( 현재 ${chat.length}자 )`
+        );
+
+      socket?.emit("onSend", {
+        user: {
+          _id: me._id,
+          name: me.name,
+          introduction: me.introduction,
+          Photos: me.Photos,
+        },
+        roomId: router.query.id as string,
+        chat,
+      });
+      dispatch(
+        chatActions.addChat({
+          _id: Date.now(),
+          RoomId: +(router.query.id as string),
+          UserId: me?._id,
+          contents: chat,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          User: me,
+        })
+      );
       setChat("");
-      return console.log(
-        "버그 때문에 임시 조치 >> 글자 완성중에 전송요청하면 마지막 글자가 또 전송되는 버그"
-      );
-    }
-
-    if (!me) return;
-    if (chat.trim() === "") return toast.error("내용을 채우고 전송해주세요!");
-    if (chat.length > 200)
-      return toast.error(
-        `200자 이내만 입력가능합니다... ( 현재 ${chat.length}자 )`
-      );
-
-    socket?.emit("onSend", {
-      userId: me?._id!,
-      roomId: router.query.id as string,
-      chat,
-    });
-    dispatch(
-      addChatRequest({
-        _id: Date.now(),
-        RoomId: +(router.query.id as string),
-        UserId: me?._id,
-        contents: chat,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        User: me,
-      })
-    );
-    setChat("");
-  };
+    },
+    [me, chat, socket, dispatch, setChat, router]
+  );
 
   // 2022/05/29 - textarea ref - by 1-blue
   const chatRef = useRef<HTMLTextAreaElement | null>(null);
@@ -238,7 +238,7 @@ const Room = () => {
     ) {
       if (chats.length === 0) {
         dispatch(
-          loadChatsRequest({
+          chatActions.loadChatsRequest({
             RoomId: router.query.id as string,
             lastId: -1,
             limit: 20,
@@ -246,7 +246,7 @@ const Room = () => {
         );
       } else {
         dispatch(
-          loadChatsRequest({
+          chatActions.loadChatsRequest({
             RoomId: router.query.id as string,
             lastId: chats[0]._id,
             limit: 20,
@@ -272,7 +272,7 @@ const Room = () => {
     if (!confirm("채팅방을 나가면 되돌릴 수 없습니다.\n정말 실행하시겠습니까?"))
       return;
 
-    dispatch(exitRoomRequest({ RoomId: roomInformation?._id! }));
+    dispatch(chatActions.exitRoomRequest({ RoomId: roomInformation?._id! }));
   }, [dispatch, roomInformation]);
   // 2022/06/01 - 채팅방 나가기 성공 시 실행 - by 1-blue
   useEffect(() => {
@@ -353,6 +353,7 @@ const Room = () => {
           ))}
         </ul>
       </section>
+
       <Form onSubmit={onSubmit}>
         <textarea
           placeholder="메시지 보내기..."
@@ -361,10 +362,12 @@ const Room = () => {
           ref={chatRef}
           onInput={handleResizeHeight}
           rows={1}
-          onKeyDown={(e) => {
+          onKeyPress={(e) => {
             if (e.code === "Enter" && e.shiftKey) return;
+
             if (e.code === "Enter") {
               e.preventDefault();
+
               return buttonRef.current?.click();
             }
           }}
@@ -384,9 +387,9 @@ export const getServerSideProps: GetServerSideProps =
       cookie = cookie ? cookie : "";
       axiosInstance.defaults.headers.Cookie = cookie;
 
-      store.dispatch(loadToMeRequest());
+      store.dispatch(userActions.loadToMeRequest());
       store.dispatch(
-        loadChatsRequest({
+        chatActions.loadChatsRequest({
           RoomId: context.query.id as string,
           lastId: -1,
           limit: 20,

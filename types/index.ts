@@ -5,12 +5,7 @@ export type ServerToClientEvents = {
 };
 export type ClientToServerEvents = {
   onJoinRoom: (roomId: string) => void;
-  onSend: (data: { userId: number; roomId: string; chat: string }) => void;
+  onSend: (data: { user: SimpleUser; roomId: string; chat: string }) => void;
 };
-export type InterServerEvents = {
-  ping: () => void;
-};
-export type SocketData = {
-  name: string;
-  age: number;
-};
+export type InterServerEvents = {};
+export type SocketData = {};

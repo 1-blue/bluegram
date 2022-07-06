@@ -19,11 +19,11 @@ import Photo from "@src/components/common/Photo";
 import useToastMessage from "@src/hooks/useToastMessage";
 
 // action
-import { uploadPostRequest } from "@src/store/actions/postAction";
+import { postActions } from "@src/store/reducers";
 
 // type
-import type { PostState, UserState } from "@src/store/reducers";
-import type { ResponseOfPhoto } from "@src/pages/signup";
+import type { RootState } from "@src/store/configureStore";
+import { ResponseOfPhoto } from "@src/store/types";
 
 type WriteForm = {
   text: string;
@@ -36,7 +36,7 @@ type Props = {
 
 const WritePostModal = ({ showModal, onCloseModal }: Props) => {
   const dispatch = useDispatch();
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
+  const { me } = useSelector(({ user }: RootState) => user);
 
   // 2022/05/19 - 모달 ref ( 영역 외 클릭 시 닫기에 사용 ) - by 1-blue
   const modalRef = useRef<HTMLDivElement | null>(null);
@@ -107,7 +107,9 @@ const WritePostModal = ({ showModal, onCloseModal }: Props) => {
 
       try {
         setUploadingPhotos(true);
-        const { photos }: ResponseOfPhoto = await fetch(
+        const {
+          data: { photos },
+        }: ResponseOfPhoto = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/photo`,
           {
             method: "POST",
@@ -143,7 +145,9 @@ const WritePostModal = ({ showModal, onCloseModal }: Props) => {
       try {
         setUploadingPhotos(true);
 
-        const { photos }: ResponseOfPhoto = await fetch(
+        const {
+          data: { photos },
+        }: ResponseOfPhoto = await fetch(
           `${process.env.NEXT_PUBLIC_SERVER_URL}/api/photo`,
           {
             method: "POST",
@@ -176,13 +180,13 @@ const WritePostModal = ({ showModal, onCloseModal }: Props) => {
       if (text.trim().length === 0)
         return toast.error("게시글의 내용을 채우고 버튼을 눌러주세요!");
 
-      dispatch(uploadPostRequest({ content: text, photos }));
+      dispatch(postActions.uploadPostRequest({ content: text, photos }));
     },
     [dispatch]
   );
   // 2022/05/19 - 게시글 생성 성공 시 메시지 및 모달 닫기 및 페이지 이동 - by 1-blue
   const { uploadPostDone, uploadPostError } = useSelector(
-    ({ post }: { post: PostState }) => post
+    ({ post }: RootState) => post
   );
   useToastMessage({
     done: uploadPostDone,

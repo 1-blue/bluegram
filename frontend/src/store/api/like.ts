@@ -10,7 +10,7 @@ import type {
   RemoveLikeToCommentResponse,
   RemoveLikeToPostBody,
   RemoveLikeToPostResponse,
-} from "../types";
+} from "@src/store/types";
 
 // 2022/05/21 - 게시글에 좋아요 추가 요청 - by 1-blue
 export const apiAppendLikeToPost = ({ PostId }: AppendLikeToPostBody) =>

@@ -23,7 +23,7 @@ const Carousel = ({ children, setPhotoIndex }: Props) => {
       arrows={false}
       {...settings}
       beforeChange={(currentIndex, newIndex) => {
-        if (typeof setPhotoIndex === "function") setPhotoIndex(newIndex);
+        if (typeof setPhotoIndex === "function") setPhotoIndex(newIndex - 1);
       }}
     >
       {children}

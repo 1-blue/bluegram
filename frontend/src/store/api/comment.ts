@@ -10,7 +10,7 @@ import type {
   LoadRecommentsResponse,
   RemoveCommentBody,
   RemoveCommentResponse,
-} from "../types";
+} from "@src/store/types";
 
 // 2022/05/21 - 게시글의 댓글들 로드 요청 - by 1-blue
 export const apiLoadComments = ({ lastId, limit, PostId }: LoadCommentsBody) =>

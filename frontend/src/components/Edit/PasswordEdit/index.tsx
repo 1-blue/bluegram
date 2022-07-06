@@ -3,16 +3,18 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
-// redux
-import { editPasswordRequest } from "@src/store/actions/userAction";
-import type { UserState } from "@src/store/reducers";
+// common-component
+import Button from "@src/components/common/Button";
+import Input from "@src/components/common/Input";
 
 // style
 import { Wrapper } from "../AccountEdit/style";
 
-// common-component
-import Button from "@src/components/common/Button";
-import Input from "@src/components/common/Input";
+// action
+import { userActions } from "@src/store/reducers";
+
+// type
+import type { RootState } from "@src/store/configureStore";
 
 type PasswordForm = {
   currentPassword: string;
@@ -22,9 +24,7 @@ type PasswordForm = {
 
 const PasswordEdit = () => {
   const dispatch = useDispatch();
-  const { editPasswordLoading } = useSelector(
-    ({ user }: { user: UserState }) => user
-  );
+  const { editPasswordLoading } = useSelector(({ user }: RootState) => user);
 
   // 2022/06/02 - 비밀번호 변경 관련 메서드들 - by 1-blue
   const {
@@ -42,7 +42,7 @@ const PasswordEdit = () => {
         });
 
       dispatch(
-        editPasswordRequest({
+        userActions.editPasswordRequest({
           currentPassword,
           password,
         })

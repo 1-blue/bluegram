@@ -1,22 +1,31 @@
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 // redux
 import { END } from "redux-saga";
 import wrapper from "@src/store/configureStore";
 import { axiosInstance } from "@src/store/api";
-import { loadRoomsRequest, loadToMeRequest } from "@src/store/actions";
-
-import type { GetServerSideProps, GetServerSidePropsContext } from "next";
-import type { ChatState, UserState } from "@src/store/reducers";
-import { dateOrTimeFormat } from "@src/libs/dateFormat";
-import Avatar from "@src/components/common/Avatar";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 
 // common-components
 import HeadInfo from "@src/components/common/HeadInfo";
+import Avatar from "@src/components/common/Avatar";
+
+// util
+import { dateOrTimeFormat } from "@src/libs/dateFormat";
+
+// action
+import { chatActions, userActions } from "@src/store/reducers";
+
+// type
+import type {
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  NextPage,
+} from "next";
+import type { RootState } from "@src/store/configureStore";
 
 const Wrapper = styled.ul`
   display: flex;
@@ -63,12 +72,12 @@ const Wrapper = styled.ul`
   }
 `;
 
-const DM = () => {
+const DM: NextPage = () => {
   const router = useRouter();
-  const { me } = useSelector(({ user }: { user: UserState }) => user);
-  const { rooms } = useSelector(({ chat }: { chat: ChatState }) => chat);
+  const { me } = useSelector(({ user }: RootState) => user);
+  const { rooms } = useSelector(({ chat }: RootState) => chat);
 
-  if (!me?._id) {
+  if (me && !me._id) {
     toast.error("로그인후에 접근해주세요!");
     router.push("/");
     return null;
@@ -76,7 +85,7 @@ const DM = () => {
 
   const filteredRooms = rooms
     .filter((room) => room.Chats.length > 0)
-    .filter((room) => (room.RoomUsers.selfGranted === me._id ? false : true));
+    .filter((room) => (room.RoomUsers.selfGranted === me?._id ? false : true));
 
   return (
     <>
@@ -126,8 +135,8 @@ export const getServerSideProps: GetServerSideProps =
       cookie = cookie ? cookie : "";
       axiosInstance.defaults.headers.Cookie = cookie;
 
-      store.dispatch(loadToMeRequest());
-      store.dispatch(loadRoomsRequest({}));
+      store.dispatch(userActions.loadToMeRequest());
+      store.dispatch(chatActions.loadRoomsRequest());
 
       store.dispatch(END);
       await store.sagaTask?.toPromise();

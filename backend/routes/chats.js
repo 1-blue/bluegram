@@ -7,7 +7,7 @@ import db from "../models/index.js";
 
 const { User, Room, Photo } = db;
 
-// 2022/05/28 - 특정 채팅방의 채팅들 가져오기 - by 1-blue
+// 2022/07/03 - 특정 채팅방의 채팅들 가져오기 - by 1-blue
 router.get("/:RoomId", isLoggedIn, async (req, res, next) => {
   const RoomId = +req.params.RoomId;
   const lastId = +req.query.lastId || -1;
@@ -18,6 +18,12 @@ router.get("/:RoomId", isLoggedIn, async (req, res, next) => {
     const mePromise = await User.findByPk(req.user._id);
 
     const [{ value: targetRoom }, { value: me }] = await Promise.allSettled([targetRoomPromise, mePromise]);
+
+    if (!targetRoom)
+      return res.status(404).json({
+        status: { status: { ok: false } },
+        data: { message: "채팅방이 존재하지 않습니다." },
+      });
 
     const where = {
       _id: lastId === -1 ? { [Op.gt]: lastId } : { [Op.lt]: lastId },
@@ -58,15 +64,17 @@ router.get("/:RoomId", isLoggedIn, async (req, res, next) => {
     const [{ value: rooms }, { value: chats }] = await Promise.allSettled([roomsPromise, chatsPromise]);
 
     res.status(200).json({
-      ok: true,
-      message: `"${targetRoom.name}" 채팅방의 채팅들을 가져왔습니다.`,
-      chats: chats.reverse(),
-      roomInformation: {
-        _id: RoomId,
-        name: rooms[0].name,
-        users: rooms[0].RoomUser.map(user => user),
+      status: { ok: true },
+      data: {
+        message: `"${targetRoom.name}" 채팅방의 채팅들을 가져왔습니다.`,
+        chats: chats.reverse(),
+        roomInformation: {
+          _id: RoomId,
+          name: rooms[0].name,
+          users: rooms[0].RoomUser.map(user => user),
+        },
+        limit,
       },
-      limit,
     });
   } catch (error) {
     console.error("POST api/room >> ", error);

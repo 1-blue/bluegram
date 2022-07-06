@@ -11,10 +11,12 @@ import Icon from "@src/components/common/Icon";
 import Button from "@src/components/common/Button";
 import Menu from "@src/components/common/Menu";
 
+// action
+import { RootState } from "@src/store/configureStore";
+
 // type
 import { ICON } from "@src/type";
 import type { SimpleUser } from "@src/type";
-import type { UserState } from "@src/store/reducers";
 
 type Props = {
   user: SimpleUser;
@@ -24,7 +26,7 @@ type Props = {
 
 const PostCardHead = ({ user, onRemovePost, onClickFollowButton }: Props) => {
   const { me, followLoading, unfollowLoading } = useSelector(
-    ({ user }: { user: UserState }) => user
+    ({ user }: RootState) => user
   );
   const [isMine, setIsMine] = useState(false);
   const [isFollow, setIsFollow] = useState(false);

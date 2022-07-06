@@ -7,7 +7,7 @@ import db from "../models/index.js";
 
 const { User, Room, Photo, Chat, RoomUsers } = db;
 
-// 2022/05/29 - 로그인한 유저의 채팅방들 가져오기 - by 1-blue
+// 2022/07/03 - 로그인한 유저의 채팅방들 가져오기 - by 1-blue
 router.get("/", isLoggedIn, async (req, res, next) => {
   try {
     const me = await User.findByPk(req.user._id);
@@ -42,17 +42,19 @@ router.get("/", isLoggedIn, async (req, res, next) => {
     });
 
     res.status(200).json({
-      ok: true,
-      message: `채팅방들을 가져왔습니다.`,
-      rooms,
+      status: { ok: true },
+      data: {
+        message: `채팅방들을 가져왔습니다.`,
+        rooms,
+      },
     });
   } catch (error) {
-    console.error("POST api/room >> ", error);
+    console.error("GET api/room >> ", error);
     next(error);
   }
 });
 
-// 2022/05/28 - 로그인한 유저와 특정 유저의 채팅방 생성 - by 1-blue
+// 2022/07/03 - 로그인한 유저와 특정 유저의 채팅방 생성 - by 1-blue
 router.post("/", isLoggedIn, async (req, res, next) => {
   const { roomName, UserId } = req.body;
 
@@ -102,9 +104,8 @@ router.post("/", isLoggedIn, async (req, res, next) => {
     }
 
     res.status(201).json({
-      ok: true,
-      message: `"${roomName}" 채팅방을 생성했습니다.`,
-      RoomId,
+      status: { ok: true },
+      data: { message: `"${roomName}" 채팅방을 생성했습니다.`, RoomId },
     });
   } catch (error) {
     console.error("POST api/room >> ", error);
@@ -112,7 +113,7 @@ router.post("/", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2022/06/01 - 로그인한 유저 채팅방 나가기 - by 1-blue
+// 2022/07/03 - 로그인한 유저 채팅방 영구적으로 나가기 - by 1-blue
 router.delete("/", isLoggedIn, async (req, res, next) => {
   const { RoomId } = req.query;
 
@@ -141,9 +142,9 @@ router.delete("/", isLoggedIn, async (req, res, next) => {
       });
     }
 
-    res.status(201).json({
-      ok: true,
-      message: `채팅방을 나갔습니다.`,
+    res.status(200).json({
+      status: { ok: true },
+      data: { message: `채팅방을 나갔습니다.` },
     });
   } catch (error) {
     console.error("DELETE api/room >> ", error);

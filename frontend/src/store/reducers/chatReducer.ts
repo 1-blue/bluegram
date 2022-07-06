@@ -1,31 +1,29 @@
-import {
-  RESET_MESSAGE,
-  ADD_ROOM_FAILURE,
-  ADD_ROOM_REQUEST,
-  ADD_ROOM_SUCCESS,
-  LOAD_ROOMS_REQUEST,
-  LOAD_ROOMS_SUCCESS,
-  LOAD_ROOMS_FAILURE,
-  LOAD_CHATS_REQUEST,
-  LOAD_CHATS_SUCCESS,
-  LOAD_CHATS_FAILURE,
-  ADD_CHAT,
-  EXIT_ROOM_REQUEST,
-  EXIT_ROOM_SUCCESS,
-  EXIT_ROOM_FAILURE,
-} from "@src/store/types";
-import {
+import { createSlice } from "@reduxjs/toolkit";
+
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type {
   IChatWithUser,
   IRoomInformation,
   IRoomWithUserAndLastChat,
 } from "@src/type";
-import type { ChatActionRequest } from "../actions";
+import type {
+  AddChatBody,
+  AddRoomBody,
+  AddRoomResponse,
+  ExitRoomBody,
+  ExitRoomResponse,
+  LoadChatsBody,
+  LoadChatsResponse,
+  LoadRoomsResponse,
+  ResponseFailure,
+} from "@src/store/types";
 
-type StateType = {
+export type ChatStateType = {
   rooms: IRoomWithUserAndLastChat[];
   chats: IChatWithUser[];
   roomInformation?: IRoomInformation | null;
   hasMoreChat: boolean;
+  addedRoomId: number | null;
 
   addRoomLoading: boolean;
   addRoomDone: null | string;
@@ -44,7 +42,7 @@ type StateType = {
   exitRoomError: null | string;
 };
 
-const initState: StateType = {
+const initialState: ChatStateType = {
   // 2022/05/28 - 로그인한 유저의 채팅방들 - by 1-blue
   rooms: [],
 
@@ -56,6 +54,9 @@ const initState: StateType = {
 
   // 2022/05/28 - 특정 채팅방의 정보 - by 1-blue
   roomInformation: null,
+
+  // 2022/07/03 - 추가한 채팅방 식별자 - by 1-blue
+  addedRoomId: null,
 
   // 2022/05/28 - 채팅방 생성 관련 변수 - by 1-blue
   addRoomLoading: false,
@@ -78,58 +79,55 @@ const initState: StateType = {
   exitRoomError: null,
 };
 
-function chatReducer(prevState = initState, action: ChatActionRequest) {
-  switch (action.type) {
-    // 2022/05/13 - 리셋 메시지 - by 1-blue
-    case RESET_MESSAGE:
-      return {
-        ...prevState,
-        addRoomLoading: false,
-        addRoomDone: null,
-        addRoomError: null,
-
-        loadRoomsLoading: false,
-        loadRoomsDone: null,
-        loadRoomsError: null,
-
-        loadChatsLoading: false,
-        loadChatsDone: null,
-        loadChatsError: null,
-      };
-
-    // 2022/05/28 - 채팅방 생성 - by 1-blue
-    case ADD_ROOM_REQUEST:
-      return {
-        ...prevState,
-        addRoomLoading: true,
-        addRoomDone: null,
-        addRoomError: null,
-      };
-    case ADD_ROOM_SUCCESS:
-      return {
-        ...prevState,
-        addRoomLoading: false,
-        addRoomDone: action.data.RoomId,
-      };
-    case ADD_ROOM_FAILURE:
-      return {
-        ...prevState,
-        addRoomLoading: false,
-        addRoomError: action.data.message,
-      };
-
-    // 2022/05/28 - 채팅방 로드 - by 1-blue
-    case LOAD_ROOMS_REQUEST:
-      return {
-        ...prevState,
-        loadRoomsLoading: true,
-        loadRoomsDone: null,
-        loadRoomsError: null,
-      };
-    case LOAD_ROOMS_SUCCESS:
-      // 2022/05/28 - 마지막 채팅을 기준으로 채팅방 정렬 - by 1-blue
-      // mysql + sequelize로 가져오는 시간값은 string형...
-      const sortedRooms = action.data.rooms.sort((a, b) => {
+const chatSlice = createSlice({
+  name: "chat",
+  initialState,
+  reducers: {
+    resetMessage(state) {
+      state.addRoomLoading = false;
+      state.addRoomDone = null;
+      state.addRoomError = null;
+      state.loadRoomsLoading = false;
+      state.loadRoomsDone = null;
+      state.loadRoomsError = null;
+      state.loadChatsLoading = false;
+      state.loadChatsDone = null;
+      state.loadChatsError = null;
+      state.addedRoomId = null;
+    },
+    // 2022/07/02 - 본인 채팅 추가 - by 1-blue
+    addChat(state, action: PayloadAction<AddChatBody>) {
+      state.chats = [...state.chats, action.payload];
+    },
+    // 2022/07/02 - 채팅들 패치 - by 1-blue
+    loadChatsRequest(state, action: PayloadAction<LoadChatsBody>) {
+      state.loadChatsLoading = true;
+      state.loadChatsDone = null;
+      state.loadChatsError = null;
+    },
+    loadChatsSuccess(state, action: PayloadAction<LoadChatsResponse>) {
+      state.loadChatsLoading = false;
+      state.loadChatsDone = action.payload.data.message;
+      state.chats = [...action.payload.data.chats, ...state.chats];
+      state.roomInformation = action.payload.data.roomInformation;
+      state.hasMoreChat =
+        action.payload.data.chats.length === action.payload.data.limit;
+    },
+    loadChatsFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadChatsLoading = false;
+      state.loadChatsError = action.payload.data.message;
+    },
+    // 2022/07/02 - 채팅방들 패치 - by 1-blue
+    loadRoomsRequest(state) {
+      state.loadRoomsLoading = true;
+      state.loadRoomsDone = null;
+      state.loadRoomsError = null;
+    },
+    loadRoomsSuccess(state, action: PayloadAction<LoadRoomsResponse>) {
+      state.loadRoomsLoading = false;
+      state.loadRoomsDone = action.payload.data.message;
+      state.rooms = action.payload.data.rooms;
+      state.rooms.sort((a, b) => {
         if (a.Chats.length === 0 || b.Chats.length === 0) return 1;
 
         return (
@@ -137,75 +135,42 @@ function chatReducer(prevState = initState, action: ChatActionRequest) {
           new Date(a.Chats[0].createdAt as unknown as string).getTime()
         );
       });
+    },
+    // 2022/07/02 - 채팅방 추가 ( DM ) - by 1-blue
+    addRoomRequest(state, action: PayloadAction<AddRoomBody>) {
+      state.addRoomLoading = true;
+      state.addRoomDone = null;
+      state.addRoomError = null;
+    },
+    addRoomSuccess(state, action: PayloadAction<AddRoomResponse>) {
+      state.addRoomLoading = false;
+      state.addRoomDone = action.payload.data.message;
+      state.addedRoomId = action.payload.data.RoomId;
+    },
+    addRoomFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.addRoomLoading = false;
+      state.addRoomError = action.payload.data.message;
+    },
+    loadRoomsFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadRoomsLoading = false;
+      state.loadRoomsError = action.payload.data.message;
+    },
+    // 2022/07/02 - 채팅방 영구적으로 나가기 - by 1-blue
+    exitRoomRequest(state, action: PayloadAction<ExitRoomBody>) {
+      state.exitRoomLoading = true;
+      state.exitRoomDone = null;
+      state.exitRoomError = null;
+    },
+    exitRoomSuccess(state, action: PayloadAction<ExitRoomResponse>) {
+      state.exitRoomLoading = false;
+      state.exitRoomDone = action.payload.data.message;
+    },
+    exitRoomFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.exitRoomLoading = false;
+      state.exitRoomError = action.payload.data.message;
+    },
+  },
+});
 
-      return {
-        ...prevState,
-        loadRoomsLoading: false,
-        loadRoomsDone: action.data.message,
-        rooms: sortedRooms,
-      };
-    case LOAD_ROOMS_FAILURE:
-      return {
-        ...prevState,
-        loadRoomsLoading: false,
-        loadRoomsError: action.data.message,
-      };
-
-    // 2022/05/28 - 특정 채팅방의 채팅들 로드 생성 - by 1-blue
-    case LOAD_CHATS_REQUEST:
-      return {
-        ...prevState,
-        loadChatsLoading: true,
-        loadChatsDone: null,
-        loadChatsError: null,
-      };
-    case LOAD_CHATS_SUCCESS:
-      return {
-        ...prevState,
-        loadChatsLoading: false,
-        loadChatsDone: action.data.message,
-        chats: [...action.data.chats, ...prevState.chats],
-        roomInformation: action.data.roomInformation,
-        hasMoreChat: action.data.chats.length === action.data.limit,
-      };
-    case LOAD_CHATS_FAILURE:
-      return {
-        ...prevState,
-        loadChatsLoading: false,
-        loadChatsError: action.data.message,
-      };
-
-    // 2022/05/31 - 채팅 추가 - by 1-blue
-    case ADD_CHAT:
-      return {
-        ...prevState,
-        chats: [...prevState.chats, action.data],
-      };
-
-    // 2022/06/01 - 채팅방 나가기 로드 생성 - by 1-blue
-    case EXIT_ROOM_REQUEST:
-      return {
-        ...prevState,
-        exitRoomLoading: true,
-        exitRoomDone: null,
-        exitRoomError: null,
-      };
-    case EXIT_ROOM_SUCCESS:
-      return {
-        ...prevState,
-        exitRoomLoading: false,
-        exitRoomDone: action.data.message,
-      };
-    case EXIT_ROOM_FAILURE:
-      return {
-        ...prevState,
-        exitRoomLoading: false,
-        exitRoomError: action.data.message,
-      };
-
-    default:
-      return prevState;
-  }
-}
-
-export default chatReducer;
+export const chatActions = chatSlice.actions;
+export default chatSlice.reducer;

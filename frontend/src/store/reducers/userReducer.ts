@@ -1,37 +1,27 @@
-import {
-  RESET_MESSAGE,
-  LOAD_TO_ME_REQUEST,
-  LOAD_TO_ME_SUCCESS,
-  LOAD_TO_ME_FAILURE,
-  FOLLOW_REQUEST,
-  FOLLOW_SUCCESS,
-  FOLLOW_FAILURE,
-  UNFOLLOW_REQUEST,
-  UNFOLLOW_SUCCESS,
-  UNFOLLOW_FAILURE,
-  LOAD_TO_USER_REQUEST,
-  LOAD_TO_USER_SUCCESS,
-  LOAD_TO_USER_FAILURE,
-  LOAD_FOLLOWERS_REQUEST,
-  LOAD_FOLLOWERS_SUCCESS,
-  LOAD_FOLLOWERS_FAILURE,
-  LOAD_FOLLOWINGS_REQUEST,
-  LOAD_FOLLOWINGS_SUCCESS,
-  LOAD_FOLLOWINGS_FAILURE,
-  LOAD_ME_DETAIL_REQUEST,
-  LOAD_ME_DETAIL_SUCCESS,
-  LOAD_ME_DETAIL_FAILURE,
-  EDIT_ACCOUNT_REQUEST,
-  EDIT_ACCOUNT_SUCCESS,
-  EDIT_ACCOUNT_FAILURE,
-  EDIT_PASSWORD_REQUEST,
-  EDIT_PASSWORD_SUCCESS,
-  EDIT_PASSWORD_FAILURE,
-  SIGN_OUT_REQUEST,
-  SIGN_OUT_SUCCESS,
-  SIGN_OUT_FAILURE,
+import { createSlice } from "@reduxjs/toolkit";
+
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type {
+  EditAccountBody,
+  EditAccountResponse,
+  EditPasswordBody,
+  EditPasswordResponse,
+  FollowBody,
+  FollowResponse,
+  LoadFollowersBody,
+  LoadFollowersResponse,
+  LoadFollowingsBody,
+  LoadFollowingsResponse,
+  LoadToMeDetailResponse,
+  LoadToMeResponse,
+  LoadToUserBody,
+  LoadToUserResponse,
+  ResponseFailure,
+  SignOutBody,
+  SignOutResponse,
+  UnfollowBody,
+  UnfollowResponse,
 } from "@src/store/types";
-import type { UserActionRequest } from "../actions";
 import type {
   Photo,
   SimpleUser,
@@ -47,55 +37,55 @@ export type UserStateType = {
 
   me: UserWithPostAndFollowerAndFollowing | null;
   loadToMeLoading: boolean;
-  loadToMeDone: null;
-  loadToMeError: null;
+  loadToMeDone: null | string;
+  loadToMeError: null | string;
 
   logoutLoading: boolean;
-  logoutDone: null;
-  logoutError: null;
+  logoutDone: null | string;
+  logoutError: null | string;
 
   signUpLoading: boolean;
-  signUpDone: null;
-  signUpError: null;
+  signUpDone: null | string;
+  signUpError: null | string;
 
   followLoading: boolean;
   followDone: null | string;
-  followError: null;
+  followError: null | string;
   unfollowLoading: boolean;
   unfollowDone: null | string;
-  unfollowError: null;
+  unfollowError: null | string;
 
   loadToUserLoading: boolean;
   loadToUserDone: null | string;
-  loadToUserError: null;
+  loadToUserError: null | string;
 
   loadFollowersLoading: boolean;
   loadFollowersDone: null | string;
-  loadFollowersError: null;
+  loadFollowersError: null | string;
 
   loadFollowingsLoading: boolean;
   loadFollowingsDone: null | string;
-  loadFollowingsError: null;
+  loadFollowingsError: null | string;
 
   detailMe: (User & { Photos?: Photo[] }) | null;
-  loadMeDetailLoading: boolean;
-  loadMeDetailDone: null | string;
-  loadMeDetailError: null;
+  loadToMeDetailLoading: boolean;
+  loadToMeDetailDone: null | string;
+  loadToMeDetailError: null | string;
 
   editAccountLoading: boolean;
   editAccountDone: null | string;
-  editAccountError: null;
+  editAccountError: null | string;
 
   editPasswordLoading: boolean;
   editPasswordDone: null | string;
-  editPasswordError: null;
+  editPasswordError: null | string;
 
   signOutLoading: boolean;
   signOutDone: null | string;
-  signOutError: null;
+  signOutError: null | string;
 };
 
-const initState: UserStateType = {
+const initialState: UserStateType = {
   // 2022/05/21 - 특정 유저 정보를 저장할 변수 - by 1-blue
   user: null,
 
@@ -145,9 +135,9 @@ const initState: UserStateType = {
 
   // 2022/06/02 - 로그인한 유저 상세 정보 변수 - by 1-blue
   detailMe: null,
-  loadMeDetailLoading: false,
-  loadMeDetailDone: null,
-  loadMeDetailError: null,
+  loadToMeDetailLoading: false,
+  loadToMeDetailDone: null,
+  loadToMeDetailError: null,
 
   // 2022/06/02 - 로그인한 유저 기본 정보 변경 변수 - by 1-blue
   editAccountLoading: false,
@@ -165,356 +155,238 @@ const initState: UserStateType = {
   signOutError: null,
 };
 
-function userReducer(prevState = initState, action: UserActionRequest) {
-  let tempMe: null | UserWithPostAndFollowerAndFollowing = null;
-  let tempUser: null | UserWithPostAndFollowerAndFollowing = null;
-  let tempFollowers: null | { _id: number }[] = null;
-  let tempFollowings: null | { _id: number }[] = null;
+const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    resetMessage(state) {
+      state.loadToMeLoading = false;
+      state.loadToMeDone = null;
+      state.loadToMeError = null;
+      state.logoutLoading = false;
+      state.logoutDone = null;
+      state.logoutError = null;
+      state.signUpLoading = false;
+      state.signUpDone = null;
+      state.signUpError = null;
+      state.followLoading = false;
+      state.followDone = null;
+      state.followError = null;
+      state.unfollowLoading = false;
+      state.unfollowDone = null;
+      state.unfollowError = null;
+      state.loadToUserLoading = false;
+      state.loadToUserDone = null;
+      state.loadToUserError = null;
+      state.loadFollowersLoading = false;
+      state.loadFollowersDone = null;
+      state.loadFollowersError = null;
+      state.loadFollowingsLoading = false;
+      state.loadFollowingsDone = null;
+      state.loadFollowingsError = null;
+      state.loadToMeDetailLoading = false;
+      state.loadToMeDetailDone = null;
+      state.loadToMeDetailError = null;
+      state.editAccountLoading = false;
+      state.editAccountDone = null;
+      state.editAccountError = null;
+      state.editPasswordLoading = false;
+      state.editPasswordDone = null;
+      state.editPasswordError = null;
+      state.signOutLoading = false;
+      state.signOutDone = null;
+      state.signOutError = null;
+    },
 
-  switch (action.type) {
-    // 2022/05/13 - 리셋 메시지 - by 1-blue
-    case RESET_MESSAGE:
-      return {
-        ...prevState,
-        loginLoading: false,
-        loginDone: null,
-        loginError: null,
-        logoutLoading: false,
-        logoutDone: null,
-        logoutError: null,
-        signUpLoading: false,
-        signUpDone: null,
-        signUpError: null,
-        followLoading: false,
-        followDone: null,
-        followError: null,
-        unfollowLoading: false,
-        unfollowDone: null,
-        unfollowError: null,
+    // 2022/07/02 - 본인 정보 패치 - by 1-blue
+    loadToMeRequest(state) {
+      state.loadToMeLoading = true;
+      state.loadToMeDone = null;
+      state.loadToMeError = null;
+    },
+    loadToMeSuccess(state, action: PayloadAction<LoadToMeResponse>) {
+      state.loadToMeLoading = false;
+      state.loadToMeDone = action.payload.data.message;
+      state.me = action.payload.data.user;
+    },
+    loadToMeFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadToMeLoading = false;
+      state.loadToMeError = action.payload.data.message;
+    },
+    // 2022/07/02 - 본인의 상세 정보 패치 - by 1-blue
+    loadToMeDetailRequest(state) {
+      state.loadToMeDetailLoading = true;
+      state.loadToMeDetailDone = null;
+      state.loadToMeDetailError = null;
+    },
+    loadToMeDetailSuccess(
+      state,
+      action: PayloadAction<LoadToMeDetailResponse>
+    ) {
+      state.loadToMeDetailLoading = false;
+      state.loadToMeDetailDone = action.payload.data.message;
+      state.detailMe = action.payload.data.me;
+    },
+    loadToMeDetailFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadToMeDetailLoading = false;
+      state.loadToMeDetailError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 유저의 정보 패치 - by 1-blue
+    loadToUserRequest(state, action: PayloadAction<LoadToUserBody>) {
+      state.loadToUserLoading = true;
+      state.loadToUserDone = null;
+      state.loadToUserError = null;
+    },
+    loadToUserSuccess(state, action: PayloadAction<LoadToUserResponse>) {
+      state.loadToUserLoading = false;
+      state.loadToUserDone = action.payload.data.message;
+      state.user = action.payload.data.user;
+    },
+    loadToUserFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadToUserLoading = false;
+      state.loadToUserError = action.payload.data.message;
+    },
+    // 2022/07/02 - 본인의 기본 정보 변경 요청 - by 1-blue
+    editAccountRequest(state, action: PayloadAction<EditAccountBody>) {
+      state.editAccountLoading = true;
+      state.editAccountDone = null;
+      state.editAccountError = null;
+    },
+    editAccountSuccess(state, action: PayloadAction<EditAccountResponse>) {
+      state.editAccountLoading = false;
+      state.editAccountDone = action.payload.data.message;
+    },
+    editAccountFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.editAccountLoading = false;
+      state.editAccountError = action.payload.data.message;
+    },
+    // 2022/07/02 - 본인의 비밀번호 변경 요청 - by 1-blue
+    editPasswordRequest(state, action: PayloadAction<EditPasswordBody>) {
+      state.editPasswordLoading = true;
+      state.editPasswordDone = null;
+      state.editPasswordError = null;
+    },
+    editPasswordSuccess(state, action: PayloadAction<EditPasswordResponse>) {
+      state.editPasswordLoading = false;
+      state.editPasswordDone = action.payload.data.message;
+    },
+    editPasswordFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.editPasswordLoading = false;
+      state.editPasswordError = action.payload.data.message;
+    },
+    // 2022/07/02 - 본인의 회원 탈퇴 요청 - by 1-blue
+    signOutRequest(state, action: PayloadAction<SignOutBody>) {
+      state.signOutLoading = true;
+      state.signOutDone = null;
+      state.signOutError = null;
+    },
+    signOutSuccess(state, action: PayloadAction<SignOutResponse>) {
+      state.signOutLoading = false;
+      state.signOutDone = action.payload.data.message;
+    },
+    signOutFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.signOutLoading = false;
+      state.signOutError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 유저의 팔로워들 패치 - by 1-blue
+    loadFollowersRequest(state, action: PayloadAction<LoadFollowersBody>) {
+      state.loadFollowersLoading = true;
+      state.loadFollowersDone = null;
+      state.loadFollowersError = null;
+    },
+    loadFollowersSuccess(state, action: PayloadAction<LoadFollowersResponse>) {
+      state.loadFollowersLoading = false;
+      state.loadFollowersDone = action.payload.data.message;
+      state.Followers = action.payload.data.followers;
+    },
+    loadFollowersFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadFollowersLoading = false;
+      state.loadFollowersError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 유저의 팔로잉들 패치 - by 1-blue
+    loadFollowingsRequest(state, action: PayloadAction<LoadFollowingsBody>) {
+      state.loadFollowingsLoading = true;
+      state.loadFollowingsDone = null;
+      state.loadFollowingsError = null;
+    },
+    loadFollowingsSuccess(
+      state,
+      action: PayloadAction<LoadFollowingsResponse>
+    ) {
+      state.loadFollowingsLoading = false;
+      state.loadFollowingsDone = action.payload.data.message;
+      state.Followings = action.payload.data.followings;
+    },
+    loadFollowingsFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadFollowingsLoading = false;
+      state.loadFollowingsError = action.payload.data.message;
+    },
+    // 2022/07/02 - 팔로우 요청 - by 1-blue
+    followRequest(state, action: PayloadAction<FollowBody>) {
+      state.followLoading = true;
+      state.followDone = null;
+      state.followError = null;
+    },
+    followSuccess(state, action: PayloadAction<FollowResponse>) {
+      state.followLoading = false;
+      state.followDone = action.payload.data.message;
 
-        loadToUserLoading: false,
-        loadToUserDone: null,
-        loadToUserError: null,
+      if (!state.me) return;
+      // 나의 팔로잉 리스트에 해당 유저 추가
+      state.me.Followings.push({ _id: action.payload.data.followingId });
 
-        loadFollowersLoading: false,
-        loadFollowersDone: null,
-        loadFollowersError: null,
-
-        loadFollowingsLoading: false,
-        loadFollowingsDone: null,
-        loadFollowingsError: null,
-
-        loadMeDetailLoading: false,
-        loadMeDetailDone: null,
-        loadMeDetailError: null,
-
-        editAccountLoading: false,
-        editAccountDone: null,
-        editAccountError: null,
-
-        editPasswordLoading: false,
-        editPasswordDone: null,
-        editPasswordError: null,
-
-        signOutLoading: false,
-        signOutDone: null,
-        signOutError: null,
-      };
-
-    // 2022/05/07 - 본인 정보 요청 - by 1-blue
-    case LOAD_TO_ME_REQUEST:
-      return {
-        ...prevState,
-        loadToMeLoading: true,
-        loadToMeDone: null,
-        loadToMeError: null,
-      };
-    case LOAD_TO_ME_SUCCESS:
-      return {
-        ...prevState,
-        loadToMeLoading: false,
-        loadToMeDone: action.data?.message,
-        me: action.data?.user,
-      };
-    case LOAD_TO_ME_FAILURE:
-      return {
-        ...prevState,
-        loadToMeLoading: false,
-      };
-
-    // 2022/05/21 - 팔로우 요청 - by 1-blue
-    case FOLLOW_REQUEST:
-      return {
-        ...prevState,
-        followLoading: true,
-        followDone: null,
-        followError: null,
-      };
-    case FOLLOW_SUCCESS:
-      if (!prevState.me)
-        return {
-          ...prevState,
-          followLoading: false,
-          followDone: "follow-success 버그",
-        };
-
-      tempMe = {
-        ...prevState.me,
-        Followings: [
-          ...prevState.me.Followings,
-          { _id: action.data.followingId },
-        ],
-      };
-      // 2022/01/19 - 본인 정보창에서 팔로우를 누를 경우 숫자를 증가시키기 위함 - by 1-blue
-      if (prevState.user) {
-        if (prevState.me._id === prevState.user._id) {
-          tempFollowers = [...prevState.user.Followers];
-          tempFollowings = [
-            ...prevState.user.Followings,
-            { _id: action.data.followingId },
-          ];
-        } else {
-          tempFollowers = [
-            ...prevState.user.Followers,
-            { _id: action.data.followerId },
-          ];
-          tempFollowings = [...prevState.user.Followings];
-        }
-        tempUser = {
-          ...prevState.user,
-          Followers: tempFollowers,
-          Followings: tempFollowings,
-        };
-      } else {
-        tempUser = null;
+      // 특정 유저의 페이지에 있다면
+      if (!state.user) return;
+      // 특정 유저가 본인이라면
+      if (state.me._id === state.user._id) {
+        state.user.Followings.push({ _id: action.payload.data.followingId });
       }
-
-      return {
-        ...prevState,
-        followLoading: false,
-        followDone: action.data?.message,
-        me: tempMe,
-        user: tempUser,
-      };
-    case FOLLOW_FAILURE:
-      return {
-        ...prevState,
-        followLoading: false,
-        followError: action.data.message,
-      };
-    // 2022/05/21 - 언팔로우 요청 - by 1-blue
-    case UNFOLLOW_REQUEST:
-      return {
-        ...prevState,
-        unfollowLoading: true,
-        unfollowDone: null,
-        unfollowError: null,
-      };
-    case UNFOLLOW_SUCCESS:
-      if (!prevState.me)
-        return {
-          ...prevState,
-          followLoading: false,
-          followDone: "follow-success 버그",
-        };
-
-      tempMe = {
-        ...prevState.me,
-        Followings: prevState.me.Followings.filter(
-          (following) => following._id !== action.data.unfollowingId
-        ),
-      };
-
-      // 2021/12/31 - 본인 정보창에서 언팔로우를 누를 경우 숫자를 감소시키기 위함 - by 1-blue
-      if (prevState.user) {
-        if (prevState.me._id === prevState.user._id) {
-          tempFollowers = [...prevState.user.Followers];
-          tempFollowings = prevState.user.Followings.filter(
-            (following) => following._id !== action.data.unfollowingId
-          );
-        } else {
-          tempFollowers = prevState.user.Followers.filter(
-            (follower) => follower._id !== action.data.unfollowerId
-          );
-          tempFollowings = [...prevState.user.Followings];
-        }
-        tempUser = {
-          ...prevState.user,
-          Followers: tempFollowers,
-          Followings: tempFollowings,
-        };
-      } else {
-        tempUser = null;
+      // 특정 유저가 본인이 아니라면
+      else {
+        state.user.Followers.push({ _id: action.payload.data.followerId });
       }
+    },
+    followFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.followLoading = false;
+      state.followError = action.payload.data.message;
+    },
+    // 2022/07/02 - 언팔로우 요청 - by 1-blue
+    unfollowRequest(state, action: PayloadAction<UnfollowBody>) {
+      state.unfollowLoading = true;
+      state.unfollowDone = null;
+      state.unfollowError = null;
+    },
+    unfollowSuccess(state, action: PayloadAction<UnfollowResponse>) {
+      state.unfollowLoading = false;
+      state.unfollowDone = action.payload.data.message;
 
-      return {
-        ...prevState,
-        unfollowLoading: false,
-        unfollowDone: action.data?.message,
-        me: tempMe,
-        user: tempUser,
-      };
-    case UNFOLLOW_FAILURE:
-      return {
-        ...prevState,
-        unfollowLoading: false,
-        unfollowError: action.data.message,
-      };
+      if (!state.me) return;
+      // 나의 팔로잉 리스트에 해당 유저 제거
+      state.me.Followings = state.me.Followings.filter(
+        (following) => following._id !== action.payload.data.unfollowingId
+      );
 
-    // 2022/05/26 - 특정 유저의 정보 요청 - by 1-blue
-    case LOAD_TO_USER_REQUEST:
-      return {
-        ...prevState,
-        loadToUserLoading: true,
-        loadToUserDone: null,
-        loadToUserError: null,
-      };
-    case LOAD_TO_USER_SUCCESS:
-      return {
-        ...prevState,
-        loadToUserLoading: false,
-        loadToUserDone: action.data?.message,
-        user: action.data.user,
-      };
-    case LOAD_TO_USER_FAILURE:
-      return {
-        ...prevState,
-        loadToUserLoading: false,
-        loadToUserError: action.data.message,
-      };
+      // 특정 유저의 페이지에 있다면
+      if (!state.user) return;
+      // 특정 유저가 본인이라면
+      if (state.me._id === state.user._id) {
+        state.user.Followings = state.user.Followings.filter(
+          (following) => following._id !== action.payload.data.unfollowingId
+        );
+      }
+      // 특정 유저가 본인이 아니라면
+      else {
+        state.user.Followers = state.user.Followers.filter(
+          (follower) => follower._id !== action.payload.data.unfollowerId
+        );
+      }
+    },
+    unfollowFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.unfollowLoading = false;
+      state.unfollowError = action.payload.data.message;
+    },
+  },
+});
 
-    // 2022/05/26 - 특정 유저의 팔로워들 요청 - by 1-blue
-    case LOAD_FOLLOWERS_REQUEST:
-      return {
-        ...prevState,
-        loadFollowersLoading: true,
-        loadFollowersDone: null,
-        loadFollowersError: null,
-      };
-    case LOAD_FOLLOWERS_SUCCESS:
-      return {
-        ...prevState,
-        loadFollowersLoading: false,
-        loadFollowersDone: action.data?.message,
-        Followers: action.data.followers,
-      };
-    case LOAD_FOLLOWERS_FAILURE:
-      return {
-        ...prevState,
-        loadFollowersLoading: false,
-        loadFollowersError: action.data.message,
-      };
-
-    // 2022/05/26 - 특정 유저의 팔로워들 요청 - by 1-blue
-    case LOAD_FOLLOWINGS_REQUEST:
-      return {
-        ...prevState,
-        loadFollowingsLoading: true,
-        loadFollowingsDone: null,
-        loadFollowingsError: null,
-      };
-    case LOAD_FOLLOWINGS_SUCCESS:
-      return {
-        ...prevState,
-        loadFollowingsLoading: false,
-        loadFollowingsDone: action.data?.message,
-        Followings: action.data.followings,
-      };
-    case LOAD_FOLLOWINGS_FAILURE:
-      return {
-        ...prevState,
-        loadFollowingsLoading: false,
-        loadFollowingsError: action.data.message,
-      };
-
-    // 2022/06/02 - 유저 상세 정보 요청 - by 1-blue
-    case LOAD_ME_DETAIL_REQUEST:
-      return {
-        ...prevState,
-        loadMeDetailLoading: true,
-        loadMeDetailDone: null,
-        loadMeDetailError: null,
-      };
-    case LOAD_ME_DETAIL_SUCCESS:
-      return {
-        ...prevState,
-        loadMeDetailLoading: false,
-        loadMeDetailDone: action.data?.message,
-        detailMe: action.data.me,
-      };
-    case LOAD_ME_DETAIL_FAILURE:
-      return {
-        ...prevState,
-        loadMeDetailLoading: false,
-        loadMeDetailError: action.data.message,
-      };
-
-    // 2022/06/02 - 유저 기본 정보 변경 요청 - by 1-blue
-    case EDIT_ACCOUNT_REQUEST:
-      return {
-        ...prevState,
-        editAccountLoading: true,
-        editAccountDone: null,
-        editAccountError: null,
-      };
-    case EDIT_ACCOUNT_SUCCESS:
-      return {
-        ...prevState,
-        editAccountLoading: false,
-        editAccountDone: action.data?.message,
-      };
-    case EDIT_ACCOUNT_FAILURE:
-      return {
-        ...prevState,
-        editAccountLoading: false,
-        editAccountError: action.data.message,
-      };
-
-    // 2022/06/02 - 유저 비밀번호 변경 요청 - by 1-blue
-    case EDIT_PASSWORD_REQUEST:
-      return {
-        ...prevState,
-        editPasswordLoading: true,
-        editPasswordDone: null,
-        editPasswordError: null,
-      };
-    case EDIT_PASSWORD_SUCCESS:
-      return {
-        ...prevState,
-        editPasswordLoading: false,
-        editPasswordDone: action.data?.message,
-      };
-    case EDIT_PASSWORD_FAILURE:
-      return {
-        ...prevState,
-        editPasswordLoading: false,
-        editPasswordError: action.data.message,
-      };
-
-    // 2022/06/02 - 유저 회원 탈퇴 요청 - by 1-blue
-    case SIGN_OUT_REQUEST:
-      return {
-        ...prevState,
-        signOutLoading: true,
-        signOutDone: null,
-        signOutError: null,
-      };
-    case SIGN_OUT_SUCCESS:
-      return {
-        ...prevState,
-        signOutLoading: false,
-        signOutDone: action.data?.message,
-      };
-    case SIGN_OUT_FAILURE:
-      return {
-        ...prevState,
-        signOutLoading: false,
-        signOutError: action.data.message,
-      };
-
-    default:
-      return prevState;
-  }
-}
-
-export default userReducer;
+export const userActions = userSlice.actions;
+export default userSlice.reducer;

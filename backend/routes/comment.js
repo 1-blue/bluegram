@@ -7,7 +7,7 @@ import db from "../models/index.js";
 
 const { Post, Comment, User, Photo } = db;
 
-// 2021/12/27 - 게시글에 댓글/답글 추가 - by 1-blue
+// 2022/07/03 - 게시글에 댓글/답글 추가 - by 1-blue
 router.post("/post", isLoggedIn, async (req, res, next) => {
   const { content, PostId, RecommentId } = req.body;
   const { _id: UserId } = req.user;
@@ -16,7 +16,10 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
     const targetPost = await Post.findByPk(PostId);
 
     if (!targetPost) {
-      return res.status(404).json({ ok: false, message: "존재하지 않는 게시글입니다.\n잠시후에 다시 시도해주세요" });
+      return res.status(404).json({
+        status: { ok: false },
+        data: { message: "존재하지 않는 게시글입니다.\n잠시후에 다시 시도해주세요" },
+      });
     }
 
     const createdComment = await targetPost.createComment({ content, RecommentId, UserId });
@@ -47,10 +50,12 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
     });
 
     res.json({
-      ok: true,
-      message: `${RecommentId ? "답글" : "댓글"}이 생성되었습니다.`,
-      createdComment: createdCommentWithData,
-      RecommentId,
+      status: { ok: true },
+      data: {
+        message: `${RecommentId ? "답글" : "댓글"}이 생성되었습니다.`,
+        createdComment: createdCommentWithData,
+        RecommentId,
+      },
     });
   } catch (error) {
     console.error("POST /comment/post >> ", error);
@@ -58,7 +63,7 @@ router.post("/post", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2021/12/27 - 게시글의 댓글/답글 제거 - by 1-blue
+// 2022/07/03 - 게시글의 댓글/답글 제거 - by 1-blue
 router.delete("/post/:CommentId", isLoggedIn, async (req, res, next) => {
   const CommentId = +req.params.CommentId;
 
@@ -66,18 +71,23 @@ router.delete("/post/:CommentId", isLoggedIn, async (req, res, next) => {
     const targetComment = await Comment.findByPk(CommentId);
 
     if (!targetComment) {
-      return res.status(404).json({ ok: false, message: "존재하지 않은 댓글입니다.\n잠시후에 다시 시도해주세요" });
+      return res.status(404).json({
+        status: { ok: false },
+        data: { message: "존재하지 않은 댓글입니다.\n잠시후에 다시 시도해주세요" },
+      });
     }
     const removedPostId = targetComment.PostId;
 
     await Comment.destroy({ where: { _id: CommentId } });
 
     res.json({
-      ok: true,
-      message: `${targetComment.RecommentId ? "답글" : "댓글"}이 삭제되었습니다.`,
-      removedCommentId: CommentId,
-      removedPostId,
-      RecommentId: targetComment.RecommentId,
+      status: { ok: true },
+      data: {
+        message: `${targetComment.RecommentId ? "답글" : "댓글"}이 삭제되었습니다.`,
+        removedCommentId: CommentId,
+        removedPostId,
+        RecommentId: targetComment.RecommentId,
+      },
     });
   } catch (error) {
     console.error("DELETE /comment/post/:CommentId >> ", error);
@@ -85,7 +95,7 @@ router.delete("/post/:CommentId", isLoggedIn, async (req, res, next) => {
   }
 });
 
-// 2022/01/16 - 특정 게시글의 댓글들 불러오기 - by 1-blue
+// 2022/07/03 - 특정 게시글의 댓글들 불러오기 - by 1-blue
 router.get("/post/:PostId", async (req, res, next) => {
   const PostId = +req.params.PostId;
   const lastId = +req.query.lastId || -1;
@@ -103,7 +113,10 @@ router.get("/post/:PostId", async (req, res, next) => {
     const targetPost = await Post.findByPk(PostId);
 
     if (!targetPost) {
-      return res.status(404).json({ ok: false, message: "존재하지 않은 게시글입니다.\n잠시후에 다시 시도해주세요" });
+      return res.status(404).json({
+        status: { ok: false },
+        data: { message: "존재하지 않은 게시글입니다.\n잠시후에 다시 시도해주세요" },
+      });
     }
 
     // 댓글 관련 정보 불러오기
@@ -140,14 +153,17 @@ router.get("/post/:PostId", async (req, res, next) => {
       ],
     });
 
-    res.status(200).json({ ok: true, message: "댓글들을 정상적으로 불러왔습니다.", Comments: comments, PostId, limit });
+    res.status(200).json({
+      status: { ok: true },
+      data: { message: "댓글들을 정상적으로 불러왔습니다.", Comments: comments, PostId, limit },
+    });
   } catch (error) {
     console.error("GET /comment/post/:PostId >> ", error);
     next(error);
   }
 });
 
-// 2022/01/16 - 특정 댓글의 답글들 불러오기 - by 1-blue
+// 2022/07/03 - 특정 댓글의 답글들 불러오기 - by 1-blue
 router.get("/recomment/:CommentId", async (req, res, next) => {
   const CommentId = +req.params.CommentId;
   const lastId = +req.query.lastId || 999999;
@@ -162,7 +178,10 @@ router.get("/recomment/:CommentId", async (req, res, next) => {
     const targetComment = await Comment.findByPk(CommentId);
 
     if (!targetComment) {
-      return res.status(404).json({ message: "존재하지 않은 답글입니다.\n잠시후에 다시 시도해주세요" });
+      return res.status(404).json({
+        status: { ok: false },
+        data: { message: "존재하지 않은 답글입니다.\n잠시후에 다시 시도해주세요" },
+      });
     }
 
     // 답글의 유저와 유저 프로필 이미지 불러오기
@@ -197,11 +216,16 @@ router.get("/recomment/:CommentId", async (req, res, next) => {
     });
 
     res.status(200).json({
-      message: "답글들을 정상적으로 불러왔습니다.",
-      targetPostId: targetComment.PostId,
-      targetCommentId: CommentId,
-      Recomments: recomments,
-      limit,
+      status: {
+        ok: true,
+      },
+      data: {
+        message: "답글들을 정상적으로 불러왔습니다.",
+        targetPostId: targetComment.PostId,
+        targetCommentId: CommentId,
+        Recomments: recomments,
+        limit,
+      },
     });
   } catch (error) {
     console.error("GET /comment/recomment/:CommentId >> ", error);

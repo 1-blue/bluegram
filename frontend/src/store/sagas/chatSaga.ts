@@ -1,117 +1,124 @@
 import { all, call, fork, put, takeLatest } from "redux-saga/effects";
 
+// action
+import { chatActions } from "@src/store/reducers";
+
 // types
 import type { AxiosResponse } from "axios";
-import {
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type {
   AddRoomResponse,
-  ADD_ROOM_SUCCESS,
-  ADD_ROOM_FAILURE,
-  ADD_ROOM_REQUEST,
   LoadRoomsResponse,
-  LOAD_ROOMS_SUCCESS,
-  LOAD_ROOMS_FAILURE,
-  LOAD_ROOMS_REQUEST,
-  LOAD_CHATS_SUCCESS,
-  LOAD_CHATS_FAILURE,
-  LOAD_CHATS_REQUEST,
   LoadChatsResponse,
   ExitRoomResponse,
-  EXIT_ROOM_SUCCESS,
-  EXIT_ROOM_FAILURE,
-  EXIT_ROOM_REQUEST,
+  AddRoomBody,
+  LoadChatsBody,
+  ExitRoomBody,
 } from "@src/store/types";
 
 // api
-import { apiAddRoom, apiLoadRooms, apiLoadChats } from "@src/store/api";
-import { apiExitRoom } from "../api/room";
+import {
+  apiAddRoom,
+  apiLoadRooms,
+  apiLoadChats,
+  apiExitRoom,
+} from "@src/store/api";
 
-function* addRoom(action: any) {
+function* addRoom(action: PayloadAction<AddRoomBody>) {
   try {
     const { data }: AxiosResponse<AddRoomResponse> = yield call(
       apiAddRoom,
-      action.data
+      action.payload
     );
 
-    yield put({ type: ADD_ROOM_SUCCESS, data });
+    yield put(chatActions.addRoomSuccess(data));
   } catch (error: any) {
-    console.error("authSaga addRoom >> ", error);
+    console.error("chatSaga addRoom >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: ADD_ROOM_FAILURE, data: { message } });
+    yield put(
+      chatActions.addRoomFailure({ status: { ok: false }, data: { message } })
+    );
   }
 }
 function* watchAddRoom() {
-  yield takeLatest(ADD_ROOM_REQUEST, addRoom);
+  yield takeLatest(chatActions.addRoomRequest, addRoom);
 }
 
 function* loadRooms() {
   try {
     const { data }: AxiosResponse<LoadRoomsResponse> = yield call(apiLoadRooms);
 
-    yield put({ type: LOAD_ROOMS_SUCCESS, data });
+    yield put(chatActions.loadRoomsSuccess(data));
   } catch (error: any) {
-    console.error("authSaga loadRooms >> ", error);
+    console.error("chatSaga loadRooms >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: LOAD_ROOMS_FAILURE, data: { message } });
+    yield put(
+      chatActions.loadRoomsFailure({ status: { ok: false }, data: { message } })
+    );
   }
 }
 function* watchLoadRooms() {
-  yield takeLatest(LOAD_ROOMS_REQUEST, loadRooms);
+  yield takeLatest(chatActions.loadRoomsRequest, loadRooms);
 }
 
-function* loadChats(action: any) {
+function* loadChats(action: PayloadAction<LoadChatsBody>) {
   try {
     const { data }: AxiosResponse<LoadChatsResponse> = yield call(
       apiLoadChats,
-      action.data
+      action.payload
     );
 
-    yield put({ type: LOAD_CHATS_SUCCESS, data });
+    yield put(chatActions.loadChatsSuccess(data));
   } catch (error: any) {
-    console.error("authSaga loadChats >> ", error);
+    console.error("chatSaga loadChats >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: LOAD_CHATS_FAILURE, data: { message } });
+    yield put(
+      chatActions.loadChatsFailure({ status: { ok: false }, data: { message } })
+    );
   }
 }
 function* watchLoadChats() {
-  yield takeLatest(LOAD_CHATS_REQUEST, loadChats);
+  yield takeLatest(chatActions.loadChatsRequest, loadChats);
 }
 
-function* exitRoom(action: any) {
+function* exitRoom(action: PayloadAction<ExitRoomBody>) {
   try {
     const { data }: AxiosResponse<ExitRoomResponse> = yield call(
       apiExitRoom,
-      action.data
+      action.payload
     );
 
-    yield put({ type: EXIT_ROOM_SUCCESS, data });
+    yield put(chatActions.exitRoomSuccess(data));
   } catch (error: any) {
-    console.error("authSaga exitRoom >> ", error);
+    console.error("chatSaga exitRoom >> ", error);
 
     const message =
       error?.name === "AxiosError"
-        ? error.response.data.message
+        ? error.response.data.data.message
         : "서버측 에러입니다. \n잠시후에 다시 시도해주세요";
 
-    yield put({ type: EXIT_ROOM_FAILURE, data: { message } });
+    yield put(
+      chatActions.exitRoomFailure({ status: { ok: false }, data: { message } })
+    );
   }
 }
 function* watchExitRoom() {
-  yield takeLatest(EXIT_ROOM_REQUEST, exitRoom);
+  yield takeLatest(chatActions.exitRoomRequest, exitRoom);
 }
 
 export default function* chatSaga() {

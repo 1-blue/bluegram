@@ -1,79 +1,61 @@
-import {
-  RESET_MESSAGE,
-  LOAD_POSTS_REQUEST,
-  LOAD_POSTS_SUCCESS,
-  LOAD_POSTS_FAILURE,
-  OPEN_WRITE_MODAL,
-  CLOSE_WRITE_MODAL,
-  UPLOAD_POST_REQUEST,
-  UPLOAD_POST_SUCCESS,
-  UPLOAD_POST_FAILURE,
-  LOAD_DETAIL_POSTS_REQUEST,
-  LOAD_DETAIL_POSTS_SUCCESS,
-  LOAD_DETAIL_POSTS_FAILURE,
-  REMOVE_POST_REQUEST,
-  REMOVE_POST_SUCCESS,
-  REMOVE_POST_FAILURE,
-  LOAD_COMMENTS_REQUEST,
-  LOAD_COMMENTS_SUCCESS,
-  LOAD_COMMENTS_FAILURE,
-  APPEND_COMMENT_REQUEST,
-  APPEND_COMMENT_SUCCESS,
-  APPEND_COMMENT_FAILURE,
-  REMOVE_COMMENT_REQUEST,
-  REMOVE_COMMENT_SUCCESS,
-  REMOVE_COMMENT_FAILURE,
-  APPEND_LIKE_TO_POST_REQUEST,
-  APPEND_LIKE_TO_POST_SUCCESS,
-  APPEND_LIKE_TO_POST_FAILURE,
-  REMOVE_LIKE_TO_POST_REQUEST,
-  REMOVE_LIKE_TO_POST_SUCCESS,
-  REMOVE_LIKE_TO_POST_FAILURE,
-  APPEND_LIKE_TO_COMMENT_REQUEST,
-  APPEND_LIKE_TO_COMMENT_SUCCESS,
-  APPEND_LIKE_TO_COMMENT_FAILURE,
-  REMOVE_LIKE_TO_COMMENT_REQUEST,
-  REMOVE_LIKE_TO_COMMENT_SUCCESS,
-  REMOVE_LIKE_TO_COMMENT_FAILURE,
-  APPEND_BOOKMARK_REQUEST,
-  APPEND_BOOKMARK_SUCCESS,
-  APPEND_BOOKMARK_FAILURE,
-  REMOVE_BOOKMARK_REQUEST,
-  REMOVE_BOOKMARK_SUCCESS,
-  REMOVE_BOOKMARK_FAILURE,
-  LOAD_RECOMMENTS_REQUEST,
-  LOAD_RECOMMENTS_SUCCESS,
-  LOAD_RECOMMENTS_FAILURE,
-  LOAD_POSTS_OF_HASHTAG_REQUEST,
-  LOAD_POSTS_OF_HASHTAG_SUCCESS,
-  LOAD_POSTS_OF_HASHTAG_FAILURE,
-  LOAD_POSTS_OF_USER_REQUEST,
-  LOAD_POSTS_OF_USER_SUCCESS,
-  LOAD_POSTS_OF_USER_FAILURE,
-  LOAD_POSTS_OF_BOOKMARK_REQUEST,
-  LOAD_POSTS_OF_BOOKMARK_SUCCESS,
-  LOAD_POSTS_OF_BOOKMARK_FAILURE,
-  LOAD_POSTS_DETAIL_OF_USER_REQUEST,
-  LOAD_POSTS_DETAIL_OF_USER_SUCCESS,
-  LOAD_POSTS_DETAIL_OF_USER_FAILURE,
-} from "@src/store/types";
-import type { PostActionRequest } from "../actions";
-import { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
+import { createSlice } from "@reduxjs/toolkit";
 
-type StateType = {
+import type { PayloadAction } from "@reduxjs/toolkit";
+import type { IPostWithPhotoAndCommentAndLikerAndCount } from "@src/type";
+import type {
+  AppendBookmarkBody,
+  AppendBookmarkResponse,
+  AppendCommentBody,
+  AppendCommentResponse,
+  AppendLikeToCommentBody,
+  AppendLikeToCommentResponse,
+  AppendLikeToPostBody,
+  AppendLikeToPostResponse,
+  LoadCommentsBody,
+  LoadCommentsResponse,
+  LoadDetailPostsBody,
+  LoadDetailPostsResponse,
+  LoadPostsBody,
+  LoadPostsDetailOfUserBody,
+  LoadPostsDetailOfUserResponse,
+  LoadPostsOfBookmarkResponse,
+  LoadPostsOfHashtagBody,
+  LoadPostsOfHashtagResponse,
+  LoadPostsOfUserBody,
+  LoadPostsOfUserResponse,
+  LoadPostsResponse,
+  LoadRecommentsBody,
+  LoadRecommentsResponse,
+  RemoveBookmarkBody,
+  RemoveBookmarkResponse,
+  RemoveCommentBody,
+  RemoveCommentResponse,
+  RemoveLikeToCommentBody,
+  RemoveLikeToCommentResponse,
+  RemoveLikeToPostBody,
+  RemoveLikeToPostResponse,
+  RemovePostBody,
+  RemovePostResponse,
+  ResponseFailure,
+  UploadPostBody,
+  UploadPostResponse,
+  LoadPostsOfBookmarkBody,
+} from "@src/store/types";
+
+export type PostStateType = {
   isShowWritePostModal: boolean;
 
-  posts: IPostWithPhotoAndCommentAndLikerAndCount[] | null;
+  posts: IPostWithPhotoAndCommentAndLikerAndCount[];
   hasMorePosts: boolean;
   loadPostsLoading: boolean;
-  loadPostsDone: null;
-  loadPostsError: null;
+  loadPostsDone: null | string;
+  loadPostsError: null | string;
 
   uploadPostLoading: boolean;
   uploadPostDone: null | string;
   uploadPostError: null | string;
 
-  detailPosts: IPostWithPhotoAndCommentAndLikerAndCount[] | null;
+  detailPosts: IPostWithPhotoAndCommentAndLikerAndCount[];
   hasMoreDeatailPosts: boolean;
   loadDetailPostsLoading: boolean;
   loadDetailPostsDone: null | string;
@@ -130,7 +112,6 @@ type StateType = {
   hashtagData: {
     hasMoreHashtagPosts: boolean;
     postsOfHashtagCount: number;
-    hashtag: string;
   };
 
   loadPostsOfUserLoading: boolean;
@@ -146,12 +127,12 @@ type StateType = {
   loadPostsOfBookmarkError: null | string;
 };
 
-const initState: StateType = {
+const initialState: PostStateType = {
   // 2022/05/19 - 게시글 생성 모달 toggle - by 1-blue
   isShowWritePostModal: false,
 
   // 2022/05/07 - 모든 게시글들의 정보를 저장할 변수 - by 1-blue
-  posts: null,
+  posts: [],
   // 2022/05/07 - 로드할 게시글이 남아있는지 판단할 변수 - by 1-blue
   hasMorePosts: true,
   // 2022/05/07 - 모든 게시글들 요청 관련 변수 - by 1-blue
@@ -165,7 +146,7 @@ const initState: StateType = {
   uploadPostError: null,
 
   // 2022/05/21 - 게시글 상세 정보를 넣을 변수 - by 1-blue
-  detailPosts: null,
+  detailPosts: [],
   // 2022/05/21 - 로드할 게시글이 남아있는지 판단할 변수 - by 1-blue
   hasMoreDeatailPosts: true,
   // 2022/05/21 - 게시글 상세 정보 요청 관련 변수 - by 1-blue
@@ -236,7 +217,6 @@ const initState: StateType = {
   hashtagData: {
     hasMoreHashtagPosts: true,
     postsOfHashtagCount: 0,
-    hashtag: "",
   },
 
   // 2022/05/26 - 특정 유저의 게시글들 요청 관련 변수 - by 1-blue
@@ -255,880 +235,654 @@ const initState: StateType = {
   loadPostsOfBookmarkError: null,
 };
 
-function postReducer(
-  prevState: StateType = initState,
-  action: PostActionRequest
-) {
-  let tempDetailPosts:
-    | null
-    | undefined
-    | IPostWithPhotoAndCommentAndLikerAndCount[] = null;
+const postSlice = createSlice({
+  name: "post",
+  initialState,
+  reducers: {
+    resetMessage(state) {
+      state.loadPostsLoading = false;
+      state.loadPostsDone = null;
+      state.loadPostsError = null;
+      state.uploadPostLoading = false;
+      state.uploadPostDone = null;
+      state.uploadPostError = null;
+      state.loadDetailPostsLoading = false;
+      state.loadDetailPostsDone = null;
+      state.loadDetailPostsError = null;
+      state.removePostLoading = false;
+      state.removePostDone = null;
+      state.removePostError = null;
+      state.loadCommentsLoading = false;
+      state.loadCommentsDone = null;
+      state.loadCommentsError = null;
+      state.appendCommentLoading = false;
+      state.appendCommentDone = null;
+      state.appendCommentError = null;
+      state.removeCommentLoading = false;
+      state.removeCommentDone = null;
+      state.removeCommentError = null;
+      state.appendLikeToPostLoading = false;
+      state.appendLikeToPostDone = null;
+      state.appendLikeToPostError = null;
+      state.removeLikeToPostLoading = false;
+      state.removeLikeToPostDone = null;
+      state.removeLikeToPostError = null;
+      state.appendLikeToCommentLoading = false;
+      state.appendLikeToCommentDone = null;
+      state.appendLikeToCommentError = null;
+      state.removeLikeToCommentLoading = false;
+      state.removeLikeToCommentDone = null;
+      state.removeLikeToCommentError = null;
+      state.appendBookmarkLoading = false;
+      state.appendBookmarkDone = null;
+      state.appendBookmarkError = null;
+      state.removeBookmarkLoading = false;
+      state.removeBookmarkDone = null;
+      state.removeBookmarkError = null;
+      state.loadRecommentsLoading = false;
+      state.loadRecommentsDone = null;
+      state.loadRecommentsError = null;
+      state.loadPostsOfHashtagLoading = false;
+      state.loadPostsOfHashtagDone = null;
+      state.loadPostsOfHashtagError = null;
+      state.loadPostsOfUserLoading = false;
+      state.loadPostsOfUserDone = null;
+      state.loadPostsOfUserError = null;
+      state.loadPostsDetailOfUserLoading = false;
+      state.loadPostsDetailOfUserDone = null;
+      state.loadPostsDetailOfUserError = null;
+      state.loadPostsOfBookmarkLoading = false;
+      state.loadPostsOfBookmarkDone = null;
+      state.loadPostsOfBookmarkError = null;
+    },
+    // 2022/07/02 - 게시글 생성 모달 열기/닫기 - by 1-blue
+    openWritePostModal(state) {
+      state.isShowWritePostModal = true;
+    },
+    closeWritePostModal(state) {
+      state.isShowWritePostModal = false;
+    },
+    // 2022/07/02 - 게시글 생성 요청 - by 1-blue
+    uploadPostRequest(state, action: PayloadAction<UploadPostBody>) {
+      state.uploadPostLoading = true;
+      state.uploadPostDone = null;
+      state.uploadPostError = null;
+    },
+    uploadPostSuccess(state, action: PayloadAction<UploadPostResponse>) {
+      state.uploadPostLoading = false;
+      state.uploadPostDone = action.payload.data.message;
+      state.posts.unshift(action.payload.data.createdPost);
+    },
+    uploadPostFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.uploadPostLoading = false;
+      state.uploadPostError = action.payload.data.message;
+    },
+    // 2022/07/02 - 게시글 제거 요청 - by 1-blue
+    removePostRequest(state, action: PayloadAction<RemovePostBody>) {
+      state.removePostLoading = true;
+      state.removePostDone = null;
+      state.removePostError = null;
+    },
+    removePostSuccess(state, action: PayloadAction<RemovePostResponse>) {
+      state.removePostLoading = false;
+      state.removePostDone = action.payload.data.message;
+      state.detailPosts = state.detailPosts.filter(
+        (post) => post._id !== action.payload.data.removedPostId
+      );
+    },
+    removePostFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.removePostLoading = false;
+      state.removePostError = action.payload.data.message;
+    },
+    // 2022/07/02 - 모든 게시글들 패치 - by 1-blue
+    loadPostsRequest(state, action: PayloadAction<LoadPostsBody>) {
+      state.loadPostsLoading = true;
+      state.loadPostsDone = null;
+      state.loadPostsError = null;
+    },
+    loadPostsSuccess(state, action: PayloadAction<LoadPostsResponse>) {
+      state.loadPostsLoading = false;
+      state.loadPostsDone = action.payload.data.message;
+      state.posts = [...state.posts, ...action.payload.data.posts];
+      state.hasMorePosts =
+        action.payload.data.posts.length === action.payload.data.limit;
+    },
+    loadPostsFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadPostsLoading = false;
+      state.loadPostsError = action.payload.data.message;
+    },
+    // 2022/07/02 - 게시글 상세 정보 로드 요청 - by 1-blue
+    loadDetailPostsRequest(state, action: PayloadAction<LoadDetailPostsBody>) {
+      state.loadDetailPostsLoading = true;
+      state.loadDetailPostsDone = null;
+      state.loadDetailPostsError = null;
+    },
+    loadDetailPostsSuccess(
+      state,
+      action: PayloadAction<LoadDetailPostsResponse>
+    ) {
+      state.loadDetailPostsLoading = false;
+      state.loadDetailPostsDone = action.payload.data.message;
+      state.detailPosts = [
+        ...state.detailPosts,
+        ...action.payload.data.posts.map((post: any) => ({
+          ...post,
+          hasMoreComments: true,
+          allCommentCount: post.Comments.length,
+        })),
+      ];
+      state.hasMoreDeatailPosts =
+        action.payload.data.posts.length === action.payload.data.limit;
+    },
+    loadDetailPostsFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadDetailPostsLoading = false;
+      state.loadDetailPostsError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 유저의 게시글들 패치 - by 1-blue
+    loadPostsOfUserRequest(state, action: PayloadAction<LoadPostsOfUserBody>) {
+      state.loadPostsOfUserLoading = true;
+      state.loadPostsOfUserDone = null;
+      state.loadPostsOfUserError = null;
+    },
+    loadPostsOfUserSuccess(
+      state,
+      action: PayloadAction<LoadPostsOfUserResponse>
+    ) {
+      state.loadPostsOfUserLoading = false;
+      state.loadPostsOfUserDone = action.payload.data.message;
 
-  switch (action.type) {
-    // 2022/05/2 - 리셋 메시지 - by 1-blue
-    case RESET_MESSAGE:
-      return {
-        ...prevState,
-        loadPostsLoading: false,
-        loadPostsDone: null,
-        loadPostsError: null,
+      state.posts = [...state.posts, ...action.payload.data.posts];
+      state.hasMorePosts =
+        action.payload.data.posts.length === action.payload.data.limit;
+    },
+    loadPostsOfUserFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadPostsOfUserLoading = false;
+      state.loadPostsOfUserError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 유저의 게시글들 상세 정보 패치 - by 1-blue
+    loadPostsDetailOfUserRequest(
+      state,
+      action: PayloadAction<LoadPostsDetailOfUserBody>
+    ) {
+      state.loadPostsDetailOfUserLoading = true;
+      state.loadPostsDetailOfUserDone = null;
+      state.loadPostsDetailOfUserError = null;
+    },
+    loadPostsDetailOfUserSuccess(
+      state,
+      action: PayloadAction<LoadPostsDetailOfUserResponse>
+    ) {
+      state.loadPostsDetailOfUserLoading = false;
+      state.loadPostsDetailOfUserDone = action.payload.data.message;
 
-        uploadPostLoading: false,
-        uploadPostDone: null,
-        uploadPostError: null,
+      state.detailPosts = [
+        ...state.detailPosts,
+        ...action.payload.data.posts.map((post: any) => ({
+          ...post,
+          hasMoreComments: true,
+          allCommentCount: post.Comments.length,
+        })),
+      ];
+      state.hasMoreDeatailPosts =
+        action.payload.data.posts.length === action.payload.data.limit;
+    },
+    loadPostsDetailOfUserFailure(
+      state,
+      action: PayloadAction<ResponseFailure>
+    ) {
+      state.loadPostsDetailOfUserLoading = false;
+      state.loadPostsDetailOfUserError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 해시태그 게시글들 패치 - by 1-blue
+    loadPostsOfHashtagRequest(
+      state,
+      action: PayloadAction<LoadPostsOfHashtagBody>
+    ) {
+      state.loadPostsOfHashtagLoading = true;
+      state.loadPostsOfHashtagDone = null;
+      state.loadPostsOfHashtagError = null;
+    },
+    loadPostsOfHashtagSuccess(
+      state,
+      action: PayloadAction<LoadPostsOfHashtagResponse>
+    ) {
+      state.loadPostsOfHashtagLoading = false;
+      state.loadPostsOfHashtagDone = action.payload.data.message;
 
-        loadDetailPostsLoading: false,
-        loadDetailPostsDone: null,
-        loadDetailPostsError: null,
+      state.detailPosts = [
+        ...state.detailPosts,
+        ...action.payload.data.posts.map((post: any) => ({
+          ...post,
+          hasMoreComments: true,
+          allCommentCount: post.Comments.length,
+        })),
+      ];
+      state.hashtagData.hasMoreHashtagPosts =
+        action.payload.data.posts.length === action.payload.data.limit;
+      state.hashtagData.postsOfHashtagCount = action.payload.data.postCount;
+    },
+    loadPostsOfHashtagFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadPostsOfHashtagLoading = false;
+      state.loadPostsOfHashtagError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 게시글의 댓글/답글 추가 요청 - by 1-blue
+    appendCommentRequest(state, action: PayloadAction<AppendCommentBody>) {
+      state.appendCommentLoading = true;
+      state.appendCommentDone = null;
+      state.appendCommentError = null;
+    },
+    appendCommentSuccess(state, action: PayloadAction<AppendCommentResponse>) {
+      state.appendCommentLoading = false;
+      state.appendCommentDone = action.payload.data.message;
 
-        removePostLoading: false,
-        removePostDone: null,
-        removePostError: null,
+      let targetPost = state.detailPosts.find(
+        (post) => post._id === action.payload.data.createdComment.PostId
+      );
+      if (!targetPost)
+        return console.warn("appendCommentSuccess >> 게시글 없음");
 
-        loadCommentsLoading: false,
-        loadCommentsDone: null,
-        loadCommentsError: null,
+      // 답글 추가
+      if (action.payload.data.RecommentId) {
+        const targetComment = targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.RecommentId
+        );
+        if (!targetComment)
+          return console.warn("appendCommentSuccess >> 댓글 없음");
 
-        appendCommentLoading: false,
-        appendCommentDone: null,
-        appendCommentError: null,
+        targetComment.Recomments.push(action.payload.data.createdComment);
+        targetComment.allCommentCount += 1;
+      }
+      // 댓글 추가
+      else {
+        targetPost.Comments.push(action.payload.data.createdComment);
+        targetPost.allCommentCount += 1;
+      }
+    },
+    appendCommentFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.appendCommentLoading = false;
+      state.appendCommentError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 게시글의 댓글/답글 제거 요청 - by 1-blue
+    removeCommentRequest(state, action: PayloadAction<RemoveCommentBody>) {
+      state.removeCommentLoading = true;
+      state.removeCommentDone = null;
+      state.removeCommentError = null;
+    },
+    removeCommentSuccess(state, action: PayloadAction<RemoveCommentResponse>) {
+      state.removeCommentLoading = false;
+      state.removeCommentDone = action.payload.data.message;
 
-        removeCommentLoading: false,
-        removeCommentDone: null,
-        removeCommentError: null,
+      let targetPost = state.detailPosts?.find(
+        (post) => post._id === action.payload.data.removedPostId
+      );
+      if (!targetPost)
+        return console.warn("removeCommentSuccess >> 게시글 없음");
 
-        appendLikeToPostLoading: false,
-        appendLikeToPostDone: null,
-        appendLikeToPostError: null,
+      // 답글 제거
+      if (action.payload.data.RecommentId) {
+        const targetComment = targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.RecommentId
+        );
+        if (!targetComment)
+          return console.warn("removeCommentSuccess >> 댓글 없음");
 
-        removeLikeToPostLoading: false,
-        removeLikeToPostDone: null,
-        removeLikeToPostError: null,
+        targetComment.Recomments = targetComment.Recomments.filter(
+          (comment) => comment._id !== action.payload.data.removedCommentId
+        );
+        targetComment.allCommentCount -= 1;
+      }
+      // 댓글 제거
+      else {
+        targetPost.Comments = targetPost.Comments.filter(
+          (comment) => comment._id !== action.payload.data.removedCommentId
+        );
+        targetPost.allCommentCount -= 1;
+      }
+    },
+    removeCommentFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.removeCommentLoading = false;
+      state.removeCommentError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 게시글의 댓글 로드 요청 - by 1-blue
+    loadCommentsRequest(state, action: PayloadAction<LoadCommentsBody>) {
+      state.loadCommentsLoading = true;
+      state.loadCommentsDone = null;
+      state.loadCommentsError = null;
+    },
+    loadCommentsSuccess(state, action: PayloadAction<LoadCommentsResponse>) {
+      state.loadCommentsLoading = false;
+      state.loadCommentsDone = action.payload.data.message;
 
-        appendLikeToCommentLoading: false,
-        appendLikeToCommentDone: null,
-        appendLikeToCommentError: null,
+      const targetPost = state.detailPosts.find(
+        (post) => post._id === action.payload.data.PostId
+      );
+      if (!targetPost)
+        return console.warn("loadCommentsSuccess >> 게시글 없음");
 
-        removeLikeToCommentLoading: false,
-        removeLikeToCommentDone: null,
-        removeLikeToCommentError: null,
+      targetPost.hasMoreComments =
+        action.payload.data.Comments.length === action.payload.data.limit;
 
-        appendBookmarkLoading: false,
-        appendBookmarkDone: null,
-        appendBookmarkError: null,
-
-        removeBookmarkLoading: false,
-        removeBookmarkDone: null,
-        removeBookmarkError: null,
-
-        loadRecommentsLoading: false,
-        loadRecommentsDone: null,
-        loadRecommentsError: null,
-
-        loadPostsOfHashtagLoading: false,
-        loadPostsOfHashtagDone: null,
-        loadPostsOfHashtagError: null,
-
-        loadPostsOfUserLoading: false,
-        loadPostsOfUserDone: null,
-        loadPostsOfUserError: null,
-
-        loadPostsDetailOfUserLoading: false,
-        loadPostsDetailOfUserDone: null,
-        loadPostsDetailOfUserError: null,
-
-        loadPostsOfBookmarkLoading: false,
-        loadPostsOfBookmarkDone: null,
-        loadPostsOfBookmarkError: null,
-      };
-
-    // 2022/05/19 - 게시글 생성 모달 토글 - by 1-blue
-    case OPEN_WRITE_MODAL:
-      return {
-        ...prevState,
-        isShowWritePostModal: true,
-      };
-    case CLOSE_WRITE_MODAL:
-      return {
-        ...prevState,
-        isShowWritePostModal: false,
-      };
-
-    // 2022/05/07 - 모든 게시글들 정보 - by 1-blue
-    case LOAD_POSTS_REQUEST:
-      return {
-        ...prevState,
-        loadPostsLoading: true,
-        loadPostsDone: null,
-        loadPostsError: null,
-      };
-    case LOAD_POSTS_SUCCESS:
-      return {
-        ...prevState,
-        loadPostsLoading: false,
-        posts: [
-          ...(prevState.posts ? prevState.posts : []),
-          ...action.data.posts,
-        ],
-        hasMorePosts: action.data.posts.length === action.data.limit,
-      };
-    case LOAD_POSTS_FAILURE:
-      return {
-        ...prevState,
-        loadPostsLoading: false,
-      };
-
-    // 2022/05/19 - 게시글 생성 요청 - by 1-blue
-    case UPLOAD_POST_REQUEST:
-      return {
-        ...prevState,
-        uploadPostLoading: true,
-        uploadPostDone: null,
-        uploadPostError: null,
-      };
-    case UPLOAD_POST_SUCCESS:
-      return {
-        ...prevState,
-        uploadPostLoading: false,
-        uploadPostDone: action.data.message,
-        posts: prevState.posts
-          ? [action.data.createdPost, ...prevState.posts]
-          : [action.data.createdPost],
-      };
-    case UPLOAD_POST_FAILURE:
-      return {
-        ...prevState,
-        uploadPostLoading: false,
-        uploadPostError: action.data.message,
-      };
-
-    // 2022/05/21 - 게시글 제거 요청 관련 변수 - by 1-blue
-    case REMOVE_POST_REQUEST:
-      return {
-        ...prevState,
-        removePostLoading: true,
-        removePostDone: null,
-        removePostError: null,
-      };
-    case REMOVE_POST_SUCCESS:
-      return {
-        ...prevState,
-        removePostLoading: false,
-        removePostDone: action.data.message,
-        detailPosts: prevState.detailPosts?.filter(
-          (post) => post._id !== action.data.removedPostId
-        ),
-      };
-    case REMOVE_POST_FAILURE:
-      return {
-        ...prevState,
-        removePostLoading: false,
-        removePostError: action.data.message,
-      };
-
-    // 2022/05/21 - 특정 게시글 로드 요청 - by 1-blue
-    case LOAD_DETAIL_POSTS_REQUEST:
-      return {
-        ...prevState,
-        loadDetailPostsLoading: true,
-        loadDetailPostsDone: null,
-        loadDetailPostsError: null,
-      };
-    case LOAD_DETAIL_POSTS_SUCCESS:
-      return {
-        ...prevState,
-        loadDetailPostsLoading: false,
-        loadDetailPostsDone: action.data.message,
-        detailPosts: [
-          ...(prevState.detailPosts ? prevState.detailPosts : []),
-          ...action.data.posts.map((post) => ({
-            ...post,
+      // 이미 댓글을 불러왔다면
+      if (targetPost.Comments[0].content) {
+        targetPost.Comments.splice(
+          targetPost.Comments.length,
+          0,
+          ...action.payload.data.Comments.map((comment) => ({
+            ...comment,
+            allCommentCount: comment.Recomments.length,
             hasMoreComments: true,
-            allCommentCount: post.Comments.length,
-          })),
-        ],
-        hasMoreDeatailPosts: action.data.posts.length === action.data.limit,
-      };
-    case LOAD_DETAIL_POSTS_FAILURE:
-      return {
-        ...prevState,
-        loadDetailPostsLoading: false,
-      };
-
-    // 2022/05/21 - 댓글 로드 요청 관련 변수 - by 1-blue
-    case LOAD_COMMENTS_REQUEST:
-      return {
-        ...prevState,
-        loadCommentsLoading: true,
-        loadCommentsDone: null,
-        loadCommentsError: null,
-      };
-    case LOAD_COMMENTS_SUCCESS:
-      tempDetailPosts = prevState.detailPosts?.map((post) => {
-        if (post._id !== action.data.PostId) return post;
-
-        // 2022/01/17 - 이미 댓글을 불러왔다면 - by 1-blue
-        if (post.Comments?.[0]?.content) {
-          return {
-            ...post,
-            Comments: [
-              ...post.Comments,
-              ...action.data.Comments.map((comment) => ({
-                ...comment,
-                allCommentCount: comment?.Recomments?.length,
-                hasMoreComments: true,
-              })),
-            ],
-            hasMoreComments: action.data.limit === action.data.Comments.length,
-          };
-        }
-        // 2022/01/17 - 처음 댓글을 불러온다면 - by 1-blue
-        else {
-          return {
-            ...post,
-            Comments: [
-              ...action.data.Comments.map((comment) => ({
-                ...comment,
-                allCommentCount: comment.Recomments.length,
-                hasMoreComments: true,
-              })),
-            ],
-            hasMoreComments: action.data.limit === action.data.Comments.length,
-          };
-        }
-      });
-
-      return {
-        ...prevState,
-        loadCommentsLoading: false,
-        loadCommentsDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case LOAD_COMMENTS_FAILURE:
-      return {
-        ...prevState,
-        loadCommentsLoading: false,
-        loadCommentsError: action.data.message,
-      };
-
-    // 2022/05/21 - 댓글 추가 제거 요청 관련 변수 - by 1-blue
-    case APPEND_COMMENT_REQUEST:
-      return {
-        ...prevState,
-        appendCommentLoading: true,
-        appendCommentDone: null,
-        appendCommentError: null,
-      };
-    case APPEND_COMMENT_SUCCESS:
-      if (!action.data.RecommentId) {
-        tempDetailPosts = prevState.detailPosts?.map((post) => {
-          if (post._id !== action.data.createdComment.PostId) return post;
-
-          return {
-            ...post,
-            Comments: [...post.Comments, { ...action.data.createdComment }],
-            allCommentCount: post.allCommentCount + 1,
-          };
-        });
+          }))
+        );
       }
-      // 답글 추가일 경우
+      // 처음 댓글을 불러온다면
       else {
-        tempDetailPosts = prevState.detailPosts?.map((post) => {
-          if (post._id !== action.data.createdComment.PostId) return post;
-
-          return {
-            ...post,
-            Comments: post.Comments.map((comment) => {
-              if (comment._id !== action.data.RecommentId) return comment;
-
-              return {
-                ...comment,
-                Recomments: [...comment.Recomments, action.data.createdComment],
-                allCommentCount: comment.allCommentCount + 1,
-              };
-            }),
-          };
-        });
+        targetPost.Comments = action.payload.data.Comments.map((comment) => ({
+          ...comment,
+          allCommentCount: comment.Recomments.length,
+          hasMoreComments: true,
+        }));
       }
+    },
+    loadCommentsFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadCommentsLoading = false;
+      state.loadCommentsError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 댓글의 답글 패치 - by 1-blue
+    loadRecommentsRequest(state, action: PayloadAction<LoadRecommentsBody>) {
+      state.loadRecommentsLoading = true;
+      state.loadRecommentsDone = null;
+      state.loadRecommentsError = null;
+    },
+    loadRecommentsSuccess(
+      state,
+      action: PayloadAction<LoadRecommentsResponse>
+    ) {
+      state.loadRecommentsLoading = false;
+      state.loadRecommentsDone = action.payload.data.message;
 
-      return {
-        ...prevState,
-        appendCommentLoading: false,
-        appendCommentDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case APPEND_COMMENT_FAILURE:
-      return {
-        ...prevState,
-        appendCommentLoading: false,
-        appendCommentError: action.data.message,
-      };
+      const targetPost = state.detailPosts.find(
+        (post) => post._id === action.payload.data.targetPostId
+      );
+      if (!targetPost)
+        return console.warn("loadRecommentsSuccess >> 게시글 없음");
+      const targetComment = targetPost.Comments.find(
+        (comment) => comment._id === action.payload.data.targetCommentId
+      );
+      if (!targetComment)
+        return console.warn("loadRecommentsSuccess >> 댓글 없음");
 
-    // 2022/05/21 - 댓글 제거 제거 요청 관련 변수 - by 1-blue
-    case REMOVE_COMMENT_REQUEST:
-      return {
-        ...prevState,
-        removeCommentLoading: true,
-        removeCommentDone: null,
-        removeCommentError: null,
-      };
-    case REMOVE_COMMENT_SUCCESS:
-      if (!action.data.RecommentId) {
-        tempDetailPosts = prevState.detailPosts?.map((post) => {
-          if (post._id !== action.data.removedPostId) return post;
-
-          return {
-            ...post,
-            Comments: post.Comments.filter(
-              (comment) => comment._id !== action.data.removedCommentId
-            ),
-            allCommentCount: post.allCommentCount - 1,
-          };
-        });
+      // 기존에 답글 불러온 경우
+      if (targetComment.Recomments[0].content) {
+        targetComment.Recomments.splice(
+          targetComment.Recomments.length,
+          0,
+          ...action.payload.data.Recomments
+        );
       }
-      // 답글 삭제
+      // 처음 답글 불러오는 경우
       else {
-        tempDetailPosts = prevState.detailPosts?.map((post) => {
-          if (post._id !== action.data.removedPostId) return post;
-
-          return {
-            ...post,
-            Comments: post.Comments.map((comment) => {
-              if (comment._id !== action.data.RecommentId) return comment;
-
-              return {
-                ...comment,
-                Recomments: comment.Recomments.filter(
-                  (recomment) => recomment._id !== action.data.removedCommentId
-                ),
-              };
-            }),
-          };
-        });
+        targetComment.Recomments = action.payload.data.Recomments;
       }
 
-      return {
-        ...prevState,
-        removeCommentLoading: false,
-        removeCommentDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case REMOVE_COMMENT_FAILURE:
-      return {
-        ...prevState,
-        removeCommentLoading: false,
-        removeCommentError: action.data.message,
-      };
+      targetComment.hasMoreComments =
+        action.payload.data.Recomments.length === action.payload.data.limit;
+    },
+    loadRecommentsFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadRecommentsLoading = false;
+      state.loadRecommentsError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 게시글에 좋아요 추가 요청 - by 1-blue
+    appendLikeToPostRequest(
+      state,
+      action: PayloadAction<AppendLikeToPostBody>
+    ) {
+      state.appendLikeToPostLoading = true;
+      state.appendLikeToPostDone = null;
+      state.appendLikeToPostError = null;
+    },
+    appendLikeToPostSuccess(
+      state,
+      action: PayloadAction<AppendLikeToPostResponse>
+    ) {
+      state.appendLikeToPostLoading = false;
+      state.appendLikeToPostDone = action.payload.data.message;
 
-    // 2022/05/21 - 게시글에 좋아요 추가 요청 관련 변수 - by 1-blue
-    case APPEND_LIKE_TO_POST_REQUEST:
-      return {
-        ...prevState,
-        appendLikeToPostLoading: true,
-        appendLikeToPostDone: null,
-        appendLikeToPostError: null,
-      };
-    case APPEND_LIKE_TO_POST_SUCCESS:
-      tempDetailPosts = prevState.detailPosts?.map((post) => {
-        if (post._id !== action.data.likedPostId) return post;
-
-        return {
-          ...post,
-          PostLikers: [
-            ...post.PostLikers,
-            { _id: action.data.UserId, name: "", Photos: [] },
-          ],
-        };
-      });
-
-      return {
-        ...prevState,
-        appendLikeToPostLoading: false,
-        appendLikeToPostDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case APPEND_LIKE_TO_POST_FAILURE:
-      return {
-        ...prevState,
-        appendLikeToPostLoading: false,
-        appendLikeToPostError: action.data.message,
-      };
-
-    // 2022/05/21 - 게시글에 좋아요 제거 요청 관련 변수 - by 1-blue
-    case REMOVE_LIKE_TO_POST_REQUEST:
-      return {
-        ...prevState,
-        removeLikeToPostLoading: true,
-        removeLikeToPostDone: null,
-        removeLikeToPostError: null,
-      };
-    case REMOVE_LIKE_TO_POST_SUCCESS:
-      tempDetailPosts = prevState.detailPosts?.map((post) => {
-        if (post._id !== action.data.unlikedPostId) return post;
-
-        return {
-          ...post,
-          PostLikers: post.PostLikers.filter(
-            (liker) => liker._id !== action.data.UserId
-          ),
-        };
-      });
-
-      return {
-        ...prevState,
-        removeLikeToPostLoading: false,
-        removeLikeToPostDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case REMOVE_LIKE_TO_POST_FAILURE:
-      return {
-        ...prevState,
-        removeLikeToPostLoading: false,
-        removeLikeToPostError: action.data.message,
-      };
-
-    // 2022/05/21 - 댓글에 좋아요 추가 요청 관련 변수 - by 1-blue
-    case APPEND_LIKE_TO_COMMENT_REQUEST:
-      return {
-        ...prevState,
-        appendLikeToCommentLoading: true,
-        appendLikeToCommentDone: null,
-        appendLikeToCommentError: null,
-      };
-    case APPEND_LIKE_TO_COMMENT_SUCCESS:
-      if (action.data.RecommentId) {
-        tempDetailPosts = prevState.detailPosts?.map((post) => {
-          if (post._id !== action.data.PostId) return post;
-
-          return {
-            ...post,
-            Comments: post.Comments.map((comment) => {
-              if (comment._id !== action.data.RecommentId) return comment;
-              return {
-                ...comment,
-                Recomments: comment.Recomments.map((recomment) => {
-                  if (recomment._id !== action.data.CommentId) return recomment;
-
-                  return {
-                    ...recomment,
-                    CommentLikers: [
-                      ...recomment.CommentLikers,
-                      action.data.commentLiker,
-                    ],
-                  };
-                }),
-              };
-            }),
-          };
+      // 게시글에 좋아요 추가
+      state.detailPosts
+        .find((post) => post._id === action.payload.data.likedPostId)
+        ?.PostLikers.push({
+          _id: action.payload.data.UserId,
+          name: "",
+          Photos: [],
         });
+    },
+    appendLikeToPostFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.appendLikeToPostLoading = false;
+      state.appendLikeToPostError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 게시글에 좋아요 제거 요청 - by 1-blue
+    removeLikeToPostRequest(
+      state,
+      action: PayloadAction<RemoveLikeToPostBody>
+    ) {
+      state.removeLikeToPostLoading = true;
+      state.removeLikeToPostDone = null;
+      state.removeLikeToPostError = null;
+    },
+    removeLikeToPostSuccess(
+      state,
+      action: PayloadAction<RemoveLikeToPostResponse>
+    ) {
+      state.removeLikeToPostLoading = false;
+      state.removeLikeToPostDone = action.payload.data.message;
+
+      const targetPostIndex = state.detailPosts.findIndex(
+        (post) => post._id === action.payload.data.unlikedPostId
+      );
+
+      if (targetPostIndex === -1)
+        return console.warn("removeLikeToPostSuccess >> 게시글 없음");
+
+      state.detailPosts[targetPostIndex].PostLikers = state.detailPosts[
+        targetPostIndex
+      ].PostLikers.filter((liker) => liker._id !== action.payload.data.UserId);
+    },
+    removeLikeToPostFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.removeLikeToPostLoading = false;
+      state.removeLikeToPostError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 댓글/답글에 좋아요 추가 요청 - by 1-blue
+    appendLikeToCommentRequest(
+      state,
+      action: PayloadAction<AppendLikeToCommentBody>
+    ) {
+      state.appendLikeToCommentLoading = true;
+      state.appendLikeToCommentDone = null;
+      state.appendLikeToCommentError = null;
+    },
+    appendLikeToCommentSuccess(
+      state,
+      action: PayloadAction<AppendLikeToCommentResponse>
+    ) {
+      state.appendLikeToCommentLoading = false;
+      state.appendLikeToCommentDone = action.payload.data.message;
+
+      const targetPost = state.detailPosts.find(
+        (post) => post._id === action.payload.data.PostId
+      );
+      if (!targetPost)
+        return console.warn("appendLikeToCommentSuccess >> 게시글 없음");
+
+      let targetComment = null;
+
+      // 답글 찾기
+      if (action.payload.data.RecommentId) {
+        targetComment = targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.RecommentId
+        )?.Recomments.find(
+          (recomment) => recomment._id === action.payload.data.CommentId
+        );
       }
-      // 댓글에 좋아요 누른 경우
+      // 댓글 찾기
       else {
-        tempDetailPosts = prevState.detailPosts?.map((post) => {
-          if (post._id !== action.data.PostId) return post;
-
-          return {
-            ...post,
-            Comments: post.Comments.map((comment) => {
-              if (comment._id !== action.data.CommentId) return comment;
-
-              return {
-                ...comment,
-                CommentLikers: [
-                  ...comment.CommentLikers,
-                  action.data.commentLiker,
-                ],
-              };
-            }),
-          };
-        });
+        targetComment = targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.CommentId
+        );
       }
+      // 좋아요 추가
+      if (!targetComment)
+        return console.warn("appendLikeToCommentSuccess >> 댓글 없음");
+      targetComment.CommentLikers.push(action.payload.data.commentLiker);
+    },
+    appendLikeToCommentFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.appendLikeToCommentLoading = false;
+      state.appendLikeToCommentError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 댓글/답글에 좋아요 제거 요청 - by 1-blue
+    removeLikeToCommentRequest(
+      state,
+      action: PayloadAction<RemoveLikeToCommentBody>
+    ) {
+      state.removeLikeToCommentLoading = true;
+      state.removeLikeToCommentDone = null;
+      state.removeLikeToCommentError = null;
+    },
+    removeLikeToCommentSuccess(
+      state,
+      action: PayloadAction<RemoveLikeToCommentResponse>
+    ) {
+      state.removeLikeToCommentLoading = false;
+      state.removeLikeToCommentDone = action.payload.data.message;
 
-      return {
-        ...prevState,
-        appendLikeToCommentLoading: false,
-        appendLikeToCommentDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case APPEND_LIKE_TO_COMMENT_FAILURE:
-      return {
-        ...prevState,
-        appendLikeToCommentLoading: false,
-        appendLikeToCommentError: action.data.message,
-      };
+      const targetPost = state.detailPosts.find(
+        (post) => post._id === action.payload.data.PostId
+      );
+      if (!targetPost) return;
 
-    // 2022/05/21 - 댓글에 좋아요 제거 요청 관련 변수 - by 1-blue
-    case REMOVE_LIKE_TO_COMMENT_REQUEST:
-      return {
-        ...prevState,
-        removeLikeToCommentLoading: true,
-        removeLikeToCommentDone: null,
-        removeLikeToCommentError: null,
-      };
-    case REMOVE_LIKE_TO_COMMENT_SUCCESS:
-      // 답글일 경우
-      if (action.data.RecommentId) {
-        tempDetailPosts = prevState.detailPosts?.map((post) => {
-          if (post._id !== action.data.PostId) return post;
+      // 답글에 좋아요 제거
+      if (action.payload.data.RecommentId) {
+        const targetRecommentIndex = targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.RecommentId
+        )?.Recomments.findIndex(
+          (recomment) => recomment._id === action.payload.data.CommentId
+        );
 
-          return {
-            ...post,
-            Comments: post.Comments.map((comment) => {
-              if (comment._id !== action.data.RecommentId) return comment;
+        if (targetRecommentIndex === -1 || targetRecommentIndex === undefined)
+          return console.warn("removeLikeToCommentSuccess >> 답글 좋아요 추가");
 
-              return {
-                ...comment,
-                Recomments: comment.Recomments.map((recomment) => {
-                  if (recomment._id !== action.data.CommentId) return recomment;
-
-                  return {
-                    ...recomment,
-                    CommentLikers: comment.CommentLikers.filter(
-                      (commentLiker) => commentLiker._id !== action.data.UserId
-                    ),
-                  };
-                }),
-              };
-            }),
-          };
-        });
+        targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.RecommentId
+        )
+          ?.Recomments.find(
+            (recomment) => recomment._id === action.payload.data.CommentId
+          )
+          ?.CommentLikers.splice(targetRecommentIndex, 1);
       }
-      // 댓글일 경우
+      // 댓글에 좋아요 제거
       else {
-        tempDetailPosts = prevState.detailPosts?.map((post) => {
-          if (post._id !== action.data.PostId) return post;
+        const targetCommentIndex = targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.CommentId
+        )?.CommentLikers.findIndex(
+          (liker) => liker._id === action.payload.data.UserId
+        );
+        if (targetCommentIndex === -1 || targetCommentIndex === undefined)
+          return console.warn("removeLikeToCommentSuccess >> 댓글 좋아요 제거");
 
-          return {
-            ...post,
-            Comments: post.Comments.map((comment) => {
-              if (comment._id !== action.data.CommentId) return comment;
+        targetPost.Comments.find(
+          (comment) => comment._id === action.payload.data.CommentId
+        )?.CommentLikers.splice(targetCommentIndex, 1);
+      }
+    },
+    removeLikeToCommentFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.removeLikeToCommentLoading = false;
+      state.removeLikeToCommentError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 게시글에 북마크 추가 - by 1-blue
+    appendBookmarkRequest(state, action: PayloadAction<AppendBookmarkBody>) {
+      state.appendBookmarkLoading = true;
+      state.appendBookmarkDone = null;
+      state.appendBookmarkError = null;
+    },
+    appendBookmarkSuccess(
+      state,
+      action: PayloadAction<AppendBookmarkResponse>
+    ) {
+      state.appendBookmarkLoading = false;
+      state.appendBookmarkDone = action.payload.data.message;
 
-              return {
-                ...comment,
-                CommentLikers: comment.CommentLikers.filter(
-                  (commentLiker) => commentLiker._id !== action.data.UserId
-                ),
-              };
-            }),
-          };
+      state.detailPosts
+        .find((post) => post._id === action.payload.data.PostId)
+        ?.PostBookmarks.push({
+          _id: action.payload.data.UserId,
+          name: "",
+          Photos: [],
+          introduction: "",
         });
-      }
+    },
+    appendBookmarkFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.appendBookmarkLoading = false;
+      state.appendBookmarkError = action.payload.data.message;
+    },
+    // 2022/07/02 - 특정 게시글에 북마크 제거 - by 1-blue
+    removeBookmarkRequest(state, action: PayloadAction<RemoveBookmarkBody>) {
+      state.removeBookmarkLoading = true;
+      state.removeBookmarkDone = null;
+      state.removeBookmarkError = null;
+    },
+    removeBookmarkSuccess(
+      state,
+      action: PayloadAction<RemoveBookmarkResponse>
+    ) {
+      state.removeBookmarkLoading = false;
+      state.removeBookmarkDone = action.payload.data.message;
 
-      return {
-        ...prevState,
-        removeLikeToCommentLoading: false,
-        removeLikeToCommentDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case REMOVE_LIKE_TO_COMMENT_FAILURE:
-      return {
-        ...prevState,
-        removeLikeToCommentLoading: false,
-        removeLikeToCommentError: action.data.message,
-      };
+      const targetPost = state.detailPosts.find(
+        (post) => post._id === action.payload.data.PostId
+      );
+      if (!targetPost)
+        return console.warn("removeBookmarkSuccess >> 게시글 없음");
 
-    // 2022/05/21 - 북마크 추가 요청 관련 변수 - by 1-blue
-    case APPEND_BOOKMARK_REQUEST:
-      return {
-        ...prevState,
-        appendBookmarkLoading: true,
-        appendBookmarkDone: null,
-        appendBookmarkError: null,
-      };
-    case APPEND_BOOKMARK_SUCCESS:
-      tempDetailPosts = prevState.detailPosts?.map((post) => {
-        if (post._id !== action.data.PostId) return post;
+      targetPost.PostBookmarks = targetPost.PostBookmarks.filter(
+        (post) => post._id !== action.payload.data.UserId
+      );
+    },
+    removeBookmarkFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.removeBookmarkLoading = false;
+      state.removeBookmarkError = action.payload.data.message;
+    },
+    // 2022/07/02 - 로그인한 유저의 북마크된 게시글들 패치 - by 1-blue
+    loadPostsOfBookmarkRequest(
+      state,
+      action: PayloadAction<LoadPostsOfBookmarkBody>
+    ) {
+      state.loadPostsOfBookmarkLoading = true;
+      state.loadPostsOfBookmarkDone = null;
+      state.loadPostsOfBookmarkError = null;
+    },
+    loadPostsOfBookmarkSuccess(
+      state,
+      action: PayloadAction<LoadPostsOfBookmarkResponse>
+    ) {
+      state.loadPostsOfBookmarkLoading = false;
+      state.loadPostsOfBookmarkDone = action.payload.data.message;
 
-        return {
+      state.detailPosts = [
+        ...state.detailPosts,
+        ...action.payload.data.posts.map((post) => ({
           ...post,
-          PostBookmarks: [
-            ...post.PostBookmarks,
-            { _id: action.data.UserId, name: "임시", Photos: [] },
-          ],
-        };
-      });
+          hasMoreComments: true,
+          allCommentCount: post.Comments.length,
+        })),
+      ];
+      state.hasMoreDeatailPosts =
+        action.payload.data.posts.length === action.payload.data.limit;
+    },
+    loadPostsOfBookmarkFailure(state, action: PayloadAction<ResponseFailure>) {
+      state.loadPostsOfBookmarkLoading = false;
+      state.loadPostsOfBookmarkError = action.payload.data.message;
+    },
+  },
+});
 
-      return {
-        ...prevState,
-        appendBookmarkLoading: false,
-        appendBookmarkDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case APPEND_BOOKMARK_FAILURE:
-      return {
-        ...prevState,
-        appendBookmarkLoading: false,
-        appendBookmarkError: action.data.message,
-      };
-
-    // 2022/05/21 - 북마크 제거 요청 관련 변수 - by 1-blue
-    case REMOVE_BOOKMARK_REQUEST:
-      return {
-        ...prevState,
-        removeBookmarkLoading: true,
-        removeBookmarkDone: null,
-        removeBookmarkError: null,
-      };
-    case REMOVE_BOOKMARK_SUCCESS:
-      tempDetailPosts = prevState.detailPosts?.map((post) => {
-        if (post._id !== action.data.PostId) return post;
-
-        return {
-          ...post,
-          PostBookmarks: post.PostBookmarks.filter(
-            (bookmark) => bookmark._id !== action.data.UserId
-          ),
-        };
-      });
-
-      return {
-        ...prevState,
-        removeBookmarkLoading: false,
-        removeBookmarkDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case REMOVE_BOOKMARK_FAILURE:
-      return {
-        ...prevState,
-        removeBookmarkLoading: false,
-        removeBookmarkError: action.data.message,
-      };
-
-    // 2022/05/21 - 북마크 제거 요청 관련 변수 - by 1-blue
-    case REMOVE_BOOKMARK_REQUEST:
-      return {
-        ...prevState,
-        removeBookmarkLoading: true,
-        removeBookmarkDone: null,
-        removeBookmarkError: null,
-      };
-    case REMOVE_BOOKMARK_SUCCESS:
-      tempDetailPosts = prevState.detailPosts?.map((post) => {
-        if (post._id !== action.data.PostId) return post;
-
-        return {
-          ...post,
-          PostBookmarks: post.PostBookmarks.filter(
-            (bookmark) => bookmark._id !== action.data.UserId
-          ),
-        };
-      });
-
-      return {
-        ...prevState,
-        removeBookmarkLoading: false,
-        removeBookmarkDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case REMOVE_BOOKMARK_FAILURE:
-      return {
-        ...prevState,
-        removeBookmarkLoading: false,
-        removeBookmarkError: action.data.message,
-      };
-
-    // 2022/05/23 - 답글 패치 요청 관련 변수 - by 1-blue
-    case LOAD_RECOMMENTS_REQUEST:
-      return {
-        ...prevState,
-        loadRecommentsLoading: true,
-        loadRecommentsDone: null,
-        loadRecommentsError: null,
-      };
-    case LOAD_RECOMMENTS_SUCCESS:
-      tempDetailPosts = prevState.detailPosts?.map((post) => {
-        if (post._id !== action.data.targetPostId) return post;
-
-        return {
-          ...post,
-          Comments: post.Comments.map((comment) => {
-            if (comment._id !== action.data.targetCommentId) return comment;
-
-            // 이전에 답글을 불러온적이 있다면
-            if (comment.Recomments[0]?.content) {
-              return {
-                ...comment,
-                Recomments: [...comment.Recomments, ...action.data.Recomments],
-                hasMoreComments:
-                  action.data.Recomments.length === action.data.limit,
-              };
-            }
-            // 처음 답글을 불러온다면
-            else {
-              return {
-                ...comment,
-                Recomments: [...action.data.Recomments],
-                hasMoreComments:
-                  action.data.Recomments.length === action.data.limit,
-              };
-            }
-          }),
-        };
-      });
-
-      return {
-        ...prevState,
-        loadRecommentsLoading: false,
-        loadRecommentsDone: action.data.message,
-        detailPosts: tempDetailPosts,
-      };
-    case LOAD_RECOMMENTS_FAILURE:
-      return {
-        ...prevState,
-        loadRecommentsLoading: false,
-        loadRecommentsError: action.data.message,
-      };
-
-    // 2022/05/25 - 답글 패치 요청 관련 변수 - by 1-blue
-    case LOAD_POSTS_OF_HASHTAG_REQUEST:
-      return {
-        ...prevState,
-        loadPostsOfHashtagLoading: true,
-        loadPostsOfHashtagDone: null,
-        loadPostsOfHashtagError: null,
-      };
-    case LOAD_POSTS_OF_HASHTAG_SUCCESS:
-      if (prevState.hashtagData.hashtag === action.data.hashtag) {
-        tempDetailPosts = [
-          ...prevState.detailPosts!,
-          ...action.data.posts.map((post) => ({
-            ...post,
-            hasMoreComments: true,
-            allCommentCount: post.Comments.length,
-          })),
-        ];
-      } else {
-        tempDetailPosts = [
-          ...action.data.posts.map((post) => ({
-            ...post,
-            hasMoreComments: true,
-            allCommentCount: post.Comments.length,
-          })),
-        ];
-      }
-
-      return {
-        ...prevState,
-        loadPostsOfHashtagLoading: false,
-        loadPostsOfHashtagDone: action.data.message,
-        detailPosts: tempDetailPosts,
-        hashtagData: {
-          hasMoreHashtagPosts: action.data.posts.length === action.data.limit,
-          postsOfHashtagCount: action.data.postCount,
-          hashtag: action.data.hashtag,
-        },
-      };
-    case LOAD_POSTS_OF_HASHTAG_FAILURE:
-      return {
-        ...prevState,
-        loadPostsOfHashtagLoading: false,
-        loadPostsOfHashtagError: action.data.message,
-      };
-
-    // 2022/05/26 - 특정 유저의 게시글들 - by 1-blue
-    case LOAD_POSTS_OF_USER_REQUEST:
-      return {
-        ...prevState,
-        loadPostsOfUserLoading: true,
-        loadPostsOfUserDone: null,
-        loadPostsOfUserError: null,
-      };
-    case LOAD_POSTS_OF_USER_SUCCESS:
-      return {
-        ...prevState,
-        loadPostsOfUserLoading: false,
-        loadPostsOfUserDone: action.data.message,
-        posts: prevState.posts
-          ? [...prevState.posts, ...action.data.posts]
-          : [...action.data.posts],
-        hasMorePosts: action.data.posts.length === action.data.limit,
-      };
-    case LOAD_POSTS_OF_USER_FAILURE:
-      return {
-        ...prevState,
-        loadPostsOfUserLoading: false,
-        loadPostsOfUserError: action.data.message,
-      };
-
-    // 2022/05/26 - 특정 유저의 상세 게시글들 - by 1-blue
-    case LOAD_POSTS_DETAIL_OF_USER_REQUEST:
-      return {
-        ...prevState,
-        loadPostsDetailOfUserLoading: true,
-        loadPostsDetailOfUserDone: null,
-        loadPostsDetailOfUserError: null,
-      };
-    case LOAD_POSTS_DETAIL_OF_USER_SUCCESS:
-      return {
-        ...prevState,
-        loadPostsDetailOfUserLoading: false,
-        loadPostsDetailOfUserDone: action.data.message,
-        detailPosts: prevState.detailPosts
-          ? [
-              ...prevState.detailPosts,
-              ...action.data.posts.map((post) => ({
-                ...post,
-                hasMoreComments: true,
-                allCommentCount: post.Comments.length,
-              })),
-            ]
-          : [
-              ...action.data.posts.map((post) => ({
-                ...post,
-                hasMoreComments: true,
-                allCommentCount: post.Comments.length,
-              })),
-            ],
-        hasMoreDeatailPosts: action.data.posts.length === action.data.limit,
-      };
-    case LOAD_POSTS_DETAIL_OF_USER_FAILURE:
-      return {
-        ...prevState,
-        loadPostsDetailOfUserLoading: false,
-        loadPostsDetailOfUserError: action.data.message,
-      };
-
-    // 2022/05/26 - 로그인한 유저의 북마크된 게시글들 - by 1-blue
-    case LOAD_POSTS_OF_BOOKMARK_REQUEST:
-      return {
-        ...prevState,
-        loadPostsOfBookmarkLoading: true,
-        loadPostsOfBookmarkDone: null,
-        loadPostsOfBookmarkError: null,
-      };
-    case LOAD_POSTS_OF_BOOKMARK_SUCCESS:
-      return {
-        ...prevState,
-        loadPostsOfBookmarkLoading: false,
-        loadPostsOfBookmarkDone: action.data.message,
-        detailPosts: prevState.detailPosts
-          ? [
-              ...prevState.detailPosts,
-              ...action.data.posts.map((post) => ({
-                ...post,
-                hasMoreComments: true,
-                allCommentCount: post.Comments.length,
-              })),
-            ]
-          : [
-              ...action.data.posts.map((post) => ({
-                ...post,
-                hasMoreComments: true,
-                allCommentCount: post.Comments.length,
-              })),
-            ],
-        hasMoreDeatailPosts: action.data.posts.length === action.data.limit,
-      };
-    case LOAD_POSTS_OF_BOOKMARK_FAILURE:
-      return {
-        ...prevState,
-        loadPostsOfBookmarkLoading: false,
-        loadPostsOfBookmarkError: action.data.message,
-      };
-
-    default:
-      return prevState;
-  }
-}
-
-export default postReducer;
+export const postActions = postSlice.actions;
+export default postSlice.reducer;

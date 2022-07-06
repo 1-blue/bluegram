@@ -10,7 +10,7 @@ import Avatar from "@src/components/common/Avatar";
 import Button from "@src/components/common/Button";
 
 // type
-import type { ChatState, UserState } from "@src/store/reducers";
+import type { RootState } from "@src/store/configureStore";
 
 type Props = {
   onClickFollowButton: (UserId?: number, isFollow?: boolean) => void;
@@ -23,13 +23,11 @@ const ProfileHead = ({
   onClickLogOut,
   onClickDM,
 }: Props) => {
-  const { me, user } = useSelector(({ user }: { user: UserState }) => user);
+  const { me, user } = useSelector(({ user }: RootState) => user);
   const { followLoading, unfollowLoading } = useSelector(
-    ({ user }: { user: UserState }) => user
+    ({ user }: RootState) => user
   );
-  const { addRoomLoading } = useSelector(
-    ({ chat }: { chat: ChatState }) => chat
-  );
+  const { addRoomLoading } = useSelector(({ chat }: RootState) => chat);
   const isMyFollower = me?.Followings?.some(
     (following) => following._id === user?._id
   );

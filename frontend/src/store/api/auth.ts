@@ -1,7 +1,7 @@
 import { axiosInstance } from ".";
 
 // type
-import type { LogInBody, LogInResponse, SignUpBody } from "../types";
+import type { LogInBody, LogInResponse, SignUpBody } from "@src/store/types";
 
 // 2022/05/06 - 로컬 로그인 - by 1-blue
 export const apiLocalLogin = (body: LogInBody) =>

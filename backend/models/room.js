@@ -10,9 +10,9 @@ const Room = (sequelize, DataTypes) => {
         comment: "채팅방의 아이디 ( 채팅방을 식별할 값 )",
       },
       name: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(40),
         alllowNull: true,
-        comment: "게시글의 내용 ( 최대 50자, 특수문자 가능 )",
+        comment: "채팅방 이름 ( 최대 40자, 특수문자 가능 )",
       },
     },
     {

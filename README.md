@@ -13,7 +13,7 @@
   <img src="https://img.shields.io/badge/Next.js-818CF8?style=flat-square&logo=Next.js&logoColor=white" />
   <img src="https://img.shields.io/badge/Typescript-3178C6?style=flat-square&logo=Typescript&logoColor=white" />
   <img src="https://img.shields.io/badge/styledComponents-DB7093?style=flat-square&logo=styled-components&logoColor=white" />
-  <img src="https://img.shields.io/badge/Redux-764ABC?style=flat-square&logo=Redux&logoColor=white" />
+  <img src="https://img.shields.io/badge/Redux_Toolkit-764ABC?style=flat-square&logo=Redux&logoColor=white" />
   <img src="https://img.shields.io/badge/ReduxSaga-999999?style=flat-square&logo=Redux-Saga&logoColor=white" />
   <img src="https://img.shields.io/badge/AmazonS3-569A31?style=flat-square&logo=AmazonS3&logoColor=white" />
   <img src="https://img.shields.io/badge/Express-000000?style=flat-square&logo=Express&logoColor=white" />

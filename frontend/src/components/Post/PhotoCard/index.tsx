@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import { Wrapper } from "./style";
 
 // common-components
-import Icon from "../../common/Icon";
-import Photo from "../../common/Photo";
+import Icon from "@src/components/common/Icon";
+import Photo from "@src/components/common/Photo";
 
 // type
 import { ICON } from "@src/type";

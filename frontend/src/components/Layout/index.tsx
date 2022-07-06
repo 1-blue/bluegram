@@ -8,10 +8,10 @@ import { Wrapper } from "./style";
 import WritePostModal from "@src/components/Post/WriteModal";
 
 // actions
-import { closeWriteModalRequest } from "@src/store/actions";
+import { postActions } from "@src/store/reducers";
 
 // type
-import type { PostState } from "@src/store/reducers";
+import type { RootState } from "@src/store/configureStore";
 
 type Props = {
   children: React.ReactNode;
@@ -19,13 +19,11 @@ type Props = {
 
 const Layout = ({ children }: Props) => {
   const dispatch = useDispatch();
-  const { isShowWritePostModal } = useSelector(
-    ({ post }: { post: PostState }) => post
-  );
+  const { isShowWritePostModal } = useSelector(({ post }: RootState) => post);
 
   // 2022/05/19 - 게시글 생성 모달 닫기 - by 1-blue
   const onCloseModal = useCallback(() => {
-    dispatch(closeWriteModalRequest());
+    dispatch(postActions.closeWritePostModal());
   }, [dispatch]);
 
   return (

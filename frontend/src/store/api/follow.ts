@@ -8,7 +8,7 @@ import type {
   LoadFollowersResponse,
   LoadFollowingsBody,
   LoadFollowingsResponse,
-} from "../types";
+} from "@src/store/types";
 
 // 2022/05/21 - 팔로우 요청 - by 1-blue
 export const apiFollow = ({ UserId }: FollowBody) =>

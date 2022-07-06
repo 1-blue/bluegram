@@ -8,10 +8,10 @@ import { Wrapper } from "./style";
 import PhotoCard from "@src/components/Post/PhotoCard";
 
 // actions
-import { loadPostsOfUserRequest } from "@src/store/actions";
+import { postActions } from "@src/store/reducers";
 
 // type
-import type { PostState } from "@src/store/reducers";
+import type { RootState } from "@src/store/configureStore";
 
 type Props = {
   id: number;
@@ -20,7 +20,7 @@ type Props = {
 const ProfilePostImageCard = ({ id }: Props) => {
   const dispatch = useDispatch();
   const { posts, hasMorePosts, loadPostsOfUserLoading } = useSelector(
-    ({ post }: { post: PostState }) => post
+    ({ post }: RootState) => post
   );
 
   // 2022/01/20 - 무한 스크롤링 이벤트 함수 - by 1-blue
@@ -32,7 +32,7 @@ const ProfilePostImageCard = ({ id }: Props) => {
       !loadPostsOfUserLoading
     ) {
       dispatch(
-        loadPostsOfUserRequest({
+        postActions.loadPostsOfUserRequest({
           UserId: id,
           lastId: posts?.[posts.length - 1]._id || -1,
           limit: 15,
