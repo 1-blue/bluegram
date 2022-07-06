@@ -45,7 +45,7 @@ const PostCard = ({ post }: Props) => {
   const { me, followLoading, unfollowLoading } = useSelector(
     ({ user }: RootState) => user
   );
-  const { addRoomDone } = useSelector(({ chat }: RootState) => chat);
+  const { addedRoomId } = useSelector(({ chat }: RootState) => chat);
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const [text, onChangeText, setText, resize] = useTextarea("");
   const [isShowComment, setIsShowComment] = useState(true);
@@ -98,10 +98,10 @@ const PostCard = ({ post }: Props) => {
   }, [me, dispatch, post]);
   // 2022/05/30 - 생성된 or 존재하는 DM 페이지로 이동 - by 1-blue
   useEffect(() => {
-    if (!addRoomDone) return;
+    if (!addedRoomId) return;
 
-    router.push(`/dm/${addRoomDone}`);
-  }, [router, addRoomDone]);
+    router.push(`/dm/${addedRoomId}`);
+  }, [router, addedRoomId]);
 
   // 2022/01/19 - 답글 달기 버튼 클릭 시 포커스 부여 + 답글에 대한 정보 기록 - by 1-blue
   const onClickRecommentButton = useCallback(

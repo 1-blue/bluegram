@@ -144,14 +144,14 @@ const Room: NextPage = () => {
   // 2022/05/28 - 채팅방 입장 및 채팅 받기 이벤트 등록 - by 1-blue
   useEffect(() => {
     if (!me) return;
-    if (socket) return;
 
     const mySocket = io(process.env.NEXT_PUBLIC_SERVER_URL!, {
       withCredentials: true,
       // transports: ["websocket"],
     });
+    setSocket(mySocket);
 
-    mySocket?.on("connect", () => {
+    mySocket.on("connect", () => {
       mySocket.emit("onJoinRoom", router.query.id as string);
 
       mySocket.on("onReceive", ({ user, chat }) => {
@@ -168,9 +168,7 @@ const Room: NextPage = () => {
         );
       });
     });
-
-    setSocket(mySocket);
-  }, [me, router, socket, dispatch]);
+  }, [me, router, dispatch]);
 
   // 2022/05/28 - 채팅 전송 - by 1-blue
   const onSubmit = useCallback(

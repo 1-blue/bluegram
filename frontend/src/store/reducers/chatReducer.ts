@@ -93,6 +93,7 @@ const chatSlice = createSlice({
       state.loadChatsLoading = false;
       state.loadChatsDone = null;
       state.loadChatsError = null;
+      state.addedRoomId = null;
     },
     // 2022/07/02 - 본인 채팅 추가 - by 1-blue
     addChat(state, action: PayloadAction<AddChatBody>) {

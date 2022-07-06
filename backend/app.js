@@ -122,7 +122,7 @@ const io = new Server(httpServer, {
   },
 });
 // 소켓 최초 연결
-io.on("connection", socket => {
+io.on("connect", socket => {
   // console.log("소켓 연결 완료 >> ", socket.id);
   console.log("연결된 소켓 >> ", io.engine.clientsCount);
 

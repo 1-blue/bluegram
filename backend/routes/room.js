@@ -43,8 +43,10 @@ router.get("/", isLoggedIn, async (req, res, next) => {
 
     res.status(200).json({
       status: { ok: true },
-      message: `채팅방들을 가져왔습니다.`,
-      rooms,
+      data: {
+        message: `채팅방들을 가져왔습니다.`,
+        rooms,
+      },
     });
   } catch (error) {
     console.error("GET api/room >> ", error);

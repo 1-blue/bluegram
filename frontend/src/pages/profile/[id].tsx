@@ -98,7 +98,7 @@ const Profile: NextPage = () => {
   const { user, me, followLoading, unfollowLoading } = useSelector(
     ({ user }: RootState) => user
   );
-  const { addRoomDone } = useSelector(({ chat }: RootState) => chat);
+  const { addedRoomId } = useSelector(({ chat }: RootState) => chat);
 
   const [isOpenFollowerModal, setIsOpenFollowerModal] = useState(false);
   const onToggleFollowerModal = useCallback(
@@ -194,10 +194,10 @@ const Profile: NextPage = () => {
 
   // 2022/05/30 - 생성된 or 존재하는 DM 페이지로 이동 - by 1-blue
   useEffect(() => {
-    if (!addRoomDone) return;
+    if (!addedRoomId) return;
 
-    push(`/dm/${addRoomDone}`);
-  }, [push, addRoomDone]);
+    push(`/dm/${addedRoomId}`);
+  }, [push, addedRoomId]);
 
   return (
     <>
